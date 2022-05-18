@@ -14,8 +14,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySource {
 
@@ -100,7 +100,7 @@ public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySourc
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {
 		super.initConfigurationWidgets(context, builder, isFirstLine);
 		if (isFirstLine)

@@ -9,8 +9,8 @@ import com.simibubi.create.Create;
 
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class TrainIconType {
 
@@ -53,7 +53,7 @@ public class TrainIconType {
 	public static final int ENGINE = -1;
 	public static final int FLIPPED_ENGINE = -2;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public int render(int lengthOrEngine, PoseStack ms, int x, int y) {
 		int offset = getIconOffset(lengthOrEngine);
 		int width = getIconWidth(lengthOrEngine);

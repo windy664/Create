@@ -21,8 +21,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class ItemThresholdCondition extends CargoThresholdCondition {
 	public ItemStack stack = ItemStack.EMPTY;
@@ -75,7 +75,7 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void createWidgets(ScheduleScreen screen,
 		List<Pair<GuiEventListener, BiConsumer<IScheduleInput, GuiEventListener>>> editorSubWidgets,
 		List<Integer> dividers, int x, int y) {

@@ -119,7 +119,7 @@ public class ContraptionHandlerClient {
 		return false;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static Couple<Vec3> getRayInputs(LocalPlayer player) {
 		Minecraft mc = Minecraft.getInstance();
 		Vec3 origin = RaycastHelper.getTraceOrigin(player);

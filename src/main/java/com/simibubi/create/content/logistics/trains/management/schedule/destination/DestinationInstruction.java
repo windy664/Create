@@ -17,8 +17,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class DestinationInstruction extends ScheduleInstructionWithEditBox {
 
@@ -72,7 +72,7 @@ public class DestinationInstruction extends ScheduleInstructionWithEditBox {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected void modifyEditBox(EditBox box) {
 		box.setFilter(s -> StringUtils.countMatches(s, '*') <= 3);
 	}

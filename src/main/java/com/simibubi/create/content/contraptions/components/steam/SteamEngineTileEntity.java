@@ -28,8 +28,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fml.DistExecutor;
 
 public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
@@ -78,7 +78,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 		if (!level.isClientSide)
 			return;
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::spawnParticles);
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::spawnParticles);
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected AABB createRenderBoundingBox() {
 		return super.createRenderBoundingBox().inflate(2);
 	}
@@ -126,7 +126,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 
 	float prevAngle = 0;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void spawnParticles() {
 		Float targetAngle = getTargetAngle();
 		PoweredShaftTileEntity ste = target.get();
@@ -173,7 +173,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 	}
 
 	@Nullable
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public Float getTargetAngle() {
 		float angle = 0;
 		BlockState blockState = getBlockState();

@@ -22,8 +22,8 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public abstract class ValueListDisplaySource extends DisplaySource {
 
@@ -153,13 +153,13 @@ public abstract class ValueListDisplaySource extends DisplaySource {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {
 		if (isFirstLine)
 			addFullNumberConfig(builder);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected void addFullNumberConfig(LineBuilder builder) {
 		builder.addSelectionScrollInput(0, 75,
 			(si, l) -> si.forOptions(Lang.translatedOptions("display_source.value_list", "shortened", "full_number"))

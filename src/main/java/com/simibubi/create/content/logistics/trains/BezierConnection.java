@@ -28,8 +28,8 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
@@ -426,7 +426,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	private SegmentAngles[] bakedSegments;
 	private GirderAngles[] bakedGirders;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static class SegmentAngles {
 
 		public Pose tieTransform;
@@ -435,7 +435,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static class GirderAngles {
 
 		public Couple<Pose> beams;
@@ -444,7 +444,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public SegmentAngles[] getBakedSegments() {
 		if (bakedSegments != null)
 			return bakedSegments;
@@ -513,7 +513,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		return bakedSegments;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public GirderAngles[] getBakedGirders() {
 		if (bakedGirders != null)
 			return bakedGirders;

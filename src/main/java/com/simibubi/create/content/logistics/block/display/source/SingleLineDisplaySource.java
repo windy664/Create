@@ -14,8 +14,8 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public abstract class SingleLineDisplaySource extends DisplaySource {
 
@@ -24,13 +24,13 @@ public abstract class SingleLineDisplaySource extends DisplaySource {
 	protected abstract boolean allowsLabeling(DisplayLinkContext context);
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {
 		if (isFirstLine && allowsLabeling(context))
 			addLabelingTextBox(builder);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected void addLabelingTextBox(LineBuilder builder) {
 		builder.addTextInput(0, 137, (e, t) -> {
 			e.setValue("");

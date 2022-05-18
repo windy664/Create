@@ -27,8 +27,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class TimeOfDayCondition extends ScheduleWaitCondition {
 
@@ -99,7 +99,7 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public boolean renderSpecialIcon(PoseStack ms, int x, int y) {
 		int displayHr = (hour + 12) % 24;
 		float progress = (displayHr * 60f + minute) / (24 * 60);
@@ -110,7 +110,7 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void createWidgets(ScheduleScreen screen,
 		List<Pair<GuiEventListener, BiConsumer<IScheduleInput, GuiEventListener>>> editorSubWidgets,
 		List<Integer> dividers, int x, int y) {

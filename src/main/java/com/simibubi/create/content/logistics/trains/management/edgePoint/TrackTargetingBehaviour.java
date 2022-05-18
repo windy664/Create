@@ -41,8 +41,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntityBehaviour {
 
@@ -290,7 +290,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 		STATION, SIGNAL, DUAL_SIGNAL;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void render(LevelAccessor level, BlockPos pos, AxisDirection direction,
 		BezierTrackPointLocation bezier, PoseStack ms, MultiBufferSource buffer, int light, int overlay,
 		RenderedTrackOverlayType type, float scale) {

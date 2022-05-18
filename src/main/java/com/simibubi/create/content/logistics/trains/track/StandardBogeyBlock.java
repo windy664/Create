@@ -36,8 +36,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<StandardBogeyTileEntity> {
 
@@ -96,7 +96,7 @@ public class StandardBogeyBlock extends Block implements IBogeyBlock, ITE<Standa
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void render(BlockState state, float wheelAngle, PoseStack ms, float partialTicks, MultiBufferSource buffers,
 		int light, int overlay) {
 		if (state != null) {

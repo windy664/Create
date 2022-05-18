@@ -22,8 +22,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidThresholdCondition extends CargoThresholdCondition {
@@ -52,7 +52,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 		compareStack = ItemStack.of(tag.getCompound("Bucket"));
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private FluidStack loadFluid() {
 		if (fluidStack != null)
 			return fluidStack;
@@ -90,7 +90,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void createWidgets(ScheduleScreen screen,
 		List<Pair<GuiEventListener, BiConsumer<IScheduleInput, GuiEventListener>>> editorSubWidgets,
 		List<Integer> dividers, int x, int y) {

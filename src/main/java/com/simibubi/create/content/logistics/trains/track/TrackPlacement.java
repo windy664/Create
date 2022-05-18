@@ -48,8 +48,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TrackPlacement {
@@ -552,7 +552,7 @@ public class TrackPlacement {
 	static BlockPos hintPos;
 	static Couple<List<BlockPos>> hints;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void clientTick() {
 		LocalPlayer player = Minecraft.getInstance().player;
 		ItemStack stack = player.getMainHandItem();
@@ -729,7 +729,7 @@ public class TrackPlacement {
 		lastLineCount = segCount;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private static void line(int id, Vec3 v1, Vec3 o1, Vec3 ex) {
 		int color = Color.mixColors(0xEA5C2B, 0x95CD41, animation.getValue());
 		CreateClient.OUTLINER.showLine(Pair.of("start", id), v1.subtract(o1), v1.add(ex))

@@ -34,13 +34,13 @@ import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
+import net.fabricmc.api.EnvType;
 import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(Dist.CLIENT)
+@EventBusSubscriber(EnvType.CLIENT)
 public class TrackBlockOutline {
 
 	public static WorldAttached<Map<BlockPos, TrackTileEntity>> TRACKS_WITH_TURNS =

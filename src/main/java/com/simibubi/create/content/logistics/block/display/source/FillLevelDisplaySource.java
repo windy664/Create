@@ -15,8 +15,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class FillLevelDisplaySource extends NumericSingleLineDisplaySource {
 
@@ -82,7 +82,7 @@ public class FillLevelDisplaySource extends NumericSingleLineDisplaySource {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {
 		super.initConfigurationWidgets(context, builder, isFirstLine);
 		if (isFirstLine)

@@ -36,8 +36,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class TrackTargetingBlockItem extends BlockItem {
 
@@ -138,7 +138,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 		return AllBlocks.TRACK_SIGNAL.isIn(stack) ? EdgePointType.SIGNAL : EdgePointType.STATION;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public boolean useOnCurve(BezierPointSelection selection, ItemStack stack) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;

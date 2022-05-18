@@ -38,8 +38,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fml.DistExecutor;
 
 public class TrackTileEntity extends SmartTileEntity implements ITransformableTE, IMergeableTE {
@@ -182,7 +182,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 			connections.put(connection.getKey(), connection);
 		}
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 
 		if (hasInteractableConnections())
 			registerToCurveInteraction();
@@ -196,7 +196,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public AABB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}
@@ -278,20 +278,20 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	}
 
 	private void registerToCurveInteraction() {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerToCurveInteractionUnsafe);
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::registerToCurveInteractionUnsafe);
 	}
 
 	private void removeFromCurveInteraction() {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::removeFromCurveInteractionUnsafe);
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::removeFromCurveInteractionUnsafe);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void registerToCurveInteractionUnsafe() {
 		TrackBlockOutline.TRACKS_WITH_TURNS.get(level)
 			.put(worldPosition, this);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void removeFromCurveInteractionUnsafe() {
 		TrackBlockOutline.TRACKS_WITH_TURNS.get(level)
 			.remove(worldPosition);

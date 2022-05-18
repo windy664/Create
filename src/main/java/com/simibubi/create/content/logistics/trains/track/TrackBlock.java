@@ -94,8 +94,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.client.IBlockRenderProperties;
 
 public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement {
@@ -114,7 +114,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TE));
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
 		consumer.accept(new RenderProperties());
 	}
@@ -616,7 +616,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,
 		PoseStack ms) {
 		TransformStack.cast(ms)
@@ -625,7 +625,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state,
 		BezierTrackPointLocation bezierPoint, AxisDirection direction, PoseStack ms, RenderedTrackOverlayType type) {
 		TransformStack msr = TransformStack.cast(ms);

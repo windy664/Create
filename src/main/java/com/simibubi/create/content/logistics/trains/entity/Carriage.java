@@ -45,8 +45,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fml.DistExecutor;
 
 public class Carriage {
@@ -762,10 +762,10 @@ public class Carriage {
 			cc.portalCutoffMax = maxAllowedLocalCoord();
 			if (!entity.level.isClientSide())
 				return;
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> invalidate(cce));
+			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> invalidate(cce));
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private void invalidate(CarriageContraptionEntity entity) {
 			ContraptionRenderDispatcher.invalidate(entity.getContraption());
 			entity.updateRenderedPortalCutoff();

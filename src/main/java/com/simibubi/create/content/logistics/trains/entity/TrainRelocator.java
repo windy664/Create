@@ -50,8 +50,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 
 public class TrainRelocator {
@@ -70,7 +70,7 @@ public class TrainRelocator {
 		return relocatingTrain != null;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void onClicked(ClickInputEvent event) {
 		if (relocatingTrain == null)
 			return;
@@ -103,7 +103,7 @@ public class TrainRelocator {
 	}
 
 	@Nullable
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static Boolean relocateClient(Train relocating, boolean simulate) {
 		Minecraft mc = Minecraft.getInstance();
 		HitResult hitResult = mc.hitResult;
@@ -261,7 +261,7 @@ public class TrainRelocator {
 		return true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void visualise(Train train, int i, Vec3 v1, Vec3 v2, boolean valid) {
 		CreateClient.OUTLINER.showLine(Pair.of(train, i), v1.add(0, -.825f, 0), v2.add(0, -.825f, 0))
 			.colored(valid ? 0x95CD41 : 0xEA5C2B)
@@ -269,7 +269,7 @@ public class TrainRelocator {
 			.lineWidth(i % 2 == 1 ? 1 / 6f : 1 / 4f);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void clientTick() {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
@@ -346,7 +346,7 @@ public class TrainRelocator {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static boolean carriageWrenched(Vec3 vec3, CarriageContraptionEntity entity) {
 		Train train = getTrainFromEntity(entity);
 		if (train == null)
@@ -357,7 +357,7 @@ public class TrainRelocator {
 		return true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static boolean addToTooltip(List<Component> tooltip, boolean shiftKeyDown) {
 		Train train = getTrainFromEntity(hoveredEntity.get());
 		if (train != null && train.derailed) {
@@ -367,7 +367,7 @@ public class TrainRelocator {
 		return false;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private static Train getRelocating(LevelAccessor level) {
 		return relocatingTrain == null ? null : Create.RAILWAYS.sided(level).trains.get(relocatingTrain);
 	}

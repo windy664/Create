@@ -21,8 +21,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public abstract class CargoThresholdCondition extends ScheduleWaitCondition {
 	public static enum Ops {
@@ -78,7 +78,7 @@ public abstract class CargoThresholdCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void createWidgets(ScheduleScreen screen,
 		List<Pair<GuiEventListener, BiConsumer<IScheduleInput, GuiEventListener>>> editorSubWidgets,
 		List<Integer> dividers, int x, int y) {

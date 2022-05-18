@@ -50,8 +50,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
@@ -629,16 +629,16 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		return super.isReadyForRender() && validForRender && !firstPositionUpdate;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private WeakReference<CarriageContraptionInstance> instanceHolder;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void bindInstance(CarriageContraptionInstance instance) {
 		this.instanceHolder = new WeakReference<>(instance);
 		updateRenderedPortalCutoff();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void updateRenderedPortalCutoff() {
 		if (carriage == null)
 			return;

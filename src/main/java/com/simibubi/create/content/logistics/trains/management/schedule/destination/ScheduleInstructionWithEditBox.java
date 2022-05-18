@@ -15,8 +15,8 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public abstract class ScheduleInstructionWithEditBox extends ScheduleInstruction {
 
@@ -47,7 +47,7 @@ public abstract class ScheduleInstructionWithEditBox extends ScheduleInstruction
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void createWidgets(ScheduleScreen screen,
 		List<Pair<GuiEventListener, BiConsumer<IScheduleInput, GuiEventListener>>> editorSubWidgets,
 		List<Integer> dividers, int x, int y) {
@@ -63,7 +63,7 @@ public abstract class ScheduleInstructionWithEditBox extends ScheduleInstruction
 			(dest, box) -> ((ScheduleInstructionWithEditBox) dest).labelText = ((EditBox) box).getValue()));
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected void modifyEditBox(EditBox box) {}
 
 }

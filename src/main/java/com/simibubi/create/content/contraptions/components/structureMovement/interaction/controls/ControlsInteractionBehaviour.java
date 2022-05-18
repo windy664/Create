@@ -10,7 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
+import net.fabricmc.api.EnvType;
 import net.minecraftforge.fml.DistExecutor;
 
 public class ControlsInteractionBehaviour extends MovingInteractionBehaviour {
@@ -35,7 +35,7 @@ public class ControlsInteractionBehaviour extends MovingInteractionBehaviour {
 
 		contraptionEntity.setControllingPlayer(player.getUUID());
 		if (player.level.isClientSide)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT,
 				() -> () -> ControlsHandler.startControlling(contraptionEntity, localPos));
 		return true;
 	}

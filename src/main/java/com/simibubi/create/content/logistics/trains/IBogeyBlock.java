@@ -20,8 +20,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public interface IBogeyBlock extends IWrenchable {
@@ -42,11 +42,11 @@ public interface IBogeyBlock extends IWrenchable {
 
 	public Vec3 getConnectorAnchorOffset();
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void render(@Nullable BlockState state, float wheelAngle, PoseStack ms, float partialTicks,
 		MultiBufferSource buffers, int light, int overlay);
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public BogeyInstance createInstance(MaterialManager materialManager, CarriageBogey bogey);
 
 	public default Direction getBogeyUpDirection() {

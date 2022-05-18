@@ -30,13 +30,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(Dist.CLIENT)
+@EventBusSubscriber(EnvType.CLIENT)
 public class TrackBlockItem extends BlockItem {
 
 	public TrackBlockItem(Block pBlock, Properties pProperties) {
@@ -151,7 +151,7 @@ public class TrackBlockItem extends BlockItem {
 	}
 
 	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void sendExtenderPacket(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack stack = event.getItemStack();
 		if (!AllBlocks.TRACK.isIn(stack) || !stack.hasTag())

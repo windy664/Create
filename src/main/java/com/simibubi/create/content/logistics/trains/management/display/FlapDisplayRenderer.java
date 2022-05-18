@@ -30,8 +30,8 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 
@@ -112,7 +112,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 		ms.popPose();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	static class FlapDisplayRenderOutput implements FormattedCharSink {
 
 		final MultiBufferSource bufferSource;

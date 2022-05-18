@@ -14,8 +14,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public interface IScheduleInput {
 
@@ -27,7 +27,7 @@ public interface IScheduleInput {
 		return false;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public default void createWidgets(ScheduleScreen screen,
 		List<Pair<GuiEventListener, BiConsumer<IScheduleInput, GuiEventListener>>> editorSubWidgets,
 		List<Integer> dividers, int x, int y) {}
@@ -48,7 +48,7 @@ public interface IScheduleInput {
 		return null;
 	}
 	
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public default boolean renderSpecialIcon(PoseStack ms, int x, int y) {
 		return false;
 	}

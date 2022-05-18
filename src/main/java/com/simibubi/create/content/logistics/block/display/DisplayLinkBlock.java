@@ -34,8 +34,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fml.DistExecutor;
 
 public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<DisplayLinkTileEntity> {
@@ -126,12 +126,12 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 			return InteractionResult.PASS;
 		if (pPlayer.isSteppingCarefully())
 			return InteractionResult.PASS;
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT,
 			() -> () -> withTileEntityDo(pLevel, pPos, te -> this.displayScreen(te, pPlayer)));
 		return InteractionResult.SUCCESS;
 	}
 
-	@OnlyIn(value = Dist.CLIENT)
+	@Environment(value = EnvType.CLIENT)
 	protected void displayScreen(DisplayLinkTileEntity te, Player player) {
 		if (!(player instanceof LocalPlayer))
 			return;

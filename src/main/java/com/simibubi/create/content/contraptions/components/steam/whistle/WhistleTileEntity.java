@@ -29,8 +29,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fml.DistExecutor;
 
 public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
@@ -77,7 +77,7 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 			&& (tank.boiler.passiveHeat || tank.boiler.activeHeat > 0);
 		animation.chase(powered ? 1 : 0, powered ? .5f : .4f, powered ? Chaser.EXP : Chaser.LINEAR);
 		animation.tickChaser();
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.tickAudio(getOctave(), powered));
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> this.tickAudio(getOctave(), powered));
 	}
 
 	@Override
@@ -109,10 +109,10 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 			.orElse(WhistleSize.MEDIUM);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected WhistleSoundInstance soundInstance;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected void tickAudio(WhistleSize size, boolean powered) {
 		if (!powered) {
 			if (soundInstance != null) {
