@@ -8,10 +8,8 @@ import com.jozufozu.flywheel.backend.IrisShaderHandler;
 import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.DiffuseLightCalculator;
-import com.jozufozu.flywheel.util.transform.Rotate;
-import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
-import com.jozufozu.flywheel.util.transform.Translate;
+import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -35,7 +33,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
-public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperByteBuffer>, Rotate<SuperByteBuffer>, TStack<SuperByteBuffer> {
+public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
 	private final VertexList template;
 	private final IntPredicate shadedPredicate;
@@ -264,6 +262,22 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	@Override
 	public SuperByteBuffer popPose() {
 		transforms.popPose();
+		return this;
+	}
+
+	@Override
+	public SuperByteBuffer mulPose(Matrix4f pose) {
+		transforms.last()
+				.pose()
+				.multiply(pose);
+		return this;
+	}
+
+	@Override
+	public SuperByteBuffer mulNormal(Matrix3f normal) {
+		transforms.last()
+				.normal()
+				.mul(normal);
 		return this;
 	}
 

@@ -17,9 +17,11 @@ import com.simibubi.create.content.contraptions.components.actors.BlockBreakingM
 import com.simibubi.create.content.contraptions.components.actors.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity.ContraptionRotationState;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.collision.OrientedBB;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -38,6 +40,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -114,7 +117,7 @@ public class ContraptionCollider {
 
 			// Use simplified bbs when present
 			final Vec3 motionCopy = motion;
-			List<AABB> collidableBBs = contraption.simplifiedEntityColliders.orElseGet(() -> {
+			List<AABB> collidableBBs = contraption.getSimplifiedEntityColliders().orElseGet(() -> {
 
 				// Else find 'nearby' individual block shapes to collide with
 				List<AABB> bbs = new ArrayList<>();
@@ -236,6 +239,11 @@ public class ContraptionCollider {
 					.containsKey(pos)) {
 					BlockState blockState = contraption.getBlocks()
 						.get(pos).state;
+
+					MovingInteractionBehaviour movingInteractionBehaviour = contraption.interactors.get(pos);
+					if (movingInteractionBehaviour != null)
+						movingInteractionBehaviour.handleEntityCollision(entity, pos, contraptionEntity);
+
 					bounce = BlockHelper.getBounceMultiplier(blockState.getBlock());
 					slide = Math.max(0, blockState.getBlock().getFriction()) - .6f;
 				}
@@ -276,6 +284,7 @@ public class ContraptionCollider {
 						.add(0, contraptionMotion.y, 0);
 				if (motionZ != 0 && Math.abs(intersectZ) > horizonalEpsilon && motionZ > 0 == intersectZ < 0)
 					entityMotion = entityMotion.multiply(1, 1, 0);
+
 			}
 
 			if (bounce == 0 && slide > 0 && hasNormal && anyCollision && rotation.hasVerticalRotation()) {
@@ -299,6 +308,29 @@ public class ContraptionCollider {
 			entity.setPos(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
 				entityPosition.z + allowedMovement.z);
 			entityPosition = entity.position();
+
+			if (contraptionEntity instanceof CarriageContraptionEntity cce && entity.isOnGround()) {
+				if (AllConfigs.SERVER.trains.trainsCauseDamage.get()) {
+					Vec3 diffMotion = contraptionMotion.subtract(entity.getDeltaMovement());
+					if (diffMotion.length() > 0.35f && contraptionMotion.length() > 0.35f) {
+						EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
+						double damage = diffMotion.length();
+						if (playerType == PlayerType.CLIENT)
+							AllPackets.channel
+								.sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
+						else
+							entity.hurt(pSource, (int) (damage * 16));
+						if (!(entity instanceof Player p) || !p.isCreative() && !p.isSpectator())
+							entityMotion = entityMotion.add(entity.position()
+								.subtract(contraptionPosition)
+								.multiply(1, 0, 1)
+								.normalize()
+								.add(0, .25, 0)
+								.scale(damage * 4))
+								.add(diffMotion);
+					}
+				}
+			}
 
 			entity.hurtMarked = true;
 			Vec3 contactPointMotion = Vec3.ZERO;
@@ -459,6 +491,7 @@ public class ContraptionCollider {
 
 		List<VoxelShape> potentialHits = BlockPos.betweenClosedStream(min, max)
 			.filter(contraption.getBlocks()::containsKey)
+			.filter(Predicates.not(contraption::isHiddenInPortal))
 			.map(p -> {
 				BlockState blockState = contraption.getBlocks()
 					.get(p).state;

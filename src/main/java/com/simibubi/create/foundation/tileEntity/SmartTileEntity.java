@@ -25,8 +25,8 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours = new HashMap<>();
 	private boolean initialized = false;
 	private boolean firstNbtRead = true;
-	private int lazyTickRate;
-	private int lazyTickCounter;
+	protected int lazyTickRate;
+	protected int lazyTickCounter;
 
 	// Used for simulating this TE in a client-only setting
 	private boolean virtualMode;
@@ -128,12 +128,11 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	}
 
 	protected void setRemovedNotDueToChunkUnload() {
-
+		forEachBehaviour(TileEntityBehaviour::remove);
 	}
 
 	@Override
 	public void setRemoved() {
-		forEachBehaviour(TileEntityBehaviour::remove);
 		super.setRemoved();
 
 		if (!unloaded) {

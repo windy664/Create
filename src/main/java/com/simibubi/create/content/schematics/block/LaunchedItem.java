@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
-import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
@@ -154,7 +154,7 @@ public abstract class LaunchedItem {
 			BlockPos offset = BeltBlock.nextSegmentPosition(state, BlockPos.ZERO, isStart);
 			int i = length - 1;
 			Axis axis = state.getValue(BeltBlock.SLOPE) == BeltSlope.SIDEWAYS ? Axis.Y : state.getValue(BeltBlock.HORIZONTAL_FACING).getClockWise().getAxis();
-			world.setBlockAndUpdate(target, AllBlocks.SHAFT.getDefaultState().setValue(AbstractShaftBlock.AXIS, axis));
+			world.setBlockAndUpdate(target, AllBlocks.SHAFT.getDefaultState().setValue(AbstractSimpleShaftBlock.AXIS, axis));
 			BeltConnectorItem
 					.createBelts(world, target, target.offset(offset.getX() * i, offset.getY() * i, offset.getZ() * i));
 		}

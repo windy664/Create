@@ -146,8 +146,10 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : ((ScreenAccessor) this).port_lib$getRenderables()) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
 				List<Component> tooltip = simiWidget.getToolTip();
+				int ttx = simiWidget.lockedTooltipX;
+				int tty = simiWidget.lockedTooltipY;
 				if (!tooltip.isEmpty())
-					renderComponentTooltip(ms, tooltip, mouseX, mouseY);
+					renderComponentTooltip(ms, tooltip, ttx == -1 ? mouseX : ttx, tty == -1 ? mouseY : tty);
 			}
 		}
 	}
@@ -158,6 +160,15 @@ public abstract class AbstractSimiScreen extends Screen {
 	@Deprecated
 	protected void debugWindowArea(PoseStack matrixStack) {
 		fill(matrixStack, guiLeft + windowWidth, guiTop + windowHeight, guiLeft, guiTop, 0xD3D3D3D3);
+	}
+
+	@Override
+	public GuiEventListener getFocused() {
+		GuiEventListener focused = super.getFocused();
+		if (focused instanceof AbstractWidget && !((AbstractWidget) focused).isFocused())
+			focused = null;
+		setFocused(focused);
+		return focused;
 	}
 
 }

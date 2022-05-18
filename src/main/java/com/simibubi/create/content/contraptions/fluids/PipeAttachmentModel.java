@@ -37,6 +37,8 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
 		PipeModelData data = new PipeModelData();
+		PipeModelData pipeData = data.getData(PIPE_PROPERTY);
+		quads = side != null && pipeData.hasRim(side) ? new ArrayList<>() : new ArrayList<>(quads);
 		FluidTransportBehaviour transport = TileEntityBehaviour.get(blockView, pos, FluidTransportBehaviour.TYPE);
 		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(blockView, pos, BracketedTileEntityBehaviour.TYPE);
 

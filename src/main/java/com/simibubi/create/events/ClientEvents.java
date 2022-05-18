@@ -14,10 +14,11 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.fan.AirCurrent;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
+import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
@@ -34,8 +35,17 @@ import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
+import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRenderer;
+import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingClient;
+import com.simibubi.create.content.logistics.trains.management.schedule.TrainHatArmorLayer;
+import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
+import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
+import com.simibubi.create.content.logistics.trains.track.TrackRemoval;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.OpenCreateMenuButton;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -112,6 +122,12 @@ public class ClientEvents {
 			return;
 
 		Level world = Minecraft.getInstance().level;
+		if (event.phase == Phase.START) {
+			LinkedControllerClientHandler.tick();
+			ControlsHandler.tick();
+			AirCurrent.tickClientPlayerSounds();
+			return;
+		}
 
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
@@ -119,10 +135,12 @@ public class ClientEvents {
 
 		CreateClient.SCHEMATIC_SENDER.tick();
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.tick();
+		CreateClient.GLUE_HANDLER.tick();
 		CreateClient.SCHEMATIC_HANDLER.tick();
 		CreateClient.ZAPPER_RENDER_HANDLER.tick();
 		CreateClient.POTATO_CANNON_RENDER_HANDLER.tick();
 		CreateClient.SOUL_PULSE_EFFECT_HANDLER.tick(world);
+		CreateClient.RAILWAYS.clientTick();
 
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
@@ -152,10 +170,24 @@ public class ClientEvents {
 		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
 		ToolboxHandlerClient.clientTick();
+		TrackTargetingClient.clientTick();
+		TrackPlacement.clientTick();
+		TrackRemoval.clientTick();
+		TrainRelocator.clientTick();
+		DisplayLinkBlockItem.clientTick();
+		CurvedTrackInteraction.clientTick();
 	}
+
+	@SubscribeEvent
+	public static void onRenderSelection(DrawSelectionEvent event) {}
 
 	public static void onJoin(ClientPacketListener handler, PacketSender sender, Minecraft client) {
 		CreateClient.checkGraphicsFanciness();
+	}
+
+	@SubscribeEvent
+	public static void onLeave(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+		CreateClient.RAILWAYS.cleanUp();
 	}
 
 	public static void onLoadWorld(Minecraft client, ClientLevel world) {
@@ -171,6 +203,7 @@ public class ClientEvents {
 			CreateClient.invalidateRenderers();
 			CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
 			AnimationTickHolder.reset();
+			ControlsHandler.levelUnloaded(event.getWorld());
 		}
 	}
 
@@ -184,12 +217,14 @@ public class ClientEvents {
 		ms.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 
+		TrackBlockOutline.drawCurveSelection(ms, buffer);
+		TrackTargetingClient.render(ms, buffer);
 		CouplingRenderer.renderAll(ms, buffer);
+		CarriageCouplingRenderer.renderAll(ms, buffer);
 		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);
 		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer);
 
 		CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
-		// LightVolumeDebugger.render(ms, buffer);
 		buffer.draw();
 		RenderSystem.enableCull();
 
@@ -220,7 +255,7 @@ public class ClientEvents {
 
 		if (stack.getItem() instanceof BlockItem) {
 			BlockItem item = (BlockItem) stack.getItem();
-			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof EngineBlock) {
+			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof SteamEngineBlock) {
 				List<Component> kineticStats = ItemDescription.getKineticStats(item.getBlock());
 				if (!kineticStats.isEmpty()) {
 					itemTooltip
@@ -249,18 +284,19 @@ public class ClientEvents {
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);
-        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
-           return currentDensity;
-
+		if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
+			return currentDensity;
 		Fluid fluid = fluidstate.getType();
 
-		if (AllFluids.CHOCOLATE.get().isSame(fluid)) {
+		if (AllFluids.CHOCOLATE.get()
+			.isSame(fluid)) {
 //			event.setDensity(5f);
 //			event.setCanceled(true);
 			return 5f;
 		}
 
-		if (AllFluids.HONEY.get().isSame(fluid)) {
+		if (AllFluids.HONEY.get()
+			.isSame(fluid)) {
 //			event.setDensity(1.5f);
 //			event.setCanceled(true);
 			return 1.5f;
@@ -285,13 +321,15 @@ public class ClientEvents {
 
 		Fluid fluid = fluidstate.getType();
 
-		if (AllFluids.CHOCOLATE.get().isSame(fluid)) {
+		if (AllFluids.CHOCOLATE.get()
+			.isSame(fluid)) {
 			event.setRed(98 / 256f);
 			event.setGreen(32 / 256f);
 			event.setBlue(32 / 256f);
 		}
 
-		if (AllFluids.HONEY.get().isSame(fluid)) {
+		if (AllFluids.HONEY.get()
+			.isSame(fluid)) {
 			event.setRed(234 / 256f);
 			event.setGreen(174 / 256f);
 			event.setBlue(47 / 256f);
@@ -328,6 +366,15 @@ public class ClientEvents {
 //				() -> new ConfigGuiHandler.ConfigGuiFactory((mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
 //		}
 
+	}
+
+	// TODO TRAIN PORT
+	@SubscribeEvent
+	public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
+		EntityRenderDispatcher dispatcher = Minecraft.getInstance()
+				.getEntityRenderDispatcher();
+		CopperBacktankArmorLayer.registerOnAll(dispatcher);
+		TrainHatArmorLayer.registerOnAll(dispatcher);
 	}
 
 	public static void register() {

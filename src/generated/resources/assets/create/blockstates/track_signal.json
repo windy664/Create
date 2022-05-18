@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "type=entry_signal": {
+      "model": "create:block/track_signal/block_entry_signal"
+    },
+    "type=cross_signal": {
+      "model": "create:block/track_signal/block_cross_signal"
+    }
+  }
+}

@@ -115,8 +115,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	public float getInitialYaw() {
-		return (isInitialOrientationPresent() ? entityData.get(INITIAL_ORIENTATION) : Direction.SOUTH)
-			.toYRot();
+		return (isInitialOrientationPresent() ? entityData.get(INITIAL_ORIENTATION) : Direction.SOUTH).toYRot();
 	}
 
 	@Override
@@ -184,8 +183,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		super.writeAdditional(compound, spawnPacket);
 
 		if (motionBeforeStall != null)
-			compound.put("CachedMotion",
-				newDoubleList(motionBeforeStall.x, motionBeforeStall.y, motionBeforeStall.z));
+			compound.put("CachedMotion", newDoubleList(motionBeforeStall.x, motionBeforeStall.y, motionBeforeStall.z));
 
 		Direction optional = entityData.get(INITIAL_ORIENTATION);
 		if (optional.getAxis()
@@ -207,7 +205,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
 		super.onSyncedDataUpdated(key);
-		if (key == INITIAL_ORIENTATION && isInitialOrientationPresent() && !manuallyPlaced)
+		if (INITIAL_ORIENTATION.equals(key) && isInitialOrientationPresent() && !manuallyPlaced)
 			startAtInitialYaw();
 	}
 
@@ -440,7 +438,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 					.normalize()
 					.scale(1));
 		if (fuel < 5 && contraption != null) {
-			ItemStack coal = ItemHelper.extract(contraption.inventory, FUEL_ITEMS, 1, false);
+			ItemStack coal = ItemHelper.extract(contraption.getSharedInventory(), FUEL_ITEMS, 1, false);
 			if (!coal.isEmpty())
 				fuel += 3600;
 		}
@@ -469,15 +467,17 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	protected void attachInventoriesFromRidingCarts(Entity riding, boolean isOnCoupling, UUID couplingId) {
-		if (isOnCoupling) {
-			Couple<MinecartController> coupledCarts = getCoupledCartsIfPresent();
-			if (coupledCarts == null)
-				return;
-			coupledCarts.map(MinecartController::cart)
-				.forEach(contraption::addExtraInventories);
+		if (!(contraption instanceof MountedContraption mc))
+			return;
+		if (!isOnCoupling) {
+			mc.addExtraInventories(riding);
 			return;
 		}
-		contraption.addExtraInventories(riding);
+		Couple<MinecartController> coupledCarts = getCoupledCartsIfPresent();
+		if (coupledCarts == null)
+			return;
+		coupledCarts.map(MinecartController::cart)
+			.forEach(mc::addExtraInventories);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.base.Optional;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -19,6 +20,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
@@ -133,13 +135,22 @@ public class SeatBlock extends Block implements CustomPathNodeTypeBlock {
 
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
-		sitDown(world, pos, player);
+		sitDown(world, pos, getLeashed(world, player).or(player));
 		return InteractionResult.SUCCESS;
 	}
 
 	public static boolean isSeatOccupied(Level world, BlockPos pos) {
 		return !world.getEntitiesOfClass(SeatEntity.class, new AABB(pos))
 			.isEmpty();
+	}
+
+	public static Optional<Entity> getLeashed(Level level, Player player) {
+		List<Entity> entities = player.level.getEntities((Entity) null, player.getBoundingBox()
+			.inflate(10), e -> true);
+		for (Entity e : entities)
+			if (e instanceof Mob mob && mob.getLeashHolder() == player && SeatBlock.canBePickedUp(e))
+				return Optional.of(mob);
+		return Optional.absent();
 	}
 
 	public static boolean canBePickedUp(Entity passenger) {
@@ -153,6 +164,8 @@ public class SeatBlock extends Block implements CustomPathNodeTypeBlock {
 		seat.setPos(pos.getX() + .5f, pos.getY(), pos.getZ() + .5f);
 		world.addFreshEntity(seat);
 		entity.startRiding(seat, true);
+		if (entity instanceof TamableAnimal ta)
+			ta.setInSittingPose(true);
 	}
 
 	public DyeColor getColor() {

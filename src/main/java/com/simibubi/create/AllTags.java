@@ -34,7 +34,8 @@ public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
 
-	public static <T> TagKey<T> optionalTag(Registry<T> registry, ResourceLocation id) {
+	public static <T> TagKey<T> optionalTag(Registry<T> registry,
+		ResourceLocation id) {
 		return TagKey.create(registry.key(), id);
 	}
 
@@ -81,9 +82,7 @@ public class AllTags {
 
 	public enum NameSpace {
 
-		MOD(Create.ID, false, true),
-		FORGE("c"),
-		TIC("tconstruct")
+		MOD(Create.ID, false, true), FORGE("c"), TIC("tconstruct")
 
 		;
 
@@ -116,6 +115,9 @@ public class AllTags {
 		WINDMILL_SAILS,
 		WINDOWABLE,
 		WRENCH_PICKUP,
+		CASING,
+
+		PASSIVE_BOILER_HEATERS,
 
 		RELOCATION_NOT_SUPPORTED(FORGE),
 		WG_STONE(FORGE),
@@ -152,7 +154,8 @@ public class AllTags {
 
 		@SuppressWarnings("deprecation")
 		public boolean matches(Block block) {
-			return block.builtInRegistryHolder().is(tag);
+			return block.builtInRegistryHolder()
+				.is(tag);
 		}
 
 		public boolean matches(BlockState state) {
@@ -194,7 +197,13 @@ public class AllTags {
 		TOOLBOXES,
 		UPRIGHT_ON_BELT,
 		VALVE_HANDLES,
+		VANILLA_STRIPPED_LOGS,
+		VANILLA_STRIPPED_WOOD,
+		CASING,
+		SLEEPERS,
 
+		STRIPPED_LOGS(FORGE),
+		STRIPPED_WOOD(FORGE),
 		BEACON_PAYMENT(FORGE),
 		PLATES(FORGE)
 
@@ -229,7 +238,8 @@ public class AllTags {
 
 		@SuppressWarnings("deprecation")
 		public boolean matches(Item item) {
-			return item.builtInRegistryHolder().is(tag);
+			return item.builtInRegistryHolder()
+				.is(tag);
 		}
 
 		public boolean matches(ItemStack stack) {
@@ -325,11 +335,23 @@ public class AllTags {
 	public static void register() {
 		AllFluidTags.BOTTOMLESS_ALLOW.add(Fluids.WATER, Fluids.LAVA);
 
+		AllItemTags.VANILLA_STRIPPED_LOGS.add(Items.STRIPPED_ACACIA_LOG, Items.STRIPPED_BIRCH_LOG,
+			Items.STRIPPED_CRIMSON_STEM, Items.STRIPPED_DARK_OAK_LOG, Items.STRIPPED_JUNGLE_LOG, Items.STRIPPED_OAK_LOG,
+			Items.STRIPPED_SPRUCE_LOG, Items.STRIPPED_WARPED_STEM);
+		AllItemTags.VANILLA_STRIPPED_LOGS.includeIn(AllItemTags.STRIPPED_LOGS);
+
+		AllItemTags.VANILLA_STRIPPED_WOOD.add(Items.STRIPPED_ACACIA_WOOD, Items.STRIPPED_BIRCH_WOOD,
+			Items.STRIPPED_CRIMSON_HYPHAE, Items.STRIPPED_DARK_OAK_WOOD, Items.STRIPPED_JUNGLE_WOOD,
+			Items.STRIPPED_OAK_WOOD, Items.STRIPPED_SPRUCE_WOOD, Items.STRIPPED_WARPED_HYPHAE);
+		AllItemTags.VANILLA_STRIPPED_WOOD.includeIn(AllItemTags.STRIPPED_WOOD);
+
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
 		AllItemTags.CREATE_INGOTS.includeIn(Tags.Items.INGOTS);
 
 		AllItemTags.UPRIGHT_ON_BELT.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,
 			Items.HONEY_BOTTLE, Items.CAKE);
+
+		AllItemTags.SLEEPERS.add(Items.STONE_SLAB, Items.SMOOTH_STONE_SLAB, Items.ANDESITE_SLAB);
 
 		AllBlockTags.WINDMILL_SAILS.includeAll(BlockTags.WOOL);
 
@@ -342,6 +364,7 @@ public class AllTags {
 
 		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE, Blocks.SOUL_FIRE,
 			Blocks.SOUL_CAMPFIRE);
+		AllBlockTags.FAN_HEATERS.includeIn(AllBlockTags.PASSIVE_BOILER_HEATERS);
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.SIGNS);
 
 		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.RAILS);

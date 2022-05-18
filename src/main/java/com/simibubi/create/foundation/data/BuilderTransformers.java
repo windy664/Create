@@ -27,9 +27,12 @@ import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
+import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
+import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
@@ -63,6 +66,16 @@ public class BuilderTransformers {
 			.build();
 	}
 
+	public static <B extends StandardBogeyBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> bogey() {
+		return b -> b.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+			.properties(p -> p.noOcclusion())
+			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
+				.getExistingFile(p.modLoc("block/track/bogey/top"))))
+			.loot((p, l) -> p.dropOther(l, AllBlocks.RAILWAY_CASING.get()))
+			.onRegister(block -> IBogeyBlock.register(block.getRegistryName()));
+	}
+
 	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedCogwheel(
 		String casing, Supplier<CTSpriteShiftEntry> casingShift) {
 		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.COGWHEEL.get(), false);
@@ -79,8 +92,7 @@ public class BuilderTransformers {
 		String encasedSuffix = "_encased_cogwheel_side" + (large ? "_connected" : "");
 		String blockFolder = large ? "encased_large_cogwheel" : "encased_cogwheel";
 		String wood = casing.equals("brass") ? "dark_oak" : "spruce";
-		return encasedBase(b, drop)
-			.addLayer(() -> RenderType::cutoutMipped)
+		return encasedBase(b, drop).addLayer(() -> RenderType::cutoutMipped)
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift.get(),
 				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
 					&& !s.getValue(f.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
@@ -144,7 +156,27 @@ public class BuilderTransformers {
 			.blockstate((c, p) -> p.simpleBlock(c.get()))
 			.onRegister(connectedTextures(() -> new EncasedCTBehaviour(ct.get())))
 			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct.get())))
-			.simpleItem();
+			.tag(AllBlockTags.CASING.tag)
+			.item()
+			.tag(AllItemTags.CASING.tag)
+			.build();
+	}
+
+	public static <B extends CasingBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> layeredCasing(
+		Supplier<CTSpriteShiftEntry> ct, Supplier<CTSpriteShiftEntry> ct2) {
+		return b -> b.initialProperties(SharedProperties::stone)
+			.transform(axeOrPickaxe())
+			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
+				.cubeColumn(c.getName(), ct.get()
+					.getOriginalResourceLocation(),
+					ct2.get()
+						.getOriginalResourceLocation())))
+			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get(), ct2.get())))
+			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct.get())))
+			.tag(AllBlockTags.CASING.tag)
+			.item()
+			.tag(AllItemTags.CASING.tag)
+			.build();
 	}
 
 	public static <B extends BeltTunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> beltTunnel(

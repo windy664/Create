@@ -27,14 +27,11 @@ public interface MovementBehaviour {
 		return true;
 	}
 
-	default void tick(MovementContext context) {
-	}
+	default void tick(MovementContext context) {}
 
-	default void startMoving(MovementContext context) {
-	}
+	default void startMoving(MovementContext context) {}
 
-	default void visitNewPosition(MovementContext context, BlockPos pos) {
-	}
+	default void visitNewPosition(MovementContext context, BlockPos pos) {}
 
 	default Vec3 getActiveAreaOffset(MovementContext context) {
 		return Vec3.ZERO;
@@ -44,7 +41,7 @@ public interface MovementBehaviour {
 		ItemStack remainder;
 		if (AllConfigs.SERVER.kinetics.moveItemsToStorage.get()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
-				long inserted = context.contraption.inventory.insert(ItemVariant.of(stack), stack.getCount(), t);
+				long inserted = context.contraption.getSharedInventory().insert(ItemVariant.of(stack), stack.getCount(), t);
 				remainder = stack.copy();
 				remainder.shrink((int) inserted);
 				t.commit();
@@ -62,14 +59,11 @@ public interface MovementBehaviour {
 		context.world.addFreshEntity(itemEntity);
 	}
 
-	default void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {
-	}
+	default void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {}
 
-	default void stopMoving(MovementContext context) {
-	}
+	default void stopMoving(MovementContext context) {}
 
-	default void writeExtraData(MovementContext context) {
-	}
+	default void writeExtraData(MovementContext context) {}
 
 	default boolean renderAsNormalTileEntity() {
 		return false;
@@ -81,12 +75,12 @@ public interface MovementBehaviour {
 
 	@Environment(EnvType.CLIENT)
 	default void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
-		ContraptionMatrices matrices, MultiBufferSource buffer) {
-	}
+		ContraptionMatrices matrices, MultiBufferSource buffer) {}
 
 	@Environment(EnvType.CLIENT)
 	@Nullable
-	default ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
+	default ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
+		MovementContext context) {
 		return null;
 	}
 }

@@ -33,15 +33,11 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 		JsonArray jsonIngredients = new JsonArray();
 		JsonArray jsonOutputs = new JsonArray();
 
-		recipe.getIngredients()
-			.forEach(i -> jsonIngredients.add(i.toJson()));
-		recipe.getFluidIngredients()
-			.forEach(i -> jsonIngredients.add(i.serialize()));
+		recipe.ingredients.forEach(i -> jsonIngredients.add(i.toJson()));
+		recipe.fluidIngredients.forEach(i -> jsonIngredients.add(i.serialize()));
 
-		recipe.getRollableResults()
-			.forEach(o -> jsonOutputs.add(o.serialize()));
-		recipe.getFluidResults()
-			.forEach(o -> jsonOutputs.add(FluidHelper.serializeFluidStack(o)));
+		recipe.results.forEach(o -> jsonOutputs.add(o.serialize()));
+		recipe.fluidResults.forEach(o -> jsonOutputs.add(FluidHelper.serializeFluidStack(o)));
 
 		json.add("ingredients", jsonIngredients);
 		json.add("results", jsonOutputs);
@@ -95,10 +91,10 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 	}
 
 	protected void writeToBuffer(FriendlyByteBuf buffer, T recipe) {
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		NonNullList<FluidIngredient> fluidIngredients = recipe.getFluidIngredients();
-		NonNullList<ProcessingOutput> outputs = recipe.getRollableResults();
-		NonNullList<FluidStack> fluidOutputs = recipe.getFluidResults();
+		NonNullList<Ingredient> ingredients = recipe.ingredients;
+		NonNullList<FluidIngredient> fluidIngredients = recipe.fluidIngredients;
+		NonNullList<ProcessingOutput> outputs = recipe.results;
+		NonNullList<FluidStack> fluidOutputs = recipe.fluidResults;
 
 		buffer.writeVarInt(ingredients.size());
 		ingredients.forEach(i -> i.toNetwork(buffer));

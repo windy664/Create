@@ -4,12 +4,15 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandlerClient;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
+import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
+import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 import io.github.fabricators_of_create.porting_lib.event.client.KeyInputCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.MouseButtonCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.MouseScrolledCallback;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;
 
@@ -31,8 +34,8 @@ public class InputEvents {
 
 //		CollisionDebugger.onScroll(delta);
 		boolean cancelled = CreateClient.SCHEMATIC_HANDLER.mouseScrolled(delta)
-				|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
-				|| ScrollValueHandler.onScroll(delta);
+			|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
+			|| ScrollValueHandler.onScroll(delta);
 		return cancelled;
 	}
 
@@ -47,19 +50,34 @@ public class InputEvents {
 		return InteractionResult.PASS;
 	}
 
+	@SubscribeEvent
 	public static InteractionResult onClickInput(int button, int action, int mods) {
-		if (Minecraft.getInstance().screen != null)
-			return InteractionResult.PASS;
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.screen != null)
+			return;
 
-		if (/*button == */Minecraft.getInstance().options.keyPickItem.isDown()) {
+		if (CurvedTrackInteraction.onClickInput(event)) {
+			event.setCanceled(true);
+			return;
+		}
+
+		KeyMapping key = event.getKeyMapping();
+
+		if (key == mc.options.keyUse || key == mc.options.keyAttack) {
+			if (CreateClient.GLUE_HANDLER.onMouseInput(key == mc.options.keyAttack))
+				event.setCanceled(true);
+		}
+
+		if (mc.options.keyPickItem.isDown()) {
 			if (ToolboxHandlerClient.onPickItem())
 				return InteractionResult.SUCCESS;
 			return InteractionResult.PASS;
 		}
 
-		if (button == 1)
-			LinkedControllerClientHandler.deactivateInLectern();
-		return InteractionResult.PASS;
+		if (button != 1)
+			return InteractionResult.PASS;
+		LinkedControllerClientHandler.deactivateInLectern();
+		TrainRelocator.onClicked(event);
 	}
 
 	public static void register() {

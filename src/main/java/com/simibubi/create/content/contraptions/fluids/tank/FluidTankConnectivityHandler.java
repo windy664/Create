@@ -143,6 +143,7 @@ public class FluidTankConnectivityHandler {
 
 			te.setWindows(te.window);
 			te.onFluidStackChanged(te.tankInventory.getFluid());
+			te.updateBoilerState();
 			te.setChanged();
 		}
 
@@ -156,9 +157,8 @@ public class FluidTankConnectivityHandler {
 		BlockEntityType<?> type = te.getType();
 		Level world = te.getLevel();
 		BlockPos origin = te.getBlockPos();
-		Storage<FluidVariant> capability = te.getFluidStorage(null);
-		FluidTank teTank = (FluidTank) capability;
-		FluidStack fluid = TransferUtil.firstOrEmpty(teTank);
+		FluidTank teTank = te.tankInventory;
+		FluidStack fluid = te.tankInventory.getFluidInTank(0);
 
 		Search:
 
@@ -242,7 +242,6 @@ public class FluidTankConnectivityHandler {
 		}
 
 		te.setWindows(!opaque);
-
 		return amount;
 	}
 

@@ -93,7 +93,8 @@ public class ConnectedPillarBlock extends LayeredBlock {
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
 		if (pState.getBlock() != this)
 			return;
-		BlockPos belowPos = pPos.relative(Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.NEGATIVE));
+		BlockPos belowPos =
+			pPos.relative(Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.NEGATIVE));
 		BlockState belowState = pLevel.getBlockState(belowPos);
 		if (!canConnect(pState, belowState))
 			pLevel.setBlock(pPos, updateColumn(pLevel, pPos, pState, true), 3);

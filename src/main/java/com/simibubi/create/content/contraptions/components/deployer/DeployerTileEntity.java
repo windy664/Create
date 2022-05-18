@@ -467,11 +467,9 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 
 	@Nullable
 	public Recipe<? extends Container> getRecipe(ItemStack stack) {
-		// safety checks
 		if (player == null || level == null)
 			return null;
 
-		// sandpaper = op
 		ItemStack heldItemMainhand = player.getMainHandItem();
 		if (heldItemMainhand.getItem() instanceof SandPaperItem) {
 			sandpaperInv.setItem(0, stack);
@@ -479,19 +477,16 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 				.orElse(null);
 		}
 
-		// inventory
 		recipeInv.setItem(0, stack);
 		recipeInv.setItem(1, heldItemMainhand);
 
-		// event nonsense
 		DeployerRecipeSearchEvent event = new DeployerRecipeSearchEvent(this, recipeInv);
 
-		// creates deployer recipes
 		event.addRecipe(() -> SequencedAssemblyRecipe.getRecipe(level, event.getInventory(),
 			AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class), 100);
 		event.addRecipe(() -> AllRecipeTypes.DEPLOYING.find(event.getInventory(), level), 50);
+		event.addRecipe(() -> AllRecipeTypes.ITEM_APPLICATION.find(event.getInventory(), level), 50);
 
-		// post the event, get result
 		DeployerRecipeSearchEvent.EVENT.invoker().handle(event);
 		return event.getRecipe();
 	}

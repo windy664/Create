@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -138,10 +139,10 @@ public class FlwContraption extends ContraptionRenderInfo {
 		renderLayers.clear();
 
 		List<RenderType> blockLayers = RenderType.chunkBufferLayers();
-
+		Collection<StructureBlockInfo> renderedBlocks = contraption.getRenderedBlocks();
+		
 		for (RenderType layer : blockLayers) {
-			Model layerModel = new WorldModel(renderWorld, layer, contraption.getBlocks().values(), layer + "_" + contraption.entity.getId());
-
+			Model layerModel = new WorldModel(renderWorld, layer, renderedBlocks, layer + "_" + contraption.entity.getId());
 			renderLayers.put(layer, new ArrayModelRenderer(layerModel));
 		}
 	}
@@ -182,20 +183,20 @@ public class FlwContraption extends ContraptionRenderInfo {
 		private final ContraptionInstanceManager tileInstanceManager;
 
 		public ContraptionInstanceWorld(FlwContraption parent) {
-			switch (Backend.getEngine()) {
+			switch (Backend.getBackendType()) {
 			case INSTANCING -> {
 				InstancingEngine<ContraptionProgram> engine = InstancingEngine.builder(CreateContexts.CWORLD)
 						.setGroupFactory(ContraptionGroup.forContraption(parent))
 						.setIgnoreOriginCoordinate(true)
 						.build();
-				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld);
+				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld, parent.contraption);
 				engine.addListener(tileInstanceManager);
 
 				this.engine = engine;
 			}
 			case BATCHING -> {
 				engine = new BatchingEngine();
-				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld);
+				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld, parent.contraption);
 			}
 			default -> throw new IllegalArgumentException("Unknown engine type");
 			}

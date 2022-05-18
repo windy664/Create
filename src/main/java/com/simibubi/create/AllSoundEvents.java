@@ -222,6 +222,37 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		WHISTLE_HIGH = create("whistle_high").subtitle("High whistling")
+			.category(SoundSource.RECORDS)
+			.attenuationDistance(64)
+			.build(),
+
+		WHISTLE_MEDIUM = create("whistle").subtitle("Whistling")
+			.category(SoundSource.RECORDS)
+			.attenuationDistance(64)
+			.build(),
+
+		WHISTLE_LOW = create("whistle_low").subtitle("Low whistling")
+			.category(SoundSource.RECORDS)
+			.attenuationDistance(64)
+			.build(),
+
+		WHISTLE_TRAIN_HIGH = create("whistle_train_high").subtitle("High whistling")
+			.category(SoundSource.RECORDS)
+			.build(),
+
+		WHISTLE_TRAIN_MEDIUM = create("whistle_train").subtitle("Whistling")
+			.category(SoundSource.RECORDS)
+			.build(),
+
+		WHISTLE_TRAIN_LOW = create("whistle_train_low").subtitle("Low whistling")
+			.category(SoundSource.RECORDS)
+			.build(),
+
+		WHISTLE_CHIFF = create("chiff").noSubtitle()
+			.category(SoundSource.RECORDS)
+			.build(),
+
 		HAUNTED_BELL_CONVERT = create("haunted_bell_convert").subtitle("Haunted Bell awakens")
 			.category(SoundSource.BLOCKS)
 			.build(),
@@ -258,6 +289,11 @@ public class AllSoundEvents {
 
 	public static SoundEntryProvider provider(DataGenerator generator) {
 		return new SoundEntryProvider(generator);
+	}
+
+	public static void playItemPickup(Player player) {
+		player.level.playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
+			1f + Create.RANDOM.nextFloat());
 	}
 
 //	@SubscribeEvent
@@ -319,6 +355,7 @@ public class AllSoundEvents {
 		protected SoundSource category = SoundSource.BLOCKS;
 		protected List<Pair<SoundEvent, Couple<Float>>> wrappedEvents;
 		protected List<ResourceLocation> variants;
+		protected int attenuationDistance;
 
 		public SoundEntryBuilder(ResourceLocation id) {
 			wrappedEvents = new ArrayList<>();
@@ -328,6 +365,11 @@ public class AllSoundEvents {
 
 		public SoundEntryBuilder subtitle(String subtitle) {
 			this.subtitle = subtitle;
+			return this;
+		}
+
+		public SoundEntryBuilder attenuationDistance(int distance) {
+			this.attenuationDistance = distance;
 			return this;
 		}
 
@@ -360,8 +402,9 @@ public class AllSoundEvents {
 		}
 
 		public SoundEntry build() {
-			SoundEntry entry = wrappedEvents.isEmpty() ? new CustomSoundEntry(id, variants, subtitle, category)
-				: new WrappedSoundEntry(id, subtitle, wrappedEvents, category);
+			SoundEntry entry =
+				wrappedEvents.isEmpty() ? new CustomSoundEntry(id, variants, subtitle, category, attenuationDistance)
+					: new WrappedSoundEntry(id, subtitle, wrappedEvents, category);
 			entries.put(entry.getId(), entry);
 			return entry;
 		}
@@ -452,8 +495,8 @@ public class AllSoundEvents {
 		private List<Pair<SoundEvent, Couple<Float>>> wrappedEvents;
 		private List<Pair<SoundEvent, Couple<Float>>> compiledEvents;
 
-		public WrappedSoundEntry(ResourceLocation id, String subtitle, List<Pair<SoundEvent, Couple<Float>>> wrappedEvents,
-			SoundSource category) {
+		public WrappedSoundEntry(ResourceLocation id, String subtitle,
+			List<Pair<SoundEvent, Couple<Float>>> wrappedEvents, SoundSource category) {
 			super(id, subtitle, category);
 			this.wrappedEvents = wrappedEvents;
 			compiledEvents = Lists.newArrayList();
@@ -529,10 +572,13 @@ public class AllSoundEvents {
 
 		protected List<ResourceLocation> variants;
 		protected SoundEvent event;
+		protected int attenuationDistance;
 
-		public CustomSoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle, SoundSource category) {
+		public CustomSoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle,
+			SoundSource category, int attenuationDistance) {
 			super(id, subtitle, category);
 			this.variants = variants;
+			this.attenuationDistance = attenuationDistance;
 		}
 
 		@Override
@@ -555,9 +601,20 @@ public class AllSoundEvents {
 			JsonObject entry = new JsonObject();
 			JsonArray list = new JsonArray();
 
-			list.add(id.toString());
+			JsonObject s = new JsonObject();
+			s.addProperty("name", id.toString());
+			s.addProperty("type", "file");
+			if (attenuationDistance != 0)
+				s.addProperty("attenuation_distance", attenuationDistance);
+			list.add(s);
+
 			for (ResourceLocation variant : variants) {
-				list.add(variant.toString());
+				s = new JsonObject();
+				s.addProperty("name", variant.toString());
+				s.addProperty("type", "file");
+				if (attenuationDistance != 0)
+					s.addProperty("attenuation_distance", attenuationDistance);
+				list.add(s);
 			}
 
 			entry.add("sounds", list);

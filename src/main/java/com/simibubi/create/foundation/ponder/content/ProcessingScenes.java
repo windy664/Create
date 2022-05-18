@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneTileEntity;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerTileEntity;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity.Mode;
+import com.simibubi.create.content.contraptions.components.press.PressingBehaviour.Mode;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
@@ -315,10 +315,11 @@ public class ProcessingScenes {
 		scene.idle(10);
 
 		Class<MechanicalPressTileEntity> type = MechanicalPressTileEntity.class;
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.start(Mode.BELT));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.start(Mode.BELT));
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type,
-			pte -> pte.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
 		scene.world.removeItemsFromBelt(depotPos);
 		ItemStack sheet = AllItems.COPPER_SHEET.asStack();
 		scene.world.createItemOnBeltLike(depotPos, Direction.UP, sheet);
@@ -345,7 +346,8 @@ public class ProcessingScenes {
 		ElementLink<BeltItemElement> ingot2 = scene.world.createItemOnBelt(beltPos, Direction.SOUTH, copper);
 		scene.idle(15);
 		scene.world.stallBeltItem(ingot, true);
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.start(Mode.BELT));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.start(Mode.BELT));
 
 		scene.overlay.showText(50)
 			.pointAt(pressSide)
@@ -354,8 +356,8 @@ public class ProcessingScenes {
 			.text("The Press will hold and process them automatically");
 
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type,
-			pte -> pte.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
 		scene.world.removeItemsFromBelt(pressPos.below(2));
 		ingot = scene.world.createItemOnBelt(pressPos.below(2), Direction.UP, sheet);
 		scene.world.stallBeltItem(ingot, true);
@@ -363,10 +365,11 @@ public class ProcessingScenes {
 		scene.world.stallBeltItem(ingot, false);
 		scene.idle(15);
 		scene.world.stallBeltItem(ingot2, true);
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.start(Mode.BELT));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.start(Mode.BELT));
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type,
-			pte -> pte.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
 		scene.world.removeItemsFromBelt(pressPos.below(2));
 		ingot2 = scene.world.createItemOnBelt(pressPos.below(2), Direction.UP, sheet);
 		scene.world.stallBeltItem(ingot2, true);
@@ -492,10 +495,11 @@ public class ProcessingScenes {
 			30);
 		scene.idle(30);
 		Class<MechanicalPressTileEntity> type = MechanicalPressTileEntity.class;
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.start(Mode.BASIN));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.start(Mode.BASIN));
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type,
-			pte -> pte.makeCompactingParticleEffect(util.vector.centerOf(basin), copper));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.makeCompactingParticleEffect(util.vector.centerOf(basin), copper));
 		scene.world.modifyTileNBT(util.select.position(basin), BasinTileEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
 				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, copperBlock)), ia -> NBTSerializer.serializeNBTCompound(ia.getValue())));
@@ -516,10 +520,11 @@ public class ProcessingScenes {
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(basin), Pointing.DOWN).withItem(log), 30);
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.start(Mode.BASIN));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.start(Mode.BASIN));
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type,
-			pte -> pte.makeCompactingParticleEffect(util.vector.centerOf(basin), log));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.makeCompactingParticleEffect(util.vector.centerOf(basin), log));
 		scene.world.modifyTileNBT(util.select.position(basin), BasinTileEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
 				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, bark)), ia -> NBTSerializer.serializeNBTCompound(ia.getValue())));
@@ -630,8 +635,8 @@ public class ProcessingScenes {
 				.withItem(new ItemStack(Items.SOUL_SAND)),
 			40);
 		scene.idle(7);
-		scene.world.modifyBlock(util.grid.at(3, 1, 2), s -> s.setValue(LitBlazeBurnerBlock.FLAME_TYPE, LitBlazeBurnerBlock.FlameType.SOUL),
-			false);
+		scene.world.modifyBlock(util.grid.at(3, 1, 2),
+			s -> s.setValue(LitBlazeBurnerBlock.FLAME_TYPE, LitBlazeBurnerBlock.FlameType.SOUL), false);
 		scene.overlay.showText(60)
 			.text("The flame can be transformed using a soul-infused item")
 			.pointAt(util.vector.blockSurface(center.east()
@@ -818,10 +823,11 @@ public class ProcessingScenes {
 		scene.idle(10);
 
 		Class<MechanicalPressTileEntity> type = MechanicalPressTileEntity.class;
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.start(Mode.BASIN));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.start(Mode.BASIN));
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type,
-			pte -> pte.makeCompactingParticleEffect(util.vector.centerOf(basinPos), stack));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.makeCompactingParticleEffect(util.vector.centerOf(basinPos), stack));
 		scene.world.modifyTileNBT(util.select.position(basinPos), BasinTileEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
 				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, new ItemStack(Blocks.BRICKS))),
@@ -855,20 +861,22 @@ public class ProcessingScenes {
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(basinPos), Pointing.RIGHT).withItem(nugget),
 			30);
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.start(Mode.BASIN));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.start(Mode.BASIN));
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type,
-			pte -> pte.makeCompactingParticleEffect(util.vector.centerOf(basinPos), nugget));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.makeCompactingParticleEffect(util.vector.centerOf(basinPos), nugget));
 
 		ItemStack ingot = new ItemStack(Items.COPPER_INGOT);
 		scene.idle(30);
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(basinPos), Pointing.RIGHT).withItem(ingot),
 			30);
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.start(Mode.BASIN));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.start(Mode.BASIN));
 		scene.idle(30);
-		scene.world.modifyTileEntity(pressPos, type,
-			pte -> pte.makeCompactingParticleEffect(util.vector.centerOf(basinPos), ingot));
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+			.makeCompactingParticleEffect(util.vector.centerOf(basinPos), ingot));
 
 		ItemStack block = new ItemStack(Items.COPPER_BLOCK);
 		scene.idle(30);

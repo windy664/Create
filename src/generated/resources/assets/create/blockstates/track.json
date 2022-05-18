@@ -1,0 +1,130 @@
+{
+  "variants": {
+    "shape=none,turn=false": {
+      "model": "minecraft:block/air"
+    },
+    "shape=zo,turn=false": {
+      "model": "create:block/track/z_ortho"
+    },
+    "shape=xo,turn=false": {
+      "model": "create:block/track/x_ortho"
+    },
+    "shape=pd,turn=false": {
+      "model": "create:block/track/diag"
+    },
+    "shape=nd,turn=false": {
+      "model": "create:block/track/diag_2"
+    },
+    "shape=an,turn=false": {
+      "model": "create:block/track/ascending",
+      "y": 180
+    },
+    "shape=as,turn=false": {
+      "model": "create:block/track/ascending"
+    },
+    "shape=ae,turn=false": {
+      "model": "create:block/track/ascending",
+      "y": 270
+    },
+    "shape=aw,turn=false": {
+      "model": "create:block/track/ascending",
+      "y": 90
+    },
+    "shape=tn,turn=false": {
+      "model": "create:block/track/teleport",
+      "y": 180
+    },
+    "shape=ts,turn=false": {
+      "model": "create:block/track/teleport"
+    },
+    "shape=te,turn=false": {
+      "model": "create:block/track/teleport",
+      "y": 270
+    },
+    "shape=tw,turn=false": {
+      "model": "create:block/track/teleport",
+      "y": 90
+    },
+    "shape=cr_o,turn=false": {
+      "model": "create:block/track/cross_ortho"
+    },
+    "shape=cr_d,turn=false": {
+      "model": "create:block/track/cross_diag"
+    },
+    "shape=cr_pdx,turn=false": {
+      "model": "create:block/track/cross_d1_xo"
+    },
+    "shape=cr_pdz,turn=false": {
+      "model": "create:block/track/cross_d1_zo"
+    },
+    "shape=cr_ndx,turn=false": {
+      "model": "create:block/track/cross_d2_xo"
+    },
+    "shape=cr_ndz,turn=false": {
+      "model": "create:block/track/cross_d2_zo"
+    },
+    "shape=none,turn=true": {
+      "model": "minecraft:block/air"
+    },
+    "shape=zo,turn=true": {
+      "model": "create:block/track/z_ortho"
+    },
+    "shape=xo,turn=true": {
+      "model": "create:block/track/x_ortho"
+    },
+    "shape=pd,turn=true": {
+      "model": "create:block/track/diag"
+    },
+    "shape=nd,turn=true": {
+      "model": "create:block/track/diag_2"
+    },
+    "shape=an,turn=true": {
+      "model": "create:block/track/ascending",
+      "y": 180
+    },
+    "shape=as,turn=true": {
+      "model": "create:block/track/ascending"
+    },
+    "shape=ae,turn=true": {
+      "model": "create:block/track/ascending",
+      "y": 270
+    },
+    "shape=aw,turn=true": {
+      "model": "create:block/track/ascending",
+      "y": 90
+    },
+    "shape=tn,turn=true": {
+      "model": "create:block/track/teleport",
+      "y": 180
+    },
+    "shape=ts,turn=true": {
+      "model": "create:block/track/teleport"
+    },
+    "shape=te,turn=true": {
+      "model": "create:block/track/teleport",
+      "y": 270
+    },
+    "shape=tw,turn=true": {
+      "model": "create:block/track/teleport",
+      "y": 90
+    },
+    "shape=cr_o,turn=true": {
+      "model": "create:block/track/cross_ortho"
+    },
+    "shape=cr_d,turn=true": {
+      "model": "create:block/track/cross_diag"
+    },
+    "shape=cr_pdx,turn=true": {
+      "model": "create:block/track/cross_d1_xo"
+    },
+    "shape=cr_pdz,turn=true": {
+      "model": "create:block/track/cross_d1_zo"
+    },
+    "shape=cr_ndx,turn=true": {
+      "model": "create:block/track/cross_d2_xo"
+    },
+    "shape=cr_ndz,turn=true": {
+      "model": "create:block/track/cross_d2_zo"
+    }
+  }
+}

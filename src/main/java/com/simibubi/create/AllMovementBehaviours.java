@@ -53,7 +53,7 @@ public class AllMovementBehaviours {
 		MovementBehaviour movementBehaviour) {
 		return b -> addMovementBehaviour(Registry.BLOCK.getKey(b), movementBehaviour);
 	}
-
+	
 	static void register() {
 		addMovementBehaviour(Blocks.BELL, new BellMovementBehaviour());
 		addMovementBehaviour(Blocks.CAMPFIRE, new CampfireMovementBehaviour());

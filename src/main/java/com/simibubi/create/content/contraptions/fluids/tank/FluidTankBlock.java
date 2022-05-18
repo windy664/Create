@@ -20,6 +20,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
@@ -35,6 +36,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -118,6 +120,14 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
+	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
+		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+		if (pDirection == Direction.DOWN && pNeighborState.getBlock() != this)
+			withTileEntityDo(pLevel, pCurrentPos, FluidTankTileEntity::updateBoilerTemperature);
+		return pState;
+	}
+
+	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {
 		ItemStack heldItem = player.getItemInHand(hand);
@@ -193,7 +203,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 				FluidTankTileEntity controllerTE = ((FluidTankTileEntity) te).getControllerTE();
 				if (controllerTE != null) {
 					if (fluidState != null && onClient) {
-						BlockParticleOption blockParticleData = new BlockParticleOption(ParticleTypes.BLOCK, fluidState);
+						BlockParticleOption blockParticleData =
+							new BlockParticleOption(ParticleTypes.BLOCK, fluidState);
 						float level = (float) fluidInTank.getAmount() / TransferUtil.firstCapacity(fluidTank);
 
 						boolean reversed = FluidVariantAttributes.isLighterThanAir(fluidInTank.getType());
@@ -316,6 +327,19 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		return getTileEntityOptional(worldIn, pos).map(FluidTankTileEntity::getControllerTE)
 			.map(te -> ComparatorUtil.fractionToRedstoneLevel(te.getFillState()))
 			.orElse(0);
+	}
+
+	public static void updateBoilerState(BlockState pState, Level pLevel, BlockPos tankPos) {
+		BlockState tankState = pLevel.getBlockState(tankPos);
+		if (!FluidTankBlock.isTank(tankState))
+			return;
+		FluidTankTileEntity tankTE = FluidTankConnectivityHandler.anyTankAt(pLevel, tankPos);
+		if (tankTE == null)
+			return;
+		FluidTankTileEntity controllerTE = tankTE.getControllerTE();
+		if (controllerTE == null)
+			return;
+		controllerTE.updateBoilerState();
 	}
 
 }

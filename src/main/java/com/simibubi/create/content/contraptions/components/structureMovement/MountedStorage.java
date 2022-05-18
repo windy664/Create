@@ -36,16 +36,16 @@ public class MountedStorage {
 	private static final ItemStackHandler dummyHandler = new ItemStackHandler();
 
 	ItemStackHandler handler;
+	boolean noFuel;
 	boolean valid;
+
 	private BlockEntity te;
 
 	public static boolean canUseAsStorage(BlockEntity te) {
 		if (te == null)
 			return false;
-
 		if (te instanceof MechanicalCrafterTileEntity)
 			return false;
-
 		if (AllTileEntities.CREATIVE_CRATE.is(te))
 			return true;
 		if (te instanceof ShulkerBoxBlockEntity)
@@ -64,6 +64,7 @@ public class MountedStorage {
 	public MountedStorage(BlockEntity te) {
 		this.te = te;
 		handler = dummyHandler;
+		noFuel = te instanceof ItemVaultTileEntity;
 	}
 
 	public void removeStorageFromWorld() {
@@ -169,13 +170,15 @@ if (te instanceof ChestBlockEntity) {
 	public CompoundTag serialize() {
 		if (!valid)
 			return null;
+
 		CompoundTag tag = handler.serializeNBT();
+		if (noFuel)
+			NBTHelper.putMarker(tag, "NoFuel");
+		if (!(handler instanceof BottomlessItemHandler))
+			return tag;
 
-		if (handler instanceof BottomlessItemHandler) {
-			NBTHelper.putMarker(tag, "Bottomless");
-			tag.put("ProvidedStack", NBTSerializer.serializeNBT(handler.getStackInSlot(0)));
-		}
-
+		NBTHelper.putMarker(tag, "Bottomless");
+		tag.put("ProvidedStack", NBTSerializer.serializeNBT(handler.getStackInSlot(0)));
 		return tag;
 	}
 
@@ -185,6 +188,7 @@ if (te instanceof ChestBlockEntity) {
 		if (nbt == null)
 			return storage;
 		storage.valid = true;
+		storage.noFuel = nbt.contains("NoFuel");
 
 		if (nbt.contains("Bottomless")) {
 			ItemStack providedStack = ItemStack.of(nbt.getCompound("ProvidedStack"));
@@ -198,6 +202,10 @@ if (te instanceof ChestBlockEntity) {
 
 	public boolean isValid() {
 		return valid;
+	}
+
+	public boolean canUseForFuel() {
+		return !noFuel;
 	}
 
 }

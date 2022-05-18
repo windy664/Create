@@ -44,7 +44,7 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 				if (!(entityByID instanceof AbstractContraptionEntity))
 					return;
 				AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
-				contraptionEntity.getContraption().updateContainedFluid(localPos, containedFluid);
+				contraptionEntity.getContraption().handleContraptionFluidPacket(localPos, containedFluid);
 			});
 		context.get()
 			.setPacketHandled(true);

@@ -84,8 +84,13 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			.getNormal());
 		facingVec = context.rotation.apply(facingVec);
 		Vec3 vec = context.position.subtract(facingVec.scale(2));
+
+		float xRot = AbstractContraptionEntity.pitchFromVector(facingVec) - 90;
+		if (Math.abs(xRot) > 89)
+			facingVec = context.rotation.apply(new Vec3(0, 0, 1));
+
 		player.setYRot(AbstractContraptionEntity.yawFromVector(facingVec));
-		player.setXRot(AbstractContraptionEntity.pitchFromVector(facingVec) - 90);
+		player.setXRot(xRot);
 
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
 	}
@@ -106,7 +111,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		if (schematicWorld == null)
 			return;
 		if (!schematicWorld.getBounds()
-				.isInside(pos.subtract(schematicWorld.anchor)))
+			.isInside(pos.subtract(schematicWorld.anchor)))
 			return;
 		BlockState blockState = schematicWorld.getBlockState(pos);
 		ItemRequirement requirement = ItemRequirement.of(blockState, schematicWorld.getBlockEntity(pos));
@@ -119,18 +124,18 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		ItemStack firstRequired = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).item;
 
 		if (!context.contraption.hasUniversalCreativeCrate) {
-			Storage<ItemVariant> iItemHandler = context.contraption.inventory;
+			Storage<ItemVariant> iItemHandler = context.contraption.getSharedInventory();
 			for (ItemRequirement.StackRequirement required : requiredItems) {
 				int amountFound = ItemHelper
-						.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
-								required.item.getCount(), true)
-						.getCount();
+					.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
+						required.item.getCount(), true)
+					.getCount();
 				if (amountFound < required.item.getCount())
 					return;
 			}
 			for (ItemRequirement.StackRequirement required : requiredItems)
-				ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
-						required.item.getCount(), false);
+				ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s),
+					ExtractionCountMode.UPTO, required.item.getCount(), false);
 		}
 
 		CompoundTag data = null;
@@ -184,7 +189,8 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		if (player == null)
 			return;
 
-		context.tileData.put("Inventory", player.getInventory().save(new ListTag()));
+		context.tileData.put("Inventory", player.getInventory()
+			.save(new ListTag()));
 		player.discard();
 	}
 
@@ -197,7 +203,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			ItemStack filter = getFilter(context);
 			if (AllItems.SCHEMATIC.isIn(filter))
 				return;
-			ItemStack held = ItemHelper.extract(context.contraption.inventory,
+			ItemStack held = ItemHelper.extract(context.contraption.getSharedInventory(),
 				stack -> FilterItem.test(context.world, stack, filter), 1, false);
 			player.setItemInHand(InteractionHand.MAIN_HAND, held);
 		}
@@ -216,8 +222,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 				if (itemstack.isEmpty())
 					continue;
 
-				if (list == inv.items && i == inv.selected
-					&& FilterItem.test(context.world, itemstack, filter))
+				if (list == inv.items && i == inv.selected && FilterItem.test(context.world, itemstack, filter))
 					continue;
 
 				dropItem(context, itemstack);
@@ -237,9 +242,11 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	private DeployerFakePlayer getPlayer(MovementContext context) {
 		if (!(context.temporaryData instanceof DeployerFakePlayer) && context.world instanceof ServerLevel) {
 			DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) context.world);
-			deployerFakePlayer.getInventory().load(context.tileData.getList("Inventory", Tag.TAG_COMPOUND));
+			deployerFakePlayer.getInventory()
+				.load(context.tileData.getList("Inventory", Tag.TAG_COMPOUND));
 			if (context.data.contains("HeldItem"))
-				deployerFakePlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.of(context.data.getCompound("HeldItem")));
+				deployerFakePlayer.setItemInHand(InteractionHand.MAIN_HAND,
+					ItemStack.of(context.data.getCompound("HeldItem")));
 			context.tileData.remove("Inventory");
 			context.temporaryData = deployerFakePlayer;
 		}
@@ -257,7 +264,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
-        if (!Backend.isOn())
+		if (!Backend.isOn())
 			DeployerRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
@@ -268,7 +275,8 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
+	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
+		MovementContext context) {
 		return new DeployerActorInstance(materialManager, simulationWorld, context);
 	}
 }

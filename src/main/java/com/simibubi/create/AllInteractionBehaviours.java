@@ -6,11 +6,11 @@ import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.LeverMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
+import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -31,6 +31,11 @@ public class AllInteractionBehaviours {
 		addInteractionBehaviour(Registry.BLOCK.getKey(block), behaviour);
 	}
 
+	public static <B extends Block> NonNullConsumer<? super B> addInteractionBehaviour(
+		MovingInteractionBehaviour movementBehaviour) {
+		return b -> addInteractionBehaviour(b.getRegistryName(), () -> movementBehaviour);
+	}
+
 	@Nullable
 	public static MovingInteractionBehaviour of(ResourceLocation loc) {
 		return (INTERACT_BEHAVIOURS.get(loc) == null) ? null
@@ -49,7 +54,6 @@ public class AllInteractionBehaviours {
 
 	static void register() {
 		addInteractionBehaviour(Registry.BLOCK.getKey(Blocks.LEVER), LeverMovingInteraction::new);
-		addInteractionBehaviour(AllBlocks.DEPLOYER.getId(), DeployerMovingInteraction::new);
 
 		// TODO: Scan registry for instanceof (-> modded door support)
 

@@ -52,6 +52,7 @@ import com.simibubi.create.compat.rei.category.SpoutCategory;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
+import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
@@ -61,6 +62,7 @@ import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
+import com.simibubi.create.foundation.data.recipe.LogStrippingFakeRecipes;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
@@ -209,8 +211,14 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllItems.RED_SAND_PAPER::get)
 				.build(),
 
+			item_application = register("item_application", ItemApplicationCategory::new)
+				.addTypedRecipes(AllRecipeTypes.ITEM_APPLICATION)
+				.addRecipes(LogStrippingFakeRecipes::createRecipes)
+				.build(),
+
 			deploying = register("deploying", DeployingCategory::new).addTypedRecipes(AllRecipeTypes.DEPLOYING)
 				.addTypedRecipes(AllRecipeTypes.SANDPAPER_POLISHING::getType, DeployerApplicationRecipe::convert)
+				.addTypedRecipes(AllRecipeTypes.ITEM_APPLICATION::getType, ManualApplicationRecipe::asDeploying)
 				.catalyst(AllBlocks.DEPLOYER::get)
 				.catalyst(AllBlocks.DEPOT::get)
 				.catalyst(AllItems.BELT_CONNECTOR::get)

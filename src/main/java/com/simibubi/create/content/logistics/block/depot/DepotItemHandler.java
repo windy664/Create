@@ -133,6 +133,12 @@ public class DepotItemHandler implements Storage<ItemVariant> {
 			return count;
 		}
 
+		// TODO TRAIN PORT
+		@Override
+		public boolean isItemValid(int slot, ItemStack stack) {
+			return slot == MAIN_SLOT && te.isItemValid(stack);
+		}
+
 		@Override
 		public long getCapacity() {
 			return max;

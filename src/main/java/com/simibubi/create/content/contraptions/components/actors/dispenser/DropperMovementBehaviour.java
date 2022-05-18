@@ -21,7 +21,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class DropperMovementBehaviour implements MovementBehaviour {
-	protected static final MovedDefaultDispenseItemBehaviour DEFAULT_BEHAVIOUR = new MovedDefaultDispenseItemBehaviour();
+	protected static final MovedDefaultDispenseItemBehaviour DEFAULT_BEHAVIOUR =
+		new MovedDefaultDispenseItemBehaviour();
 	private static final Random RNG = new Random();
 
 	protected void activate(MovementContext context, BlockPos pos) {
@@ -29,7 +30,8 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 		if (location.isEmpty()) {
 			context.world.levelEvent(1001, pos, 0);
 		} else {
-			setItemStackAt(location, DEFAULT_BEHAVIOUR.dispense(getItemStackAt(location, context), context, pos), context);
+			setItemStackAt(location, DEFAULT_BEHAVIOUR.dispense(getItemStackAt(location, context), context, pos),
+				context);
 		}
 	}
 
@@ -42,8 +44,13 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 	}
 
 	private void collectItems(MovementContext context) {
-		getStacks(context).stream().filter(itemStack -> !itemStack.isEmpty() && itemStack.getItem() != Items.AIR && itemStack.getMaxStackSize() > itemStack.getCount()).forEach(itemStack -> itemStack.grow(
-			ItemHelper.extract(context.contraption.inventory, itemStack::sameItem, ItemHelper.ExtractionCountMode.UPTO, itemStack.getMaxStackSize() - itemStack.getCount(), false).getCount()));
+		getStacks(context).stream()
+			.filter(itemStack -> !itemStack.isEmpty() && itemStack.getItem() != Items.AIR
+				&& itemStack.getMaxStackSize() > itemStack.getCount())
+			.forEach(itemStack -> itemStack.grow(ItemHelper
+				.extract(context.contraption.getSharedInventory(), itemStack::sameItem,
+					ItemHelper.ExtractionCountMode.UPTO, itemStack.getMaxStackSize() - itemStack.getCount(), false)
+				.getCount()));
 	}
 
 	private void updateTemporaryData(MovementContext context) {
@@ -69,7 +76,7 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 				if (testStack == null || testStack.isEmpty())
 					continue;
 				if (testStack.getMaxStackSize() == 1) {
-					ResourceAmount<ItemVariant> available = StorageUtil.findExtractableContent(context.contraption.inventory, v -> v.matches(testStack), t);
+					ResourceAmount<ItemVariant> available = StorageUtil.findExtractableContent(context.contraption.getSharedInventory(), v -> v.matches(testStack), t);
 					if (available != null) {
 						location = new DispenseItemLocation(available);
 						useable.add(location);
@@ -114,7 +121,8 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 		if (location.isInternal()) {
 			return getStacks(context).get(location.getSlot());
 		} else {
-			return location.getVariant().toStack(location.getCount());
+			return context.contraption.getSharedInventory()
+				.getStackInSlot(location.getSlot());
 		}
 	}
 
@@ -123,7 +131,8 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 			getStacks(context).set(location.getSlot(), stack);
 		} else {
 			try (Transaction t = TransferUtil.getTransaction()) {
-				context.contraption.inventory.extract(location.getVariant(), location.getCount(), t);
+				context.contraption.getSharedInventory()
+				.extract(location.getVariant(), location.getCount(), t);
 				context.contraption.inventory.insert(ItemVariant.of(stack), stack.getCount(), t);
 				t.commit();
 			}

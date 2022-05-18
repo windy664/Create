@@ -99,8 +99,8 @@ public class MountedContraption extends Contraption {
 		for (Axis axis : Iterate.axes) {
 			if (axis.isVertical() || !VecHelper.onSameAxis(anchor, pos, axis))
 				continue;
-			for (AbstractMinecart abstractMinecartEntity : world
-				.getEntitiesOfClass(AbstractMinecart.class, new AABB(pos))) {
+			for (AbstractMinecart abstractMinecartEntity : world.getEntitiesOfClass(AbstractMinecart.class,
+				new AABB(pos))) {
 				if (!CartAssemblerBlock.canAssembleTo(abstractMinecartEntity))
 					break;
 				connectedCart = abstractMinecartEntity;
@@ -122,8 +122,8 @@ public class MountedContraption extends Contraption {
 		for (Axis axis : Iterate.axes) {
 			if (axis.isVertical() || !VecHelper.onSameAxis(anchor, pos, axis))
 				continue;
-			for (AbstractMinecart abstractMinecartEntity : world
-				.getEntitiesOfClass(AbstractMinecart.class, new AABB(pos))) {
+			for (AbstractMinecart abstractMinecartEntity : world.getEntitiesOfClass(AbstractMinecart.class,
+				new AABB(pos))) {
 				if (!CartAssemblerBlock.canAssembleTo(abstractMinecartEntity))
 					break;
 				return true;
@@ -160,12 +160,9 @@ public class MountedContraption extends Contraption {
 		return true;
 	}
 
-	@Override
 	public void addExtraInventories(Entity cart) {
-		if (!(cart instanceof Container))
-			return;
-		Storage<ItemVariant> handlerFromInv = new ContraptionInvWrapper(true, InventoryStorage.of((Container) cart, null));
-		inventory = new ContraptionInvWrapper(handlerFromInv, inventory);
+		if (cart instanceof Container container)
+			storage.attachExternal(new ContraptionInvWrapper(true, new InvWrapper(container)));
 	}
 
 	@Override

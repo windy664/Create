@@ -50,6 +50,7 @@ import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManag
 import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
+import com.simibubi.create.content.logistics.trains.entity.CarriageEntityHandler;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -102,6 +103,7 @@ public class CommonEvents {
 		Create.SCHEMATIC_RECEIVER.tick();
 		Create.LAGGER.tick();
 		ServerSpeedProvider.serverTick(server);
+		Create.RAILWAYS.sync.serverTick();
 	}
 
 	public static void onChunkUnloaded(Level world, LevelChunk chunk) {
@@ -110,6 +112,13 @@ public class CommonEvents {
 
 	public static void playerLoggedIn(ServerPlayer player) {
 		ToolboxHandler.playerLogin(player);
+		Create.RAILWAYS.playerLogin(player);
+	}
+
+	@SubscribeEvent
+	public static void playerLoggedOut(PlayerLoggedOutEvent event) {
+		Player player = event.getPlayer();
+		Create.RAILWAYS.playerLogout(player);
 	}
 
 	public static BlockState whenFluidsMeet(LevelAccessor world, BlockPos pos, BlockState blockState) {
@@ -138,6 +147,8 @@ public class CommonEvents {
 			CapabilityMinecartController.tick(world);
 			CouplingPhysics.tick(world);
 			LinkedControllerServerHandler.tick(world);
+			ControlsServerHandler.tick(world);
+			Create.RAILWAYS.tick(world);
 		}
 	}
 
@@ -161,6 +172,11 @@ public class CommonEvents {
 		AllCommands.register(dispatcher);
 	}
 
+	@SubscribeEvent
+	public static void onEntityEnterSection(EntityEvent.EnteringSection event) {
+		CarriageEntityHandler.onEntityEnterSection(event);
+	}
+
 	public static void addReloadListeners() {
 		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(RecipeFinder.LISTENER);
 		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
@@ -181,6 +197,7 @@ public class CommonEvents {
 	public static void onLoadWorld(Executor executor, LevelAccessor world) {
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onLoadWorld(world);
 		Create.TORQUE_PROPAGATOR.onLoadWorld(world);
+		Create.RAILWAYS.levelLoaded(world);
 	}
 
 	public static void onUnloadWorld(Executor executor, LevelAccessor world) {

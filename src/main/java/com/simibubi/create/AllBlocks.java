@@ -1,11 +1,13 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllInteractionBehaviours.addInteractionBehaviour;
 import static com.simibubi.create.AllMovementBehaviours.addMovementBehaviour;
 import static com.simibubi.create.AllTags.axeOnly;
 import static com.simibubi.create.AllTags.axeOrPickaxe;
 import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
@@ -26,6 +28,7 @@ import com.simibubi.create.content.contraptions.components.actors.PortableStorag
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
+import com.simibubi.create.content.contraptions.components.actors.SeatInteractionBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
@@ -36,11 +39,10 @@ import com.simibubi.create.content.contraptions.components.crusher.CrushingWheel
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerMovingInteraction;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
-import com.simibubi.create.content.contraptions.components.flywheel.FlywheelGenerator;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneBlock;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerBlock;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorBlock;
@@ -48,6 +50,11 @@ import com.simibubi.create.content.contraptions.components.motor.CreativeMotorGe
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
+import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
+import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleGenerator;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BlankSailBlockItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
@@ -59,6 +66,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsInteractionBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.MinecartAnchorBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
@@ -93,6 +103,7 @@ import com.simibubi.create.content.contraptions.processing.BasinGenerator;
 import com.simibubi.create.content.contraptions.processing.BasinMovementBehaviour;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerInteractionBehaviour;
 import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
@@ -121,6 +132,10 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
+import com.simibubi.create.content.curiosities.girder.ConnectedGirderModel;
+import com.simibubi.create.content.curiosities.girder.GirderBlock;
+import com.simibubi.create.content.curiosities.girder.GirderBlockStateGenerator;
+import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
@@ -139,6 +154,18 @@ import com.simibubi.create.content.logistics.block.diodes.PoweredLatchBlock;
 import com.simibubi.create.content.logistics.block.diodes.PoweredLatchGenerator;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
+import com.simibubi.create.content.logistics.block.display.source.AccumulatedItemCountDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.FillLevelDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ItemCountDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ItemListDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ItemNameDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ItemThoughputDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.StationSummaryDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.StopWatchDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.TimeOfDayDisplaySource;
+import com.simibubi.create.content.logistics.block.display.target.DisplayBoardTarget;
 import com.simibubi.create.content.logistics.block.funnel.AndesiteFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelGenerator;
@@ -162,12 +189,21 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultCTBehaviour;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlock;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlock;
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
+import com.simibubi.create.content.logistics.trains.track.TrackBlock;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockItem;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockStateGenerator;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
+import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
@@ -201,6 +237,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.PistonType;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -306,14 +343,14 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.register();
 
-	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_COGWHEEL =
-		REGISTRATE.block("andesite_encased_cogwheel", p -> EncasedCogwheelBlock.andesite(false, p))
-			.transform(BuilderTransformers.encasedCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
-			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
-				Couple.create(AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_SIDE,
-					AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_OTHERSIDE))))
-			.transform(axeOrPickaxe())
-			.register();
+	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_COGWHEEL = REGISTRATE
+		.block("andesite_encased_cogwheel", p -> EncasedCogwheelBlock.andesite(false, p))
+		.transform(BuilderTransformers.encasedCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+		.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
+			Couple.create(AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_SIDE,
+				AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_OTHERSIDE))))
+		.transform(axeOrPickaxe())
+		.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_COGWHEEL =
 		REGISTRATE.block("brass_encased_cogwheel", p -> EncasedCogwheelBlock.brass(false, p))
@@ -407,6 +444,7 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.blockstate(new BeltGenerator()::generate)
 		.transform(BlockStressDefaults.setImpact(0))
+		.onRegister(assignDataBehaviour(new ItemNameDisplaySource(), "combine_item_names"))
 		.onRegister(CreateRegistrate.blockModel(() -> BeltModel::new))
 		.register();
 
@@ -437,7 +475,6 @@ public class AllBlocks {
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(axeOrPickaxe())
-		.transform(BlockStressDefaults.setCapacity(16.0))
 		.transform(BlockStressDefaults.setImpact(2.0))
 		.item()
 		.transform(customItemModel())
@@ -476,6 +513,8 @@ public class AllBlocks {
 		REGISTRATE.block("cuckoo_clock", CuckooClockBlock::regular)
 			.transform(axeOrPickaxe())
 			.transform(BuilderTransformers.cuckooClock())
+			.onRegister(assignDataBehaviour(new TimeOfDayDisplaySource(), "time_of_day"))
+			.onRegister(assignDataBehaviour(new StopWatchDisplaySource(), "stop_watch"))
 			.register();
 
 	public static final BlockEntry<CuckooClockBlock> MYSTERIOUS_CUCKOO_CLOCK =
@@ -509,7 +548,9 @@ public class AllBlocks {
 	public static final BlockEntry<CrushingWheelControllerBlock> CRUSHING_WHEEL_CONTROLLER =
 		REGISTRATE.block("crushing_wheel_controller", CrushingWheelControllerBlock::new)
 			.initialProperties(SharedProperties.CRUSHING_WHEEL_CONTROLLER_MATERIAL)
-			.properties(p -> p.noOcclusion().noDrops().air())
+			.properties(p -> p.noOcclusion()
+				.noDrops()
+				.air())
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(state -> ConfiguredModel.builder()
 					.modelFile(p.models()
@@ -559,6 +600,7 @@ public class AllBlocks {
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
 			.loot((lt, block) -> lt.add(block, BlazeBurnerBlock.buildLootTable()))
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+			.onRegister(addInteractionBehaviour(new BlazeBurnerInteractionBehaviour()))
 			.item(BlazeBurnerBlockItem::withBlaze)
 			.model(AssetLookup.<BlazeBurnerBlockItem>customBlockItemModel("blaze_burner", "block_with_blaze"))
 			.build()
@@ -586,6 +628,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.transform(axeOrPickaxe())
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		.onRegister(assignDataBehaviour(new ItemNameDisplaySource(), "combine_item_names"))
 		.item()
 		.transform(customItemModel("_", "block"))
 		.register();
@@ -597,6 +640,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p), 180))
 			.transform(BlockStressDefaults.setImpact(2.0))
+			.onRegister(assignDataBehaviour(new ItemNameDisplaySource(), "combine_item_names"))
 			.item(EjectorItem::new)
 			.transform(customItemModel())
 			.register();
@@ -653,6 +697,27 @@ public class AllBlocks {
 		.item(BracketBlockItem::new)
 		.transform(BracketGenerator.itemModel("metal"))
 		.register();
+
+	public static final BlockEntry<GirderBlock> METAL_GIRDER = REGISTRATE.block("metal_girder", GirderBlock::new)
+		.blockstate(GirderBlockStateGenerator::blockState)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.transform(pickaxeOnly())
+		.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
+		.item()
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<GirderEncasedShaftBlock> METAL_GIRDER_ENCASED_SHAFT =
+		REGISTRATE.block("metal_girder_encased_shaft", GirderEncasedShaftBlock::new)
+			.blockstate(GirderBlockStateGenerator::blockStateWithShaft)
+			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+			.transform(pickaxeOnly())
+			.loot((p, b) -> p.add(b, RegistrateBlockLootTables.createSingleItemTable(METAL_GIRDER.get())
+				.withPool(RegistrateBlockLootTables.applyExplosionCondition(SHAFT.get(), LootPool.lootPool()
+					.setRolls(ConstantValue.exactly(1.0F))
+					.add(LootItem.lootTableItem(SHAFT.get()))))))
+			.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
+			.register();
 
 	// Fluids
 
@@ -804,6 +869,39 @@ public class AllBlocks {
 			.onRegister(addMovementBehaviour(new PortableStorageInterfaceMovement()))
 			.item()
 			.transform(customItemModel())
+			.register();
+
+	public static final BlockEntry<SteamEngineBlock> STEAM_ENGINE =
+		REGISTRATE.block("steam_engine", SteamEngineBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.transform(pickaxeOnly())
+			.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+			.transform(BlockStressDefaults.setCapacity(1024.0))
+			.item()
+			.transform(customItemModel())
+			.register();
+
+	public static final BlockEntry<WhistleBlock> STEAM_WHISTLE = REGISTRATE.block("steam_whistle", WhistleBlock::new)
+		.initialProperties(SharedProperties::copperMetal)
+		.transform(pickaxeOnly())
+		.blockstate(new WhistleGenerator()::generate)
+		.item()
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<WhistleExtenderBlock> STEAM_WHISTLE_EXTENSION =
+		REGISTRATE.block("steam_whistle_extension", WhistleExtenderBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.transform(pickaxeOnly())
+			.blockstate(BlockStateGen.whistleExtender())
+			.register();
+
+	public static final BlockEntry<PoweredShaftBlock> POWERED_SHAFT =
+		REGISTRATE.block("powered_shaft", PoweredShaftBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.transform(pickaxeOnly())
+			.blockstate(BlockStateGen.axisBlockProvider(false))
+			.loot((lt, block) -> lt.dropOther(block, AllBlocks.SHAFT.get()))
 			.register();
 
 	// Contraptions
@@ -1031,6 +1129,7 @@ public class AllBlocks {
 		.blockstate(BlockStateGen.directionalAxisBlockProvider())
 		.transform(BlockStressDefaults.setImpact(4.0))
 		.onRegister(addMovementBehaviour(new DeployerMovementBehaviour()))
+		.onRegister(addInteractionBehaviour(new DeployerMovingInteraction()))
 		.item(AssemblyOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
@@ -1078,10 +1177,12 @@ public class AllBlocks {
 	public static final DyedBlockList<SeatBlock> SEATS = new DyedBlockList<>(colour -> {
 		String colourName = colour.getSerializedName();
 		SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
+		SeatInteractionBehaviour interactionBehaviour = new SeatInteractionBehaviour();
 		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour, colour == DyeColor.RED))
 			.initialProperties(SharedProperties::wooden)
 			.transform(axeOnly())
 			.onRegister(addMovementBehaviour(movementBehaviour))
+			.onRegister(addInteractionBehaviour(interactionBehaviour))
 			.blockstate((c, p) -> {
 				p.simpleBlock(c.get(), p.models()
 					.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
@@ -1205,21 +1306,10 @@ public class AllBlocks {
 		.properties(BlockBehaviour.Properties::noOcclusion)
 		.transform(axeOrPickaxe())
 		.transform(BlockStressDefaults.setNoImpact())
-		.blockstate(new FlywheelGenerator()::generate)
+		.blockstate(BlockStateGen.axisBlockProvider(true))
 		.item()
 		.transform(customItemModel())
 		.register();
-
-	public static final BlockEntry<FurnaceEngineBlock> FURNACE_ENGINE =
-		REGISTRATE.block("furnace_engine", FurnaceEngineBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.transform(pickaxeOnly())
-			.tag(AllBlockTags.BRITTLE.tag)
-			.blockstate(BlockStateGen.horizontalBlockProvider(true))
-			.transform(BlockStressDefaults.setCapacity(1024.0))
-			.item()
-			.transform(customItemModel())
-			.register();
 
 	public static final BlockEntry<SpeedControllerBlock> ROTATION_SPEED_CONTROLLER =
 		REGISTRATE.block("rotation_speed_controller", SpeedControllerBlock::new)
@@ -1248,6 +1338,75 @@ public class AllBlocks {
 				.build()))
 		.transform(BlockStressDefaults.setImpact(2.0))
 		.item(ArmItem::new)
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<TrackBlock> TRACK = REGISTRATE.block("track", TrackBlock::new)
+		.initialProperties(Material.DECORATION)
+		.properties(p -> p.strength(0.8F)
+			.sound(SoundType.METAL)
+			.noOcclusion())
+		.addLayer(() -> RenderType::cutoutMipped)
+		.transform(pickaxeOnly())
+		.blockstate(new TrackBlockStateGenerator()::generate)
+		.tag(AllBlockTags.RELOCATION_NOT_SUPPORTED.tag)
+		.lang("Train Track")
+		.item(TrackBlockItem::new)
+		.model((c, p) -> p.generated(c, Create.asResource("item/" + c.getName())))
+		.build()
+		.register();
+
+	public static final BlockEntry<CasingBlock> RAILWAY_CASING = REGISTRATE.block("railway_casing", CasingBlock::new)
+		.transform(BuilderTransformers.layeredCasing(() -> AllSpriteShifts.RAILWAY_CASING_SIDE,
+			() -> AllSpriteShifts.RAILWAY_CASING))
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.register();
+
+	public static final BlockEntry<StationBlock> TRACK_STATION = REGISTRATE.block("track_station", StationBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.transform(axeOrPickaxe())
+		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+		.onRegister(assignDataBehaviour(new StationSummaryDisplaySource(), "station_summary"))
+		.lang("Train Station")
+		.item(TrackTargetingBlockItem::new)
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<SignalBlock> TRACK_SIGNAL = REGISTRATE.block("track_signal", SignalBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.properties(BlockBehaviour.Properties::noOcclusion)
+		.transform(pickaxeOnly())
+		.blockstate((c, p) -> p.getVariantBuilder(c.get())
+			.forAllStates(state -> ConfiguredModel.builder()
+				.modelFile(AssetLookup.partialBaseModel(c, p, state.getValue(SignalBlock.TYPE)
+					.getSerializedName()))
+				.build()))
+		.lang("Train Signal")
+		.item(TrackTargetingBlockItem::new)
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<StandardBogeyBlock> SMALL_BOGEY =
+		REGISTRATE.block("small_bogey", p -> new StandardBogeyBlock(p, false))
+			.transform(BuilderTransformers.bogey())
+			.register();
+
+	public static final BlockEntry<StandardBogeyBlock> LARGE_BOGEY =
+		REGISTRATE.block("large_bogey", p -> new StandardBogeyBlock(p, true))
+			.transform(BuilderTransformers.bogey())
+			.register();
+
+	public static final BlockEntry<ControlsBlock> CONTROLS = REGISTRATE.block("controls", ControlsBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.blockstate((c, p) -> p.horizontalBlock(c.get(),
+			s -> AssetLookup.partialBaseModel(c, p, s.getValue(ControlsBlock.OPEN) ? "open" : "closed")))
+		.onRegister(addMovementBehaviour(new ControlsMovementBehaviour()))
+		.onRegister(addInteractionBehaviour(new ControlsInteractionBehaviour()))
+		.lang("Train Controls")
+		.item()
 		.transform(customItemModel())
 		.register();
 
@@ -1311,11 +1470,13 @@ public class AllBlocks {
 	public static final BlockEntry<BeltTunnelBlock> ANDESITE_TUNNEL =
 		REGISTRATE.block("andesite_tunnel", BeltTunnelBlock::new)
 			.transform(BuilderTransformers.beltTunnel("andesite", new ResourceLocation("block/polished_andesite")))
+			.onRegister(assignDataBehaviour(new AccumulatedItemCountDisplaySource(), "accumulate_items"))
 			.register();
 
 	public static final BlockEntry<BrassTunnelBlock> BRASS_TUNNEL =
 		REGISTRATE.block("brass_tunnel", BrassTunnelBlock::new)
 			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
+			.onRegister(assignDataBehaviour(new ItemThoughputDisplaySource(), "item_throughput"))
 			.onRegister(connectedTextures(BrassTunnelCTBehaviour::new))
 			.register();
 
@@ -1324,6 +1485,8 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p)))
+			.onRegister(assignDataBehaviour(new ItemCountDisplaySource(), "count_items"))
+			.onRegister(assignDataBehaviour(new ItemListDisplaySource(), "list_items"))
 			.item()
 			.transform(customItemModel("_", "block"))
 			.register();
@@ -1334,6 +1497,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.horizontalBlock(c.get(),
 				AssetLookup.withIndicator(c, p, $ -> AssetLookup.standardModel(c, p), StockpileSwitchBlock.INDICATOR)))
+			.onRegister(assignDataBehaviour(new FillLevelDisplaySource(), "fill_level"))
 			.simpleItem()
 			.register();
 
@@ -1341,6 +1505,28 @@ public class AllBlocks {
 		REGISTRATE.block("creative_crate", CreativeCrateBlock::new)
 			.transform(BuilderTransformers.crate("creative"))
 			.tag(AllBlockTags.SAFE_NBT.tag)
+			.register();
+
+	public static final BlockEntry<DisplayLinkBlock> DISPLAY_LINK =
+		REGISTRATE.block("display_link", DisplayLinkBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.addLayer(() -> RenderType::translucent)
+			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
+			.item(DisplayLinkBlockItem::new)
+			.transform(customItemModel("_", "block"))
+			.register();
+
+	public static final BlockEntry<FlapDisplayBlock> DISPLAY_BOARD =
+		REGISTRATE.block("display_board", FlapDisplayBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.addLayer(() -> RenderType::cutoutMipped)
+			.transform(pickaxeOnly())
+			.transform(BlockStressDefaults.setImpact(0))
+			.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+			.onRegister(assignDataBehaviour(new DisplayBoardTarget()))
+			.lang("Display Board")
+			.item()
+			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<NixieTubeBlock> ORANGE_NIXIE_TUBE =

@@ -581,5 +581,9 @@ public class KineticTileEntity extends SmartTileEntity
 	protected boolean isNoisy() {
 		return true;
 	}
+	
+	public int getRotationAngleOffset(Axis axis) {
+		return 0;
+	}
 
 }
