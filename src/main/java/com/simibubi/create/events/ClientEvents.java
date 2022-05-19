@@ -2,6 +2,7 @@ package com.simibubi.create.events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -65,6 +66,9 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
+
+import io.github.fabricators_of_create.porting_lib.event.client.DrawSelectionEvents;
+import io.github.fabricators_of_create.porting_lib.event.client.EntityAddedLayerCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.AttackAirCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.ClientWorldEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.FogEvents;
@@ -94,17 +98,24 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class ClientEvents {
@@ -114,6 +125,7 @@ public class ClientEvents {
 
 	public static void onTickStart(Minecraft client) {
 		LinkedControllerClientHandler.tick();
+		ControlsHandler.tick();
 		AirCurrent.tickClientPlayerSounds();
 	}
 
@@ -122,12 +134,6 @@ public class ClientEvents {
 			return;
 
 		Level world = Minecraft.getInstance().level;
-		if (event.phase == Phase.START) {
-			LinkedControllerClientHandler.tick();
-			ControlsHandler.tick();
-			AirCurrent.tickClientPlayerSounds();
-			return;
-		}
 
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
@@ -178,15 +184,13 @@ public class ClientEvents {
 		CurvedTrackInteraction.clientTick();
 	}
 
-	@SubscribeEvent
-	public static void onRenderSelection(DrawSelectionEvent event) {}
+	public static boolean onRenderSelection(LevelRenderer context, Camera info, HitResult target, float partialTicks, PoseStack matrix, MultiBufferSource buffers) { return false; }
 
 	public static void onJoin(ClientPacketListener handler, PacketSender sender, Minecraft client) {
 		CreateClient.checkGraphicsFanciness();
 	}
 
-	@SubscribeEvent
-	public static void onLeave(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+	public static void onLeave(ClientPacketListener handler, Minecraft client) {
 		CreateClient.RAILWAYS.cleanUp();
 	}
 
@@ -203,7 +207,7 @@ public class ClientEvents {
 			CreateClient.invalidateRenderers();
 			CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
 			AnimationTickHolder.reset();
-			ControlsHandler.levelUnloaded(event.getWorld());
+			ControlsHandler.levelUnloaded(world);
 		}
 	}
 
@@ -369,11 +373,10 @@ public class ClientEvents {
 	}
 
 	// TODO TRAIN PORT
-	@SubscribeEvent
-	public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
+	public static void addEntityRendererLayers(final Map<EntityType<?>, EntityRenderer<?>> renderers, final Map<String, EntityRenderer<? extends Player>> skinMap) {
 		EntityRenderDispatcher dispatcher = Minecraft.getInstance()
 				.getEntityRenderDispatcher();
-		CopperBacktankArmorLayer.registerOnAll(dispatcher);
+//		CopperBacktankArmorLayer.registerOnAll(dispatcher);
 		TrainHatArmorLayer.registerOnAll(dispatcher);
 	}
 
@@ -411,6 +414,10 @@ public class ClientEvents {
 		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		PlayerTickEvents.END.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
+		EntityAddedLayerCallback.EVENT.register(ClientEvents::addEntityRendererLayers);
+		ClientPlayConnectionEvents.DISCONNECT.register(ClientEvents::onLeave);
+		DrawSelectionEvents.BLOCK.register(ClientEvents::onRenderSelection);
+		DrawSelectionEvents.ENTITY.register(ClientEvents::onRenderSelection);
 
 		// Flywheel Events
 

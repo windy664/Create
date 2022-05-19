@@ -119,7 +119,7 @@ public class Create implements ModInitializer {
 		CommonEvents.register();
 		AllWorldFeatures.registerOreFeatures();
 
-		modEventBus.addGenericListener(DataSerializerEntry.class, AllEntityDataSerializers::register);
+		AllEntityDataSerializers.register();
 
 		AllPackets.channel.initServerListener();
 	}

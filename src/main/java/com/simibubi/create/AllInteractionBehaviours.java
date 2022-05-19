@@ -33,7 +33,7 @@ public class AllInteractionBehaviours {
 
 	public static <B extends Block> NonNullConsumer<? super B> addInteractionBehaviour(
 		MovingInteractionBehaviour movementBehaviour) {
-		return b -> addInteractionBehaviour(b.getRegistryName(), () -> movementBehaviour);
+		return b -> addInteractionBehaviour(Registry.BLOCK.getKey(b), () -> movementBehaviour);
 	}
 
 	@Nullable

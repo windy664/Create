@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.AxeItem;
@@ -18,8 +19,6 @@ import net.minecraft.world.item.ItemStack.TooltipPart;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.ITagManager;
 
 /**
  * Just in case players don't know about that vanilla feature
@@ -35,9 +34,8 @@ public class LogStrippingFakeRecipes {
 		axe.hideTooltipPart(TooltipPart.MODIFIERS);
 		axe.setHoverName(Lang.translate("recipe.item_application.any_axe")
 			.withStyle(style -> style.withItalic(false)));
-		ITagManager<Item> tags = ForgeRegistries.ITEMS.tags();
-		tags.getTag(ItemTags.LOGS)
-			.forEach(stack -> process(stack, recipes, axe));
+		Registry.ITEM.getTag(ItemTags.LOGS).get()
+			.forEach(stack -> process(stack.value(), recipes, axe));
 		return recipes;
 	}
 
@@ -57,7 +55,7 @@ public class LogStrippingFakeRecipes {
 	}
 
 	private static ManualApplicationRecipe create(Item fromItem, Item toItem, ItemStack axe) {
-		ResourceLocation rn = toItem.getRegistryName();
+		ResourceLocation rn = Registry.ITEM.getKey(toItem);
 		return new ProcessingRecipeBuilder<>(ManualApplicationRecipe::new,
 			new ResourceLocation(rn.getNamespace(), rn.getPath() + "_via_vanilla_stripping")).require(fromItem)
 				.require(Ingredient.of(axe))

@@ -9,9 +9,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.IntAttached;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
 
 public class ItemListDisplaySource extends ValueListDisplaySource {
 
@@ -23,7 +24,7 @@ public class ItemListDisplaySource extends ValueListDisplaySource {
 
 		InvManipulationBehaviour invManipulationBehaviour = cote.getBehaviour(InvManipulationBehaviour.TYPE);
 		FilteringBehaviour filteringBehaviour = cote.getBehaviour(FilteringBehaviour.TYPE);
-		IItemHandler handler = invManipulationBehaviour.getInventory();
+		Storage<ItemVariant> handler = invManipulationBehaviour.getInventory();
 
 		if (handler == null)
 			return Stream.empty();
