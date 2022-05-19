@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.InteractionResult;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 
@@ -52,7 +54,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 
 public class TrainRelocator {
 
@@ -71,35 +72,36 @@ public class TrainRelocator {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void onClicked(ClickInputEvent event) {
+	public static InteractionResult onClicked(int button, int action, int mods) {
 		if (relocatingTrain == null)
-			return;
+			return InteractionResult.PASS;
 
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		if (player == null)
-			return;
+			return InteractionResult.PASS;
 
 		if (!player.position()
 			.closerThan(relocatingOrigin, 24) || player.isSteppingCarefully()) {
 			relocatingTrain = null;
 			player.displayClientMessage(Lang.translate("train.relocate.abort")
 				.withStyle(ChatFormatting.RED), true);
-			return;
+			return InteractionResult.PASS;
 		}
 
 		if (player.isPassenger())
-			return;
+			return InteractionResult.PASS;
 		if (mc.level == null)
-			return;
+			return InteractionResult.PASS;
 		Train relocating = getRelocating(mc.level);
 		if (relocating != null) {
 			Boolean relocate = relocateClient(relocating, false);
 			if (relocate != null && relocate.booleanValue())
 				relocatingTrain = null;
 			if (relocate != null)
-				event.setCanceled(true);
+				return InteractionResult.SUCCESS;
 		}
+		return InteractionResult.PASS;
 	}
 
 	@Nullable

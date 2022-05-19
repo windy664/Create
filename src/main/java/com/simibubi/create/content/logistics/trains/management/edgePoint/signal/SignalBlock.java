@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 
+import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -22,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
-public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrenchable {
+public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrenchable, ConnectableRedstoneBlock {
 
 	public static final EnumProperty<SignalType> TYPE = EnumProperty.create("type", SignalType.class);
 

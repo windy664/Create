@@ -73,6 +73,8 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import org.jetbrains.annotations.Nullable;
+
 public abstract class AbstractContraptionEntity extends Entity implements ExtraSpawnDataEntity, RemovalFromWorldListener {
 
 	private static final EntityDataAccessor<Boolean> STALLED =
@@ -218,8 +220,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	public void stopControlling(BlockPos controlsLocalPos) {
 		getControllingPlayer().map(level::getPlayerByUUID)
 			.map(p -> (p instanceof ServerPlayer) ? ((ServerPlayer) p) : null)
-			.ifPresent(p -> AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> p),
-				new ControlsStopControllingPacket()));
+			.ifPresent(p -> AllPackets.channel.sendToClient(new ControlsStopControllingPacket(),
+				p));
 		setControllingPlayer(null);
 	}
 
@@ -630,7 +632,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	@Override
 	public void onRemovedFromWorld() {
-		super.onRemovedFromWorld();
+//		super.onRemovedFromWorld();
 	}
 
 	@Override

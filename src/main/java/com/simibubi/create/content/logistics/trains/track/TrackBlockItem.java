@@ -29,14 +29,11 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(EnvType.CLIENT)
 public class TrackBlockItem extends BlockItem {
 
 	public TrackBlockItem(Block pBlock, Properties pProperties) {
@@ -150,15 +147,15 @@ public class TrackBlockItem extends BlockItem {
 		return true;
 	}
 
-	@SubscribeEvent
 	@Environment(EnvType.CLIENT)
-	public static void sendExtenderPacket(PlayerInteractEvent.RightClickBlock event) {
-		ItemStack stack = event.getItemStack();
+	public static InteractionResult sendExtenderPacket(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+		ItemStack stack = player.getItemInHand(hand);
 		if (!AllBlocks.TRACK.isIn(stack) || !stack.hasTag())
-			return;
+			return InteractionResult.PASS;
 		if (Minecraft.getInstance().options.keySprint.isDown())
 			AllPackets.channel
-				.sendToServer(new PlaceExtendedCurvePacket(event.getHand() == InteractionHand.MAIN_HAND, true));
+				.sendToServer(new PlaceExtendedCurvePacket(hand == InteractionHand.MAIN_HAND, true));
+		return InteractionResult.PASS;
 	}
 
 	@Override

@@ -11,67 +11,64 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
 
-@EventBusSubscriber
+import org.jetbrains.annotations.Nullable;
+
 public class ScheduleItemRetrieval {
 
-	@SubscribeEvent
-	public static void removeScheduleFromConductor(EntityInteract event) {
-		Entity entity = event.getTarget();
-		Player player = event.getPlayer();
+	public static InteractionResult removeScheduleFromConductor(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
 		if (player == null || entity == null)
-			return;
+			return InteractionResult.PASS;
 
 		Entity rootVehicle = entity.getRootVehicle();
 		if (!(rootVehicle instanceof CarriageContraptionEntity))
-			return;
+			return InteractionResult.PASS;
 
-		ItemStack itemStack = event.getItemStack();
+		ItemStack itemStack = player.getItemInHand(hand);
 		if (AllItems.SCHEDULE.isIn(itemStack) && entity instanceof Wolf wolf) {
 			itemStack.getItem()
-				.interactLivingEntity(itemStack, player, wolf, event.getHand());
-			return;
+				.interactLivingEntity(itemStack, player, wolf, hand);
+			return InteractionResult.PASS;
 		}
 
 		if (player.level.isClientSide)
-			return;
-		if (event.getHand() == InteractionHand.OFF_HAND)
-			return;
+			return InteractionResult.PASS;
+		if (hand == InteractionHand.OFF_HAND)
+			return InteractionResult.PASS;
 
 		CarriageContraptionEntity cce = (CarriageContraptionEntity) rootVehicle;
 		Contraption contraption = cce.getContraption();
 		if (!(contraption instanceof CarriageContraption cc))
-			return;
+			return InteractionResult.PASS;
 
 		Train train = cce.getCarriage().train;
 		if (train == null)
-			return;
+			return InteractionResult.PASS;
 		if (train.runtime.getSchedule() == null)
-			return;
+			return InteractionResult.PASS;
 
 		Integer seatIndex = contraption.getSeatMapping()
 			.get(entity.getUUID());
 		if (seatIndex == null)
-			return;
+			return InteractionResult.PASS;
 		BlockPos seatPos = contraption.getSeats()
 			.get(seatIndex);
 		Couple<Boolean> directions = cc.conductorSeats.get(seatPos);
 		if (directions == null)
-			return;
+			return InteractionResult.PASS;
 
-		ItemStack itemInHand = player.getItemInHand(event.getHand());
+		ItemStack itemInHand = player.getItemInHand(hand);
 		if (!itemInHand.isEmpty()) {
 			AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
 			player.displayClientMessage(Lang.translate("schedule.remove_with_empty_hand"), true);
-			event.setCanceled(true);
-			return;
+			return InteractionResult.SUCCESS;
 		}
 
 		AllSoundEvents.playItemPickup(player);
@@ -83,8 +80,7 @@ public class ScheduleItemRetrieval {
 		player.getInventory()
 			.placeItemBackInInventory(train.runtime.returnSchedule());
 //		player.setItemInHand(event.getHand(), train.runtime.returnSchedule());
-		event.setCanceled(true);
-		return;
+		return InteractionResult.SUCCESS;
 	}
 
 }

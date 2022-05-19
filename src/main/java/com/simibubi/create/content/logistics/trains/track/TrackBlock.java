@@ -97,7 +97,7 @@ import net.minecraft.world.ticks.LevelTickAccess;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement {
+public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, DestroyProgressRenderingHandler {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
@@ -111,11 +111,6 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
 		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TE));
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
-		consumer.accept(new RenderProperties());
 	}
 
 	@Override
@@ -278,7 +273,7 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		SuperGlueEntity probe = new SuperGlueEntity(level, new AABB(portalPos));
 		probe.setYRot(inboundTrack.getFace()
 			.toYRot());
-		PortalInfo portalinfo = teleporter.getPortalInfo(probe, otherLevel, probe::findDimensionEntryPoint);
+		PortalInfo portalinfo = probe.findDimensionEntryPoint(otherLevel);
 		if (portalinfo == null)
 			return null;
 
@@ -718,16 +713,14 @@ public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrac
 		return new ItemRequirement(ItemUseType.CONSUME, stacks);
 	}
 
-	public static class RenderProperties extends ReducedDestroyEffects implements DestroyProgressRenderingHandler {
-		@Override
-		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos,
-			int progress, BlockState blockState) {
-			BlockEntity blockEntity = level.getBlockEntity(pos);
-			if (blockEntity instanceof TrackTileEntity track)
-				for (BlockPos trackPos : track.connections.keySet())
-					renderer.destroyBlockProgress(pos.hashCode(), trackPos, progress);
-			return false;
-		}
+	@Override
+	public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos,
+		int progress, BlockState blockState) {
+		BlockEntity blockEntity = level.getBlockEntity(pos);
+		if (blockEntity instanceof TrackTileEntity track)
+			for (BlockPos trackPos : track.connections.keySet())
+				renderer.destroyBlockProgress(pos.hashCode(), trackPos, progress);
+		return false;
 	}
 
 }

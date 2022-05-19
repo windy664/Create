@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 
 public class CurvedTrackInteraction {
 
@@ -39,7 +38,7 @@ public class CurvedTrackInteraction {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		ClientLevel level = mc.level;
-		
+
 		if (!player.getAbilities().mayBuild)
 			return;
 
@@ -53,7 +52,7 @@ public class CurvedTrackInteraction {
 			}
 
 			if (breakTicks % 4.0F == 0.0F) {
-				SoundType soundtype = blockState.getSoundType(level, breakPos, player);
+				SoundType soundtype = blockState.getSoundType();
 				mc.getSoundManager()
 					.play(new SimpleSoundInstance(soundtype.getHitSound(), SoundSource.BLOCKS,
 						(soundtype.getVolume() + 1.0F) / 8.0F, soundtype.getPitch() * 0.5F,
@@ -102,7 +101,7 @@ public class CurvedTrackInteraction {
 		breakPos = null;
 	}
 
-	public static boolean onClickInput(ClickInputEvent event) {
+	public static boolean onClickInput(int button, int action, int mods) {
 		BezierPointSelection result = TrackBlockOutline.result;
 		if (result == null)
 			return false;
@@ -114,7 +113,7 @@ public class CurvedTrackInteraction {
 		if (player == null || level == null)
 			return false;
 
-		if (event.isUseItem()) {
+		if (button == 1) {
 			ItemStack heldItem = player.getMainHandItem();
 			Item item = heldItem.getItem();
 			if (AllBlocks.TRACK.isIn(heldItem)) {
@@ -139,7 +138,7 @@ public class CurvedTrackInteraction {
 			}
 		}
 
-		if (event.isAttack())
+		if (button == 0)
 			return true;
 
 		return false;

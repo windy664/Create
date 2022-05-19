@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerHandler;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItemRetrieval;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
@@ -26,8 +27,10 @@ import io.github.fabricators_of_create.porting_lib.event.common.ProjectileImpact
 import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.packs.PackType;
 
 import org.jetbrains.annotations.Nullable;
@@ -120,9 +123,8 @@ public class CommonEvents {
 		Create.RAILWAYS.playerLogin(player);
 	}
 
-	@SubscribeEvent
-	public static void playerLoggedOut(PlayerLoggedOutEvent event) {
-		Player player = event.getPlayer();
+	public static void playerLoggedOut(ServerGamePacketListenerImpl handler, MinecraftServer server) {
+		Player player = handler.getPlayer();
 		Create.RAILWAYS.playerLogout(player);
 	}
 
@@ -177,9 +179,8 @@ public class CommonEvents {
 		AllCommands.register(dispatcher);
 	}
 
-	@SubscribeEvent
-	public static void onEntityEnterSection(EntityEvent.EnteringSection event) {
-		CarriageEntityHandler.onEntityEnterSection(event);
+	public static void onEntityEnterSection(Entity entity, long packedOldPos, long packedNewPos) {
+		CarriageEntityHandler.onEntityEnterSection(entity, packedOldPos, packedNewPos);
 	}
 
 	public static void addReloadListeners() {
@@ -249,18 +250,15 @@ public class CommonEvents {
 		ServerLifecycleEvents.SERVER_STOPPED.register(CommonEvents::serverStopping);
 		ServerWorldEvents.LOAD.register(CommonEvents::onLoadWorld);
 		ServerWorldEvents.UNLOAD.register(CommonEvents::onUnloadWorld);
+		ServerPlayConnectionEvents.DISCONNECT.register(CommonEvents::playerLoggedOut);
 		AttackEntityCallback.EVENT.register(CommonEvents::onEntityAttackedByPlayer);
 		CommandRegistrationCallback.EVENT.register(CommonEvents::registerCommands);
 		EntityEvents.START_TRACKING_TAIL.register(CommonEvents::startTracking);
+		EntityEvents.ENTERING_SECTION.register(CommonEvents::onEntityEnterSection);
 		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
 		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
 		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
-		CommonEvents.addReloadListeners();
-		CommonEvents.onBiomeLoad(); // Fabric Biome API requires biomes to only be registered once
-
-		// External Events
-
 		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
 		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
 		UseBlockCallback.EVENT.register(FilteringHandler::onBlockActivated);
@@ -271,6 +269,12 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(SuperGlueItem::glueItemAlwaysPlacesWhenUsed);
 		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
 		UseBlockCallback.EVENT.register(DisplayLinkBlockItem::gathererItemAlwaysPlacesWhenUsed);
+		UseEntityCallback.EVENT.register(ScheduleItemRetrieval::removeScheduleFromConductor);
+		CommonEvents.addReloadListeners();
+		CommonEvents.onBiomeLoad(); // Fabric Biome API requires biomes to only be registered once
+
+		// External Events
+
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
 		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);

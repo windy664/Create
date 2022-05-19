@@ -11,13 +11,12 @@ import net.minecraft.world.level.Level;
  */
 public class CarriageEntityHandler {
 
-	public static void onEntityEnterSection(EntityEvent.EnteringSection event) {
-		if (!event.didChunkChange())
+	public static void onEntityEnterSection(Entity entity, long packedOldPos, long packedNewPos) {
+		if (!(SectionPos.x(packedOldPos) != SectionPos.x(packedNewPos) || SectionPos.z(packedOldPos) != SectionPos.z(packedNewPos)))
 			return;
-		Entity entity = event.getEntity();
 		if (!(entity instanceof CarriageContraptionEntity cce))
 			return;
-		SectionPos newPos = event.getNewPos();
+		SectionPos newPos = SectionPos.of(packedNewPos);;
 		Level level = entity.getLevel();
 		if (level.isClientSide)
 			return;

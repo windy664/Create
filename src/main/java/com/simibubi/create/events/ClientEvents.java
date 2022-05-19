@@ -44,6 +44,7 @@ import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingClient;
 import com.simibubi.create.content.logistics.trains.management.schedule.TrainHatArmorLayer;
 import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
 import com.simibubi.create.content.logistics.trains.track.TrackRemoval;
@@ -398,6 +399,7 @@ public class ClientEvents {
 		RenderTickStartCallback.EVENT.register(ClientEvents::onRenderTick);
 		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
 		AttackAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
+		UseBlockCallback.EVENT.register(TrackBlockItem::sendExtenderPacket);
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((type, renderer, helper, context) -> CopperBacktankArmorLayer.registerOn(renderer, helper));
 
 		// External Events
@@ -417,6 +419,7 @@ public class ClientEvents {
 		EntityAddedLayerCallback.EVENT.register(ClientEvents::addEntityRendererLayers);
 		ClientPlayConnectionEvents.DISCONNECT.register(ClientEvents::onLeave);
 		DrawSelectionEvents.BLOCK.register(ClientEvents::onRenderSelection);
+		DrawSelectionEvents.BLOCK.register(TrackBlockOutline::drawCustomBlockSelection);
 		DrawSelectionEvents.ENTITY.register(ClientEvents::onRenderSelection);
 
 		// Flywheel Events

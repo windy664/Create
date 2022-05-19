@@ -50,22 +50,18 @@ public class InputEvents {
 		return InteractionResult.PASS;
 	}
 
-	@SubscribeEvent
 	public static InteractionResult onClickInput(int button, int action, int mods) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.screen != null)
-			return;
+			return InteractionResult.PASS;
 
-		if (CurvedTrackInteraction.onClickInput(event)) {
-			event.setCanceled(true);
-			return;
+		if (CurvedTrackInteraction.onClickInput(button, action, mods)) {
+			return InteractionResult.SUCCESS;
 		}
-
-		KeyMapping key = event.getKeyMapping();
-
-		if (key == mc.options.keyUse || key == mc.options.keyAttack) {
-			if (CreateClient.GLUE_HANDLER.onMouseInput(key == mc.options.keyAttack))
-				event.setCanceled(true);
+		boolean cancel = false;
+		if (action == 0 || action == 1) {
+			if (CreateClient.GLUE_HANDLER.onMouseInput(action == 1))
+				cancel = true;
 		}
 
 		if (mc.options.keyPickItem.isDown()) {
@@ -77,7 +73,7 @@ public class InputEvents {
 		if (button != 1)
 			return InteractionResult.PASS;
 		LinkedControllerClientHandler.deactivateInLectern();
-		TrainRelocator.onClicked(event);
+		return TrainRelocator.onClicked(button, action, mods) == InteractionResult.SUCCESS || cancel ? InteractionResult.SUCCESS : InteractionResult.PASS;
 	}
 
 	public static void register() {

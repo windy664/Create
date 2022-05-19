@@ -1,22 +1,24 @@
-package com.simibubi.create.compat.jei.category;
+package com.simibubi.create.compat.rei.category;
 
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
+import com.simibubi.create.compat.rei.category.animations.AnimatedKinetics;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
 
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.client.util.ClientEntryStacks;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -26,38 +28,40 @@ import net.minecraft.world.level.block.state.BlockState;
 public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicationRecipe> {
 
 	public ItemApplicationCategory() {
-		super(itemIcon(AllItems.BRASS_HAND.get()), emptyBackground(177, 60));
+		super(itemIcon(AllItems.BRASS_HAND), emptyBackground(177, 60));
 	}
 
 	@Override
-	public Class<ItemApplicationRecipe> getRecipeClass() {
-		return ItemApplicationRecipe.class;
+	public void addWidgets(CreateDisplay<ItemApplicationRecipe> display, List<Widget> ingredients, Point origin) {
+		ingredients.add(basicSlot( 27, 38)
+				.markInput()
+				.entries(EntryIngredients.ofItemStacks(Arrays.asList(display.getRecipe().getProcessedItem()
+						.getItems()))));
+
+		Slot slot = basicSlot(51, 5)
+				.markInput()
+				.entries(EntryIngredients.ofItemStacks(Arrays.asList(display.getRecipe().getRequiredHeldItem()
+								.getItems())));
+		ClientEntryStacks.setTooltipProcessor(slot.getCurrentEntry(), (entryStack, tooltip) -> {
+			if (display.getRecipe().shouldKeepHeldItem())
+					tooltip.add(Lang.translate("recipe.deploying.not_consumed")
+					.withStyle(ChatFormatting.GOLD));
+			return tooltip;
+		});
+
+		Slot outputSlot = basicSlot(132, 38)
+				.markOutput()
+				.entries(display.getOutputEntries().get(0));
+		ClientEntryStacks.setTooltipProcessor(outputSlot.getCurrentEntry(), (entryStack, tooltip) -> {
+					addStochasticTooltip(display.getRecipe().getRollableResults()
+							.get(0), tooltip);
+			return tooltip;
+		});
+		ingredients.add(outputSlot);
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, ItemApplicationRecipe recipe, IFocusGroup focuses) {
-		builder.addSlot(RecipeIngredientRole.INPUT, 27, 38)
-			.addItemStacks(Arrays.asList(recipe.getProcessedItem()
-				.getItems()));
-
-		builder.addSlot(RecipeIngredientRole.INPUT, 51, 5)
-			.addItemStacks(Arrays.asList(recipe.getRequiredHeldItem()
-				.getItems()))
-			.addTooltipCallback(
-				recipe.shouldKeepHeldItem()
-					? (view, tooltip) -> tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
-						.withStyle(ChatFormatting.GOLD))
-					: (view, tooltip) -> {
-					});
-
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 132, 38)
-			.addItemStack(recipe.getResultItem())
-			.addTooltipCallback(addStochasticTooltip(recipe.getRollableResults()
-				.get(0)));
-	}
-
-	@Override
-	public void draw(ItemApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack,
+	public void draw(ItemApplicationRecipe recipe, CreateDisplay<ItemApplicationRecipe> display, PoseStack matrixStack,
 		double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.render(matrixStack, 50, 4);
 		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 37);
@@ -65,14 +69,11 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 47);
 		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 74, 10);
 
-		Optional<ItemStack> displayedIngredient = recipeSlotsView.getSlotViews()
-			.get(0)
-			.getDisplayedIngredient(VanillaTypes.ITEM);
+		EntryIngredient displayedIngredient = display.getInputEntries().get(0);
 		if (displayedIngredient.isEmpty())
 			return;
 
-		Item item = displayedIngredient.get()
-			.getItem();
+		Item item = ((ItemStack)displayedIngredient.get(0).getValue()).getItem();
 		if (!(item instanceof BlockItem blockItem))
 			return;
 

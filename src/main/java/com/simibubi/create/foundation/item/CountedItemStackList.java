@@ -10,22 +10,26 @@ import java.util.stream.Stream;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.IntAttached;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CountedItemStackList {
 
 	Map<Item, Set<ItemStackEntry>> items = new HashMap<>();
 
-	public CountedItemStackList(IItemHandler inventory, FilteringBehaviour filteringBehaviour) {
-		for (int slot = 0; slot < inventory.getSlots(); slot++) {
-			ItemStack extractItem = inventory.extractItem(slot, inventory.getSlotLimit(slot), true);
-			if (filteringBehaviour.test(extractItem))
-				add(extractItem);
+	public CountedItemStackList(Storage<ItemVariant> inventory, FilteringBehaviour filteringBehaviour) {
+		try (Transaction t = TransferUtil.getTransaction()){
+			for (StorageView<ItemVariant> view : inventory.iterable(t)) {
+				if (filteringBehaviour.test(view.getResource().toStack()))
+					add(view.getResource().toStack((int) view.getAmount()));
+			}
 		}
 	}
 

@@ -3,8 +3,10 @@ package com.simibubi.create.content.logistics.trains.track;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -18,8 +20,10 @@ import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -30,17 +34,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.fabricmc.api.EnvType;
-import net.minecraftforge.client.event.DrawSelectionEvent;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(EnvType.CLIENT)
 public class TrackBlockOutline {
 
 	public static WorldAttached<Map<BlockPos, TrackTileEntity>> TRACKS_WITH_TURNS =
@@ -63,7 +62,7 @@ public class TrackBlockOutline {
 
 		result = null;
 
-		AttributeInstance range = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+		AttributeInstance range = player.getAttribute(ReachEntityAttributes.REACH);
 		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range.getValue()) + 1, origin);
 		Map<BlockPos, TrackTileEntity> turns = TRACKS_WITH_TURNS.get(mc.level);
 
@@ -161,25 +160,24 @@ public class TrackBlockOutline {
 		ms.popPose();
 	}
 
-	@SubscribeEvent
-	public static void drawCustomBlockSelection(DrawSelectionEvent.HighlightBlock event) {
+	public static boolean drawCustomBlockSelection(LevelRenderer context, Camera info, HitResult hitResult, float partialTicks, PoseStack ms, MultiBufferSource buffers) {
+		if (!(hitResult instanceof BlockHitResult))
+			return false;
 		Minecraft mc = Minecraft.getInstance();
-		BlockHitResult target = event.getTarget();
+		BlockHitResult target = (BlockHitResult) hitResult;
 		BlockPos pos = target.getBlockPos();
 		BlockState blockstate = mc.level.getBlockState(pos);
 
 		if (!(blockstate.getBlock() instanceof TrackBlock))
-			return;
+			return false;
 		if (!mc.level.getWorldBorder()
 			.isWithinBounds(pos))
-			return;
+			return false;
 
-		VertexConsumer vb = event.getMultiBufferSource()
+		VertexConsumer vb = buffers
 			.getBuffer(RenderType.lines());
-		Vec3 camPos = event.getCamera()
+		Vec3 camPos = info
 			.getPosition();
-
-		PoseStack ms = event.getPoseStack();
 
 		ms.pushPose();
 		ms.translate(pos.getX() - camPos.x, pos.getY() - camPos.y, pos.getZ() - camPos.z);
@@ -187,12 +185,14 @@ public class TrackBlockOutline {
 		boolean holdingTrack = AllBlocks.TRACK.isIn(Minecraft.getInstance().player.getMainHandItem());
 		TrackShape shape = blockstate.getValue(TrackBlock.SHAPE);
 		boolean isJunction = shape.isJunction();
+		AtomicBoolean cancelled = new AtomicBoolean(false);
 		walkShapes(shape, TransformStack.cast(ms), s -> {
 			renderShape(s, ms, vb, holdingTrack ? !isJunction : null);
-			event.setCanceled(true);
+			cancelled.set(true);
 		});
 
 		ms.popPose();
+		return !cancelled.get();
 	}
 
 	private static void renderShape(VoxelShape s, PoseStack ms, VertexConsumer vb, Boolean valid) {
