@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 import java.util.Set;
 import java.util.function.Supplier;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.core.BlockPos;
@@ -10,8 +11,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public class SuperGlueSelectionPacket extends SimplePacketBase {
 
@@ -40,8 +39,7 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 		ctx.enqueueWork(() -> {
 			ServerPlayer player = ctx.getSender();
 
-			double range = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
-				.getValue() + 2;
+			double range = ReachEntityAttributes.getReachDistance(player, player.isCreative() ? 5 : 4.5) + 2;
 			if (player.distanceToSqr(Vec3.atCenterOf(to)) > range * range)
 				return;
 			if (!to.closerThan(from, 25))

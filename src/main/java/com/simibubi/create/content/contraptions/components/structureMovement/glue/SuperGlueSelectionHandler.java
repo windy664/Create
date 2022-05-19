@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.google.common.base.Objects;
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
@@ -28,7 +29,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
 
 public class SuperGlueSelectionHandler {
 
@@ -74,8 +74,7 @@ public class SuperGlueSelectionHandler {
 
 		selected = null;
 		if (firstPos == null) {
-			double range = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
-				.getValue() + 1;
+			double range = ReachEntityAttributes.getReachDistance(player, mc.gameMode.getPickRange()) + 1;
 			Vec3 traceOrigin = RaycastHelper.getTraceOrigin(player);
 			Vec3 traceTarget = RaycastHelper.getTraceTarget(player, range, traceOrigin);
 

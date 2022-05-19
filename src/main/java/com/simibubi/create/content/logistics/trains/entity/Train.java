@@ -16,6 +16,17 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.Contraption.ContraptionInvWrapper;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+
+import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.server.level.ServerPlayer;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -60,10 +71,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.network.PacketDistributor;
 
 public class Train {
 
@@ -534,7 +541,7 @@ public class Train {
 		status.crash();
 	}
 
-	public boolean disassemble(Direction assemblyDirection, BlockPos pos) {
+	public boolean disassemble(ServerPlayer sender, Direction assemblyDirection, BlockPos pos) {
 		if (!canDisassemble())
 			return false;
 
@@ -564,7 +571,7 @@ public class Train {
 			currentStation.cancelReservation(this);
 
 		Create.RAILWAYS.removeTrain(id);
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(this, false));
+		AllPackets.channel.sendToClientsInServer(new TrainPacket(this, false), sender.server);
 		return true;
 	}
 
@@ -872,19 +879,21 @@ public class Train {
 		for (int index = 0; index < carriageCount; index++) {
 			int i = iterateFromBack ? carriageCount - 1 - index : index;
 			Carriage carriage = carriages.get(i);
-			IItemHandlerModifiable fuelItems = carriage.storage.getFuelItems();
+			ContraptionInvWrapper fuelItems = carriage.storage.getFuelItems();
 
-			for (int slot = 0; slot < fuelItems.getSlots(); slot++) {
-				ItemStack stack = fuelItems.extractItem(slot, 1, true);
-				int burnTime = ForgeHooks.getBurnTime(stack, null);
-				if (burnTime <= 0)
-					continue;
-
-				stack = fuelItems.extractItem(slot, 1, false);
-				fuelTicks += burnTime * stack.getCount();
-				ItemStack containerItem = stack.getContainerItem();
-				if (!containerItem.isEmpty())
-					ItemHandlerHelper.insertItemStacked(fuelItems, containerItem, false);
+			try (Transaction t = TransferUtil.getTransaction()) {
+				for (StorageView<ItemVariant> view : fuelItems.iterable(t)) {
+					ItemVariant held = view.getResource();
+					Integer burnTime = FuelRegistry.INSTANCE.get(held.getItem());
+					if (burnTime == null || burnTime <= 0)
+						continue;
+					if (view.extract(held, 1, t) != 1)
+						continue;
+					fuelTicks += burnTime;
+					ItemStack containerItem = new ItemStack(held.getItem().getCraftingRemainingItem());
+					if (!containerItem.isEmpty())
+						TransferUtil.insertItem(fuelItems, containerItem);
+				}
 			}
 		}
 	}

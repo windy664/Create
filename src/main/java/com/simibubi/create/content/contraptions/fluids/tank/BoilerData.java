@@ -10,12 +10,17 @@ import com.simibubi.create.content.contraptions.components.steam.whistle.Whistle
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import joptsimple.internal.Strings;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,8 +31,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class BoilerData {
 
@@ -68,7 +71,7 @@ public class BoilerData {
 		ticksUntilNextSample--;
 		if (ticksUntilNextSample > 0)
 			return;
-		int capacity = controller.tankInventory.getCapacity();
+		long capacity = controller.tankInventory.getCapacity();
 		if (capacity == 0)
 			return;
 
@@ -153,10 +156,10 @@ public class BoilerData {
 			.append(w));
 		tooltip.add(indent2.plainCopy()
 			.append(h));
-		
+
 		if (attachedEngines == 0)
 			return true;
-		
+
 		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(boilerLevel, attachedEngines)
 			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
 		Component capacity =
@@ -301,48 +304,29 @@ public class BoilerData {
 		return new BoilerFluidHandler();
 	}
 
-	public class BoilerFluidHandler implements IFluidHandler {
+	public class BoilerFluidHandler extends SmartFluidTank {
 
-		@Override
-		public int getTanks() {
-			return 1;
+		public BoilerFluidHandler() {
+			super(10000, (f) -> {});
+			setFluid(FluidStack.EMPTY);
 		}
 
-		@Override
-		public FluidStack getFluidInTank(int tank) {
-			return FluidStack.EMPTY;
-		}
-
-		@Override
-		public int getTankCapacity(int tank) {
-			return 10000;
-		}
-
-		@Override
-		public boolean isFluidValid(int tank, FluidStack stack) {
+		public boolean isFluidValid(FluidVariant stack) {
 			return FluidHelper.isWater(stack.getFluid());
 		}
 
 		@Override
-		public int fill(FluidStack resource, FluidAction action) {
-			if (!isFluidValid(0, resource))
+		public long insert(FluidVariant insertedVariant, long maxAmount, TransactionContext transaction) {
+			if (!isFluidValid(insertedVariant))
 				return 0;
-			int amount = resource.getAmount();
-			if (action.execute())
-				gatheredSupply += amount;
-			return amount;
+			gatheredSupply += maxAmount;
+			return maxAmount;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, FluidAction action) {
-			return FluidStack.EMPTY;
+		public long extract(FluidVariant extractedVariant, long maxAmount, TransactionContext transaction) {
+			return 0;
 		}
-
-		@Override
-		public FluidStack drain(int maxDrain, FluidAction action) {
-			return FluidStack.EMPTY;
-		}
-
 	}
 
 }

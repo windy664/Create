@@ -22,6 +22,8 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.Pair;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Registry;
@@ -40,7 +42,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
 
 public class TrackTileEntity extends SmartTileEntity implements ITransformableTE, IMergeableTE {
 
@@ -182,7 +183,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 			connections.put(connection.getKey(), connection);
 		}
 
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 
 		if (hasInteractableConnections())
 			registerToCurveInteraction();
@@ -278,11 +279,11 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	}
 
 	private void registerToCurveInteraction() {
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::registerToCurveInteractionUnsafe);
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerToCurveInteractionUnsafe);
 	}
 
 	private void removeFromCurveInteraction() {
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::removeFromCurveInteractionUnsafe);
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::removeFromCurveInteractionUnsafe);
 	}
 
 	@Environment(EnvType.CLIENT)

@@ -8,6 +8,8 @@ import com.simibubi.create.content.logistics.block.depot.SharedDepotBlockMethods
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -30,7 +32,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
 
 public class StationBlock extends Block implements ITE<StationTileEntity> {
 
@@ -73,7 +74,7 @@ public class StationBlock extends Block implements ITE<StationTileEntity> {
 		super.updateEntityAfterFallOn(worldIn, entityIn);
 		SharedDepotBlockMethods.onLanded(worldIn, entityIn);
 	}
-	
+
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
@@ -99,7 +100,7 @@ public class StationBlock extends Block implements ITE<StationTileEntity> {
 		});
 
 		if (result == InteractionResult.PASS)
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT,
+			EnvExecutor.runWhenOn(EnvType.CLIENT,
 				() -> () -> withTileEntityDo(pLevel, pPos, te -> this.displayScreen(te, pPlayer)));
 		return InteractionResult.SUCCESS;
 	}

@@ -48,6 +48,10 @@ import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -69,11 +73,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.network.PacketDistributor;
 
-public class StationTileEntity extends SmartTileEntity implements ITransformableTE {
+public class StationTileEntity extends SmartTileEntity implements ITransformableTE, ItemTransferable {
 
 	public TrackTargetingBehaviour<GlobalStation> edgePoint;
 	public LerpedFloat flag;
@@ -271,17 +272,17 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		level.setBlock(pos.offset(up), bogeyAnchor, 3);
 		player.displayClientMessage(Lang.translate("train_assembly.bogey_created"), true);
 		SoundType soundtype = bogeyAnchor.getBlock()
-			.getSoundType(state, level, pos, player);
+			.getSoundType(state);
 		level.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F,
 			soundtype.getPitch() * 0.8F);
-		
+
 		if (!player.isCreative()) {
 			ItemStack itemInHand = player.getItemInHand(hand);
 			itemInHand.shrink(1);
 			if (itemInHand.isEmpty())
 				player.setItemInHand(hand, ItemStack.EMPTY);
 		}
-		
+
 		return true;
 	}
 
@@ -603,7 +604,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 
 		train.collectInitiallyOccupiedSignalBlocks();
 		Create.RAILWAYS.addTrain(train);
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, true));
+		AllPackets.channel.sendToClientsInServer(new TrainPacket(train, true), level.getServer());
 		clearException();
 	}
 
@@ -641,11 +642,10 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		return depotBehaviour.getHeldItemStack();
 	}
 
+	@Nullable
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap))
-			return depotBehaviour.getItemCapability(cap, side);
-		return super.getCapability(cap, side);
+	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
+		return depotBehaviour.itemHandler;
 	}
 
 	private void applyAutoSchedule() {

@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,7 +38,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
 
 public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<DisplayLinkTileEntity> {
 
@@ -126,7 +127,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 			return InteractionResult.PASS;
 		if (pPlayer.isSteppingCarefully())
 			return InteractionResult.PASS;
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT,
+		EnvExecutor.runWhenOn(EnvType.CLIENT,
 			() -> () -> withTileEntityDo(pLevel, pPos, te -> this.displayScreen(te, pPlayer)));
 		return InteractionResult.SUCCESS;
 	}

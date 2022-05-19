@@ -21,6 +21,8 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -1068,14 +1070,6 @@ public abstract class Contraption {
 		storage.clear();
 	}
 
-	private void clearInternal(ContraptionInvWrapper inv) {
-		for (Storage<ItemVariant> storage : inv.parts) {
-			if (!(storage instanceof ContraptionInvWrapper wrapper) || !wrapper.isExternal) {
-				TransferUtil.clearStorage(storage);
-			}
-		}
-	}
-
 	public void addPassengersToWorld(Level world, StructureTransform transform, List<Entity> seatedEntities) {
 		for (Entity seatedEntity : seatedEntities) {
 			if (getSeatMapping().isEmpty())
@@ -1252,15 +1246,15 @@ public abstract class Contraption {
 		return maxDistSq;
 	}
 
-	public IItemHandlerModifiable getSharedInventory() {
+	public ContraptionInvWrapper getSharedInventory() {
 		return storage.getItems();
 	}
 
-	public IItemHandlerModifiable getSharedFuelInventory() {
+	public ContraptionInvWrapper getSharedFuelInventory() {
 		return storage.getFuelItems();
 	}
 
-	public IFluidHandler getSharedFluidTanks() {
+	public CombinedTankWrapper getSharedFluidTanks() {
 		return storage.getFluids();
 	}
 

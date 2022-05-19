@@ -13,7 +13,9 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import io.github.fabricators_of_create.porting_lib.extensions.RegistryNameProvider;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
@@ -22,7 +24,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class CarriageBogey {
 
@@ -144,7 +145,7 @@ public class CarriageBogey {
 
 	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
-		tag.putString("Type", ((Block) type).getRegistryName()
+		tag.putString("Type", ((RegistryNameProvider) type).getRegistryName()
 			.toString());
 		tag.put("Points", points.serializeEach(tp -> tp.write(dimensions)));
 		return tag;
@@ -152,7 +153,7 @@ public class CarriageBogey {
 
 	public static CarriageBogey read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
 		ResourceLocation location = new ResourceLocation(tag.getString("Type"));
-		IBogeyBlock type = (IBogeyBlock) ForgeRegistries.BLOCKS.getValue(location);
+		IBogeyBlock type = (IBogeyBlock) Registry.BLOCK.get(location);
 		Couple<TravellingPoint> points = Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND),
 			c -> TravellingPoint.read(c, graph, dimensions));
 		CarriageBogey carriageBogey = new CarriageBogey(type, points.getFirst(), points.getSecond());

@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -42,8 +44,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.AABB;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class CarriageContraption extends Contraption {
 
@@ -132,7 +132,7 @@ public class CarriageContraption extends Contraption {
 		}
 		storageProxy = carriage.storage;
 	}
-	
+
 	public void returnStorageForDisassembly(MountedStorageManager storage) {
 		this.storage = storage;
 	}
@@ -316,12 +316,12 @@ public class CarriageContraption extends Contraption {
 	}
 
 	@Override
-	public IItemHandlerModifiable getSharedInventory() {
+	public ContraptionInvWrapper getSharedInventory() {
 		return storageProxy.getItems();
 	}
 
 	@Override
-	public IFluidHandler getSharedFluidTanks() {
+	public CombinedTankWrapper getSharedFluidTanks() {
 		return storageProxy.getFluids();
 	}
 

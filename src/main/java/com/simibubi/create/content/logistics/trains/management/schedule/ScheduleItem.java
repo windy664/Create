@@ -37,7 +37,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.client.NetworkHooks;
 
 public class ScheduleItem extends Item implements MenuProvider {
 

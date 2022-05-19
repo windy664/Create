@@ -5,8 +5,10 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.block.BlockStressValues;
 
+import io.github.fabricators_of_create.porting_lib.extensions.RegistryNameProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -15,7 +17,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 
@@ -70,7 +71,7 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 		if (enginePos != null && capacityKey != null) {
 			compound.put("EnginePos", NbtUtils.writeBlockPos(enginePos));
 			compound.putFloat("EnginePower", engineEfficiency);
-			compound.putString("EngineType", capacityKey.getRegistryName().toString());
+			compound.putString("EngineType", ((RegistryNameProvider) capacityKey).getRegistryName().toString());
 		}
 		super.write(compound, clientPacket);
 	}
@@ -84,7 +85,7 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 		if (compound.contains("EnginePos")) {
 			enginePos = NbtUtils.readBlockPos(compound.getCompound("EnginePos"));
 			engineEfficiency = compound.getFloat("EnginePower");
-			capacityKey = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(compound.getString("EngineType")));
+			capacityKey = Registry.BLOCK.get(new ResourceLocation(compound.getString("EngineType")));
 		}
 	}
 
@@ -113,7 +114,7 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 		int combinedCoords = axis.choose(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 		return super.getRotationAngleOffset(axis) + (combinedCoords % 2 == 0 ? 180 : 0);
 	}
-	
+
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return false;

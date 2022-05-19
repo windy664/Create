@@ -17,6 +17,11 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
+import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
+
 import org.apache.commons.lang3.mutable.MutableDouble;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -47,7 +52,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
 
 public class Carriage {
 
@@ -113,7 +117,7 @@ public class Carriage {
 		for (Entity player : players)
 			player.stopRiding();
 
-		serialisedEntity = entity.serializeNBT();
+		serialisedEntity = NBTSerializer.serializeNBTCompound(entity);
 	}
 
 	public DimensionalCarriageEntity getDimensional(Level level) {
@@ -343,10 +347,10 @@ public class Carriage {
 						: pivoted(dce, dimension, point, leadingWheelSpacing));
 				}
 			}
-			
+
 			int prevmin = dce.minAllowedLocalCoord();
 			int prevmax = dce.maxAllowedLocalCoord();
-			
+
 			dce.updateCutoff(leading);
 
 			if (prevmin != dce.minAllowedLocalCoord() || prevmax != dce.maxAllowedLocalCoord()) {
@@ -441,7 +445,7 @@ public class Carriage {
 			Map<UUID, Integer> mapping = contraption.getSeatMapping();
 			for (Entity passenger : entity.getPassengers())
 				if (mapping.containsKey(passenger.getUUID()))
-					passengerMap.put(mapping.get(passenger.getUUID()), passenger.serializeNBT());
+					passengerMap.put(mapping.get(passenger.getUUID()), NBTSerializer.serializeNBTCompound(passenger));
 		}
 
 		tag.put("Entity", serialisedEntity.copy());
@@ -462,7 +466,7 @@ public class Carriage {
 	}
 
 	private void serialize(Entity entity) {
-		serialisedEntity = entity.serializeNBT();
+		serialisedEntity = NBTSerializer.serializeNBTCompound(entity);
 		serialisedEntity.remove("Passengers");
 		serialisedEntity.getCompound("Contraption")
 			.remove("Passengers");
@@ -715,7 +719,7 @@ public class Carriage {
 					continue;
 				}
 
-				serialisedPassengers.put(seat, passenger.serializeNBT());
+				serialisedPassengers.put(seat, NBTSerializer.serializeNBTCompound(passenger));
 				passenger.discard();
 			}
 
@@ -731,7 +735,7 @@ public class Carriage {
 			tag.putUUID("PlayerPassenger", sp.getUUID());
 			serialisedPassengers.put(seat, tag);
 			sp.stopRiding();
-			sp.getPersistentData()
+			EntityHelper.getExtraCustomData(sp)
 				.remove("ContraptionDismountLocation");
 
 			for (Entry<ResourceKey<Level>, DimensionalCarriageEntity> other : entities.entrySet()) {
@@ -762,7 +766,7 @@ public class Carriage {
 			cc.portalCutoffMax = maxAllowedLocalCoord();
 			if (!entity.level.isClientSide())
 				return;
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> invalidate(cce));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> invalidate(cce));
 		}
 
 		@Environment(EnvType.CLIENT)
@@ -783,7 +787,7 @@ public class Carriage {
 			}
 
 			this.entity = new WeakReference<>(cce);
-			
+
 			cce.setGraph(train.graph == null ? null : train.graph.id);
 			cce.setCarriage(Carriage.this);
 			cce.syncCarriage();
@@ -809,7 +813,7 @@ public class Carriage {
 						continue;
 					}
 
-					serialisedPassengers.put(seat, passenger.serializeNBT());
+					serialisedPassengers.put(seat, NBTSerializer.serializeNBTCompound(passenger));
 				}
 			}
 

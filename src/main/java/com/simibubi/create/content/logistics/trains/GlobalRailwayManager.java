@@ -219,13 +219,13 @@ public class GlobalRailwayManager {
 
 		for (Iterator<Train> iterator = waitingTrains.iterator(); iterator.hasNext();) {
 			Train train = iterator.next();
-			
+
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
 				continue;
 			}
-			
+
 			if (train.navigation.waitingForSignal != null)
 				continue;
 			movingTrains.add(train);
@@ -234,20 +234,20 @@ public class GlobalRailwayManager {
 
 		for (Iterator<Train> iterator = movingTrains.iterator(); iterator.hasNext();) {
 			Train train = iterator.next();
-			
+
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
 				continue;
 			}
-			
+
 			if (train.navigation.waitingForSignal == null)
 				continue;
 			waitingTrains.add(train);
 			iterator.remove();
 		}
-		
-		
+
+
 	}
 
 	public void tickSignalOverlay() {
@@ -266,7 +266,7 @@ public class GlobalRailwayManager {
 		if (level != null && !level.isClientSide())
 			return this;
 		MutableObject<GlobalRailwayManager> m = new MutableObject<>();
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> clientManager(m));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> clientManager(m));
 		return m.getValue();
 	}
 

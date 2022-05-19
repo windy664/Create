@@ -53,7 +53,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	TransportedItemStack heldItem;
 	List<TransportedItemStack> incoming;
 	ItemStackHandler processingOutputBuffer;
-	DepotItemHandler itemHandler;
+	public DepotItemHandler itemHandler;
 	TransportedItemStackHandlerBehaviour transportedHandler;
 	Supplier<Integer> maxStackSize;
 	Supplier<Boolean> canAcceptItems;

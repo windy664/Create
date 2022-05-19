@@ -18,6 +18,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +33,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
 
 public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
@@ -77,7 +78,7 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 			&& (tank.boiler.passiveHeat || tank.boiler.activeHeat > 0);
 		animation.chase(powered ? 1 : 0, powered ? .5f : .4f, powered ? Chaser.EXP : Chaser.LINEAR);
 		animation.tickChaser();
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> this.tickAudio(getOctave(), powered));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> this.tickAudio(getOctave(), powered));
 	}
 
 	@Override

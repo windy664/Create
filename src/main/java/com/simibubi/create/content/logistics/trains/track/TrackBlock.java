@@ -96,7 +96,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IBlockRenderProperties;
 
 public class TrackBlock extends Block implements EntityBlock, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement {
 

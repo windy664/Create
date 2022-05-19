@@ -47,6 +47,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	protected boolean forceFluidLevelUpdate;
 	protected SmartFluidTank tankInventory;
+	protected FluidTank exposedTank;
 	protected BlockPos controller;
 	protected BlockPos lastKnownPos;
 	protected boolean updateConnectivity;
@@ -73,6 +74,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		height = 1;
 		width = 1;
 		boiler = new BoilerData();
+		refreshCapability();
 	}
 
 	protected SmartFluidTank createInventory() {
@@ -238,6 +240,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			getLevel().setBlock(worldPosition, state, 23);
 		}
 
+		refreshCapability();
 		setChanged();
 		sendData();
 	}
@@ -334,20 +337,18 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (controller.equals(this.controller))
 			return;
 		this.controller = controller;
+		refreshCapability();
 		setChanged();
 		sendData();
 	}
 
-	// TOTO TRAIN PORT
 	private void refreshCapability() {
-		LazyOptional<IFluidHandler> oldCap = fluidCapability;
-		fluidCapability = LazyOptional.of(() -> handlerForCapability());
-		oldCap.invalidate();
+		exposedTank = handlerForCapability();
 	}
 
-	private IFluidHandler handlerForCapability() {
+	private FluidTank handlerForCapability() {
 		return isController() ? boiler.isActive() ? boiler.createHandler() : tankInventory
-			: getControllerTE() != null ? getControllerTE().handlerForCapability() : new FluidTank(0);
+				: getControllerTE() != null ? getControllerTE().handlerForCapability() : new FluidTank(0);
 	}
 
 	@Override
@@ -519,9 +520,6 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	@Nullable
 	@Override
 	public Storage<FluidVariant> getFluidStorage(@Nullable Direction direction) {
-		FluidTankTileEntity controller = getControllerTE();
-		if (controller != null)
-			return controller.getTankInventory();
-		return getTankInventory();
+		return exposedTank;
 	}
 }

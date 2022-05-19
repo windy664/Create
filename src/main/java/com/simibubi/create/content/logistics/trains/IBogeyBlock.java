@@ -12,9 +12,11 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
 import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
 
+import io.github.fabricators_of_create.porting_lib.extensions.RegistryNameProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -22,7 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public interface IBogeyBlock extends IWrenchable {
 
@@ -61,7 +62,7 @@ public interface IBogeyBlock extends IWrenchable {
 	@Override
 	default BlockState getRotatedBlockState(BlockState state, Direction targetedFace) {
 		Block block = state.getBlock();
-		int indexOf = BOGEYS.indexOf(block.getRegistryName());
+		int indexOf = BOGEYS.indexOf(((RegistryNameProvider) block).getRegistryName());
 		if (indexOf == -1)
 			return state;
 
@@ -71,7 +72,7 @@ public interface IBogeyBlock extends IWrenchable {
 
 		while (index != indexOf) {
 			ResourceLocation id = BOGEYS.get(index);
-			Block newBlock = ForgeRegistries.BLOCKS.getValue(id);
+			Block newBlock = Registry.BLOCK.get(id);
 			if (newBlock instanceof IBogeyBlock bogey) {
 				BlockState matchingBogey = bogey.getMatchingBogey(bogeyUpDirection, trackAxisAlongFirstCoordinate);
 				if (matchingBogey != null)

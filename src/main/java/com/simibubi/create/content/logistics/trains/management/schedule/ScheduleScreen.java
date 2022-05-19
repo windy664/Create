@@ -10,6 +10,9 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
+import io.github.fabricators_of_create.porting_lib.util.client.GuiUtils;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -63,7 +66,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.GuiUtils;
 
 public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContainer> {
 
@@ -369,7 +371,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		else {
 			renderBackground(matrixStack);
 			renderBg(matrixStack, partialTicks, mouseX, mouseY);
-			for (Widget widget : this.renderables)
+			for (Widget widget : ((ScreenAccessor) this).port_lib$getRenderables())
 				widget.render(matrixStack, mouseX, mouseY, partialTicks);
 			renderForeground(matrixStack, mouseX, mouseY, partialTicks);
 		}

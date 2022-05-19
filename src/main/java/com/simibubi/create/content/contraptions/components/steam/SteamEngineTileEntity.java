@@ -17,6 +17,8 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -30,7 +32,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
 
 public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
@@ -78,7 +79,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 		if (!level.isClientSide)
 			return;
 
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::spawnParticles);
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::spawnParticles);
 	}
 
 	@Override
@@ -94,7 +95,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 	protected AABB createRenderBoundingBox() {
 		return super.createRenderBoundingBox().inflate(2);
 	}
-	
+
 	public PoweredShaftTileEntity getShaft() {
 		PoweredShaftTileEntity shaft = target.get();
 		if (shaft == null || shaft.isRemoved() || !shaft.canBePoweredBy(worldPosition)) {
@@ -199,7 +200,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 			angle *= -1;
 		return angle;
 	}
-	
+
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		PoweredShaftTileEntity shaft = getShaft();
