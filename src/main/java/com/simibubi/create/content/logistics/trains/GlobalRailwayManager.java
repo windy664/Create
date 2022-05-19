@@ -12,6 +12,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.CreateClient;
@@ -29,8 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.PacketDistributor;
 
 public class GlobalRailwayManager {
 
@@ -62,8 +62,7 @@ public class GlobalRailwayManager {
 					.toList(),
 				serverPlayer);
 			for (Train train : trains.values())
-				AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-					new TrainPacket(train, true));
+				AllPackets.channel.sendToClient(new TrainPacket(train, true), serverPlayer);
 		}
 	}
 

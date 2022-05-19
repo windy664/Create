@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -24,7 +26,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fluids.FluidStack;
 
 public class FluidThresholdCondition extends CargoThresholdCondition {
 	public ItemStack compareStack = ItemStack.EMPTY;
@@ -43,7 +44,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	@Override
 	protected void write(CompoundTag tag) {
 		super.write(tag);
-		tag.put("Bucket", compareStack.serializeNBT());
+		tag.put("Bucket", NBTSerializer.serializeNBTCompound(compareStack));
 	}
 
 	@Override

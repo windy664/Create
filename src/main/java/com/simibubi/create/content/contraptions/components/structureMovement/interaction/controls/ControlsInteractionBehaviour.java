@@ -7,11 +7,12 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.fml.DistExecutor;
 
 public class ControlsInteractionBehaviour extends MovingInteractionBehaviour {
 

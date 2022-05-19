@@ -1,9 +1,12 @@
 package com.simibubi.create.foundation.block;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+
+import com.simibubi.create.foundation.utility.fabric.ReachUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -14,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
 
 public class BigOutlines {
 
@@ -35,8 +37,8 @@ public class BigOutlines {
 			: mc.hitResult.getLocation()
 				.distanceToSqr(origin);
 
-		AttributeInstance range = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
-		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range.getValue()) + 1, origin);
+		double range = ReachEntityAttributes.getReachDistance(player, mc.gameMode.getPickRange());
+		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range) + 1, origin);
 
 		RaycastHelper.rayTraceUntil(origin, target, pos -> {
 			MutableBlockPos p = BlockPos.ZERO.mutable();
@@ -89,8 +91,7 @@ public class BigOutlines {
 		double y = player.getY() - (pos.getY() + .5) + 1.5;
 		double z = player.getZ() - (pos.getZ() + .5);
 		double distSqr = x * x + y * y + z * z;
-		double maxDist = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
-			.getValue() + 1;
+		double maxDist = ReachUtil.reach(player) + 1;
 		maxDist *= maxDist;
 		return distSqr <= maxDist;
 	}
