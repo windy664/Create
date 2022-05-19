@@ -11,7 +11,6 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public class SignalEdgeGroupPacket extends SimplePacketBase {
 

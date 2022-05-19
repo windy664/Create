@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public class TrainCollisionPacket extends SimplePacketBase {
 
@@ -43,7 +42,7 @@ public class TrainCollisionPacket extends SimplePacketBase {
 			Entity entity = level.getEntity(contraptionEntityId);
 			if (!(entity instanceof CarriageContraptionEntity cce))
 				return;
-			
+
 			player.hurt(new EntityDamageSource("create.run_over", cce), (int) damage);
 		});
 		ctx.setPacketHandled(true);

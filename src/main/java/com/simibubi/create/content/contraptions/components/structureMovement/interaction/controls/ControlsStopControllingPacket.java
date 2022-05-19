@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public class ControlsStopControllingPacket extends SimplePacketBase {
 

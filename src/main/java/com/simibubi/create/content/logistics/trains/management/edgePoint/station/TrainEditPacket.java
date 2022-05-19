@@ -14,8 +14,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkEvent.Context;
-import net.minecraftforge.network.PacketDistributor;
 
 public class TrainEditPacket extends SimplePacketBase {
 
@@ -60,8 +58,8 @@ public class TrainEditPacket extends SimplePacketBase {
 			train.icon = TrainIconType.byId(iconType);
 			train.heldForAssembly = heldForAssembly;
 			if (sender != null)
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(),
-					new TrainEditReturnPacket(id, name, heldForAssembly, iconType));
+				AllPackets.channel.sendToClientsInServer(new TrainEditReturnPacket(id, name, heldForAssembly, iconType),
+						level.getServer());
 		});
 		ctx.setPacketHandled(true);
 	}

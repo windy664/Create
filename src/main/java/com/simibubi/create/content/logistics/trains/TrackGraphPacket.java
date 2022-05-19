@@ -6,8 +6,6 @@ import java.util.function.Supplier;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraftforge.network.NetworkEvent.Context;
-
 public abstract class TrackGraphPacket extends SimplePacketBase {
 
 	public UUID graphId;

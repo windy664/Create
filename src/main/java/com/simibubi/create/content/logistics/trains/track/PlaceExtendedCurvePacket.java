@@ -10,13 +10,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public class PlaceExtendedCurvePacket extends SimplePacketBase {
 
 	boolean mainHand;
 	boolean ctrlDown;
-	
+
 	public PlaceExtendedCurvePacket(boolean mainHand, boolean ctrlDown) {
 		this.mainHand = mainHand;
 		this.ctrlDown = ctrlDown;

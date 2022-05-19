@@ -19,7 +19,6 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.PacketDistributor;
 
 public class TrackGraphSync {
 
@@ -32,7 +31,7 @@ public class TrackGraphSync {
 		for (TrackGraphPacket packet : queuedPackets) {
 			if (!packet.packetDeletesGraph && !Create.RAILWAYS.trackNetworks.containsKey(packet.graphId))
 				continue;
-			AllPackets.channel.send(PacketDistributor.ALL.noArg(), packet);
+			AllPackets.channel.sendToClientsInCurrentServer(packet);
 		}
 		queuedPackets.clear();
 	}
