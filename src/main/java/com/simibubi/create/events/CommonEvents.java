@@ -3,9 +3,14 @@ package com.simibubi.create.events;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
 import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
 
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerHandler;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
@@ -263,6 +268,9 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
 		UseBlockCallback.EVENT.register(EdgeInteractionHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
+		UseBlockCallback.EVENT.register(SuperGlueItem::glueItemAlwaysPlacesWhenUsed);
+		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
+		UseBlockCallback.EVENT.register(DisplayLinkBlockItem::gathererItemAlwaysPlacesWhenUsed);
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
 		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);

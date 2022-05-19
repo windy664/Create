@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -20,30 +21,26 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event.Result;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class DisplayLinkBlockItem extends BlockItem {
 
 	public DisplayLinkBlockItem(Block pBlock, Properties pProperties) {
 		super(pBlock, pProperties);
 	}
 
-	@SubscribeEvent
-	public static void gathererItemAlwaysPlacesWhenUsed(PlayerInteractEvent.RightClickBlock event) {
-		ItemStack usedItem = event.getItemStack();
+	public static InteractionResult gathererItemAlwaysPlacesWhenUsed(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+		ItemStack usedItem = player.getItemInHand(hand);
 		if (usedItem.getItem() instanceof DisplayLinkBlockItem) {
-			if (AllBlocks.DISPLAY_LINK.has(event.getWorld()
-				.getBlockState(event.getPos())))
-				return;
-			event.setUseBlock(Result.DENY);
+			if (AllBlocks.DISPLAY_LINK.has(level
+				.getBlockState(hitResult.getBlockPos())))
+				return InteractionResult.PASS;
+			return InteractionResult.FAIL;
 		}
+		return InteractionResult.PASS;
 	}
 
 	@Override

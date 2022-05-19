@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -26,25 +27,21 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
-@EventBusSubscriber
 public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
-	@SubscribeEvent
-	public static void manualApplicationRecipesApplyInWorld(PlayerInteractEvent.RightClickBlock event) {
-		Level level = event.getWorld();
-		ItemStack heldItem = event.getItemStack();
-		BlockPos pos = event.getPos();
+	public static InteractionResult manualApplicationRecipesApplyInWorld(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+		ItemStack heldItem = player.getItemInHand(hand);
+		BlockPos pos = hitResult.getBlockPos();
 		BlockState blockState = level.getBlockState(pos);
 
 		if (level.isClientSide())
-			return;
+			return InteractionResult.PASS;
 		if (heldItem.isEmpty())
-			return;
+			return InteractionResult.PASS;
 		if (blockState.isAir())
-			return;
-		if (event.isCanceled())
-			return;
+			return InteractionResult.PASS;
 
 		RecipeType<Recipe<RecipeWrapper>> type = AllRecipeTypes.ITEM_APPLICATION.getType();
 		Optional<Recipe<RecipeWrapper>> foundRecipe = level.getRecipeManager()
@@ -58,7 +55,7 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 			.findFirst();
 
 		if (foundRecipe.isEmpty())
-			return;
+			return InteractionResult.PASS;
 
 		level.playSound(null, pos, SoundEvents.COPPER_BREAK, SoundSource.PLAYERS, 1, 1.45f);
 		ManualApplicationRecipe recipe = (ManualApplicationRecipe) foundRecipe.get();
@@ -73,13 +70,12 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
 		if (!unbreakable && !keepHeld) {
 			if (heldItem.isDamageableItem())
-				heldItem.hurtAndBreak(1, event.getPlayer(), s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+				heldItem.hurtAndBreak(1, player, s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 			else
 				heldItem.shrink(1);
 		}
 
-		event.setCancellationResult(InteractionResult.SUCCESS);
-		event.setCanceled(true);
+		return InteractionResult.SUCCESS;
 	}
 
 	public ManualApplicationRecipe(ProcessingRecipeParams params) {

@@ -11,31 +11,34 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-@EventBusSubscriber
+import org.apache.logging.log4j.core.Filter.Result;
+
 public class SuperGlueItem extends Item {
 
-	@SubscribeEvent
-	public static void glueItemAlwaysPlacesWhenUsed(PlayerInteractEvent.RightClickBlock event) {
-		if (event.getHitVec() != null) {
-			BlockState blockState = event.getWorld()
-				.getBlockState(event.getHitVec()
+	public static InteractionResult glueItemAlwaysPlacesWhenUsed(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+		if (hitResult != null) {
+			BlockState blockState = world
+				.getBlockState(hitResult
 					.getBlockPos());
 			if (blockState.getBlock()instanceof AbstractChassisBlock cb)
-				if (cb.getGlueableSide(blockState, event.getFace()) != null)
-					return;
+				if (cb.getGlueableSide(blockState, hitResult.getDirection()) != null)
+					return InteractionResult.PASS;
 		}
 
-		if (event.getItemStack()
-			.getItem() instanceof SuperGlueItem)
-			event.setUseBlock(Result.DENY);
+		if (player.getItemInHand(hand).getItem() instanceof SuperGlueItem)
+			return InteractionResult.FAIL;
+		return InteractionResult.PASS;
 	}
 
 	public SuperGlueItem(Properties properties) {
