@@ -16,7 +16,7 @@ public class CarriageEntityHandler {
 			return;
 		if (!(entity instanceof CarriageContraptionEntity cce))
 			return;
-		SectionPos newPos = SectionPos.of(packedNewPos);;
+		SectionPos newPos = SectionPos.of(packedNewPos);
 		Level level = entity.getLevel();
 		if (level.isClientSide)
 			return;
