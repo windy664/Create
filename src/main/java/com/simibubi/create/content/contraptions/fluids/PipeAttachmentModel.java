@@ -34,11 +34,7 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-
 		PipeModelData data = new PipeModelData();
-		PipeModelData pipeData = data.getData(PIPE_PROPERTY);
-		quads = side != null && pipeData.hasRim(side) ? new ArrayList<>() : new ArrayList<>(quads);
 		FluidTransportBehaviour transport = TileEntityBehaviour.get(blockView, pos, FluidTransportBehaviour.TYPE);
 		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(blockView, pos, BracketedTileEntityBehaviour.TYPE);
 
@@ -49,6 +45,16 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 			data.putBracket(bracket.getBracket());
 
 		data.setEncased(FluidPipeBlock.shouldDrawCasing(blockView, pos, state));
+
+		context.pushTransform(quad -> {
+			Direction cullFace = quad.cullFace();
+			if (cullFace != null) {
+				return !data.hasRim(cullFace);
+			}
+			return true;
+		});
+		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		context.popTransform();
 
 		for (Direction d : Iterate.directions)
 			if (data.hasRim(d))
