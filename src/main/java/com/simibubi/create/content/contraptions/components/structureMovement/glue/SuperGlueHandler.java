@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -59,7 +60,7 @@ public class SuperGlueHandler {
 		ItemStack itemstack = placer.getOffhandItem();
 		if (!AllItems.SUPER_GLUE.isIn(itemstack))
 			return InteractionResult.PASS;
-		if (AllItems.WRENCH.isIn(placer.getMainHandItem()))
+		if (AllTags.AllItemTags.WRENCHES.matches(placer.getMainHandItem()))
 			return InteractionResult.PASS;
 		if (placedAgainst == IPlacementHelper.ID)
 			return InteractionResult.PASS;

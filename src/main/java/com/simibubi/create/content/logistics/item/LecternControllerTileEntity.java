@@ -7,7 +7,6 @@ import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;
@@ -84,20 +83,20 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 
 	private void startUsing(Player player) {
 		user = player.getUUID();
-		EntityHelper.getExtraCustomData(player).putBoolean("IsUsingLecternController", true);
+		player.getExtraCustomData().putBoolean("IsUsingLecternController", true);
 		sendData();
 	}
 
 	private void stopUsing(Player player) {
 		user = null;
 		if (player != null)
-			EntityHelper.getExtraCustomData(player).remove("IsUsingLecternController");
+			player.getExtraCustomData().remove("IsUsingLecternController");
 		deactivatedThisTick = true;
 		sendData();
 	}
 
 	public static boolean playerIsUsingLectern(Player player) {
-		return EntityHelper.getExtraCustomData(player).contains("IsUsingLecternController");
+		return player.getExtraCustomData().contains("IsUsingLecternController");
 	}
 
 	@Override
@@ -173,7 +172,7 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 
 	public static boolean playerInRange(Player player, Level world, BlockPos pos) {
 		//double modifier = world.isRemote ? 0 : 1.0;
-		double reach = 0.4*player.getAttributeValue(ReachEntityAttributes.REACH);// + modifier;
+		double reach = 0.4*ReachEntityAttributes.getReachDistance(player, player.isCreative() ? 5 : 4.5);// + modifier;
 		return player.distanceToSqr(Vec3.atCenterOf(pos)) < reach*reach;
 	}
 

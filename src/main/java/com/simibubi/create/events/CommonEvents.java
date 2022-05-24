@@ -259,6 +259,10 @@ public class CommonEvents {
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
 		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
 		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
+		UseBlockCallback.EVENT.register(WrenchItem::useOn);
+
+		// External Events
+
 		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
 		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
 		UseBlockCallback.EVENT.register(FilteringHandler::onBlockActivated);

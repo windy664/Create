@@ -1,16 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.KeyMappingAccessor;
-
-import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.EntityHitResult;
-
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.simibubi.create.AllItems;
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
@@ -18,11 +10,11 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
-import io.github.fabricators_of_create.porting_lib.util.EntityHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,15 +22,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import org.jetbrains.annotations.Nullable;
 
 public class ContraptionHandlerClient {
 
@@ -49,7 +38,7 @@ public class ContraptionHandlerClient {
 		if (!(player instanceof RemotePlayer))
 			return;
 		RemotePlayer remotePlayer = (RemotePlayer) player;
-		CompoundTag data = EntityHelper.getExtraCustomData(remotePlayer);
+		CompoundTag data = remotePlayer.getExtraCustomData();
 		if (!data.contains("LastOverrideLimbSwingUpdate"))
 			return;
 

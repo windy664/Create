@@ -24,6 +24,7 @@ import com.simibubi.create.events.ClientEvents;
 import com.simibubi.create.events.InputEvents;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
