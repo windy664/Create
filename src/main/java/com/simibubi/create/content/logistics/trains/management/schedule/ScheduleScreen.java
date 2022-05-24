@@ -11,6 +11,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
+import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 import io.github.fabricators_of_create.porting_lib.util.client.GuiUtils;
 
 import org.lwjgl.opengl.GL11;
@@ -912,7 +913,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			return super.keyPressed(pKeyCode, pScanCode, pModifiers);
 		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
 		boolean hitEnter = getFocused() instanceof EditBox && (pKeyCode == 257 || pKeyCode == 335);
-		boolean hitE = getFocused() == null && minecraft.options.keyInventory.isActiveAndMatches(mouseKey);
+		boolean hitE = getFocused() == null && KeyBindingHelper.isActiveAndMatches(minecraft.options.keyInventory, mouseKey);
 		if (hitE || hitEnter) {
 			onEditorClose.accept(true);
 			stopEditing();

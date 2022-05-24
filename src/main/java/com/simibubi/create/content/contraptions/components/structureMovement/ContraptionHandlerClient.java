@@ -1,5 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import com.simibubi.create.AllItems;
+
+import com.simibubi.create.foundation.utility.VecHelper;
+
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
@@ -28,6 +32,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nullable;
+
+import java.util.List;
 
 public class ContraptionHandlerClient {
 
@@ -85,7 +93,6 @@ public class ContraptionHandlerClient {
 			if (rayTraceResult == null)
 				continue;
 
-			InteractionHand hand = event.getHand();
 			Direction face = rayTraceResult.getDirection();
 			BlockPos pos = rayTraceResult.getBlockPos();
 

@@ -155,7 +155,7 @@ public class TrackGraphSync {
 	}
 
 	private TrackGraphSyncPacket flushAndCreateNew(TrackGraph graph, ServerPlayer player, TrackGraphSyncPacket packet) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), packet);
+		AllPackets.channel.sendToClient(packet, player);
 		packet = new TrackGraphSyncPacket(graph.id);
 		return packet;
 	}
