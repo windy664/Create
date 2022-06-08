@@ -11,6 +11,8 @@ import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
+import net.minecraft.core.Vec3i;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -494,15 +496,16 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
-			return VecHelper.getCenterOf(pos)
-				.add(Vec3.atLowerCornerOf(FunnelBlock.getFunnelFacing(cachedState)
+			Direction facing = FunnelBlock.getFunnelFacing(cachedState);
+			return VecHelper.getCenterOf(pos)  // FIXME SHOULD NEVER BE NULL
+				.add(Vec3.atLowerCornerOf(facing == null ? Vec3i.ZERO : facing
 					.getNormal()).scale(-.15f));
 		}
 
 		@Override
 		protected Direction getInteractionDirection() {
-			return FunnelBlock.getFunnelFacing(cachedState)
-				.getOpposite();
+			Direction facing = FunnelBlock.getFunnelFacing(cachedState);
+			return facing != null ? facing : Direction.UP; // FIXME SHOULD NEVER BE NULL
 		}
 
 		@Override
