@@ -47,6 +47,9 @@ import static net.minecraft.world.item.Items.HONEY_BOTTLE;
 
 @SuppressWarnings("UnstableApiUsage")
 public class AllFluids {
+	// Fabric: since a honey block is 4 bottles, we can't use the default 1/3 (27000)
+	// we can't make a block take 108000, since then it can't fit in the basin
+	public static final long HONEY_BOTTLE_AMOUNT = FluidConstants.BLOCK / 4;
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
@@ -106,13 +109,13 @@ public class AllFluids {
 					.onRegisterAfter(Item.class, honey -> {
 						Fluid source = honey.getSource();
 						FluidStorage.combinedItemApiProvider(HONEY_BOTTLE).register(context ->
-								new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(source), FluidConstants.BOTTLE));
+								new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(source), HONEY_BOTTLE_AMOUNT));
 						FluidStorage.combinedItemApiProvider(GLASS_BOTTLE).register(context ->
-								new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(HONEY_BOTTLE), source, FluidConstants.BOTTLE));
+								new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(HONEY_BOTTLE), source, HONEY_BOTTLE_AMOUNT));
 						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
-								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), HONEY_BOTTLE_AMOUNT));
 						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
-								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, HONEY_BOTTLE_AMOUNT));
 					})
 					.register();
 

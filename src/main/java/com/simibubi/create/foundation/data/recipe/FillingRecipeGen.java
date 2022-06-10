@@ -17,7 +17,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllFluidTags.HONEY.tag, FluidConstants.BOTTLE)
+	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllFluidTags.HONEY.tag, AllFluids.HONEY_BOTTLE_AMOUNT)
 		.require(Items.GLASS_BOTTLE)
 		.output(Items.HONEY_BOTTLE)),
 
@@ -29,7 +29,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 			.require(AllItems.BLAZE_CAKE_BASE.get())
 			.output(AllItems.BLAZE_CAKE.get())),
 
-		HONEYED_APPLE = create("honeyed_apple", b -> b.require(AllFluidTags.HONEY.tag, FluidConstants.BOTTLE)
+		HONEYED_APPLE = create("honeyed_apple", b -> b.require(AllFluidTags.HONEY.tag, AllFluids.HONEY_BOTTLE_AMOUNT)
 			.require(Items.APPLE)
 			.output(AllItems.HONEYED_APPLE.get())),
 
