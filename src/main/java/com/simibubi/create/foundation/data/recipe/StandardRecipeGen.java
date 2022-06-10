@@ -1385,9 +1385,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			wrapped.serializeRecipeData(object);
 			object.addProperty("result", outputOverride.toString());
 
-			JsonArray conds = new JsonArray();
 			ConditionJsonProvider.write(object, conditions.toArray(new ConditionJsonProvider[0]));
-			object.add("conditions", conds);
 		}
 
 	}

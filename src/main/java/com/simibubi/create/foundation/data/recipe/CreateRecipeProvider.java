@@ -11,7 +11,7 @@ import com.simibubi.create.Create;
 
 import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipesProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -19,7 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
-public abstract class CreateRecipeProvider extends FabricRecipesProvider {
+public abstract class CreateRecipeProvider extends FabricRecipeProvider {
 
 	protected final List<GeneratedRecipe> all = new ArrayList<>();
 
