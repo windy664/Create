@@ -77,14 +77,19 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 
 	public BeltProcessingBehaviour processingBehaviour;
 
+	// list holds the held item in index 0, followed by overflow items
 	public SnapshotParticipant<List<ItemStack>> snapshotParticipant = new SnapshotParticipant<>() {
 		@Override
 		protected List<ItemStack> createSnapshot() {
-			return new ArrayList<>(overflowItems);
+			List<ItemStack> stacks = new ArrayList<>();
+			stacks.add(player.getMainHandItem());
+			stacks.addAll(overflowItems);
+			return stacks;
 		}
 
 		@Override
 		protected void readSnapshot(List<ItemStack> snapshot) {
+			player.setItemInHand(InteractionHand.MAIN_HAND, snapshot.remove(0));
 			overflowItems = snapshot;
 		}
 	};
