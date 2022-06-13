@@ -15,12 +15,8 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
-
 import java.util.Iterator;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -202,9 +198,7 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 				return 0;
 			int toExtract = (int) Math.min(maxAmount, stack.getCount());
 			updateSnapshots(transaction);
-			te.snapshotParticipant.updateSnapshots(transaction);
 			ItemStack newStack = ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - toExtract);
-			newStack.shrink(toExtract);
 			heldSetter.accept(newStack);
 			return toExtract;
 		}
@@ -232,6 +226,12 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 
 		public ItemStack getStack() {
 			return heldGetter.get();
+		}
+
+		@Override
+		public void updateSnapshots(TransactionContext transaction) {
+			super.updateSnapshots(transaction);
+			te.snapshotParticipant.updateSnapshots(transaction);
 		}
 
 		@Override
