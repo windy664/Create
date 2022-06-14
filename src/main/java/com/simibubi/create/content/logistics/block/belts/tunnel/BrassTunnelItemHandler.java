@@ -1,18 +1,17 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.world.item.ItemStack;
 
-public class BrassTunnelItemHandler extends ItemStackHandler {
+public class BrassTunnelItemHandler implements SingleSlotStorage<ItemVariant> {
 
 	private BrassTunnelTileEntity te;
 
 	public BrassTunnelItemHandler(BrassTunnelTileEntity te) {
-		super(1);
 		this.te = te;
-		stacks[0] = te.stackToDistribute;
 	}
 
 	@Override
@@ -26,7 +25,10 @@ public class BrassTunnelItemHandler extends ItemStackHandler {
 
 		if (!te.canTakeItems())
 			return 0;
-		return super.insert(resource, maxAmount, transaction);
+		int toInsert = Math.min((int) maxAmount, resource.getItem().getMaxStackSize());
+
+		te.setStackToDistribute(resource.toStack(toInsert), transaction);
+		return toInsert;
 	}
 
 	@Override
@@ -38,12 +40,30 @@ public class BrassTunnelItemHandler extends ItemStackHandler {
 	}
 
 	@Override
-	public int getSlotLimit(int slot) {
-		return stacks[slot].isEmpty() ? 64 : stacks[slot].getMaxStackSize();
+	public boolean isResourceBlank() {
+		return getResource().isBlank();
 	}
 
 	@Override
-	protected void onFinalCommit() {
-		te.setStackToDistribute(stacks[0]);
+	public ItemVariant getResource() {
+		return ItemVariant.of(getStack());
+	}
+
+	@Override
+	public long getAmount() {
+		ItemStack stack = getStack();
+		return stack.isEmpty() ? 0 : stack.getCount();
+	}
+
+	@Override
+	public long getCapacity() {
+		return getStack().getMaxStackSize();
+	}
+
+	public ItemStack getStack() {
+		ItemStack stack = te.stackToDistribute;
+		if (stack.isEmpty())
+			return ItemStack.EMPTY;
+		return stack;
 	}
 }

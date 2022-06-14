@@ -12,11 +12,11 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 
-import net.minecraft.server.level.ServerLevel;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 
 import net.minecraft.world.level.Level;
 
@@ -43,7 +43,6 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
@@ -86,6 +85,20 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	protected ScrollOptionBehaviour<SelectionMode> selectionMode;
 	private BlockApiCache<Storage<ItemVariant>, Direction> beltCapabilityCache;
 	private BrassTunnelItemHandler tunnelCapability;
+
+	public final SnapshotParticipant<Pair<ItemStack, Float>> snapshotParticipant = new SnapshotParticipant<>() {
+
+		@Override
+		protected Pair<ItemStack, Float> createSnapshot() {
+			return Pair.of(stackToDistribute.copy(), distributionProgress);
+		}
+
+		@Override
+		protected void readSnapshot(Pair<ItemStack, Float> snapshot) {
+			stackToDistribute = snapshot.getLeft();
+			distributionProgress = snapshot.getRight();
+		}
+	};
 
 	public BrassTunnelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -325,6 +338,12 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		previousOutputIndex++;
 		previousOutputIndex %= amountTargets;
 		notifyUpdate();
+	}
+
+	public void setStackToDistribute(ItemStack stack, TransactionContext ctx) {
+		snapshotParticipant.updateSnapshots(ctx);
+		stackToDistribute = stack;
+		distributionProgress = -1;
 	}
 
 	public void setStackToDistribute(ItemStack stack) {
