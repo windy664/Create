@@ -1,20 +1,19 @@
 package com.simibubi.create.content.logistics.block.depot;
 
+import com.google.common.collect.Iterators;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 
-import io.github.fabricators_of_create.porting_lib.transfer.ViewOnlyWrappedStorageView;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Iterator;
 
-public class DepotItemHandler implements Storage<ItemVariant> {
+public class DepotItemHandler extends SnapshotParticipant<Unit> implements Storage<ItemVariant> {
 
 	private static final int MAIN_SLOT = 0;
 	private DepotBehaviour te;
@@ -25,117 +24,96 @@ public class DepotItemHandler implements Storage<ItemVariant> {
 
 	@Override
 	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		if (!te.getHeldItemStack()
-				.isEmpty() && !te.canMergeItems())
+		if (!te.getHeldItemStack().isEmpty() && !te.canMergeItems())
 			return 0;
 		if (!te.isOutputEmpty() && !te.canMergeItems())
 			return 0;
-		te.snapshotParticipant.updateSnapshots(transaction);
-		int maxInsert = (int) Math.min(maxAmount, resource.getItem().getMaxStackSize());
-		ItemStack remainder = te.insert(new TransportedItemStack(resource.toStack(maxInsert)), transaction);
-		return maxInsert - remainder.getCount();
+		int toInsert = Math.min((int) maxAmount, resource.getItem().getMaxStackSize());
+		ItemStack stack = resource.toStack(toInsert);
+		ItemStack remainder = te.insert(new TransportedItemStack(stack), transaction);
+		return stack.getCount() - remainder.getCount();
 	}
 
 	@Override
 	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 		long extracted = te.processingOutputBuffer.extract(resource, maxAmount, transaction);
-		if (extracted == 0) {
-			TransportedItemStack held = te.heldItem;
-			if (held == null)
-				return 0;
-			ItemStack stack = held.stack.copy();
-			extracted = Math.min(maxAmount, stack.getCount());
-			stack.shrink((int) extracted);
-			te.snapshotParticipant.updateSnapshots(transaction);
-			te.heldItem.stack = stack;
-			if (stack.isEmpty())
-				te.heldItem = null;
-		}
+		if (extracted == maxAmount)
+			return extracted;
+		extracted += extractFromMain(resource, maxAmount - extracted, transaction);
 		return extracted;
 	}
 
+	public long extractFromMain(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+		TransportedItemStack held = te.heldItem;
+		if (held == null)
+			return 0;
+		ItemStack stack = held.stack;
+		if (!resource.matches(stack))
+			return 0;
+		int toExtract = Math.min((int) maxAmount, Math.min(stack.getCount(), te.maxStackSize.get()));
+		stack = stack.copy();
+		stack.shrink(toExtract);
+		te.snapshotParticipant.updateSnapshots(transaction);
+		te.heldItem.stack = stack;
+		if (stack.isEmpty())
+			te.heldItem = null;
+		return toExtract;
+	}
+
 	@Override
-	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		return new DepotItemHandlerIterator(transaction);
+	public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
+		return Iterators.concat(Iterators.singletonIterator(new MainSlotView()), te.processingOutputBuffer.iterator(transaction));
 	}
 
-	public class DepotItemHandlerIterator implements Iterator<StorageView<ItemVariant>> {
-		private final Iterator<StorageView<ItemVariant>> outputItr;
-		private boolean main = true;
-
-		public DepotItemHandlerIterator(TransactionContext ctx) {
-			outputItr = te.processingOutputBuffer.iterator(ctx);
-			ctx.addCloseCallback((t, r) -> main = false); // outputItr invalidates itself so this is fine
-		}
-
-		@Override
-		public boolean hasNext() {
-			return main || outputItr.hasNext();
-		}
-
-		@Override
-		public StorageView<ItemVariant> next() {
-			if (main) {
-				main = false;
-				return new MainSlotStorageView();
-			} else {
-				return outputItr.next();
-			}
-		}
+	@Override
+	protected Unit createSnapshot() {
+		return Unit.INSTANCE;
 	}
 
-	public class MainSlotStorageView implements StorageView<ItemVariant> {
+	@Override
+	protected void readSnapshot(Unit snapshot) {
+	}
 
-		private ItemVariant var;
-		private int count;
-		private int max;
+	@Override
+	protected void onFinalCommit() {
+		super.onFinalCommit();
+		te.tileEntity.notifyUpdate();
+	}
 
-		private final ItemStack stack;
-
-		public MainSlotStorageView() {
-			TransportedItemStack stack = te.heldItem;
-			this.stack = stack == null ? ItemStack.EMPTY : stack.stack;
-			update();
-		}
-
-		private void update() {
-			this.var = ItemVariant.of(stack);
-			this.count = stack.getCount();
-			this.max = stack.getMaxStackSize();
-		}
+	public class MainSlotView implements StorageView<ItemVariant> {
 
 		@Override
 		public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-			if (resource.matches(stack)) {
-				int toExtract = (int) Math.min(count, maxAmount);
-				if (toExtract != 0) {
-					te.snapshotParticipant.updateSnapshots(transaction);
-					stack.shrink(toExtract);
-					update();
-					return toExtract;
-				}
-			}
-			return 0;
+			return extractFromMain(resource, maxAmount, transaction);
 		}
 
 		@Override
 		public boolean isResourceBlank() {
-			return var.isBlank();
+			return getResource().isBlank();
 		}
 
 		@Override
 		public ItemVariant getResource() {
-			return var;
+			return ItemVariant.of(getStack());
 		}
 
 		@Override
 		public long getAmount() {
-			return count;
+			ItemStack stack = getStack();
+			return stack.isEmpty() ? 0 : stack.getCount();
 		}
 
 		@Override
 		public long getCapacity() {
-			return max;
+			ItemStack stack = getStack();
+			return stack.isEmpty() ? te.maxStackSize.get() : Math.min(stack.getMaxStackSize(), te.maxStackSize.get());
+		}
+
+		public ItemStack getStack() {
+			TransportedItemStack held = te.heldItem;
+			if (held == null || held.stack == null || held.stack.isEmpty())
+				return ItemStack.EMPTY;
+			return held.stack;
 		}
 	}
 }
