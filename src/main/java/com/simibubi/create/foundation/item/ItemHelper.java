@@ -181,7 +181,7 @@ public class ItemHelper {
 					ItemVariant variant = extracting == null ? view.getResource() : extracting;
 					if (!test.test(variant.toStack())) continue;
 					if (extracting == null) extracting = variant;
-					long toExtract = Math.min(amount, view.getAmount());
+					long toExtract = Math.min(amount - extracted, view.getAmount());
 					long actualExtracted = view.extract(variant, toExtract, t);
 					if (actualExtracted == 0) continue;
 					extracted += actualExtracted;
