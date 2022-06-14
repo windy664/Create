@@ -6,6 +6,7 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 
 import dev.emi.trinkets.api.SlotReference;
+import dev.emi.trinkets.api.TrinketInventory;
 import dev.emi.trinkets.api.TrinketsApi;
 import dev.emi.trinkets.api.client.TrinketRenderer;
 import net.minecraft.client.Minecraft;
@@ -57,8 +58,9 @@ public class GoggleTrinketRenderer implements TrinketRenderer {
 		if (!entity.getItemBySlot(EquipmentSlot.HEAD).isEmpty())
 			return true;
 		return TrinketsApi.getTrinketComponent(entity)
-				.filter(trinketComponent ->
-						!trinketComponent.getInventory().get("head").get("hat").isEmpty()
-				).isPresent();
+				.filter(component -> {							 // guaranteed  // may be null
+					TrinketInventory inv = component.getInventory().get("head").get("hat");
+					return inv != null && !inv.isEmpty();
+				}).isPresent();
 	}
 }
