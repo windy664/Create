@@ -59,7 +59,7 @@ dependencies {
     modLocalRuntime("maven.modrinth:lazydfu:0.1.2")
     modLocalRuntime("maven.modrinth:lithium:mc1.18.2-0.7.9")
     modCompileOnly("maven.modrinth:sandwichable:1.2+1.18.2")
-    modImplementation("dev.emi:trinkets:${project.trinkets_version}")
+    modImplementation("dev.emi:trinkets:${project.trinkets_version}") { exclude(group: "com.terraformersmc") }
     modCompileOnly("dev.emi:emi:${project.emi_version}")
 
     if ("${project.recipe_viewer}" == 'emi') {

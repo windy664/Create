@@ -14,7 +14,8 @@ public enum Mods {
 	DYNAMICTREES,
 	TCONSTRUCT,
 	SANDWICHABLE,
-	TRINKETS;
+	TRINKETS,
+	MODMENU;
 
 	private final boolean loaded;
 

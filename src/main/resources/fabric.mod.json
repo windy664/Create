@@ -33,6 +33,9 @@
     ],
     "rei": [
       "com.simibubi.create.compat.rei.CreateREI"
+    ],
+    "modmenu": [
+      "com.simibubi.create.compat.modmenu.CreateModMenuIntegration"
     ]
   },
 
