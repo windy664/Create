@@ -124,8 +124,7 @@ public abstract class AbstractSimiScreen extends Screen {
 			return keyPressed;
 
 		InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
-		Key invKeyCode = KeyBindingHelper.getKeyCode(this.minecraft.options.keyInventory);
-		if (Objects.equals(invKeyCode, mouseKey)) {
+		if (KeyBindingHelper.isActiveAndMatches(this.minecraft.options.keyInventory, mouseKey)) {
 			this.onClose();
 			return true;
 		}

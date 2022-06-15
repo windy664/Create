@@ -110,7 +110,7 @@ public class ToolboxHandlerClient {
 	}
 
 	public static void onKeyInput(int key, boolean pressed) {
-		if (key != AllKeys.TOOLBELT.getBoundCode())
+		if (key != AllKeys.TOOLBELT.getBoundCode() || !pressed)
 			return;
 		if (COOLDOWN > 0)
 			return;
