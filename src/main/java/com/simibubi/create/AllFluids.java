@@ -113,9 +113,9 @@ public class AllFluids {
 						FluidStorage.combinedItemApiProvider(GLASS_BOTTLE).register(context ->
 								new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(HONEY_BOTTLE), source, HONEY_BOTTLE_AMOUNT));
 						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
-								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), HONEY_BOTTLE_AMOUNT));
+								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
 						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
-								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, HONEY_BOTTLE_AMOUNT));
+								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
 					})
 					.register();
 
