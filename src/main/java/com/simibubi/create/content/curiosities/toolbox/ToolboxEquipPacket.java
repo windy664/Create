@@ -85,7 +85,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 						long count = playerStack.getCount();
 						long inserted = inventory.insert(stack, count, t);
 						if (inserted != count)
-							inserted += TransferUtil.insertToNotHotbar(player, stack, count - inserted);
+							inserted += TransferUtil.insertToMainInv(player, stack, count - inserted);
 						long remainder = count - inserted;
 						if (remainder != count) {
 							t.commit();

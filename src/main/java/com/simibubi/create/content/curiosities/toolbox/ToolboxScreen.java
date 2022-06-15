@@ -39,7 +39,8 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 
 	public ToolboxScreen(ToolboxContainer container, Inventory inv, Component title) {
 		super(container, inv, title);
-		init();
+//		init(); // fabric: this causes a crash with Trinkets since minecraft is null.
+				// removal seems to have no effect. why is it here?
 	}
 
 	@Override
