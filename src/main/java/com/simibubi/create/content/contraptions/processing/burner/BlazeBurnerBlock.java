@@ -173,7 +173,7 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		if (!doNotConsume) {
 			ItemStack container = stack.getItem().hasCraftingRemainingItem() ? new ItemStack(stack.getItem().getCraftingRemainingItem()) : ItemStack.EMPTY;
 			if (!world.isClientSide) {
-				TransactionCallback.onSuccess(ctx, () -> stack.shrink(1));
+				stack.shrink(1);
 			}
 			return InteractionResultHolder.success(container);
 		}
