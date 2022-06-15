@@ -1,7 +1,7 @@
 {
 	"_": "Missing Localizations: 0",
 
-	"_": "->------------------------]  Game Elements  [------------------------<-",
+	"_": "->------------------------]	Game Elements	[------------------------<-",
 
 	"block.create.acacia_window": "金合欢木窗户",
 	"block.create.acacia_window_pane": "金合欢木窗户板",
@@ -633,7 +633,7 @@
 	"item.create.zinc_nugget": "锌粒",
 
 
-	"_": "->------------------------]  Advancements  [------------------------<-",
+	"_": "->------------------------]	Advancements	[------------------------<-",
 
 	"advancement.create.root": "欢迎来到机械动力",
 	"advancement.create.root.desc": "是时候来制作一些超赞的机械装置了！",
@@ -785,7 +785,7 @@
 	"advancement.create.eob.desc": "期待未来会有更多的内容 <3",
 
 
-	"_": "->------------------------]  UI & Messages  [------------------------<-",
+	"_": "->------------------------]	UI & Messages	[------------------------<-",
 
 	"itemGroup.create.base": "机械动力",
 	"itemGroup.create.palettes": "机械动力丨建筑方块",
@@ -858,6 +858,63 @@
 	"create.recipe.heat_requirement.heated": "加热",
 	"create.recipe.heat_requirement.superheated": "超级加热",
 
+	"emi.category.create.milling": "研磨",
+	"emi.category.create.crushing": "粉碎",
+	"emi.category.create.pressing": "金属压片",
+	"emi.category.create.fan_washing": "批量洗涤",
+	"emi.category.create.fan_smoking": "批量烟熏",
+	"emi.category.create.fan_blasting": "批量熔炼",
+	"emi.category.create.fan_haunting": "批量缠魂",
+	"emi.category.create.mixing": "混合搅拌",
+	"emi.category.create.shapeless": "自动搅拌",
+	"emi.category.create.brewing": "自动酿造",
+	"emi.category.create.sawing": "切割",
+	"emi.category.create.block_cutting": "方块切割",
+	"emi.category.create.packing": "压块塑形",
+	"emi.category.create.automatic_packing": "自动打包",
+	"emi.category.create.deploying": "使用",
+	"emi.category.create.mystery_conversion": "神秘转化",
+	"emi.category.create.spout_filling": "注液",
+	"emi.category.create.draining": "分液",
+	"emi.category.create.sequenced_assembly": "序列组装",
+	"emi.category.create.automatic_shaped": "自动合成",
+	"emi.category.create.mechanical_crafting": "动力合成",
+	"emi.category.create.sandpaper_polishing": "砂纸打磨",
+
+	"tag.c.ores.zinc": "锌矿石",
+	"tag.c.raw_materials.zinc": "粗锌",
+	"tag.c.ingots.zinc": "锌锭",
+	"tag.c.nuggets.zinc": "锌粒",
+	"tag.c.storage_blocks.raw_zinc": "粗锌块",
+	"tag.c.storage_blocks.zinc": "锌块",
+	"tag.c.ingots.brass": "黄铜锭",
+	"tag.c.nuggets.brass": "黄铜粒",
+	"tag.c.plates.brass": "黄铜板",
+	"tag.c.storage_blocks.brass": "黄铜块",
+
+	"tag.create.stone_types.diorite": "闪长岩",
+	"tag.create.stone_types.granite": "花岗岩",
+	"tag.create.stone_types.andesite": "安山岩",
+	"tag.create.stone_types.deepslate": "深板岩",
+	"tag.create.stone_types.dripstone": "滴水石块",
+	"tag.create.stone_types.calcite": "方解石",
+	"tag.create.stone_types.tuff": "凝灰岩",
+	"tag.create.stone_types.limestone": "石灰岩",
+	"tag.create.stone_types.scoria": "熔渣",
+	"tag.create.stone_types.scorchia": "焦黑熔渣",
+	"tag.create.stone_types.crimsite": "绯红岩",
+	"tag.create.stone_types.ochrum": "赭金砂",
+	"tag.create.stone_types.asurine": "皓蓝石",
+	"tag.create.stone_types.veridium": "辉绿矿",
+	"tag.create.valve_handles": "阀门手轮",
+	"tag.create.create_ingots": "机械动力的锭",
+	"tag.create.crushed_ores": "粉碎矿石",
+	"tag.create.toolboxes": "工具箱",
+	"tag.create.seats": "坐垫",
+	"tag.create.sandpaper": "砂纸",
+	"tag.create.blaze_burner_fuel.regular": "常规烈焰人燃烧室燃料",
+	"tag.create.blaze_burner_fuel.special": "特殊烈焰人燃烧室燃料",
+
 	"create.generic.range": "范围",
 	"create.generic.radius": "半径",
 	"create.generic.width": "宽度",
@@ -872,6 +929,7 @@
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "°",
 	"create.generic.unit.millibuckets": "%1$smB",
+	"create.generic.unit.droplets": "%1$s滴",
 	"create.generic.clockwise": "顺时针方向",
 	"create.generic.counter_clockwise": "逆时针方向",
 
@@ -1333,7 +1391,7 @@
 	"create.contraption.minecart_contraption_illegal_pickup": "一股神秘的力量将这一装置与世界牢牢绑定在了一起",
 
 
-	"_": "->------------------------]  Subtitles  [------------------------<-",
+	"_": "->------------------------]	Subtitles	[------------------------<-",
 
 	"create.subtitle.contraption_disassemble": "结构：停止移动",
 	"create.subtitle.peculiar_bell_use": "奇异钟：鸣响",
@@ -1373,7 +1431,7 @@
 	"create.subtitle.confirm": "提示声：接受",
 
 
-	"_": "->------------------------]  Item Descriptions  [------------------------<-",
+	"_": "->------------------------]	Item Descriptions	[------------------------<-",
 
 	"item.create.example_item.tooltip": "EXAMPLE ITEM (just a marker that this tooltip exists)",
 	"item.create.example_item.tooltip.summary": "A brief description of the item. _Underscores_ highlight a term.",
@@ -1619,7 +1677,7 @@
 	"block.create.haunted_bell.tooltip.behaviour1": "标识出附近可能生成_敌对生物_的_亮度不足_之处",
 
 
-	"_": "->------------------------]  Ponder Content  [------------------------<-",
+	"_": "->------------------------]	Ponder Content	[------------------------<-",
 
 	"create.ponder.hold_to_ponder": "按住 [%1$s] 开始思索",
 	"create.ponder.subject": "情景主题",
