@@ -80,8 +80,6 @@ public class OpenCreateMenuButton extends Button {
 	public static class OpenConfigButtonHandler {
 
 		public static void onGuiInit(Minecraft client, Screen gui, int scaledWidth, int scaledHeight) {
-//			Screen gui = event.getGui();
-
 			MenuRows menu = null;
 			int rowIdx = 0, offsetX = 0;
 			if (gui instanceof TitleScreen) {
@@ -104,9 +102,11 @@ public class OpenCreateMenuButton extends Button {
 						.map(w -> (AbstractWidget) w)
 						.filter(w -> w.getMessage() instanceof TranslatableComponent t && target.equals(t.getKey()))
 						.findFirst()
-						.ifPresent(w -> gui.addRenderableWidget(
-								new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
-						));
+						.ifPresent(w -> {
+							gui.addRenderableWidget(
+									new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
+							);
+						});
 			}
 		}
 
