@@ -59,8 +59,8 @@ public class EmptyingByBasin {
 
 		ItemStack split = stack.copy();
 		split.setCount(1);
-		ContainerItemContext ctx = ContainerItemContext.withInitial(stack);
-		Storage<FluidVariant> tank = FluidStorage.ITEM.find(stack, ctx);
+		ContainerItemContext ctx = ContainerItemContext.withInitial(split);
+		Storage<FluidVariant> tank = FluidStorage.ITEM.find(split, ctx);
 		if (tank == null)
 			return Pair.of(resultingFluid, resultingItem);
 		try (Transaction t = TransferUtil.getTransaction()) {
