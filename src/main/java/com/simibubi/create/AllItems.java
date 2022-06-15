@@ -294,6 +294,7 @@ public class AllItems {
 		.transform(CreateRegistrate.customRenderedItem(() -> WrenchItemRenderer::new))
 		.tag(AllTags.AllItemTags.WRENCHES.tag)
 		.model(AssetLookup.itemModelWithPartials())
+		.tag(AllItemTags.WRENCH.tag)
 		.register();
 
 	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =

@@ -197,7 +197,7 @@ public class AllTags {
 
 		BEACON_PAYMENT(FORGE),
 		PLATES(FORGE),
-		WRENCHES(FORGE)
+		WRENCH(FORGE, "tools/wrench")
 
 		;
 
