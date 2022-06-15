@@ -6,14 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
-import com.simibubi.create.AllKeys;
-
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
+import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -33,12 +34,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class LinkedControllerClientHandler {
-
-	public static final IIngameOverlay OVERLAY = LinkedControllerClientHandler::renderOverlay;
 
 	public static Mode MODE = Mode.IDLE;
 	public static int PACKET_RATE = 5;
@@ -118,7 +115,7 @@ public class LinkedControllerClientHandler {
 	}
 
 	protected static boolean isActuallyPressed(KeyMapping kb) {
-		InputConstants.Key key = kb.getKey();
+		InputConstants.Key key = KeyBindingHelper.getKeyCode(kb);
 		if (key.getType() == InputConstants.Type.MOUSE) {
 			return AllKeys.isMouseButtonDown(key.getValue());
 		} else {
@@ -233,14 +230,14 @@ public class LinkedControllerClientHandler {
 		controls.forEach(kb -> kb.setDown(false));
 	}
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width1, int height1) {
+	public static void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
 		if (MODE != Mode.BIND)
 			return;
 		Minecraft mc = Minecraft.getInstance();
 
 		poseStack.pushPose();
 		Screen tooltipScreen = new Screen(TextComponent.EMPTY) {};
-		tooltipScreen.init(mc, width1, height1);
+		tooltipScreen.init(mc, window.getGuiScaledWidth(), window.getGuiScaledHeight());
 
 		Object[] keys = new Object[6];
 		Vector<KeyMapping> controls = getControls();
@@ -261,8 +258,8 @@ public class LinkedControllerClientHandler {
 		int height = list.size() * mc.font.lineHeight;
 		for (Component iTextComponent : list)
 			width = Math.max(width, mc.font.width(iTextComponent));
-		int x = (width1 / 3) - width / 2;
-		int y = height1 - height;
+		int x = (mc.getWindow().getGuiScaledWidth() / 3) - width / 2;
+		int y = mc.getWindow().getGuiScaledHeight() - height;
 
 		// TODO
 		tooltipScreen.renderComponentTooltip(poseStack, list, x, y);

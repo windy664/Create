@@ -1,6 +1,5 @@
 package com.simibubi.create.events;
 
-import java.util.List;
 import java.util.concurrent.Executor;
 
 import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
@@ -61,7 +60,6 @@ import io.github.fabricators_of_create.porting_lib.event.common.BlockPlaceCallba
 import io.github.fabricators_of_create.porting_lib.event.common.FluidPlaceBlockCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.MobEntitySetTargetCallback;
-import io.github.fabricators_of_create.porting_lib.event.common.OnDatapackSyncCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.ServerPlayerCreationCallback;
 
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -79,8 +77,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.players.PlayerList;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -166,12 +162,8 @@ public class CommonEvents {
 		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
 	}
 
-	public static void onDatapackSync(PlayerList playerList, @javax.annotation.Nullable ServerPlayer player) {
-		if (player != null) {
-			PotatoProjectileTypeManager.syncTo(player);
-		} else {
-			PotatoProjectileTypeManager.syncToAll(playerList.getPlayers());
-		}
+	public static void onDatapackSync(ServerPlayer player, boolean joined) {
+		PotatoProjectileTypeManager.syncTo(player);
 	}
 
 	public static void serverStopping(MinecraftServer server) {
@@ -233,7 +225,7 @@ public class CommonEvents {
 		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
 		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
-		OnDatapackSyncCallback.EVENT.register(CommonEvents::onDatapackSync);
+		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(CommonEvents::onDatapackSync);
 		UseBlockCallback.EVENT.register(WrenchItem::useOn);
 		CommonEvents.addReloadListeners();
 		CommonEvents.onBiomeLoad(); // Fabric Biome API requires biomes to only be registered once
