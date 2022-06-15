@@ -122,7 +122,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {
-		if (AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(hand)))
+		if (AllItems.WRENCH.isIn(player.getItemInHand(hand)))
 			return InteractionResult.PASS;
 		return SharedDepotBlockMethods.onUse(state, world, pos, player, hand, ray);
 	}

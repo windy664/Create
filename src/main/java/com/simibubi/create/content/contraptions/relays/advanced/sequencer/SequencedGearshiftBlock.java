@@ -94,7 +94,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 		if (!FilteringBehaviour.playerCanInteract(player))
 			return InteractionResult.PASS;
 		ItemStack held = player.getMainHandItem();
-		if (AllTags.AllItemTags.WRENCHES.matches(held))
+		if (AllItems.WRENCH.isIn(held))
 			return InteractionResult.PASS;
 		if (held.getItem() instanceof BlockItem) {
 			BlockItem blockItem = (BlockItem) held.getItem();

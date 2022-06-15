@@ -147,7 +147,7 @@ public class ArmInteractionPointHandler {
 	}
 
 	private static void checkForWrench(ItemStack heldItem) {
-		if (!AllTags.AllItemTags.WRENCHES.matches(heldItem)) {
+		if (!AllItems.WRENCH.is(heldItem)) {
 			return;
 		}
 

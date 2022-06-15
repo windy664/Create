@@ -463,7 +463,7 @@ public class BeltSlicer {
 		Feedback feedback = new Feedback();
 
 		// TODO: Populate feedback in the methods for clientside
-		if (AllTags.AllItemTags.WRENCHES.matches(held) || AllTags.AllItemTags.WRENCHES.matches(heldOffHand))
+		if (AllItems.WRENCH.isIn(held) || AllItems.WRENCH.isIn(heldOffHand))
 			useWrench(state, world, pos, mc.player, InteractionHand.MAIN_HAND, result, feedback);
 		else if (AllItems.BELT_CONNECTOR.isIn(held) || AllItems.BELT_CONNECTOR.isIn(heldOffHand))
 			useConnector(state, world, pos, mc.player, InteractionHand.MAIN_HAND, result, feedback);

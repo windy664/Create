@@ -65,7 +65,7 @@ public class FilteringHandler {
 		ItemStack toApply = player.getItemInHand(hand)
 			.copy();
 
-		if (AllTags.AllItemTags.WRENCHES.matches(toApply))
+		if (AllItems.WRENCH.is(toApply))
 			return InteractionResult.PASS;
 		if (AllBlocks.MECHANICAL_ARM.isIn(toApply))
 			return InteractionResult.PASS;

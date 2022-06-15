@@ -70,7 +70,7 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 		ItemStack heldItem = player.getItemInHand(handIn);
 		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem) || !canInsertIntoFunnel(state);
 
-		if (AllTags.AllItemTags.WRENCHES.matches(heldItem))
+		if (AllItems.WRENCH.isIn(heldItem))
 			return InteractionResult.PASS;
 
 		if (hit.getDirection() == getFunnelFacing(state) && !shouldntInsertItem) {

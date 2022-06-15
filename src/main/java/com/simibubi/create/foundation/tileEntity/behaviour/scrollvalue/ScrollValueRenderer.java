@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.CreateClient;
@@ -39,7 +40,7 @@ public class ScrollValueRenderer {
 			return;
 		if (!behaviour.isActive())
 			return;
-		if (behaviour.needsWrench && !AllTags.AllItemTags.WRENCHES.matches(mc.player.getMainHandItem()))
+		if (behaviour.needsWrench && !AllItems.WRENCH.is(mc.player.getMainHandItem()))
 			return;
 		boolean highlight = behaviour.testHit(target.getLocation());
 

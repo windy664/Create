@@ -38,7 +38,7 @@ public class WrenchItem extends Item {
 		UseOnContext context = new UseOnContext(player, hand, hitResult);
 		if (player == null || !player.mayBuild())
 			return InteractionResult.PASS;
-		if (!AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(hand)))
+		if (!AllItems.WRENCH.is(player.getItemInHand(hand)))
 			return InteractionResult.PASS;
 
 		BlockState state = context.getLevel()
@@ -81,7 +81,7 @@ public class WrenchItem extends Item {
 		if (!(target instanceof AbstractMinecart))
 			return InteractionResult.PASS;
 		ItemStack heldItem = player.getMainHandItem();
-		if (!AllTags.AllItemTags.WRENCHES.matches(heldItem))
+		if (!AllItems.WRENCH.is(heldItem))
 			return InteractionResult.PASS;
 		if (player.isCreative())
 			return InteractionResult.PASS;

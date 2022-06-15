@@ -82,7 +82,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 		BlockHitResult hit) {
 		ItemStack heldByPlayer = player.getItemInHand(handIn)
 			.copy();
-		if (AllTags.AllItemTags.WRENCHES.matches(heldByPlayer))
+		if (AllItems.WRENCH.isIn(heldByPlayer))
 			return InteractionResult.PASS;
 
 		if (hit.getDirection() != state.getValue(FACING))

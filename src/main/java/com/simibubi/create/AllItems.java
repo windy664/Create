@@ -292,7 +292,6 @@ public class AllItems {
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
 		.properties(p -> p.stacksTo(1))
 		.transform(CreateRegistrate.customRenderedItem(() -> WrenchItemRenderer::new))
-		.tag(AllTags.AllItemTags.WRENCHES.tag)
 		.model(AssetLookup.itemModelWithPartials())
 		.tag(AllItemTags.WRENCH.tag)
 		.register();

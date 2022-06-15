@@ -27,7 +27,7 @@ public class ItemUseOverrides {
 	}
 
 	public static InteractionResult onBlockActivated(Player player, Level world, InteractionHand hand, BlockHitResult traceResult) {
-		if (AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(hand)))
+		if (AllItems.WRENCH.is(player.getItemInHand(hand)))
 			return InteractionResult.PASS;
 
 		if (player.isSpectator())

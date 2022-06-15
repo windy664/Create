@@ -1,5 +1,7 @@
 package com.simibubi.create;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import org.lwjgl.glfw.GLFW;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
