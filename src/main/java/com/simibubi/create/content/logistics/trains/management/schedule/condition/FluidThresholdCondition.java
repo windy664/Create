@@ -8,11 +8,16 @@ import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -24,7 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidThresholdCondition extends CargoThresholdCondition {
 	public ItemStack compareStack = ItemStack.EMPTY;
@@ -50,12 +54,16 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 
 		int foundFluid = 0;
 		for (Carriage carriage : train.carriages) {
-			IFluidHandler fluids = carriage.storage.getFluids();
-			for (int i = 0; i < fluids.getTanks(); i++) {
-				FluidStack fluidInTank = fluids.getFluidInTank(i);
-				if (!FilterItem.test(level, fluidInTank, compareStack))
-					continue;
-				foundFluid += fluidInTank.getAmount();
+			CombinedTankWrapper fluids = carriage.storage.getFluids();
+			try (Transaction t = TransferUtil.getTransaction()) {
+				for (StorageView<FluidVariant> view : fluids.iterable(t)) {
+					if (view.isResourceBlank())
+						continue;
+					FluidStack fluidInTank = new FluidStack(view);
+					if (!FilterItem.test(level, fluidInTank, compareStack))
+						continue;
+					foundFluid += fluidInTank.getAmount();
+				}
 			}
 		}
 

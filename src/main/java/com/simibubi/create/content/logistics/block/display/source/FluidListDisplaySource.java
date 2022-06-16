@@ -6,6 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import com.simibubi.create.foundation.utility.LongAttached;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
@@ -23,47 +35,47 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidListDisplaySource extends ValueListDisplaySource {
 
 
 	@Override
-	protected Stream<IntAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
+	protected Stream<LongAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
 		BlockEntity sourceTE = context.getSourceTE();
 		if (!(sourceTE instanceof ContentObserverTileEntity cote))
 			return Stream.empty();
 
 		TankManipulationBehaviour tankManipulationBehaviour = cote.getBehaviour(TankManipulationBehaviour.OBSERVE);
 		FilteringBehaviour filteringBehaviour = cote.getBehaviour(FilteringBehaviour.TYPE);
-		IFluidHandler handler = tankManipulationBehaviour.getInventory();
+		Storage<FluidVariant> handler = tankManipulationBehaviour.getInventory();
 
 		if (handler == null)
 			return Stream.empty();
 
 
-		Map<Fluid, Integer> fluids = new HashMap<>();
+		Map<Fluid, Long> fluids = new HashMap<>();
 		Map<Fluid, FluidStack> fluidNames = new HashMap<>();
 
-		for (int i = 0; i < handler.getTanks(); i++) {
-			FluidStack stack = handler.getFluidInTank(i);
-			if (stack.isEmpty())
-				continue;
-			if (!filteringBehaviour.test(stack))
-				continue;
+		try (Transaction t = TransferUtil.getTransaction()) {
+			for (StorageView<FluidVariant> view : handler.iterable(t)) {
+				if (view.isResourceBlank())
+					continue;
+				FluidStack stack = new FluidStack(view);
+				if (!filteringBehaviour.test(stack))
+					continue;
 
-			fluids.merge(stack.getFluid(), stack.getAmount(), Integer::sum);
-			fluidNames.putIfAbsent(stack.getFluid(), stack);
+				fluids.merge(stack.getFluid(), stack.getAmount(), Long::sum);
+				fluidNames.putIfAbsent(stack.getFluid(), stack);
+			}
 		}
 
 		return fluids.entrySet()
 				.stream()
 				.sorted((Comparator.comparingInt(value -> ((Map.Entry<Fluid, Integer>) value).getValue()).reversed()))
 				.limit(maxRows)
-				.map(entry -> IntAttached.with(
+				.map(entry -> LongAttached.with(
 						entry.getValue(),
-						new TranslatableComponent(fluidNames.get(entry.getKey()).getTranslationKey()))
+						FluidVariantAttributes.getName(fluidNames.get(entry.getKey()).getType()))
 				);
 	}
 

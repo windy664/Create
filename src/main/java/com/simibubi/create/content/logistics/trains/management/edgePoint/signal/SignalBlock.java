@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 
 import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
+import io.github.fabricators_of_create.porting_lib.block.WeakPowerCheckingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -28,7 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
-public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrenchable, ConnectableRedstoneBlock {
+public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrenchable, WeakPowerCheckingBlock {
 
 	public static final EnumProperty<SignalType> TYPE = EnumProperty.create("type", SignalType.class);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;

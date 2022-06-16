@@ -16,6 +16,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
@@ -25,8 +27,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 
@@ -113,7 +113,7 @@ public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		if (!shouldRender(context))

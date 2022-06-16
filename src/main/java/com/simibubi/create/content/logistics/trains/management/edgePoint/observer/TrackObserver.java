@@ -12,6 +12,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
@@ -66,7 +67,7 @@ public class TrackObserver extends SingleTileEdgePoint {
 	public ItemStack getFilter() {
 		return filter;
 	}
-	
+
 	public UUID getCurrentTrain() {
 		return currentTrain;
 	}
@@ -98,7 +99,7 @@ public class TrackObserver extends SingleTileEdgePoint {
 	public void write(CompoundTag nbt, DimensionPalette dimensions) {
 		super.write(nbt, dimensions);
 		nbt.putInt("Activated", activated);
-		nbt.put("Filter", filter.serializeNBT());
+		nbt.put("Filter", NBTSerializer.serializeNBTCompound(filter));
 		if (currentTrain != null)
 			nbt.putUUID("TrainId", currentTrain);
 	}

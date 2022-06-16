@@ -13,6 +13,7 @@ import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -39,7 +40,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements ProperWaterloggedBlock, ITE<PlacardTileEntity>, ISpecialBlockItemRequirement, IWrenchable {
@@ -131,7 +131,7 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 					return InteractionResult.FAIL;
 				if (pState.getValue(POWERED))
 					return InteractionResult.FAIL;
-				
+
 				boolean test = inBlock.getItem() instanceof FilterItem ? FilterItem.test(pLevel, inHand, inBlock)
 					: ItemHandlerHelper.canItemStacksStack(inHand, inBlock);
 				if (!test) {

@@ -212,7 +212,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 				Minecraft.getInstance().player.getUUID());
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private static void zoomMultiplier(String value) {
 			try {
 				float v = Float.parseFloat(value);

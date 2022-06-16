@@ -14,6 +14,8 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.client.Minecraft;
@@ -28,6 +30,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class BlazeBurnerTileEntity extends SmartTileEntity {
 
@@ -95,7 +98,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		updateBlockState();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void tickAnimation() {
 		boolean active = getHeatLevelFromBlock().isAtLeast(HeatLevel.FADING);
 
@@ -212,6 +215,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		TransactionCallback.onSuccess(ctx, () -> {
 			activeFuel = finalNewFuel;
 			remainingBurnTime = finalNewBurnTime;
+		});
 
 		if (level.isClientSide) {
 			spawnParticleBurst(activeFuel == FuelType.SPECIAL);

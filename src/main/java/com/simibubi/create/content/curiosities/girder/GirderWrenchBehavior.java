@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -28,12 +31,10 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GirderWrenchBehavior {
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player == null || mc.level == null || !(mc.hitResult instanceof BlockHitResult result))

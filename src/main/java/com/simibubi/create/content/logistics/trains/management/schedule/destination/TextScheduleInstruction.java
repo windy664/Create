@@ -6,12 +6,12 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class TextScheduleInstruction extends ScheduleInstruction {
 
@@ -26,12 +26,12 @@ public abstract class TextScheduleInstruction extends ScheduleInstruction {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addTextInput(0, 121, (e, t) -> modifyEditBox(e), "Text");
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected void modifyEditBox(EditBox box) {}
 
 }

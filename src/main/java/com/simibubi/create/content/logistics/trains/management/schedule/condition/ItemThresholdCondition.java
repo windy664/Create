@@ -4,12 +4,18 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.structureMovement.Contraption.ContraptionInvWrapper;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class ItemThresholdCondition extends CargoThresholdCondition {
 	public ItemStack stack = ItemStack.EMPTY;
@@ -46,16 +51,20 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 
 		int foundItems = 0;
 		for (Carriage carriage : train.carriages) {
-			IItemHandlerModifiable items = carriage.storage.getItems();
-			for (int i = 0; i < items.getSlots(); i++) {
-				ItemStack stackInSlot = items.getStackInSlot(i);
-				if (!FilterItem.test(level, stackInSlot, stack))
-					continue;
+			ContraptionInvWrapper items = carriage.storage.getItems();
+			try (Transaction t = TransferUtil.getTransaction()) {
+				for (StorageView<ItemVariant> view : items.iterable(t)) {
+					if (view.isResourceBlank())
+						continue;
+					ItemVariant variant = view.getResource();
+					if (!FilterItem.test(level, variant.toStack(), stack))
+						continue;
 
-				if (stacks)
-					foundItems += stackInSlot.getCount() == stackInSlot.getMaxStackSize() ? 1 : 0;
-				else
-					foundItems += stackInSlot.getCount();
+					if (stacks)
+						foundItems += view.getAmount() == variant.getItem().getMaxStackSize() ? 1 : 0;
+					else
+						foundItems += view.getAmount();
+				}
 			}
 		}
 
@@ -66,7 +75,7 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 	@Override
 	protected void writeAdditional(CompoundTag tag) {
 		super.writeAdditional(tag);
-		tag.put("Item", stack.serializeNBT());
+		tag.put("Item", NBTSerializer.serializeNBTCompound(stack));
 	}
 
 	@Override

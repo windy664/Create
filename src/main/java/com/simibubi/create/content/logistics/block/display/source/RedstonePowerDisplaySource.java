@@ -4,13 +4,13 @@ import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySource {
-	
+
 	@Override
 	protected String getTranslationKey() {
 		return "redstone_power";
@@ -20,7 +20,7 @@ public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySourc
 	protected String formatNumeric(Float currentLevel) {
 		return String.valueOf((int) (currentLevel * 15));
 	}
-	
+
 	@Override
 	protected boolean allowsLabeling(DisplayLinkContext context) {
 		return true;
@@ -44,7 +44,7 @@ public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySourc
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		super.initConfigurationWidgets(context, builder, isFirstLine);
 		if (isFirstLine)
@@ -54,5 +54,5 @@ public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySourc
 				.titled(Lang.translate("display_source.redstone_power.display")),
 			"Mode");
 	}
-	
+
 }

@@ -145,14 +145,14 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 	}
 
 	// TODO TRAIN PORT
-	public static IRecipeSlotTooltipCallback addStochasticTooltip(ProcessingOutput output) {
-		return (view, tooltip) -> {
-			float chance = output.getChance();
-			if (chance != 1)
-				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
-						.withStyle(ChatFormatting.GOLD));
-		};
-	}
+//	public static IRecipeSlotTooltipCallback addStochasticTooltip(ProcessingOutput output) {
+//		return (view, tooltip) -> {
+//			float chance = output.getChance();
+//			if (chance != 1)
+//				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+//						.withStyle(ChatFormatting.GOLD));
+//		};
+//	}
 
 	@Deprecated // in favor of basicSlot(int, int)
 	public static Slot basicSlot(Point point) {

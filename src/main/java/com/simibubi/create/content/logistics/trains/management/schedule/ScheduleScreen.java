@@ -291,7 +291,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		editorSubWidgets.forEach(this::removeWidget);
 		editorSubWidgets.clear();
 		field.initConfigurationWidgets(
-			new ModularGuiLineBuilder(font, editorSubWidgets, getGuiLeft() + 77, getGuiTop() + 92).speechBubble());
+			new ModularGuiLineBuilder(font, editorSubWidgets, leftPos + 77, topPos + 92).speechBubble());
 		editorSubWidgets.loadValues(field.getData(), this::addRenderableWidget, this::addRenderableOnly);
 
 		if (!(field instanceof DestinationInstruction))
@@ -1065,8 +1065,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		}
 
 		pPoseStack.pushPose();
-		pPoseStack.translate(0, getGuiTop() + 87, 0);
-		editorSubWidgets.renderWidgetBG(getGuiLeft() + 77, pPoseStack);
+		pPoseStack.translate(0, topPos + 87, 0);
+		editorSubWidgets.renderWidgetBG(leftPos + 77, pPoseStack);
 		pPoseStack.popPose();
 	}
 

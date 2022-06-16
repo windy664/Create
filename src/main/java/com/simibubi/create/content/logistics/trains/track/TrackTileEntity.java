@@ -139,7 +139,8 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 		BlockState blockState = level.getBlockState(worldPosition);
 		if (blockState.hasProperty(TrackBlock.HAS_TE))
 			level.setBlockAndUpdate(worldPosition, blockState.setValue(TrackBlock.HAS_TE, false));
-		AllPackets.channel.send(packetTarget(), new RemoveTileEntityPacket(worldPosition));
+		if (level instanceof ServerLevel serverLevel)
+			AllPackets.channel.sendToClientsTracking(new RemoveTileEntityPacket(worldPosition), serverLevel, worldPosition);
 	}
 
 	public void removeInboundConnections() {
@@ -154,7 +155,8 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 				bezierConnection.spawnItems(level);
 			bezierConnection.spawnDestroyParticles(level);
 		}
-		AllPackets.channel.send(packetTarget(), new RemoveTileEntityPacket(worldPosition));
+		if (level instanceof ServerLevel serverLevel)
+			AllPackets.channel.sendToClientsTracking(new RemoveTileEntityPacket(worldPosition), serverLevel, worldPosition);
 	}
 
 	public void bind(ResourceKey<Level> boundDimension, BlockPos boundLocation) {

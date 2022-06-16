@@ -5,6 +5,7 @@ import java.util.Random;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 
+import io.github.fabricators_of_create.porting_lib.enchant.EnchantmentBonusBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -12,8 +13,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.level.block.entity.EnchantmentTableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class EnchantPowerDisplaySource extends NumericSingleLineDisplaySource {
 
@@ -32,8 +35,13 @@ public class EnchantPowerDisplaySource extends NumericSingleLineDisplaySource {
 		for(BlockPos offset : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
 			if (!EnchantmentTableBlock.isValidBookShelf(level, pos, offset))
 				continue;
-
-			enchantPower += level.getBlockState(pos.offset(offset)).getEnchantPowerBonus(level, pos.offset(offset));
+			BlockPos bookPos = pos.offset(offset);
+			BlockState state = level.getBlockState(bookPos);
+			enchantPower += state.getBlock() instanceof EnchantmentBonusBlock bonus
+					? bonus.getEnchantPowerBonus(state, level, pos)
+					: state.is(Blocks.BOOKSHELF)
+						? 1
+						: 0;
 		}
 
 

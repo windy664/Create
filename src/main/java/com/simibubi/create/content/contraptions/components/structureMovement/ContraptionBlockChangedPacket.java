@@ -4,13 +4,13 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
+import net.fabricmc.api.EnvType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public class ContraptionBlockChangedPacket extends SimplePacketBase {
 
@@ -40,7 +40,7 @@ public class ContraptionBlockChangedPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
 				() -> () -> AbstractContraptionEntity.handleBlockChangedPacket(this)));
 		context.get()
 			.setPacketHandled(true);

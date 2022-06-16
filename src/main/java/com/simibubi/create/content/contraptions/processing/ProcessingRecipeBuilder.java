@@ -12,6 +12,8 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
+import com.tterrag.registrate.util.DataIngredient;
+
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;

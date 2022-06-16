@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.simibubi.create.foundation.utility.LongAttached;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
@@ -27,7 +29,7 @@ import net.fabricmc.api.Environment;
 
 public abstract class ValueListDisplaySource extends DisplaySource {
 
-	protected abstract Stream<IntAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows);
+	protected abstract Stream<LongAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows);
 
 	protected abstract boolean valueFirst();
 

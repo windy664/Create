@@ -10,8 +10,6 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent.Context;
-import net.minecraftforge.network.PacketDistributor;
 
 public class HonkPacket extends SimplePacketBase {
 
@@ -52,7 +50,7 @@ public class HonkPacket extends SimplePacketBase {
 				else
 					train.honkTicks = train.honkTicks > 5 ? 6 : 0;
 			} else
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new HonkPacket(train, isHonk));
+				AllPackets.channel.sendToClientsInCurrentServer(new HonkPacket(train, isHonk));
 
 		});
 		c.setPacketHandled(true);

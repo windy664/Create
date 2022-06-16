@@ -248,8 +248,8 @@ public class BlueprintOverlayRenderer {
 		if (!noOutput)
 			w += 51;
 
-		int x = (width - w) / 2;
-		int y = (int) (height - 100);
+		int x = (window.getGuiScaledWidth() - w) / 2;
+		int y = (int) (window.getGuiScaledHeight() - 100);
 
 		for (Pair<ItemStack, Boolean> pair : ingredients) {
 			RenderSystem.enableBlend();

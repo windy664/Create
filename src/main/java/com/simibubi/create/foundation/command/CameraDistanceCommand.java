@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.PacketDistributor;
 
 public class CameraDistanceCommand {
 
@@ -17,9 +16,9 @@ public class CameraDistanceCommand {
 				.then(Commands.literal("reset")
 						.executes(ctx -> {
 							ServerPlayer player = ctx.getSource().getPlayerOrException();
-							AllPackets.channel.send(
-									PacketDistributor.PLAYER.with(() -> player),
-									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.zoomMultiplier.name(), "1")
+							AllPackets.channel.sendToClient(
+									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.zoomMultiplier.name(), "1"),
+									player
 							);
 
 							return Command.SINGLE_SUCCESS;
@@ -28,9 +27,9 @@ public class CameraDistanceCommand {
 						.executes(ctx -> {
 							float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
 							ServerPlayer player = ctx.getSource().getPlayerOrException();
-							AllPackets.channel.send(
-									PacketDistributor.PLAYER.with(() -> player),
-									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.zoomMultiplier.name(), String.valueOf(multiplier))
+							AllPackets.channel.sendToClient(
+									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.zoomMultiplier.name(), String.valueOf(multiplier)),
+									player
 							);
 
 							return Command.SINGLE_SUCCESS;

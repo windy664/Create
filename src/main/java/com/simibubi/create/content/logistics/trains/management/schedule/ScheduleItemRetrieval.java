@@ -68,8 +68,7 @@ public class ScheduleItemRetrieval {
 			train.runtime.paused = false;
 			AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
 			player.displayClientMessage(Lang.translate("schedule.continued"), true);
-			event.setCanceled(true);
-			return;
+			return InteractionResult.SUCCESS;
 		}
 
 		ItemStack itemInHand = player.getItemInHand(hand);

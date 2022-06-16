@@ -25,6 +25,12 @@ public enum Mods {
 	TF("twilightforest"),
 	ECO("ecologics"),
 
+	// Fabric Mods
+	TR("techreborn"),
+	MI("modern_industrialization"),
+	MTM("mythicmetals"),
+	ALG("alloygery")
+
 	;
 
 	private final String id;

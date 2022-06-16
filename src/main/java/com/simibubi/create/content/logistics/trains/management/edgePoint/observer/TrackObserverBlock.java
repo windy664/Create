@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
+import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-public class TrackObserverBlock extends Block implements ITE<TrackObserverTileEntity>, IWrenchable {
+public class TrackObserverBlock extends Block implements ITE<TrackObserverTileEntity>, IWrenchable, ConnectableRedstoneBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 

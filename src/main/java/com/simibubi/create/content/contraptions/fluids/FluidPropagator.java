@@ -190,12 +190,7 @@ public class FluidPropagator {
 	}
 
 	public static boolean hasFluidCapability(BlockGetter world, BlockPos pos, Direction side) {
-		BlockEntity tileEntity = world.getBlockEntity(pos);
-		if (tileEntity == null)
-			return false;
-		LazyOptional<IFluidHandler> capability =
-			tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
-		return capability.isPresent();
+		return world instanceof Level level && TransferUtil.getFluidStorage(level, pos, side) != null;
 	}
 
 	@Nullable

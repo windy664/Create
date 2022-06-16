@@ -201,6 +201,8 @@ import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
+import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviourTE;
+
 public class AllTileEntities {
 
 	// Schematics
@@ -654,7 +656,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<PlacardTileEntity> PLACARD = Create.registrate()
 		.tileEntity("placard", PlacardTileEntity::new)
 		.validBlocks(AllBlocks.PLACARD)
@@ -781,7 +783,7 @@ public class AllTileEntities {
 		.renderer(() -> TrackRenderer::new)
 		.validBlocks(AllBlocks.TRACK)
 		.register();
-	
+
 	public static final BlockEntityEntry<FakeTrackTileEntity> FAKE_TRACK = Create.registrate()
 		.tileEntity("fake_track", FakeTrackTileEntity::new)
 		.validBlocks(AllBlocks.FAKE_TRACK)
@@ -798,7 +800,7 @@ public class AllTileEntities {
 		.renderer(() -> StationRenderer::new)
 		.validBlocks(AllBlocks.TRACK_STATION)
 		.register();
-	
+
 	public static final BlockEntityEntry<SlidingDoorTileEntity> SLIDING_DOOR = Create.registrate()
 		.tileEntity("sliding_door", SlidingDoorTileEntity::new)
 		.renderer(() -> SlidingDoorRenderer::new)
@@ -817,7 +819,7 @@ public class AllTileEntities {
 		.renderer(() -> SignalRenderer::new)
 		.validBlocks(AllBlocks.TRACK_SIGNAL)
 		.register();
-	
+
 	public static final BlockEntityEntry<TrackObserverTileEntity> TRACK_OBSERVER = Create.registrate()
 		.tileEntity("track_observer", TrackObserverTileEntity::new)
 		.renderer(() -> TrackObserverRenderer::new)

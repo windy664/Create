@@ -33,7 +33,7 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 		return new PipeAttachmentModel(template, true);
 	}
 
-	public PipeAttachmentModel(BakedModel template, , boolean hideAttachmentConnector) {
+	public PipeAttachmentModel(BakedModel template, boolean hideAttachmentConnector) {
 		wrapped = template;
 		this.hideAttachmentConnector = hideAttachmentConnector;
 	}

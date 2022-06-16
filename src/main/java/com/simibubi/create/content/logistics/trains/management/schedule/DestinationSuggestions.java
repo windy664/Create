@@ -61,7 +61,7 @@ public class DestinationSuggestions extends CommandSuggestions {
 				.equals(value) && ia.getValue()
 					.toLowerCase()
 					.startsWith(value.toLowerCase()))
-			.sorted((ia1, ia2) -> Integer.compare(ia1.getFirst(), ia2.getFirst()))
+			.sorted((ia1, ia2) -> Long.compare(ia1.getFirst(), ia2.getFirst()))
 			.map(IntAttached::getValue)
 			.map(s -> new Suggestion(new StringRange(0, s.length()), s))
 			.toList();

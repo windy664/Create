@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.deco;
 
 import java.util.function.Predicate;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -9,6 +10,8 @@ import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,9 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeMod;
 
 public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
@@ -35,13 +35,13 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public boolean supportsExternalFaceHiding(BlockState state) {
 		return false;
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public boolean skipRendering(BlockState pState, BlockState pAdjacentBlockState, Direction pDirection) {
 		return pDirection == Direction.UP && pAdjacentBlockState.getBlock() instanceof LadderBlock;
 	}
@@ -92,7 +92,7 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
 			int range = AllConfigs.SERVER.curiosities.placementAssistRange.get();
 			if (player != null) {
-				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+				AttributeInstance reach = player.getAttribute(ReachEntityAttributes.REACH);
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))
 					range += 4;
 			}

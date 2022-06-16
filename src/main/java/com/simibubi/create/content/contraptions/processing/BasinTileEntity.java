@@ -160,11 +160,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		behaviours.add(inputTank);
 		behaviours.add(outputTank);
 
-		fluidCapability = LazyOptional.of(() -> {
-			LazyOptional<? extends IFluidHandler> inputCap = inputTank.getCapability();
-			LazyOptional<? extends IFluidHandler> outputCap = outputTank.getCapability();
-			return new CombinedTankWrapper(outputCap.orElse(null), inputCap.orElse(null));
-		});
+		fluidCapability = new CombinedTankWrapper(inputTank.getCapability(), outputTank.getCapability());
 	}
 
 	@Override
@@ -309,26 +305,9 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			.isVertical())
 			return;
 
-		for (int slot = 0; slot < outputInventory.getSlots(); slot++) {
-			ItemStack extractItem = outputInventory.extractItem(slot, 64, true);
-			if (extractItem.isEmpty())
-				continue;
-			if (acceptOutputs(ImmutableList.of(extractItem), Collections.emptyList(), true))
-				acceptOutputs(ImmutableList.of(outputInventory.extractItem(slot, 64, false)), Collections.emptyList(),
-					false);
-		}
-
-		IFluidHandler handler = outputTank.getCapability()
-			.orElse(null);
-		for (int slot = 0; slot < handler.getTanks(); slot++) {
-			FluidStack fs = handler.getFluidInTank(slot)
-				.copy();
-			if (fs.isEmpty())
-				continue;
-			if (acceptOutputs(Collections.emptyList(), ImmutableList.of(fs), true)) {
-				handler.drain(fs, FluidAction.EXECUTE);
-				acceptOutputs(Collections.emptyList(), ImmutableList.of(fs), false);
-			}
+		try (Transaction t = TransferUtil.getTransaction()) {
+			acceptOutputs(TransferUtil.getAllItems(outputInventory), TransferUtil.getAllFluids(outputTank.getCapability()), t);
+			t.commit();
 		}
 
 		notifyChangeOfContents();

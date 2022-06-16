@@ -10,6 +10,8 @@ import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,8 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class PlayerPassengerCondition extends ScheduleWaitCondition {
 
@@ -54,7 +54,7 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addScrollInput(0, 31, (i, l) -> {
 			i.titled(Lang.translate("schedule.condition.player_count.players"))

@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public class TrainHUDUpdatePacket extends SimplePacketBase {
 

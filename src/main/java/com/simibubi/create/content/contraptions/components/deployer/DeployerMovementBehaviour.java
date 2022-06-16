@@ -5,9 +5,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+
+import net.minecraft.core.Direction.Axis;
 
 import org.apache.commons.lang3.tuple.Pair;
 

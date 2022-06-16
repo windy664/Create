@@ -5,12 +5,12 @@ import java.util.function.Supplier;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public class TrainPromptPacket extends SimplePacketBase {
 
@@ -36,12 +36,12 @@ public class TrainPromptPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::apply));
+			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::apply));
 		context.get()
 			.setPacketHandled(true);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void apply() {
 		TrainHUD.currentPrompt = text;
 		TrainHUD.currentPromptShadow = shadow;

@@ -77,7 +77,7 @@ public class ContraptionHandlerClient {
 			return InteractionResult.PASS;
 		if (mc.level == null)
 			return InteractionResult.PASS;
-		if(mc.gameMode == null)
+		if (mc.gameMode == null)
 			return InteractionResult.PASS;
 //		if (!event.isUseItem())
 //			return InteractionResult.PASS;
@@ -103,9 +103,9 @@ public class ContraptionHandlerClient {
 			} else
 				continue;
 
-			event.setCanceled(true);
-			event.setSwingHand(false);
+			return InteractionResult.FAIL;
 		}
+		return InteractionResult.PASS;
 	}
 
 	private static boolean handleSpecialInteractions(AbstractContraptionEntity contraptionEntity, Player player,
@@ -161,7 +161,7 @@ public class ContraptionHandlerClient {
 		});
 
 		if (predicateResult == null || predicateResult.missed())
-			return InteractionResult.PASS;
+			return null;
 
 		BlockHitResult rayTraceResult = mutableResult.getValue();
 		return rayTraceResult;

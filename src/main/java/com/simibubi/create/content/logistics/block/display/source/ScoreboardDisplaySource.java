@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.foundation.utility.LongAttached;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -18,7 +20,7 @@ import net.minecraft.world.scores.Objective;
 public class ScoreboardDisplaySource extends ValueListDisplaySource {
 
 	@Override
-	protected Stream<IntAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
+	protected Stream<LongAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
 		Level level = context.te()
 			.getLevel();
 		if (!(level instanceof ServerLevel sLevel))
@@ -30,7 +32,7 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 		return showScoreboard(sLevel, name, maxRows);
 	}
 
-	protected Stream<IntAttached<MutableComponent>> showScoreboard(ServerLevel sLevel, String objectiveName,
+	protected Stream<LongAttached<MutableComponent>> showScoreboard(ServerLevel sLevel, String objectiveName,
 		int maxRows) {
 		Objective objective = sLevel.getScoreboard()
 			.getObjective(objectiveName);
@@ -41,11 +43,11 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 			.getPlayerScores(objective)
 			.stream()
 			.limit(maxRows)
-			.map(score -> IntAttached.with(score.getScore(), new TextComponent(score.getOwner()).copy()))
+			.map(score -> LongAttached.with(score.getScore(), new TextComponent(score.getOwner()).copy()))
 			.sorted(IntAttached.comparator());
 	}
 
-	private ImmutableList<IntAttached<MutableComponent>> notFound(String objective) {
+	private ImmutableList<LongAttached<MutableComponent>> notFound(String objective) {
 		return ImmutableList
 			.of(IntAttached.with(404, Lang.translate("display_source.scoreboard.objective_not_found", objective)));
 	}

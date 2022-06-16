@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.IntAttached;
 
+import com.simibubi.create.foundation.utility.LongAttached;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -33,7 +35,7 @@ public class CountedItemStackList {
 		}
 	}
 
-	public Stream<IntAttached<MutableComponent>> getTopNames(int limit) {
+	public Stream<LongAttached<MutableComponent>> getTopNames(int limit) {
 		return items.values()
 			.stream()
 			.flatMap(Collection::stream)

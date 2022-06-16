@@ -56,7 +56,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.network.PacketDistributor;
 
 public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
@@ -83,9 +82,9 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private Vec3 serverPrevPos;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public CarriageSounds sounds;
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public CarriageParticles particles;
 
 	public CarriageContraptionEntity(EntityType<?> type, Level world) {
@@ -201,8 +200,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		carriage.forEachPresentEntity(cce -> {
 			cce.contraption.getBlocks()
 				.put(localPos, newInfo);
-			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> cce),
-				new ContraptionBlockChangedPacket(cce.getId(), localPos, newInfo.state));
+			AllPackets.channel.sendToClientsTracking(
+				new ContraptionBlockChangedPacket(cce.getId(), localPos, newInfo.state), cce);
 		});
 	}
 
@@ -527,7 +526,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 				.equals(initialOrientation);
 
 		if (hudPacketCooldown-- <= 0 && player instanceof ServerPlayer sp) {
-			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> sp), new TrainHUDUpdatePacket(carriage.train));
+			AllPackets.channel.sendToClient(new TrainHUDUpdatePacket(carriage.train), sp);
 			hudPacketCooldown = 5;
 		}
 
@@ -637,7 +636,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private void sendPrompt(Player player, MutableComponent component, boolean shadow) {
 		if (player instanceof ServerPlayer sp)
-			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> sp), new TrainPromptPacket(component, shadow));
+			AllPackets.channel.sendToClient(new TrainPromptPacket(component, shadow), sp);
 	}
 
 	boolean stationMessage = false;

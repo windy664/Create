@@ -89,16 +89,15 @@ public class TrackGraphSync {
 	//
 
 	public void sendEdgeGroups(List<UUID> ids, List<EdgeGroupColor> colors, ServerPlayer player) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player),
-			new SignalEdgeGroupPacket(ids, colors, true));
+		AllPackets.channel.sendToClient(new SignalEdgeGroupPacket(ids, colors, true), player);
 	}
 
 	public void edgeGroupCreated(UUID id, EdgeGroupColor color) {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new SignalEdgeGroupPacket(id, color));
+		AllPackets.channel.sendToClientsInCurrentServer(new SignalEdgeGroupPacket(id, color));
 	}
 
 	public void edgeGroupRemoved(UUID id) {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(),
+		AllPackets.channel.sendToClientsInCurrentServer(
 			new SignalEdgeGroupPacket(ImmutableList.of(id), Collections.emptyList(), false));
 	}
 

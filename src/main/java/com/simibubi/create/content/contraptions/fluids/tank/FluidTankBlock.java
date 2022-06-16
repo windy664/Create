@@ -35,6 +35,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -52,6 +53,8 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, CustomSoundTypeBlock {
 
@@ -123,7 +126,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
-		CollisionContext pContext) {
+										CollisionContext pContext) {
 		if (pContext == CollisionContext.empty())
 			return CAMPFIRE_SMOKE_CLIP;
 		return pState.getShape(pLevel, pPos);

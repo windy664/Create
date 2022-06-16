@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.tr
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -9,13 +10,17 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.MountedStorageManager;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class TrainCargoManager extends MountedStorageManager {
 
@@ -33,15 +38,15 @@ public class TrainCargoManager extends MountedStorageManager {
 	}
 
 	@Override
-	protected ContraptionInvWrapper wrapItems(Collection<IItemHandlerModifiable> list, boolean fuel) {
+	protected ContraptionInvWrapper wrapItems(Collection<Storage<ItemVariant>> list, boolean fuel) {
 		if (fuel)
 			return super.wrapItems(list, fuel);
-		return new CargoInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
+		return new CargoInvWrapper(Arrays.copyOf(list.toArray(), list.size(), Storage[].class));
 	}
 
 	@Override
-	protected CombinedTankWrapper wrapFluids(Collection<IFluidHandler> list) {
-		return new CargoTankWrapper(Arrays.copyOf(list.toArray(), list.size(), IFluidHandler[].class));
+	protected CombinedTankWrapper wrapFluids(Collection<Storage<FluidVariant>> list) {
+		return new CargoTankWrapper(Arrays.copyOf(list.toArray(), list.size(), Storage[].class));
 	}
 
 	@Override
@@ -59,19 +64,19 @@ public class TrainCargoManager extends MountedStorageManager {
 	public void resetIdleCargoTracker() {
 		ticksSinceLastExchange = 0;
 	}
-	
+
 	public void tickIdleCargoTracker() {
 		ticksSinceLastExchange++;
 	}
-	
+
 	public int getTicksSinceLastExchange() {
 		return ticksSinceLastExchange;
 	}
-	
+
 	public int getVersion() {
 		return version.get();
 	}
-	
+
 	void changeDetected() {
 		version.incrementAndGet();
 		resetIdleCargoTracker();
@@ -79,65 +84,97 @@ public class TrainCargoManager extends MountedStorageManager {
 
 	class CargoInvWrapper extends ContraptionInvWrapper {
 
-		public CargoInvWrapper(IItemHandlerModifiable... itemHandler) {
+		public final SnapshotParticipant<Unit> successListener = new SnapshotParticipant<>() {
+
+			@Override
+			protected Unit createSnapshot() {
+				return Unit.INSTANCE;
+			}
+
+			@Override
+			protected void readSnapshot(Unit snapshot) {
+			}
+
+			@Override
+			protected void onFinalCommit() {
+				super.onFinalCommit();
+				changeDetected();
+			}
+		};
+
+		public CargoInvWrapper(Storage<ItemVariant>... itemHandler) {
 			super(false, itemHandler);
 		}
 
 		@Override
-		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			ItemStack remainder = super.insertItem(slot, stack, simulate);
-			if (!simulate && stack.getCount() != remainder.getCount())
-				changeDetected();
-			return remainder;
+		public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+			long inserted = super.insert(resource, maxAmount, transaction);
+			if (inserted != 0)
+				successListener.updateSnapshots(transaction);
+			return inserted;
 		}
 
 		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			ItemStack extracted = super.extractItem(slot, amount, simulate);
-			if (!simulate && !extracted.isEmpty())
-				changeDetected();
+		public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+			long extracted = super.extract(resource, maxAmount, transaction);
+			if (extracted != 0)
+				successListener.updateSnapshots(transaction);
 			return extracted;
 		}
 
 		@Override
-		public void setStackInSlot(int slot, ItemStack stack) {
-			if (!stack.equals(getStackInSlot(slot)))
-				changeDetected();
-			super.setStackInSlot(slot, stack);
+		public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
+			successListener.updateSnapshots(transaction);
+			return super.iterator(transaction);
 		}
 
 	}
 
 	class CargoTankWrapper extends CombinedTankWrapper {
 
-		public CargoTankWrapper(IFluidHandler... fluidHandler) {
+		public final SnapshotParticipant<Unit> successListener = new SnapshotParticipant<>() {
+
+			@Override
+			protected Unit createSnapshot() {
+				return Unit.INSTANCE;
+			}
+
+			@Override
+			protected void readSnapshot(Unit snapshot) {
+			}
+
+			@Override
+			protected void onFinalCommit() {
+				super.onFinalCommit();
+				changeDetected();
+			}
+		};
+
+		public CargoTankWrapper(Storage<FluidVariant>... fluidHandler) {
 			super(fluidHandler);
 		}
 
 		@Override
-		public int fill(FluidStack resource, FluidAction action) {
-			int filled = super.fill(resource, action);
-			if (action.execute() && filled > 0)
-				changeDetected();
-			return filled;
+		public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+			long inserted = super.insert(resource, maxAmount, transaction);
+			if (inserted != 0)
+				successListener.updateSnapshots(transaction);
+			return inserted;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, FluidAction action) {
-			FluidStack drained = super.drain(resource, action);
-			if (action.execute() && !drained.isEmpty())
-				changeDetected();
-			return drained;
+		public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+			long extracted = super.extract(resource, maxAmount, transaction);
+			if (extracted != 0)
+				successListener.updateSnapshots(transaction);
+			return extracted;
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, FluidAction action) {
-			FluidStack drained = super.drain(maxDrain, action);
-			if (action.execute() && !drained.isEmpty())
-				changeDetected();
-			return drained;
+		public Iterator<StorageView<FluidVariant>> iterator(TransactionContext transaction) {
+			successListener.updateSnapshots(transaction);
+			return super.iterator(transaction);
 		}
-		
 	}
 
 }

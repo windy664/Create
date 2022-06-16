@@ -19,11 +19,15 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption.ContraptionInvWrapper;
 
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.server.level.ServerPlayer;
@@ -210,28 +214,11 @@ public class Train {
 				if (shouldActivate)
 					break;
 
-				IItemHandlerModifiable inv = carriage.storage.getItems();
-				if (inv != null) {
-					for (int slot = 0; slot < inv.getSlots(); slot++) {
-						if (shouldActivate)
-							break;
-						ItemStack extractItem = inv.extractItem(slot, 1, true);
-						if (extractItem.isEmpty())
-							continue;
-						shouldActivate |= FilterItem.test(level, extractItem, filter);
-					}
-				}
-
-				IFluidHandler tank = carriage.storage.getFluids();
-				if (tank != null) {
-					for (int slot = 0; slot < tank.getTanks(); slot++) {
-						if (shouldActivate)
-							break;
-						FluidStack drain = tank.drain(1, FluidAction.SIMULATE);
-						if (drain.isEmpty())
-							continue;
-						shouldActivate |= FilterItem.test(level, drain, filter);
-					}
+				ContraptionInvWrapper inv = carriage.storage.getItems();
+				CombinedTankWrapper tank = carriage.storage.getFluids();
+				try (Transaction t = TransferUtil.getTransaction()) {
+					shouldActivate = StorageUtil.findExtractableResource(inv, variant -> FilterItem.test(level, variant.toStack(), filter), t) != null
+						|| StorageUtil.findExtractableResource(tank, variant -> FilterItem.test(level, new FluidStack(variant, 1), filter), t) != null;
 				}
 			}
 

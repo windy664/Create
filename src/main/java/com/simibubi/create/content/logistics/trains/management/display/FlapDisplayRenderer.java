@@ -11,11 +11,13 @@ import com.mojang.math.Matrix4f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.NoShadowFontWrapper;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.FontAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
@@ -45,7 +47,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		Font fontRenderer = Minecraft.getInstance().font;
-		FontSet fontSet = fontRenderer.getFontSet(Style.DEFAULT_FONT);
+		FontSet fontSet = ((FontAccessor) fontRenderer).port_lib$getFontSet(Style.DEFAULT_FONT);
 
 		float scale = 1 / 32f;
 
@@ -219,7 +221,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 		}
 
 		private FontSet getFontSet() {
-			return Minecraft.getInstance().font.getFontSet(Style.DEFAULT_FONT);
+			return ((FontAccessor) Minecraft.getInstance().font).port_lib$getFontSet(Style.DEFAULT_FONT);
 		}
 
 		private RenderType renderTypeOf(BakedGlyph bakedglyph) {

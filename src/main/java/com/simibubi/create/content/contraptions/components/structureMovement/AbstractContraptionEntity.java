@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import io.github.fabricators_of_create.porting_lib.entity.RemovalFromWorldListener;
 
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -351,8 +353,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
 		contraption.blocks.put(localPos, newInfo);
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new ContraptionBlockChangedPacket(getId(), localPos, newInfo.state));
+		AllPackets.channel.sendToClientsTracking(new ContraptionBlockChangedPacket(getId(), localPos, newInfo.state), this);
 	}
 
 	protected abstract void tickContraption();
@@ -681,7 +682,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			ce.handleBlockChange(packet.localPos, packet.newState);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	static void handleDisassemblyPacket(ContraptionDisassemblyPacket packet) {
 		if (Minecraft.getInstance().level.getEntity(packet.entityID) instanceof AbstractContraptionEntity ce)
 			ce.moveCollidedEntitiesOnDisassembly(packet.transform);
@@ -691,14 +692,14 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	protected abstract void handleStallInformation(float x, float y, float z, float angle);
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected void handleBlockChange(BlockPos localPos, BlockState newState) {
 		if (contraption == null || !contraption.blocks.containsKey(localPos))
 			return;
 		StructureBlockInfo info = contraption.blocks.get(localPos);
 		contraption.blocks.put(localPos, new StructureBlockInfo(info.pos, newState, info.nbt));
 		if (info.state != newState && !(newState.getBlock() instanceof SlidingDoorBlock))
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ContraptionRenderDispatcher.invalidate(contraption));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> ContraptionRenderDispatcher.invalidate(contraption));
 		contraption.invalidateColliders();
 	}
 

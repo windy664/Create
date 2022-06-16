@@ -87,7 +87,7 @@ public class SuperGlueHandler {
 		}
 
 		if (SuperGlueEntity.isGlued(world, gluePos, face, null))
-			return;
+			return InteractionResult.PASS;
 
 		SuperGlueEntity entity = new SuperGlueEntity(world, SuperGlueEntity.span(gluePos, gluePos.relative(face)));
 		CompoundTag compoundnbt = itemstack.getTag();

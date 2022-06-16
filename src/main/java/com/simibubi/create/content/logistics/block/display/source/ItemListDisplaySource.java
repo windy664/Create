@@ -9,6 +9,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.IntAttached;
 
+import com.simibubi.create.foundation.utility.LongAttached;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public class ItemListDisplaySource extends ValueListDisplaySource {
 
 	@Override
-	protected Stream<IntAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
+	protected Stream<LongAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
 		BlockEntity sourceTE = context.getSourceTE();
 		if (!(sourceTE instanceof ContentObserverTileEntity cote))
 			return Stream.empty();

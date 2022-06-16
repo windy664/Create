@@ -53,7 +53,7 @@ public interface IScheduleInput {
 	@Environment(EnvType.CLIENT)
 	public default void initConfigurationWidgets(ModularGuiLineBuilder builder) {};
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public default boolean renderSpecialIcon(PoseStack ms, int x, int y) {
 		return false;
 	}

@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
@@ -22,12 +23,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
 
 public class TrainHUD {
-
-	public static final IIngameOverlay OVERLAY = TrainHUD::renderOverlay;
 
 	static LerpedFloat displayedSpeed = LerpedFloat.linear();
 	static LerpedFloat displayedThrottle = LerpedFloat.linear();
@@ -101,8 +98,7 @@ public class TrainHUD {
 		return cce.getCarriage();
 	}
 
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width,
-		int height) {
+	public static void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
 		if (!(ControlsHandler.entityRef.get() instanceof CarriageContraptionEntity cce))
 			return;
 		Carriage carriage = cce.getCarriage();
@@ -117,7 +113,7 @@ public class TrainHUD {
 			return;
 
 		poseStack.pushPose();
-		poseStack.translate(width / 2 - 91, height - 29, 0);
+		poseStack.translate(window.getGuiScaledWidth() / 2 - 91, window.getGuiScaledHeight() - 29, 0);
 
 		// Speed, Throttle
 

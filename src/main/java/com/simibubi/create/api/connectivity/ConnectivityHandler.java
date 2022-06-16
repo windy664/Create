@@ -370,7 +370,7 @@ public class ConnectivityHandler {
 				}
 			}
 		}
-		if (tryReconnect) {
+		if (tryReconnect)
 			formMulti(be.getType(), level, cache == null ? new SearchCache<>() : cache, frontier);
 	}
 

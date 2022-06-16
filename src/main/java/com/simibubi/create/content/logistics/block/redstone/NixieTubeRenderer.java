@@ -13,6 +13,10 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.DyeHelper;
+
+import com.simibubi.create.foundation.utility.Iterate;
+
 import io.github.fabricators_of_create.porting_lib.util.FontRenderUtil;
 
 import net.minecraft.client.Minecraft;

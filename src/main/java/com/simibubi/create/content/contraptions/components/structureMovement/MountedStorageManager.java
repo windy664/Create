@@ -67,8 +67,8 @@ public class MountedStorageManager {
 		return new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), Storage[].class));
 	}
 
-	protected CombinedTankWrapper wrapFluids(Collection<IFluidHandler> list) {
-		return new CombinedTankWrapper(Arrays.copyOf(list.toArray(), list.size(), IFluidHandler[].class));
+	protected CombinedTankWrapper wrapFluids(Collection<Storage<FluidVariant>> list) {
+		return new CombinedTankWrapper(Arrays.copyOf(list.toArray(), list.size(), SmartFluidTank[].class));
 	}
 
 	public void addBlock(BlockPos localPos, BlockEntity te) {
@@ -90,10 +90,10 @@ public class MountedStorageManager {
 		if (clientPacket && presentTileEntities != null)
 			bindTanks(presentTileEntities);
 
-		List<IItemHandlerModifiable> handlers = new ArrayList<>();
-		List<IItemHandlerModifiable> fuelHandlers = new ArrayList<>();
+		List<Storage<ItemVariant>> handlers = new ArrayList<>();
+		List<Storage<ItemVariant>> fuelHandlers = new ArrayList<>();
 		for (MountedStorage mountedStorage : storage.values()) {
-			IItemHandlerModifiable itemHandler = mountedStorage.getItemHandler();
+			Storage<ItemVariant> itemHandler = mountedStorage.getItemHandler();
 			handlers.add(itemHandler);
 			if (mountedStorage.canUseForFuel())
 				fuelHandlers.add(itemHandler);
@@ -104,6 +104,7 @@ public class MountedStorageManager {
 		fluidInventory = wrapFluids(fluidStorage.values()
 			.stream()
 			.map(MountedFluidStorage::getFluidHandler)
+			.map(tank -> (Storage<FluidVariant>) tank)
 			.toList());
 	}
 
@@ -113,7 +114,7 @@ public class MountedStorageManager {
 			if (!(tileEntity instanceof FluidTankTileEntity))
 				return;
 			FluidTankTileEntity tank = (FluidTankTileEntity) tileEntity;
-			IFluidTank tankInventory = tank.getTankInventory();
+			FluidTank tankInventory = tank.getTankInventory();
 			if (tankInventory instanceof FluidTank)
 				((FluidTank) tankInventory).setFluid(mfs.tank.getFluid());
 			tank.getFluidLevel()

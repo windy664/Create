@@ -12,6 +12,9 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -21,8 +24,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RedstoneLinkCondition extends ScheduleWaitCondition {
 
@@ -97,8 +98,7 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 
 	@Override
 	protected void writeAdditional(CompoundTag tag) {
-		tag.put("Frequency", freq.serializeEach(f -> f.getStack()
-			.serializeNBT()));
+		tag.put("Frequency", freq.serializeEach(f -> NBTSerializer.serializeNBTCompound(f.getStack())));
 	}
 
 	public boolean lowActivation() {
@@ -111,14 +111,14 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addSelectionScrollInput(20, 101,
 			(i, l) -> i.forOptions(Lang.translatedOptions("schedule.condition.redstone_link", "powered", "unpowered"))
 				.titled(Lang.translate("schedule.condition.redstone_link.frequency_state")),
 			"Inverted");
 	}
-	
+
 	@Override
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
 		return Lang.translate("schedule.condition.redstone_link.status");

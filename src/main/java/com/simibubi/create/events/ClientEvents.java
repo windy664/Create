@@ -30,6 +30,7 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableHa
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryHandler;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
@@ -79,6 +80,7 @@ import io.github.fabricators_of_create.porting_lib.event.client.FogEvents.ColorD
 import io.github.fabricators_of_create.porting_lib.event.client.OnStartUseItemCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.ParticleManagerRegistrationCallback;
+import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.PlayerTickEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderHandCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
@@ -112,6 +114,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -287,21 +291,21 @@ public class ClientEvents {
 		TurntableHandler.gameRenderTick();
 	}
 
-	@SubscribeEvent
-	public static void onMount(EntityMountEvent event) {
-		if (event.getEntityMounting() != Minecraft.getInstance().player)
-			return;
+	public static InteractionResult onMount(Entity mounted, Entity mounting, boolean isMounting) {
+		if (mounting != Minecraft.getInstance().player)
+			return InteractionResult.PASS;
 
-		if (event.isDismounting()) {
+		if (!isMounting) {
 			CameraDistanceModifier.reset();
-			return;
+			return InteractionResult.PASS;
 		}
 
-		if (!event.isMounting() || !(event.getEntityBeingMounted() instanceof CarriageContraptionEntity carriage)) {
-			return;
+		if (!isMounting || !(mounted instanceof CarriageContraptionEntity carriage)) {
+			return InteractionResult.PASS;
 		}
 
 		CameraDistanceModifier.zoomOut();
+		return InteractionResult.PASS;
 	}
 
 	protected static boolean isGameActive() {
@@ -396,7 +400,7 @@ public class ClientEvents {
 
 	}
 
-	// TODO TRAIN PORT
+//	 TODO TRAIN PORT
 	public static void addEntityRendererLayers(final Map<EntityType<?>, EntityRenderer<?>> renderers, final Map<String, EntityRenderer<? extends Player>> skinMap) {
 		EntityRenderDispatcher dispatcher = Minecraft.getInstance()
 				.getEntityRenderDispatcher();
@@ -423,6 +427,7 @@ public class ClientEvents {
 		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
 		AttackAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
 		UseBlockCallback.EVENT.register(TrackBlockItem::sendExtenderPacket);
+		MountEntityCallback.EVENT.register(ClientEvents::onMount);
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((type, renderer, helper, context) -> CopperBacktankArmorLayer.registerOn(renderer, helper));
 
 		// External Events

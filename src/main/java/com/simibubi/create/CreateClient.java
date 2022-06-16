@@ -124,11 +124,11 @@ public class CreateClient implements ClientModInitializer {
 
 	private static void registerOverlays() {
 		// Register overlays in reverse order
-		// TODO TRAIN PORT TrainHUD.OVERLAY
 		OverlayRenderCallback.EVENT.register(((stack, partialTicks, window, type) -> {
 			if (type == OverlayRenderCallback.Types.AIR)
 				CopperBacktankArmorLayer.renderRemainingAirOverlay(stack, partialTicks, window);
 			else {
+				TrainHUD.renderOverlay(stack, partialTicks, window);
 				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window);
 				GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window);
 				BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window);

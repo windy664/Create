@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -148,7 +149,7 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 		}
 
 		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName();
-		DyeColor dye = DyeColor.getColor(heldItem);
+		DyeColor dye = TagUtil.getColorFromStack(heldItem);
 
 		if (!display && dye == null)
 			return InteractionResult.PASS;

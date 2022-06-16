@@ -19,8 +19,6 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
-import com.simibubi.create.compat.Mods;
-import com.simibubi.create.compat.curios.Curios;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;

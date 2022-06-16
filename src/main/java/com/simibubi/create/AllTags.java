@@ -16,6 +16,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import me.alphamode.forgetags.Tags;
 import net.minecraft.core.Registry;
+import net.minecraft.data.tags.TagsProvider.TagAppender;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;

@@ -5,6 +5,7 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.FontAccessor;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
@@ -24,7 +25,7 @@ public class NoShadowFontWrapper extends Font {
 	}
 
 	public FontSet getFontSet(ResourceLocation pFontLocation) {
-		return wrapped.getFontSet(pFontLocation);
+		return ((FontAccessor) wrapped).port_lib$getFontSet(pFontLocation);
 	}
 
 	public int drawShadow(PoseStack pPoseStack, String pText, float pX, float pY, int pColor) {
