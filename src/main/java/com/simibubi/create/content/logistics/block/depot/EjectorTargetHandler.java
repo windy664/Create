@@ -170,7 +170,7 @@ public class EjectorTargetHandler {
 
 	protected static void drawArc() {
 		Minecraft mc = Minecraft.getInstance();
-		boolean wrench = AllItems.WRENCH.is(mc.player.getMainHandItem());
+		boolean wrench = AllItems.WRENCH.isIn(mc.player.getMainHandItem());
 
 		if (currentSelection == null)
 			return;
