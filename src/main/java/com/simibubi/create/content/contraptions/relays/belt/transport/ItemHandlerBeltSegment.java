@@ -1,20 +1,11 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleViewIterator;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
-
-import java.util.Iterator;
-
-public class ItemHandlerBeltSegment extends SnapshotParticipant<TransportedItemStack> implements Storage<ItemVariant>, StorageView<ItemVariant> {
-	@Nullable // only not null when something has been inserted and transaction is still open
-	private TransportedItemStack stack;
+public class ItemHandlerBeltSegment implements SingleSlotStorage<ItemVariant> {
 	private final BeltInventory beltInventory;
 	int offset;
 
@@ -23,83 +14,57 @@ public class ItemHandlerBeltSegment extends SnapshotParticipant<TransportedItemS
 		this.offset = offset;
 	}
 
-	private boolean canInsert() {
-		return this.beltInventory.canInsertAt(offset) && (stack == null || stack.stack.isEmpty());
-	}
-
-	private TransportedItemStack getStack() {
-		if (stack != null && !stack.stack.isEmpty()) return stack;
-		return this.beltInventory.getStackAtOffset(offset);
-	}
-
-	@Override
-	protected void onFinalCommit() {
-		if (stack != null) {
-			this.beltInventory.addItem(stack);
-			stack = null;
-		}
-		this.beltInventory.belt.setChanged();
-		this.beltInventory.belt.sendData();
-	}
-
 	@Override
 	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		if (canInsert()) {
-			updateSnapshots(transaction);
-			int inserted = Math.min((int) maxAmount, resource.getItem().getMaxStackSize());
-			stack = new TransportedItemStack(resource.toStack(inserted));
-			stack.insertedAt = offset;
-			stack.beltPosition = offset + .5f + (beltInventory.beltMovementPositive ? -1 : 1) / 16f;
-			stack.prevBeltPosition = stack.beltPosition;
-			return inserted;
+		if (this.beltInventory.canInsertAt(offset)) {
+			TransportedItemStack newStack = new TransportedItemStack(resource.toStack());
+			newStack.insertedAt = offset;
+			newStack.beltPosition = offset + .5f + (beltInventory.beltMovementPositive ? -1 : 1) / 16f;
+			newStack.prevBeltPosition = newStack.beltPosition;
+			this.beltInventory.snapshotParticipant.updateSnapshots(transaction);
+			this.beltInventory.addItem(newStack);
+			return 1;
 		}
 		return 0;
 	}
 
 	@Override
 	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		TransportedItemStack transported = getStack();
+		TransportedItemStack transported = this.beltInventory.getStackAtOffset(offset);
 		if (transported == null)
 			return 0;
 
-		updateSnapshots(transaction);
-		int amount = Math.min((int) maxAmount, transported.stack.getCount());
-		ItemStack extracted = transported.stack.split(amount);
-		return extracted.getCount();
+		int toExtract = Math.min((int) maxAmount, transported.stack.getCount());
+		this.beltInventory.snapshotParticipant.updateSnapshots(transaction);
+		transported.stack.shrink(toExtract);
+		return toExtract;
 	}
 
 	@Override
 	public boolean isResourceBlank() {
-		return stack == null || stack.stack.isEmpty();
+		return getResource().isBlank();
 	}
 
 	@Override
 	public ItemVariant getResource() {
-		return isResourceBlank() ? ItemVariant.blank() : ItemVariant.of(stack.stack);
+		return ItemVariant.of(getStack());
 	}
 
 	@Override
 	public long getAmount() {
-		return isResourceBlank() ? 0 : stack.stack.getCount();
+		ItemStack stack = getStack();
+		return stack.isEmpty() ? 0 : stack.getCount();
 	}
 
 	@Override
 	public long getCapacity() {
-		return isResourceBlank() ? 64 : stack.stack.getMaxStackSize();
+		return getStack().getMaxStackSize();
 	}
 
-	@Override
-	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		return SingleViewIterator.create(this, transaction);
-	}
-
-	@Override
-	protected void readSnapshot(TransportedItemStack snapshot) {
-		this.stack = snapshot == TransportedItemStack.EMPTY ? null : snapshot;
-	}
-
-	@Override
-	protected TransportedItemStack createSnapshot() {
-		return stack != null ? stack.copy() : TransportedItemStack.EMPTY;
+	public ItemStack getStack() {
+		TransportedItemStack transported = this.beltInventory.getStackAtOffset(offset);
+		if (transported == null)
+			return ItemStack.EMPTY;
+		return transported.stack.isEmpty() ? ItemStack.EMPTY : transported.stack;
 	}
 }

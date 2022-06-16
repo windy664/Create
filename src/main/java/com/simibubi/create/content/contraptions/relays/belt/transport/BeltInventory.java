@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -35,17 +36,50 @@ import net.minecraft.world.phys.Vec3;
 public class BeltInventory {
 
 	final BeltTileEntity belt;
-	private final List<TransportedItemStack> items;
-	final List<TransportedItemStack> toInsert;
-	final List<TransportedItemStack> toRemove;
+	private List<TransportedItemStack> items;
+	List<TransportedItemStack> toInsert;
+	List<TransportedItemStack> toRemove;
 	boolean beltMovementPositive;
 	final float SEGMENT_WINDOW = .75f;
+
+	public final SnapshotParticipant<Data> snapshotParticipant = new SnapshotParticipant<>() {
+
+		@Override
+		protected Data createSnapshot() {
+			List<TransportedItemStack> items = new LinkedList<>();
+			BeltInventory.this.items.forEach(transported -> items.add(transported.copy()));
+			List<TransportedItemStack> toInsert = new LinkedList<>();
+			BeltInventory.this.toInsert.forEach(transported -> toInsert.add(transported.copy()));
+			List<TransportedItemStack> toRemove = new LinkedList<>();
+			BeltInventory.this.toRemove.forEach(transported -> toRemove.add(transported.copy()));
+			return new Data(items, toInsert, toRemove);
+		}
+
+		@Override
+		protected void readSnapshot(Data snapshot) {
+			BeltInventory.this.items = snapshot.items;
+			BeltInventory.this.toInsert = snapshot.toInsert;
+			BeltInventory.this.toRemove = snapshot.toRemove;
+		}
+
+		@Override
+		protected void onFinalCommit() {
+			super.onFinalCommit();
+			belt.setChanged();
+			belt.sendData();
+		}
+	};
 
 	public BeltInventory(BeltTileEntity te) {
 		this.belt = te;
 		items = new LinkedList<>();
 		toInsert = new LinkedList<>();
 		toRemove = new LinkedList<>();
+	}
+
+	public record Data(List<TransportedItemStack> items,
+					   List<TransportedItemStack> toInsert,
+					   List<TransportedItemStack> toRemove) {
 	}
 
 	public void tick() {
