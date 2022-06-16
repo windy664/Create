@@ -226,7 +226,6 @@ public class CommonEvents {
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
 		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(CommonEvents::onDatapackSync);
-		UseBlockCallback.EVENT.register(WrenchItem::useOn);
 		CommonEvents.addReloadListeners();
 		CommonEvents.onBiomeLoad(); // Fabric Biome API requires biomes to only be registered once
 
