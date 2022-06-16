@@ -181,7 +181,7 @@ public class ItemHelper {
 					ItemVariant variant = extracting == null ? view.getResource() : extracting;
 					if (!test.test(variant.toStack())) continue;
 					if (extracting == null) extracting = variant;
-					long toExtract = Math.min(amount, view.getAmount());
+					long toExtract = Math.min(amount - extracted, view.getAmount());
 					long actualExtracted = view.extract(variant, toExtract, t);
 					if (actualExtracted == 0) continue;
 					extracted += actualExtracted;
@@ -211,11 +211,11 @@ public class ItemHelper {
 
 		try (Transaction t = TransferUtil.getTransaction()) {
 			for (StorageView<ItemVariant> view : inv.iterable(t)) {
-				if (view.isResourceBlank())
-					continue;
 				ItemVariant var = view.getResource();
+				ItemStack stackInSlot = var.toStack();
+				if (view.isResourceBlank() || !test.test(stackInSlot))
+					continue;
 				if (extracting.isEmpty()) {
-					ItemStack stackInSlot = var.toStack();
 					int maxExtractionCountForItem = amountFunction.apply(stackInSlot);
 					if (maxExtractionCountForItem == 0)
 						continue;

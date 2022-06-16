@@ -166,7 +166,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 			return InteractionResult.PASS;
 
 		boolean isHand = heldItem.isEmpty() && handIn == InteractionHand.MAIN_HAND;
-		boolean wrenched = AllTags.AllItemTags.WRENCHES.matches(heldItem);
+		boolean wrenched = AllItems.WRENCH.isIn(heldItem);
 
 		if (hit.getDirection() == state.getValue(HORIZONTAL_FACING)) {
 

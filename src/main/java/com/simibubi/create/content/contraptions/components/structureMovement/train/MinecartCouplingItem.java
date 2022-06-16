@@ -46,7 +46,7 @@ public class MinecartCouplingItem extends Item {
 		if (AllItems.MINECART_COUPLING.isIn(heldItem)) {
 			if (!onCouplingInteractOnMinecart(player.level, minecart, player, controller))
 				return InteractionResult.PASS;
-		} else if (AllTags.AllItemTags.WRENCHES.matches(heldItem)) {
+		} else if (AllItems.WRENCH.isIn(heldItem)) {
 			if (!onWrenchInteractOnMinecart(player.level, minecart, player, controller))
 				return InteractionResult.PASS;
 		} else

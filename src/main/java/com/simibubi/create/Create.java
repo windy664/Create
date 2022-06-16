@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.trinkets.Trinkets;
 import com.tterrag.registrate.fabric.GatherDataEvent;
 
 import io.github.tropheusj.milk.Milk;
@@ -93,6 +95,7 @@ public class Create implements ModInitializer {
 		AllMovementBehaviours.register();
 		AllDisplayBehaviours.register();
 		AllInteractionBehaviours.register();
+		AllArmInteractionPointTypes.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
 		BlockSpoutingBehaviour.register();
@@ -122,6 +125,10 @@ public class Create implements ModInitializer {
 		AllEntityDataSerializers.register();
 
 		AllPackets.channel.initServerListener();
+
+		// causes class loading issues or something
+		// noinspection Convert2MethodRef
+		Mods.TRINKETS.executeIfInstalled(() -> () -> Trinkets.init());
 	}
 
 	public static void init() {

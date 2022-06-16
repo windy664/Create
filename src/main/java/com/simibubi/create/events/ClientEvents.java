@@ -91,6 +91,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRe
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -106,6 +107,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EntityType;
@@ -406,7 +408,6 @@ public class ClientEvents {
 
 		ClientTickEvents.END_CLIENT_TICK.register(SymmetryHandler::onClientTick);
 		WorldRenderEvents.AFTER_TRANSLUCENT.register(SymmetryHandler::render);
-		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 		UseBlockCallback.EVENT.register(ArmInteractionPointHandler::rightClickingBlocksSelectsThem);
 		UseBlockCallback.EVENT.register(EjectorTargetHandler::rightClickingBlocksSelectsThem);
 		AttackBlockCallback.EVENT.register(ArmInteractionPointHandler::leftClickingBlocksDeselectsThem);
@@ -421,6 +422,10 @@ public class ClientEvents {
 		DrawSelectionEvents.BLOCK.register(ClientEvents::onRenderSelection);
 		DrawSelectionEvents.BLOCK.register(TrackBlockOutline::drawCustomBlockSelection);
 		DrawSelectionEvents.ENTITY.register(ClientEvents::onRenderSelection);
+		// we need to add our config button after mod menu, so we register our event with a phase that comes later
+		ResourceLocation latePhase = Create.asResource("late");
+		ScreenEvents.AFTER_INIT.addPhaseOrdering(Event.DEFAULT_PHASE, latePhase);
+		ScreenEvents.AFTER_INIT.register(latePhase, OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 
 		// Flywheel Events
 

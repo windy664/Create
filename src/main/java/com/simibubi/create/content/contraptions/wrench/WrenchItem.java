@@ -34,21 +34,20 @@ public class WrenchItem extends Item {
 	}
 
 	@Nonnull
-	public static InteractionResult useOn(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
-		UseOnContext context = new UseOnContext(player, hand, hitResult);
+	@Override
+	public InteractionResult useOn(UseOnContext context) {
+		Player player = context.getPlayer();
 		if (player == null || !player.mayBuild())
-			return InteractionResult.PASS;
-		if (!AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(hand)))
-			return InteractionResult.PASS;
+			return super.useOn(context);
 
 		BlockState state = context.getLevel()
-			.getBlockState(context.getClickedPos());
+				.getBlockState(context.getClickedPos());
 		Block block = state.getBlock();
 
 		if (!(block instanceof IWrenchable)) {
 			if (canWrenchPickup(state))
 				return onItemUseOnOther(context);
-			return InteractionResult.PASS;
+			return super.useOn(context);
 		}
 
 		IWrenchable actor = (IWrenchable) block;
@@ -81,7 +80,7 @@ public class WrenchItem extends Item {
 		if (!(target instanceof AbstractMinecart))
 			return InteractionResult.PASS;
 		ItemStack heldItem = player.getMainHandItem();
-		if (!AllTags.AllItemTags.WRENCHES.matches(heldItem))
+		if (!AllItems.WRENCH.is(heldItem))
 			return InteractionResult.PASS;
 		if (player.isCreative())
 			return InteractionResult.PASS;

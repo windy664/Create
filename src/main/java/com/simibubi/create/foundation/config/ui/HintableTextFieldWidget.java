@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config.ui;
 
+import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -54,8 +56,7 @@ public class HintableTextFieldWidget extends EditBox {
 	@Override
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
 		InputConstants.Key mouseKey = InputConstants.getKey(code, p_keyPressed_2_);
-		KeyMapping key = Minecraft.getInstance().options.keyInventory;
-		if (key.matchesMouse(mouseKey.getValue()) && key.isDown()) {
+		if (KeyBindingHelper.isActiveAndMatches(Minecraft.getInstance().options.keyInventory, mouseKey)) {
 			return true;
 		}
 

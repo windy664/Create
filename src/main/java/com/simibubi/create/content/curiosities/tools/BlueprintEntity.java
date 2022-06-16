@@ -353,7 +353,7 @@ public class BlueprintEntity extends HangingEntity
 		if (player instanceof FakeServerPlayer)
 			return InteractionResult.PASS;
 
-		boolean holdingWrench = AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(hand));
+		boolean holdingWrench = AllItems.WRENCH.isIn(player.getItemInHand(hand));
 		BlueprintSection section = getSectionAt(vec);
 		ItemStackHandler items = section.getItems();
 

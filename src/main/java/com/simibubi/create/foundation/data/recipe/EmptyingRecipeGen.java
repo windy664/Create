@@ -18,7 +18,7 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
 		HONEY_BOTTLE = create("honey_bottle", b -> b
 			.require(Items.HONEY_BOTTLE)
-			.output(AllFluids.HONEY.get(), FluidConstants.BOTTLE)
+			.output(AllFluids.HONEY.get(), AllFluids.HONEY_BOTTLE_AMOUNT)
 			.output(Items.GLASS_BOTTLE)),
 
 		BUILDERS_TEA = create("builders_tea", b -> b

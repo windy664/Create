@@ -258,7 +258,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return InteractionResult.PASS;
 		ItemStack heldItem = player.getItemInHand(handIn);
 
-		boolean isWrench = AllTags.AllItemTags.WRENCHES.matches(heldItem);
+		boolean isWrench = AllItems.WRENCH.isIn(heldItem);
 		boolean isConnector = AllItems.BELT_CONNECTOR.isIn(heldItem);
 		boolean isShaft = AllBlocks.SHAFT.isIn(heldItem);
 		boolean isDye = heldItem.is(Tags.Items.DYES);

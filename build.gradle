@@ -54,24 +54,45 @@ dependencies {
     modApi("me.shedaniel.cloth:basic-math:0.6.0")
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") { transitive = false }
-    modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
     modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
     modLocalRuntime("maven.modrinth:lazydfu:0.1.2")
     modLocalRuntime("maven.modrinth:lithium:mc1.18.2-0.7.9")
     modCompileOnly("maven.modrinth:sandwichable:1.2+1.18.2")
+    modImplementation("dev.emi:trinkets:${project.trinkets_version}") { exclude(group: "com.terraformersmc") }
+    modCompileOnly("dev.emi:emi:${project.emi_version}")
+
+    if ("${project.recipe_viewer}" == 'emi') {
+        modImplementation("dev.emi:emi:${project.emi_version}")
+    } else if ("${project.recipe_viewer}" == 'rei') {
+        modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
+    }
 
     // uncomment these to test
+
+//    modLocalRuntime("maven.modrinth:kibe:1.9.7-BETA+1.18") { transitive = false }
+//    modLocalRuntime("io.github.ladysnake:PlayerAbilityLib:1.5.0") { transitive = false }
+//    modLocalRuntime("net.fabricmc:fabric-language-kotlin:1.8.0+kotlin.1.7.0")
+
+//    modLocalRuntime("maven.modrinth:better-biome-blend:1.18.2-1.3.5-fabric")
 
 //    modLocalRuntime("maven.modrinth:sandwichable:1.2+1.18.2")
 //    modLocalRuntime("maven.modrinth:mealapi:0.3+1.18")
 //    modLocalRuntime("dev.lambdaurora:spruceui:3.3.1+1.17")
 
-//    modRuntimeOnly("maven.modrinth:sodium:mc1.18.2-0.4.1")
-//    runtimeOnly('org.joml:joml:1.10.4') // for sodium
+//    modLocalRuntime("maven.modrinth:sodium:mc1.18.2-0.4.1")
+//    localRuntime("org.joml:joml:1.10.4")
+
+//    modLocalRuntime("maven.modrinth:phosphor:mc1.18.x-0.8.1")
+
+//    modLocalRuntime("maven.modrinth:starlight:1.0.2+1.18.2")
 
 //    modLocalRuntime("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT"
+
 //    modLocalRuntime("curse.maven:nbt-crafting-314633:3707208") { transitive = false }
+
 //    modLocalRuntime("curse.maven:alloygery-573592:3762142") { transitive = false }
+
 //    modLocalRuntime("curse.maven:xl-packets-fabric-390168:3527187") { transitive = false }
 
     // dependencies
@@ -131,6 +152,8 @@ loom {
 }
 
 processResources {
+    exclude("**/*.bbmodel", "**/*.lnk")
+
     Map<String, String> properties = new HashMap<>()
     properties.put("version", project.version)
     properties.put("loader_version", project.loader_version)

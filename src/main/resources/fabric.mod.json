@@ -28,8 +28,14 @@
     "fabric-datagen": [
       "com.simibubi.create.CreateData"
     ],
+    "emi": [
+      "com.simibubi.create.compat.emi.CreateEmiPlugin"
+    ],
     "rei": [
       "com.simibubi.create.compat.rei.CreateREI"
+    ],
+    "modmenu": [
+      "com.simibubi.create.compat.modmenu.CreateModMenuIntegration"
     ]
   },
 
@@ -62,7 +68,7 @@
       "com_electronwill_night-config_toml"
     ],
     "loom:injected_interfaces": {
-      "net/minecraft/class_1688": ["com/simibubi/create/foundation/utility/fabric/AbstractMinecartExtensions"]
+      "net/minecraft/class_1688": [ "com/simibubi/create/foundation/utility/fabric/AbstractMinecartExtensions" ]
     }
   }
 }

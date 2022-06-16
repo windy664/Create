@@ -79,6 +79,11 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	}
 
 	public void updateCurrentLevel() {
+		if (Transaction.isOpen()) {
+			// can't do this during close callbacks.
+			// lazyTick should catch any updates we miss.
+			return;
+		}
 		boolean changed = false;
 		float occupied = 0;
 		float totalSpace = 0;

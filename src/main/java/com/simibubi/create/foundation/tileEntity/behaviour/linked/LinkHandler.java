@@ -28,6 +28,8 @@ public class LinkHandler {
 		LinkBehaviour behaviour = TileEntityBehaviour.get(world, pos, LinkBehaviour.TYPE);
 		if (behaviour == null)
 			return InteractionResult.PASS;
+		if (!behaviour.canInteract(player))
+			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
 		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);
@@ -35,7 +37,7 @@ public class LinkHandler {
 			return InteractionResult.PASS;
 		if (AllItems.LINKED_CONTROLLER.isIn(heldItem))
 			return InteractionResult.PASS;
-		if (AllTags.AllItemTags.WRENCHES.matches(heldItem))
+		if (AllItems.WRENCH.is(heldItem))
 			return InteractionResult.PASS;
 
 		for (boolean first : Arrays.asList(false, true)) {

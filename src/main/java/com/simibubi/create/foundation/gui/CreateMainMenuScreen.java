@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -15,27 +16,22 @@ import com.simibubi.create.foundation.ponder.ui.PonderTagIndexScreen;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.terraformersmc.modmenu.gui.ModsScreen;
+
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.TitleScreenAccessor;
 
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.CubeMap;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.PanoramaRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.InventoryMenu;
-
-import javax.swing.text.Element;
 
 public class CreateMainMenuScreen extends AbstractSimiScreen {
 
@@ -60,9 +56,13 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	private long firstRenderTime;
 	private Button gettingStarted;
 
+	public final boolean fromTitleOrMods;
+
 	public CreateMainMenuScreen(Screen parent) {
 		this.parent = parent;
 		returnOnClose = true;
+		fromTitleOrMods = (parent instanceof TitleScreen) || Mods.MODMENU.runIfInstalled(() ->
+				() -> parent instanceof ModsScreen).orElse(Boolean.FALSE);
 		if (parent instanceof TitleScreen titleScreen)
 			vanillaPanorama = ((TitleScreenAccessor) titleScreen).port_lib$getPanorama();
 		else
@@ -82,8 +82,8 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		float alpha = Mth.clamp(f, 0.0F, 1.0F);
 		float elapsedPartials = minecraft.getDeltaFrameTime();
 
-		if (parent instanceof TitleScreen) {
-			if (alpha < 1)
+		if (fromTitleOrMods) {
+			if (alpha < 1 && parent instanceof TitleScreen)
 				vanillaPanorama.render(elapsedPartials, 1);
 			PANORAMA.render(elapsedPartials, alpha);
 
@@ -157,7 +157,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 
 		gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
 			Lang.translate("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
-		gettingStarted.active = !(parent instanceof TitleScreen);
+		gettingStarted.active = !fromTitleOrMods;
 		addRenderableWidget(gettingStarted);
 		addRenderableWidget(new SimpleButtonWithIcon(center - 100, yStart + 48 + -16, bShortWidth / 2, bHeight, CF_ICON,
 			20, 20, $ -> linkTo(CF_PROJECT_LINK)));
@@ -174,7 +174,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
 		((ScreenAccessor) this).port_lib$getRenderables().forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
 
-		if (parent instanceof TitleScreen) {
+		if (fromTitleOrMods) {
 			if (mouseX < gettingStarted.x || mouseX > gettingStarted.x + 98)
 				return;
 			if (mouseY < gettingStarted.y || mouseY > gettingStarted.y + 20)

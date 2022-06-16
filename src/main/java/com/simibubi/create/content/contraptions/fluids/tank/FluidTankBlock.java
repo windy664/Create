@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
@@ -103,7 +104,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	// Handled via LIGHT_LEVEL state property
 //	@Override
 //	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-//		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
+//		FluidTankTileEntity tankAt = ConnectivityHandler.partAt(getTileEntityType(), world, pos);
 //		if (tankAt == null)
 //			return 0;
 //		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
@@ -138,7 +139,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			return InteractionResult.PASS;
 
 		FluidExchange exchange = null;
-		FluidTankTileEntity te = FluidTankConnectivityHandler.anyTankAt(world, pos);
+		FluidTankTileEntity te = ConnectivityHandler.partAt(getTileEntityType(), world, pos);
 		if (te == null)
 			return InteractionResult.FAIL;
 
@@ -238,7 +239,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 				return;
 			FluidTankTileEntity tankTE = (FluidTankTileEntity) te;
 			world.removeBlockEntity(pos);
-			FluidTankConnectivityHandler.splitTank(tankTE);
+			ConnectivityHandler.splitMulti(tankTE);
 		}
 	}
 

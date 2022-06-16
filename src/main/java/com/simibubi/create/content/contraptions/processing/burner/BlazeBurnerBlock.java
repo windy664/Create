@@ -12,6 +12,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
@@ -116,6 +117,9 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		BlockHitResult blockRayTraceResult) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
+		if (!FilteringBehaviour.playerCanInteract(player))
+			return InteractionResult.PASS;
+
 		if (state.getValue(HEAT_LEVEL) == HeatLevel.NONE) {
 			if (heldItem.getItem() instanceof FlintAndSteelItem) {
 				world.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F,
@@ -169,7 +173,7 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		if (!doNotConsume) {
 			ItemStack container = stack.getItem().hasCraftingRemainingItem() ? new ItemStack(stack.getItem().getCraftingRemainingItem()) : ItemStack.EMPTY;
 			if (!world.isClientSide) {
-				TransactionCallback.onSuccess(ctx, () -> stack.shrink(1));
+				stack.shrink(1);
 			}
 			return InteractionResultHolder.success(container);
 		}

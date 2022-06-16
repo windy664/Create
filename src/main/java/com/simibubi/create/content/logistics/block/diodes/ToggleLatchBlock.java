@@ -55,7 +55,7 @@ public class ToggleLatchBlock extends AbstractDiodeBlock implements ConnectableR
 			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())
 			return InteractionResult.PASS;
-		if (AllTags.AllItemTags.WRENCHES.matches(player.getItemInHand(handIn)))
+		if (AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
 			return InteractionResult.PASS;
 		return activated(worldIn, pos, state);
 	}
