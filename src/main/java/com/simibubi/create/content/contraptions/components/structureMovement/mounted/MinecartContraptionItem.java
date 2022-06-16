@@ -200,7 +200,7 @@ public class MinecartContraptionItem extends Item {
 			return InteractionResult.PASS;
 
 		ItemStack wrench = player.getItemInHand(hand);
-		if (!AllItems.WRENCH.is(wrench))
+		if (!AllItems.WRENCH.isIn(wrench))
 			return InteractionResult.PASS;
 		if (entity instanceof AbstractContraptionEntity)
 			entity = entity.getVehicle();

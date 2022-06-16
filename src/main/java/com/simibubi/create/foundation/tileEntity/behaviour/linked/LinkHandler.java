@@ -37,7 +37,7 @@ public class LinkHandler {
 			return InteractionResult.PASS;
 		if (AllItems.LINKED_CONTROLLER.isIn(heldItem))
 			return InteractionResult.PASS;
-		if (AllItems.WRENCH.is(heldItem))
+		if (AllItems.WRENCH.isIn(heldItem))
 			return InteractionResult.PASS;
 
 		for (boolean first : Arrays.asList(false, true)) {

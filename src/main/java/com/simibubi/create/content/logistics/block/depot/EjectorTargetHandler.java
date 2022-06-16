@@ -226,7 +226,7 @@ public class EjectorTargetHandler {
 	}
 
 	private static void checkForWrench(ItemStack heldItem) {
-		if (!AllItems.WRENCH.is(heldItem))
+		if (!AllItems.WRENCH.isIn(heldItem))
 			return;
 		HitResult objectMouseOver = Minecraft.getInstance().hitResult;
 		if (!(objectMouseOver instanceof BlockHitResult))
