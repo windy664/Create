@@ -144,6 +144,16 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 					.withStyle(ChatFormatting.GOLD));
 	}
 
+	// TODO TRAIN PORT
+	public static IRecipeSlotTooltipCallback addStochasticTooltip(ProcessingOutput output) {
+		return (view, tooltip) -> {
+			float chance = output.getChance();
+			if (chance != 1)
+				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+						.withStyle(ChatFormatting.GOLD));
+		};
+	}
+
 	@Deprecated // in favor of basicSlot(int, int)
 	public static Slot basicSlot(Point point) {
 		return Widgets.createSlot(point).disableBackground();
@@ -206,7 +216,7 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 //			}
 //
 //			int amount = amounts.get(index != -1 ? 0 : slotIndex);
-//			Component text = (Lang.translate("generic.unit.millibuckets", amount)).withStyle(ChatFormatting.GOLD);
+//			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translate("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
 //			if (tooltip.isEmpty())
 //				tooltip.add(0, text);
 //			else {

@@ -215,7 +215,8 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		public boolean canCreatePoint(Level level, BlockPos pos, BlockState state) {
-			return AllBlocks.DEPOT.has(state) || AllBlocks.WEIGHTED_EJECTOR.has(state);
+			return AllBlocks.DEPOT.has(state) || AllBlocks.WEIGHTED_EJECTOR.has(state)
+				|| AllBlocks.TRACK_STATION.has(state);
 		}
 
 		@Override

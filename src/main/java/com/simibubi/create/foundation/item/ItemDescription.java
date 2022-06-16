@@ -143,9 +143,7 @@ public class ItemDescription {
 			double capacity = BlockStressValues.getCapacity(block);
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.HIGH
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.LOW);
-			StressImpact opposite = StressImpact.values()[2 - impactId.ordinal()];
-
-			int index = StressImpact.values().length - 2 - impactId.ordinal();
+			StressImpact opposite = StressImpact.values()[StressImpact.values().length - 2 - impactId.ordinal()];
 			MutableComponent level =
 				new TextComponent(makeProgressBar(3, impactId.ordinal() + 1)).withStyle(opposite.getAbsoluteColor());
 

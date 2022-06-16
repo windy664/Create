@@ -91,9 +91,9 @@ public class StationScreen extends AbstractStationScreen {
 		addRenderableWidget(dropScheduleButton);
 
 		onTextChanged = s -> trainNameBox.x = nameBoxX(s, trainNameBox);
-		trainNameBox = new EditBox(font, x + 23, y + 47, background.width - 20, 10, new TextComponent(""));
+		trainNameBox = new EditBox(font, x + 23, y + 47, background.width - 75, 10, new TextComponent(""));
 		trainNameBox.setBordered(false);
-		trainNameBox.setMaxLength(15);
+		trainNameBox.setMaxLength(35);
 		trainNameBox.setTextColor(0xC6C6C6);
 		trainNameBox.changeFocus(false);
 		trainNameBox.mouseClicked(0, 0, 0);
@@ -254,11 +254,10 @@ public class StationScreen extends AbstractStationScreen {
 		for (int i = carriages.size() - 1; i > 0; i--) {
 			RenderSystem.setShaderColor(1, 1, 1, Math.min(1f,
 				Math.min((position + offset - 10) / 30f, (background.width - 40 - position - offset) / 30f)));
-
-			if (i == carriages.size() - 1 && train.doubleEnded) {
-				offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset, y + 20) + 1;
-				continue;
-			}
+//			if (i == carriages.size() - 1 && train.doubleEnded) {
+//				offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset, y + 20) + 1;
+//				continue;
+//			}
 			Carriage carriage = carriages.get(te.trainBackwards ? carriages.size() - i - 1 : i);
 			offset += icon.render(carriage.bogeySpacing, ms, x + offset, y + 20) + 1;
 		}
@@ -281,9 +280,12 @@ public class StationScreen extends AbstractStationScreen {
 		ms.popPose();
 
 		text = trainNameBox.getValue();
-		if (!trainNameBox.isFocused())
-			AllGuiTextures.STATION_EDIT_TRAIN_NAME.render(ms, nameBoxX(text, trainNameBox) + font.width(text) + 5,
-				y + 44);
+		if (!trainNameBox.isFocused()) {
+			int buttonX = nameBoxX(text, trainNameBox) + font.width(text) + 5;
+			AllGuiTextures.STATION_EDIT_TRAIN_NAME.render(ms, Math.min(buttonX, guiLeft + 156), y + 44);
+			if (font.width(text) > trainNameBox.getWidth())
+				font.drawShadow(ms, "...", guiLeft + 26, guiTop + 47, 0xa6a6a6);
+		}
 	}
 
 	@Override
@@ -328,8 +330,7 @@ public class StationScreen extends AbstractStationScreen {
 		Train train = displayedTrain.get();
 		if (train != null && !trainNameBox.getValue()
 			.equals(train.name.getString()))
-			AllPackets.channel
-				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), false, train.icon.getId()));
+			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
 	}
 
 	private void syncStationName() {
@@ -344,9 +345,12 @@ public class StationScreen extends AbstractStationScreen {
 		AllPackets.channel
 			.sendToServer(StationEditPacket.configure(te.getBlockPos(), switchingToAssemblyMode, nameBox.getValue()));
 		Train train = displayedTrain.get();
-		if (!switchingToAssemblyMode && train != null)
-			AllPackets.channel
-				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), false, train.icon.getId()));
+		if (train == null)
+			return;
+		if (!switchingToAssemblyMode)
+			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
+		else
+			te.imminentTrain = null;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,8 +24,8 @@ import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import org.apache.commons.lang3.mutable.MutableDouble;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.MountedStorageManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.TrainCargoManager;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
@@ -45,7 +44,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -65,7 +63,7 @@ public class Carriage {
 
 	public int bogeySpacing;
 	public Couple<CarriageBogey> bogeys;
-	public MountedStorageManager storage;
+	public TrainCargoManager storage;
 
 	CompoundTag serialisedEntity;
 	Map<Integer, CompoundTag> serialisedPassengers;
@@ -82,7 +80,7 @@ public class Carriage {
 		this.presentConductors = Couple.create(false, false);
 		this.serialisedPassengers = new HashMap<>();
 		this.entities = new HashMap<>();
-		this.storage = new MountedStorageManager();
+		this.storage = new TrainCargoManager();
 
 		bogey1.setLeading();
 		bogey1.carriage = this;
@@ -106,18 +104,9 @@ public class Carriage {
 		contraption.onEntityInitialize(level, entity);
 		updateContraptionAnchors();
 
-		getDimensional(level).alignEntity(entity);
-
-		List<Entity> players = new ArrayList<>();
-		for (Entity passenger : entity.getPassengers())
-			if (!(passenger instanceof Player))
-				passenger.remove(RemovalReason.UNLOADED_WITH_PLAYER);
-			else
-				players.add(passenger);
-		for (Entity player : players)
-			player.stopRiding();
-
-		serialisedEntity = NBTSerializer.serializeNBTCompound(entity);
+		DimensionalCarriageEntity dimensional = getDimensional(level);
+		dimensional.alignEntity(entity);
+		dimensional.removeAndSaveEntity(entity, false);
 	}
 
 	public DimensionalCarriageEntity getDimensional(Level level) {
@@ -137,7 +126,7 @@ public class Carriage {
 		Function<TravellingPoint, ITrackSelector> forwardControl,
 		Function<TravellingPoint, ITrackSelector> backwardControl, int type) {
 		boolean onTwoBogeys = isOnTwoBogeys();
-		double stress = onTwoBogeys ? bogeySpacing - getAnchorDiff() : 0;
+		double stress = train.derailed ? 0 : onTwoBogeys ? bogeySpacing - getAnchorDiff() : 0;
 		blocked = false;
 
 		MutableDouble distanceMoved = new MutableDouble(distance);
@@ -205,7 +194,7 @@ public class Carriage {
 		return distanceMoved.getValue();
 	}
 
-	private double getAnchorDiff() {
+	public double getAnchorDiff() {
 		double diff = 0;
 		int entries = 0;
 
@@ -519,10 +508,14 @@ public class Carriage {
 		}
 
 		public void discardPivot() {
-			float prevCutoff = cutoff;
+			int prevmin = minAllowedLocalCoord();
+			int prevmax = maxAllowedLocalCoord();
+
 			cutoff = 0;
 			pivot = null;
-			if (!serialisedPassengers.isEmpty() || !Mth.equal(prevCutoff, cutoff)) {
+
+			if ((!serialisedPassengers.isEmpty() && entity.get() != null) || prevmin != minAllowedLocalCoord()
+				|| prevmax != maxAllowedLocalCoord()) {
 				updatePassengerLoadout();
 				updateRenderedCutoff();
 			}
@@ -776,16 +769,15 @@ public class Carriage {
 		}
 
 		private void createEntity(Level level, boolean loadPassengers) {
-			Entity entity = EntityType.loadEntityRecursive(serialisedEntity, level, e -> {
-				e.moveTo(positionAnchor);
-				return e;
-			});
+			Entity entity = EntityType.create(serialisedEntity, level)
+				.orElse(null);
 
 			if (!(entity instanceof CarriageContraptionEntity cce)) {
 				train.invalid = true;
 				return;
 			}
 
+			entity.moveTo(positionAnchor);
 			this.entity = new WeakReference<>(cce);
 
 			cce.setGraph(train.graph == null ? null : train.graph.id);
@@ -793,7 +785,7 @@ public class Carriage {
 			cce.syncCarriage();
 
 			if (level instanceof ServerLevel sl)
-				sl.tryAddFreshEntityWithPassengers(entity);
+				sl.addFreshEntity(entity);
 
 			updatePassengerLoadout();
 		}
@@ -836,6 +828,9 @@ public class Carriage {
 			double diffX = positionVec.x - coupledVec.x;
 			double diffY = positionVec.y - coupledVec.y;
 			double diffZ = positionVec.z - coupledVec.z;
+
+			if (!entity.level.isClientSide())
+				entity.setServerSidePrevPosition();
 
 			entity.setPos(positionAnchor);
 			entity.prevYaw = entity.yaw;

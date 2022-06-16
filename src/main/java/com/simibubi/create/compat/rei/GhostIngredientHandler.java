@@ -66,9 +66,12 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 
 		if (stack.getStack().getValue() instanceof ItemStack) {
 			for (int i = 36; i < gui.getMenu().slots.size(); i++) {
-				targets.add(new GhostTarget<>(gui, i - 36, isAttributeFilter));
+				if (gui.getMenu().slots.get(i)
+						.isActive())
+					targets.add(new GhostTarget<>(gui, i - 36, isAttributeFilter));
 
-				// Only accept items in 1st slot. 2nd is used for functionality, don't wanna override that one
+				// Only accept items in 1st slot. 2nd is used for functionality, don't wanna
+				// override that one
 				if (isAttributeFilter)
 					break;
 			}

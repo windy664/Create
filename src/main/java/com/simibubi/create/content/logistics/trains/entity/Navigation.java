@@ -17,7 +17,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.jozufozu.flywheel.repack.joml.Math;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
@@ -32,7 +31,6 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -57,7 +55,7 @@ public class Navigation {
 
 	private TravellingPoint signalScout;
 	public Pair<UUID, Boolean> waitingForSignal;
-	private Map<UUID, SignalBoundary> waitingForChainedGroups;
+	private Map<UUID, Pair<SignalBoundary, Boolean>> waitingForChainedGroups;
 	public double distanceToSignal;
 	public int ticksWaitingForSignal;
 
@@ -159,13 +157,14 @@ public class Navigation {
 
 						boolean primary = entering.equals(signal.groups.getFirst());
 						boolean crossSignal = signal.types.get(primary) == SignalType.CROSS_SIGNAL;
-						boolean occupied = signalEdgeGroup.isOccupiedUnless(train);
+						boolean occupied = !train.manualTick
+							&& (signal.isForcedRed(nodes.getSecond()) || signalEdgeGroup.isOccupiedUnless(train));
 
 						if (!crossSignalTracked) {
 							if (crossSignal) { // Now entering cross signal path
 								trackingCrossSignal.setValue(Pair.of(boundary.id, primary));
 								crossSignalDistanceTracker.setValue(distance);
-								waitingForChainedGroups.put(entering, signal);
+								waitingForChainedGroups.put(entering, Pair.of(signal, primary));
 							}
 							if (occupied) { // Section is occupied
 								waitingForSignal = Pair.of(boundary.id, primary);
@@ -180,7 +179,7 @@ public class Navigation {
 						}
 
 						if (crossSignalTracked) {
-							waitingForChainedGroups.put(entering, signal); // Add group to chain
+							waitingForChainedGroups.put(entering, Pair.of(signal, primary)); // Add group to chain
 							if (occupied) { // Section is occupied, but wait at the cross signal that started the chain
 								waitingForSignal = trackingCrossSignal.getValue();
 								distanceToSignal = crossSignalDistanceTracker.doubleValue();
@@ -222,8 +221,10 @@ public class Navigation {
 
 		// dont leave until green light
 		if (targetDistance > 1 / 32f && train.getCurrentStation() != null) {
-			if (waitingForSignal != null && distanceToSignal < preDepartureLookAhead)
+			if (waitingForSignal != null && distanceToSignal < preDepartureLookAhead) {
+				ticksWaitingForSignal++;
 				return;
+			}
 			train.leaveStation();
 		}
 
@@ -240,10 +241,9 @@ public class Navigation {
 		}
 
 		train.burnFuel();
-		
+
 		double topSpeed = train.maxSpeed();
-		double turnTopSpeed = train.maxTurnSpeed();
-		
+
 		if (targetDistance < 10) {
 			double target = topSpeed * ((targetDistance) / 10);
 			if (target < Math.abs(train.speed)) {
@@ -251,6 +251,9 @@ public class Navigation {
 				return;
 			}
 		}
+		
+		topSpeed *= train.throttle;
+		double turnTopSpeed = Math.min(topSpeed, train.maxTurnSpeed());
 
 		double targetSpeed = targetDistance > brakingDistance ? topSpeed * speedMod : 0;
 
@@ -271,12 +274,14 @@ public class Navigation {
 		waitingForChainedGroups.forEach((groupId, boundary) -> {
 			SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(groupId);
 			if (signalEdgeGroup != null)
-				signalEdgeGroup.reserved = boundary;
+				signalEdgeGroup.reserved = boundary.getFirst();
 		});
 		waitingForChainedGroups.clear();
 	}
 
 	private boolean currentSignalResolved() {
+		if (train.manualTick)
+			return true;
 		if (distanceToDestination < .5f)
 			return true;
 		SignalBoundary signal = train.graph.getPoint(EdgePointType.SIGNAL, waitingForSignal.getFirst());
@@ -285,11 +290,17 @@ public class Navigation {
 
 		// Cross Signal
 		if (signal.types.get(waitingForSignal.getSecond()) == SignalType.CROSS_SIGNAL) {
-			for (UUID groupId : waitingForChainedGroups.keySet()) {
-				SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(groupId);
+			for (Entry<UUID, Pair<SignalBoundary, Boolean>> entry : waitingForChainedGroups.entrySet()) {
+				Pair<SignalBoundary, Boolean> boundary = entry.getValue();
+				SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(entry.getKey());
 				if (signalEdgeGroup == null) { // Migration, re-initialize chain
 					waitingForSignal.setFirst(null);
 					return true;
+				}
+				if (boundary.getFirst()
+					.isForcedRed(boundary.getSecond())) {
+					train.reservedSignalBlocks.clear();
+					return false;
 				}
 				if (signalEdgeGroup.isOccupiedUnless(train))
 					return false;
@@ -461,9 +472,6 @@ public class Navigation {
 				results.set(forward, new DiscoveredPath((forward ? 1 : -1) * distanceToDestination, cost, currentPath));
 				return true;
 			});
-
-			if (!train.doubleEnded || !train.manualTick && !train.hasBackwardConductor())
-				break;
 		}
 
 		DiscoveredPath front = results.getFirst();
@@ -471,20 +479,13 @@ public class Navigation {
 
 		boolean frontEmpty = front == null;
 		boolean backEmpty = back == null;
-		if (backEmpty)
-			return front;
-		if (frontEmpty)
-			return back;
-
 		boolean canDriveForward = train.hasForwardConductor() || train.runtime.paused;
-		boolean canDriveBackward = train.hasBackwardConductor() || train.runtime.paused;
-		if (!canDriveBackward)
-			return front;
-		if (!canDriveForward)
-			return back;
+		boolean canDriveBackward = train.doubleEnded && train.hasBackwardConductor() || train.runtime.paused;
 
-//		Debug.debugChat("Front: " + front.distance + ", Back: " + back.distance);
-//		Debug.debugChat("FrontCost: " + front.cost + ", BackCost: " + back.cost);
+		if (backEmpty || !canDriveBackward)
+			return canDriveForward ? front : null;
+		if (frontEmpty || !canDriveForward)
+			return canDriveBackward ? back : null;
 
 		boolean frontBetter = maxCost == -1 ? -back.distance > front.distance : back.cost > front.cost;
 		return frontBetter ? front : back;
@@ -519,6 +520,9 @@ public class Navigation {
 			TrackEdge edge = currentEntry.getSecond();
 			double position = edge.getLength() - globalStation.getLocationOn(edge);
 			if (distance - position < minDistance)
+				return false;
+			Train presentTrain = globalStation.getPresentTrain();
+			if (presentTrain != null && presentTrain != train)
 				return false;
 			result.setValue(globalStation);
 			return true;
@@ -576,6 +580,7 @@ public class Navigation {
 		double distanceToNode2 = forward ? initialEdge.getLength() - startingPoint.position : startingPoint.position;
 
 		frontier.add(new FrontierEntry(distanceToNode2, 0, initialNode1, initialNode2, initialEdge));
+		int signalWeight = Mth.clamp(ticksWaitingForSignal * 2, Train.Penalties.RED_SIGNAL, 200);
 
 		Search: while (!frontier.isEmpty()) {
 			FrontierEntry entry = frontier.poll();
@@ -604,6 +609,22 @@ public class Navigation {
 						continue Search;
 					if (!point.canNavigateVia(node2))
 						continue Search;
+					if (point instanceof SignalBoundary signal) {
+						if (signal.isForcedRed(node2)) {
+							penalty += Train.Penalties.REDSTONE_RED_SIGNAL;
+							continue;
+						}
+						UUID group = signal.getGroup(node2);
+						if (group == null)
+							continue;
+						SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(group);
+						if (signalEdgeGroup == null)
+							continue;
+						if (signalEdgeGroup.isOccupiedUnless(signal)) {
+							penalty += signalWeight;
+							signalWeight /= 2;
+						}
+					}
 					if (point instanceof GlobalStation station) {
 						Train presentTrain = station.getPresentTrain();
 						boolean isOwnStation = presentTrain == train;

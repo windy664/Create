@@ -19,8 +19,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
@@ -29,6 +27,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultConnectivityHandler;
@@ -196,6 +195,8 @@ public class BlockMovementChecks {
 			return false;
 		if (AllBlockTags.RELOCATION_NOT_SUPPORTED.matches(state))
 			return false;
+		if (AllBlockTags.NON_MOVABLE.matches(state))
+			return false;
 		if (ContraptionMovementSetting.get(state.getBlock()) == ContraptionMovementSetting.UNMOVABLE)
 			return false;
 
@@ -206,11 +207,6 @@ public class BlockMovementChecks {
 			BlockEntity te = world.getBlockEntity(pos);
 			if (te instanceof MechanicalBearingTileEntity)
 				return !((MechanicalBearingTileEntity) te).isRunning();
-		}
-		if (block instanceof WindmillBearingBlock) {
-			BlockEntity te = world.getBlockEntity(pos);
-			if (te instanceof WindmillBearingTileEntity)
-				return !((WindmillBearingTileEntity) te).isRunning();
 		}
 		if (block instanceof ClockworkBearingBlock) {
 			BlockEntity te = world.getBlockEntity(pos);
@@ -389,6 +385,8 @@ public class BlockMovementChecks {
 				.getAxis();
 		if (AllBlocks.STICKER.has(state) && !state.getValue(StickerBlock.EXTENDED))
 			return facing == state.getValue(StickerBlock.FACING);
+		if (state.getBlock() instanceof SlidingDoorBlock)
+			return false;
 		return isBrittle(state);
 	}
 

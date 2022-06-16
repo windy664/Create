@@ -1,31 +1,30 @@
 package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
-import com.simibubi.create.content.logistics.trains.management.schedule.IScheduleInput;
-import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
-import com.simibubi.create.foundation.gui.widget.Label;
+import com.simibubi.create.content.logistics.trains.entity.Carriage;
+import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidThresholdCondition extends CargoThresholdCondition {
 	public ItemStack compareStack = ItemStack.EMPTY;
@@ -42,15 +41,43 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	}
 
 	@Override
-	protected void write(CompoundTag tag) {
-		super.write(tag);
+	protected boolean test(Level level, Train train, CompoundTag context) {
+		Ops operator = getOperator();
+		int target = getThreshold();
+
+		if (compareStack.isEmpty())
+			return true;
+
+		int foundFluid = 0;
+		for (Carriage carriage : train.carriages) {
+			IFluidHandler fluids = carriage.storage.getFluids();
+			for (int i = 0; i < fluids.getTanks(); i++) {
+				FluidStack fluidInTank = fluids.getFluidInTank(i);
+				if (!FilterItem.test(level, fluidInTank, compareStack))
+					continue;
+				foundFluid += fluidInTank.getAmount();
+			}
+		}
+
+		requestStatusToUpdate(foundFluid / 1000, context);
+		return operator.test(foundFluid, target * 1000);
+	}
+
+	@Override
+	protected void writeAdditional(CompoundTag tag) {
+		super.writeAdditional(tag);
 		tag.put("Bucket", NBTSerializer.serializeNBTCompound(compareStack));
 	}
 
 	@Override
-	protected void read(CompoundTag tag) {
-		super.read(tag);
+	protected void readAdditional(CompoundTag tag) {
+		super.readAdditional(tag);
 		compareStack = ItemStack.of(tag.getCompound("Bucket"));
+	}
+
+	@Override
+	public boolean tickCompletion(Level level, Train train, CompoundTag context) {
+		return super.tickCompletion(level, train, context);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -71,8 +98,8 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
 			Lang.translate("schedule.condition.threshold.train_holds",
-				Lang.translate("schedule.condition.threshold." + Lang.asId(ops.name()))),
-			Lang.translate("schedule.condition.threshold.x_units_of_item", threshold,
+				Lang.translate("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
+			Lang.translate("schedule.condition.threshold.x_units_of_item", getThreshold(),
 				Lang.translate("schedule.condition.threshold.buckets"),
 				compareStack.getItem() instanceof FilterItem
 					? Lang.translate("schedule.condition.threshold.matching_content")
@@ -81,8 +108,13 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	}
 
 	@Override
-	public void setItem(ItemStack stack) {
+	public void setItem(int slot, ItemStack stack) {
 		compareStack = stack;
+	}
+
+	@Override
+	public ItemStack getItem(int slot) {
+		return compareStack;
 	}
 
 	@Override
@@ -92,15 +124,22 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void createWidgets(ScheduleScreen screen,
-		List<Pair<GuiEventListener, BiConsumer<IScheduleInput, GuiEventListener>>> editorSubWidgets,
-		List<Integer> dividers, int x, int y) {
-		super.createWidgets(screen, editorSubWidgets, dividers, x, y);
-
-		TranslatableComponent buckets = Lang.translate("schedule.condition.threshold.buckets");
-		Label label = new Label(x + 155, y + 52, buckets).withShadow();
-		label.text = buckets;
-		editorSubWidgets.add(Pair.of(label, (d, l) -> {
-		}));
+	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
+		super.initConfigurationWidgets(builder);
+		builder.addSelectionScrollInput(71, 50, (i, l) -> {
+			i.forOptions(ImmutableList.of(Lang.translate("schedule.condition.threshold.buckets")))
+				.titled(null);
+		}, "Measure");
 	}
+
+	@Override
+	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
+		int lastDisplaySnapshot = getLastDisplaySnapshot(tag);
+		if (lastDisplaySnapshot == -1)
+			return TextComponent.EMPTY.copy();
+		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;
+		return Lang.translate("schedule.condition.threshold.status", lastDisplaySnapshot,
+			Math.max(0, getThreshold() + offset), Lang.translate("schedule.condition.threshold.buckets"));
+	}
+
 }

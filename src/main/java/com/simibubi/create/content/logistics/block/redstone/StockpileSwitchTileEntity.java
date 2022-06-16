@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -87,10 +88,18 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		boolean changed = false;
 		float occupied = 0;
 		float totalSpace = 0;
+		float prevLevel = currentLevel;
 
 		observedInventory.findNewCapability();
 		observedTank.findNewCapability();
-		if (observedInventory.hasInventory() || observedTank.hasInventory()) {
+
+		BlockPos target = worldPosition.relative(getBlockState().getOptionalValue(StockpileSwitchBlock.FACING)
+			.orElse(Direction.NORTH));
+
+		if (level.getBlockEntity(target) instanceof StockpileSwitchObservable observable) {
+			currentLevel = observable.getPercent() / 100f;
+
+		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
 				// Item inventory
 				try (Transaction t = TransferUtil.getTransaction()) {
@@ -124,6 +133,9 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 					}
 				}
 			}
+
+			currentLevel = occupied / totalSpace;
+
 		} else {
 			// No compatible inventories found
 			if (currentLevel == -1)
@@ -136,12 +148,9 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 			return;
 		}
 
-		float stockLevel = occupied / totalSpace;
-		if (currentLevel != stockLevel)
-			changed = true;
-		currentLevel = stockLevel;
 		currentLevel = Mth.clamp(currentLevel, 0, 1);
-
+		changed = currentLevel != prevLevel;
+		
 		boolean previouslyPowered = redstoneState;
 		if (redstoneState && currentLevel <= offWhenBelow)
 			redstoneState = false;

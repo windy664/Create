@@ -49,7 +49,8 @@ public class BigOutlines {
 					BlockState blockState = mc.level.getBlockState(p);
 
 					// Could be a dedicated interface for big blocks
-					if (!(blockState.getBlock() instanceof TrackBlock))
+					if (!(blockState.getBlock() instanceof TrackBlock)
+						&& !(blockState.getBlock() instanceof SlidingDoorBlock))
 						continue;
 
 					BlockHitResult hit = blockState.getInteractionShape(mc.level, p)

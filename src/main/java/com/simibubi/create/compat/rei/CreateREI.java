@@ -323,6 +323,7 @@ public class CreateREI implements REIClientPlugin {
 			}
 			return false;
 		});
+		registration.addGhostIngredientHandler(ScheduleScreen.class, new GhostIngredientHandler());
 	}
 
 	private class CategoryBuilder<T extends Recipe<?>> {

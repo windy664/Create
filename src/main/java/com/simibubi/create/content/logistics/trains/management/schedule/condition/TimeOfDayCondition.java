@@ -1,15 +1,15 @@
 package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
 import java.util.List;
-import java.util.function.BiConsumer;
+
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.schedule.IScheduleInput;
-import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
@@ -17,7 +17,6 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -32,28 +31,43 @@ import net.fabricmc.api.Environment;
 
 public class TimeOfDayCondition extends ScheduleWaitCondition {
 
-	int hour;
-	int minute;
-	int gracePeriod;
-
 	public TimeOfDayCondition() {
-		hour = 8;
-		minute = 0;
-		gracePeriod = 5;
+		data.putInt("Hour", 8);
+		data.putInt("Rotation", 5);
 	}
 
 	@Override
 	public boolean tickCompletion(Level level, Train train, CompoundTag context) {
-		int maxTickDiff = Math.max(20, gracePeriod * 60 * 20);
-		int dayTime = (int) (level.getDayTime() % 24000);
-		int targetTicks = (int) (((hour + 18) % 24) * 1000 + (minute / 60f) * 100);
+		int maxTickDiff = 40;
+		int targetHour = intData("Hour");
+		int targetMinute = intData("Minute");
+		int dayTime = (int) (level.getDayTime() % getRotation());
+		int targetTicks =
+			(int) ((((targetHour + 18) % 24) * 1000 + Math.ceil(targetMinute / 60f * 1000)) % getRotation());
 		int diff = dayTime - targetTicks;
 		return diff >= 0 && maxTickDiff >= diff;
 	}
-	
+
+	public int getRotation() {
+		int index = intData("Rotation");
+		return switch (index) {
+		case 9 -> 250;
+		case 8 -> 500;
+		case 7 -> 750;
+		case 6 -> 1000;
+		case 5 -> 2000;
+		case 4 -> 3000;
+		case 3 -> 4000;
+		case 2 -> 6000;
+		case 1 -> 12000;
+		default -> 24000;
+		};
+	}
+
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
-		return Pair.of(new ItemStack(Items.STRUCTURE_VOID), getDigitalDisplay(hour, minute, false));
+		return Pair.of(new ItemStack(Items.STRUCTURE_VOID),
+			getDigitalDisplay(intData("Hour"), intData("Minute"), false));
 	}
 
 	public MutableComponent getDigitalDisplay(int hour, int minute, boolean doubleDigitHrs) {
@@ -65,14 +79,16 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	public List<Component> getSecondLineTooltip() {
-		return super.getSecondLineTooltip();
-	}
-
-	@Override
 	public List<Component> getTitleAs(String type) {
-		return ImmutableList.of(Lang.translate("schedule.condition.time_of_day.scheduled",
-			getDigitalDisplay(hour, minute, false).withStyle(ChatFormatting.DARK_AQUA)));
+		return ImmutableList.of(Lang.translate("schedule.condition.time_of_day.scheduled"),
+			getDigitalDisplay(intData("Hour"), intData("Minute"), false).withStyle(ChatFormatting.DARK_AQUA)
+				.append(new TextComponent(" -> ").withStyle(ChatFormatting.DARK_GRAY))
+				.append(Lang
+					.translatedOptions("schedule.condition.time_of_day.rotation", "every_24", "every_12", "every_6",
+						"every_4", "every_3", "every_2", "every_1", "every_0_45", "every_0_30", "every_0_15")
+					.get(intData("Rotation"))
+					.copy()
+					.withStyle(ChatFormatting.GRAY)));
 	}
 
 	public String twoDigits(int t) {
@@ -85,24 +101,10 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	protected void write(CompoundTag tag) {
-		tag.putInt("Hour", hour);
-		tag.putInt("Minute", minute);
-		tag.putInt("GracePeriod", gracePeriod);
-	}
-
-	@Override
-	protected void read(CompoundTag tag) {
-		hour = tag.getInt("Hour");
-		minute = tag.getInt("Minute");
-		gracePeriod = tag.getInt("GracePeriod");
-	}
-
-	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean renderSpecialIcon(PoseStack ms, int x, int y) {
-		int displayHr = (hour + 12) % 24;
-		float progress = (displayHr * 60f + minute) / (24 * 60);
+		int displayHr = (intData("Hour") + 12) % 24;
+		float progress = (displayHr * 60f + intData("Minute")) / (24 * 60);
 		RenderSystem.setShaderTexture(0,
 			new ResourceLocation("textures/item/clock_" + twoDigits(Mth.clamp((int) (progress * 64), 0, 63)) + ".png"));
 		GuiComponent.blit(ms, x, y, 0, 0, 0, 16, 16, 16, 16);
@@ -111,55 +113,80 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void createWidgets(ScheduleScreen screen,
-		List<Pair<GuiEventListener, BiConsumer<IScheduleInput, GuiEventListener>>> editorSubWidgets,
-		List<Integer> dividers, int x, int y) {
-		super.createWidgets(screen, editorSubWidgets, dividers, x, y);
+	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
+		MutableObject<ScrollInput> minuteInput = new MutableObject<>();
+		MutableObject<ScrollInput> hourInput = new MutableObject<>();
+		MutableObject<Label> timeLabel = new MutableObject<>();
 
-		Label timeLabel = new Label(x + 87, y + 52, new TextComponent("")).withShadow();
-		timeLabel.text = getDigitalDisplay(hour, minute, true);
-		ScrollInput hourInput = new ScrollInput(x + 82, y + 48, 16, 16).withRange(0, 24);
-		ScrollInput minuteInput = new ScrollInput(x + 82 + 18, y + 48, 16, 16).withRange(0, 60);
+		builder.addScrollInput(0, 16, (i, l) -> {
+			i.withRange(0, 24);
+			timeLabel.setValue(l);
+			hourInput.setValue(i);
+		}, "Hour");
 
-		hourInput.titled(Lang.translate("generic.daytime.hour"))
+		builder.addScrollInput(18, 16, (i, l) -> {
+			i.withRange(0, 60);
+			minuteInput.setValue(i);
+			l.visible = false;
+		}, "Minute");
+
+		builder.addSelectionScrollInput(52, 62, (i, l) -> {
+			i.forOptions(Lang.translatedOptions("schedule.condition.time_of_day.rotation", "every_24", "every_12",
+				"every_6", "every_4", "every_3", "every_2", "every_1", "every_0_45", "every_0_30", "every_0_15"))
+				.titled(Lang.translate("schedule.condition.time_of_day.rotation"));
+		}, "Rotation");
+
+		hourInput.getValue()
+			.titled(Lang.translate("generic.daytime.hour"))
 			.calling(t -> {
-				hour = t;
-				timeLabel.text = getDigitalDisplay(hour, minute, true);
+				data.putInt("Hour", t);
+				timeLabel.getValue().text = getDigitalDisplay(t, minuteInput.getValue()
+					.getState(), true);
 			})
-			.withShiftStep(6)
-			.setState(hour);
+			.writingTo(null)
+			.withShiftStep(6);
 
-		minuteInput.titled(Lang.translate("generic.daytime.minute"))
+		minuteInput.getValue()
+			.titled(Lang.translate("generic.daytime.minute"))
 			.calling(t -> {
-				minute = t;
-				timeLabel.text = getDigitalDisplay(hour, minute, true);
+				data.putInt("Minute", t);
+				timeLabel.getValue().text = getDigitalDisplay(hourInput.getValue()
+					.getState(), t, true);
 			})
-			.withShiftStep(15)
-			.setState(minute);
-		
-		minuteInput.lockedTooltipX = hourInput.lockedTooltipX = x + 83 + 40;
-		minuteInput.lockedTooltipY = hourInput.lockedTooltipY = y + 55;
+			.writingTo(null)
+			.withShiftStep(15);
 
-		dividers.add(70);
+		minuteInput.getValue().lockedTooltipX = hourInput.getValue().lockedTooltipX = -15;
+		minuteInput.getValue().lockedTooltipY = hourInput.getValue().lockedTooltipY = 35;
 
-		Label graceLabel = new Label(x + 155, y + 52, new TextComponent("")).withShadow();
-		graceLabel.text = Lang.translate("schedule.condition.time_of_day.grace_period.format", gracePeriod);
-		ScrollInput scrollInput = new ScrollInput(x + 150, y + 48, 49, 16).withRange(0, 12)
-			.titled(Lang.translate("schedule.condition.time_of_day.grace_period"))
-			.calling(t -> graceLabel.text = Lang.translate("schedule.condition.time_of_day.grace_period.format", t))
-			.setState(gracePeriod);
+		hourInput.getValue()
+			.setState(intData("Hour"));
+		minuteInput.getValue()
+			.setState(intData("Minute"))
+			.onChanged();
 
-		editorSubWidgets.add(Pair.of(scrollInput,
-			(dest, box) -> ((TimeOfDayCondition) dest).gracePeriod = ((ScrollInput) box).getState()));
-		editorSubWidgets
-			.add(Pair.of(hourInput, (dest, box) -> ((TimeOfDayCondition) dest).hour = ((ScrollInput) box).getState()));
-		editorSubWidgets.add(
-			Pair.of(minuteInput, (dest, box) -> ((TimeOfDayCondition) dest).minute = ((ScrollInput) box).getState()));
+		builder.customArea(0, 52);
+		builder.customArea(52, 69);
+	}
 
-		editorSubWidgets.add(Pair.of(timeLabel, (d, l) -> {
-		}));
-		editorSubWidgets.add(Pair.of(graceLabel, (d, l) -> {
-		}));
+	@Override
+	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
+		int targetHour = intData("Hour");
+		int targetMinute = intData("Minute");
+		int dayTime = (int) (level.getDayTime() % getRotation());
+		int targetTicks =
+			(int) ((((targetHour + 18) % 24) * 1000 + Math.ceil(targetMinute / 60f * 1000)) % getRotation());
+		int diff = targetTicks - dayTime;
+
+		if (diff < 0)
+			diff += getRotation();
+
+		int departureTime = (int) (level.getDayTime() + diff) % 24000;
+		int departingHour = (departureTime / 1000 + 6) % 24;
+		int departingMinute = (departureTime % 1000) * 60 / 1000;
+
+		return Lang.translate("schedule.condition.time_of_day.status")
+			.append(getDigitalDisplay(departingHour, departingMinute, false));
 	}
 
 }

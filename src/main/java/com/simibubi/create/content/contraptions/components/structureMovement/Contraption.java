@@ -45,6 +45,7 @@ import com.simibubi.create.content.contraptions.components.steam.PoweredShaftTil
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
@@ -65,6 +66,7 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
@@ -121,6 +123,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -312,6 +315,10 @@ public abstract class Contraption {
 		if (AllBlocks.BELT.has(state))
 			moveBelt(pos, frontier, visited, state);
 
+		if (AllBlocks.WINDMILL_BEARING.has(state)
+			&& world.getBlockEntity(pos) instanceof WindmillBearingTileEntity wbte)
+			wbte.disassembleForMovement();
+
 		if (AllBlocks.GANTRY_CARRIAGE.has(state))
 			moveGantryPinion(world, pos, frontier, visited, state);
 
@@ -336,7 +343,7 @@ public abstract class Contraption {
 		}
 
 		// Bogeys tend to have sticky sides
-		if (state.getBlock()instanceof IBogeyBlock bogey)
+		if (state.getBlock() instanceof IBogeyBlock bogey)
 			for (Direction d : bogey.getStickySurfaces(world, pos, state))
 				if (!visited.contains(pos.relative(d)))
 					frontier.add(pos.relative(d));
@@ -599,6 +606,8 @@ public abstract class Contraption {
 			blockstate = BlockHelper.copyProperties(blockstate, AllBlocks.SHAFT.getDefaultState());
 		if (AllBlocks.CONTROLS.has(blockstate))
 			blockstate = blockstate.setValue(ControlsBlock.OPEN, true);
+		if (blockstate.hasProperty(SlidingDoorBlock.VISIBLE))
+			blockstate = blockstate.setValue(SlidingDoorBlock.VISIBLE, false);
 		if (blockstate.getBlock() instanceof ButtonBlock) {
 			blockstate = blockstate.setValue(ButtonBlock.POWERED, false);
 			world.scheduleTick(pos, blockstate.getBlock(), -1);
@@ -682,6 +691,8 @@ public abstract class Contraption {
 			.forEach(c -> {
 				CompoundTag comp = (CompoundTag) c;
 				StructureBlockInfo info = this.blocks.get(NbtUtils.readBlockPos(comp.getCompound("Pos")));
+				if (info == null)
+					return;
 				MovementContext context = MovementContext.readNBT(world, info, comp, this);
 				getActors().add(MutablePair.of(info, context));
 			});
@@ -704,7 +715,10 @@ public abstract class Contraption {
 		interactors.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Interactors", Tag.TAG_COMPOUND), c -> {
 			BlockPos pos = NbtUtils.readBlockPos(c.getCompound("Pos"));
-			MovingInteractionBehaviour behaviour = AllInteractionBehaviours.of(getBlocks().get(pos).state.getBlock());
+			StructureBlockInfo structureBlockInfo = getBlocks().get(pos);
+			if (structureBlockInfo == null)
+				return;
+			MovingInteractionBehaviour behaviour = AllInteractionBehaviours.of(structureBlockInfo.state.getBlock());
 			if (behaviour != null)
 				interactors.put(pos, behaviour);
 		});
@@ -744,7 +758,7 @@ public abstract class Contraption {
 			}
 		}
 
-		storage.write(nbt, spawnPacket);
+		(spawnPacket ? getStorageForSpawnPacket() : storage).write(nbt, spawnPacket);
 
 		ListTag interactorNBT = new ListTag();
 		for (BlockPos pos : interactors.keySet()) {
@@ -783,6 +797,10 @@ public abstract class Contraption {
 		}
 
 		return nbt;
+	}
+
+	protected MountedStorageManager getStorageForSpawnPacket() {
+		return storage;
 	}
 
 	private CompoundTag writeBlocksCompound() {
@@ -839,35 +857,35 @@ public abstract class Contraption {
 
 			this.blocks.put(info.pos, info);
 
-			if (world.isClientSide) {
-				Block block = info.state.getBlock();
-				CompoundTag tag = info.nbt;
-				MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
-				if (tag == null)
-					return;
+			if (!world.isClientSide)
+				return;
 
-				tag.putInt("x", info.pos.getX());
-				tag.putInt("y", info.pos.getY());
-				tag.putInt("z", info.pos.getZ());
+			Block block = info.state.getBlock();
+			CompoundTag tag = info.nbt;
+			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
+			if (tag == null)
+				return;
 
-				BlockEntity te = BlockEntity.loadStatic(info.pos, info.state, tag);
-				if (te == null)
-					return;
-				te.setLevel(world);
-				if (te instanceof KineticTileEntity)
-					((KineticTileEntity) te).setSpeed(0);
-				te.getBlockState();
+			tag.putInt("x", info.pos.getX());
+			tag.putInt("y", info.pos.getY());
+			tag.putInt("z", info.pos.getZ());
 
-				if (movementBehaviour == null || !movementBehaviour.hasSpecialInstancedRendering())
-					maybeInstancedTileEntities.add(te);
+			BlockEntity te = BlockEntity.loadStatic(info.pos, info.state, tag);
+			if (te == null)
+				return;
+			te.setLevel(world);
+			if (te instanceof KineticTileEntity)
+				((KineticTileEntity) te).setSpeed(0);
+			te.getBlockState();
 
-				if (movementBehaviour != null && !movementBehaviour.renderAsNormalTileEntity())
-					return;
+			if (movementBehaviour == null || !movementBehaviour.hasSpecialInstancedRendering())
+				maybeInstancedTileEntities.add(te);
 
-				presentTileEntities.put(info.pos, te);
-				specialRenderedTileEntities.add(te);
-			}
+			if (movementBehaviour != null && !movementBehaviour.renderAsNormalTileEntity())
+				return;
 
+			presentTileEntities.put(info.pos, te);
+			specialRenderedTileEntities.add(te);
 		});
 	}
 
@@ -1017,6 +1035,9 @@ public abstract class Contraption {
 
 				if (AllBlocks.SHAFT.has(state))
 					state = ShaftBlock.pickCorrectShaftType(state, world, targetPos);
+				if (state.hasProperty(SlidingDoorBlock.VISIBLE))
+					state = state.setValue(SlidingDoorBlock.VISIBLE, !state.getValue(SlidingDoorBlock.OPEN))
+						.setValue(SlidingDoorBlock.POWERED, false);
 
 				world.setBlock(targetPos, state, Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL);
 
@@ -1028,6 +1049,7 @@ public abstract class Contraption {
 				}
 
 				BlockEntity tileEntity = world.getBlockEntity(targetPos);
+
 				CompoundTag tag = block.nbt;
 				if (tileEntity != null)
 					tag = NBTProcessors.process(tileEntity, tag, false);
@@ -1116,6 +1138,8 @@ public abstract class Contraption {
 		if (PoiType.forState(info.state)
 			.isPresent())
 			return false;
+		if (info.state.getBlock() instanceof SlidingDoorBlock)
+			return false;
 		return true;
 	}
 
@@ -1203,7 +1227,7 @@ public abstract class Contraption {
 			for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
 				StructureBlockInfo info = entry.getValue();
 				BlockPos localPos = entry.getKey();
-				VoxelShape collisionShape = info.state.getCollisionShape(world, localPos);
+				VoxelShape collisionShape = info.state.getCollisionShape(world, localPos, CollisionContext.empty());
 				if (collisionShape.isEmpty())
 					continue;
 				combinedShape = Shapes.joinUnoptimized(combinedShape,
@@ -1289,6 +1313,10 @@ public abstract class Contraption {
 		public ContraptionInvWrapper(Storage<ItemVariant>... itemHandler) {
 			this(false, itemHandler);
 		}
+	}
+
+	public void tickStorage(AbstractContraptionEntity entity) {
+		storage.entityTick(entity);
 	}
 
 }

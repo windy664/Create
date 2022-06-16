@@ -93,7 +93,7 @@ public class AllItems {
 	public static final ItemEntry<Item> WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
 		CINDER_FLOUR = ingredient("cinder_flour"), ROSE_QUARTZ = ingredient("rose_quartz"),
 		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), POWDERED_OBSIDIAN = ingredient("powdered_obsidian"),
-		REINFORCED_SHEET = taggedIngredient("reinforced_sheet", forgeItemTag("plates/obsidian")),
+		STURDY_SHEET = taggedIngredient("sturdy_sheet", forgeItemTag("plates/obsidian")),
 		PROPELLER = ingredient("propeller"), WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
 		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube");
 
@@ -156,7 +156,7 @@ public class AllItems {
 	public static final ItemEntry<Item> RAW_ZINC =
 		taggedIngredient("raw_zinc", forgeItemTag("raw_materials/zinc"), TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("c", "raw_materials")));
 
-	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
+	public static final ItemEntry<Item> ANDESITE_ALLOY = taggedIngredient("andesite_alloy", CREATE_INGOTS.tag),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
 		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag);
 

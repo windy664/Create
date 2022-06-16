@@ -6,21 +6,24 @@
   "refmap": "create-refmap.json",
   "mixins": [
     "CustomItemUseEffectsMixin",
+    "MapItemSavedDataMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
-    "accessor.ServerLevelAccessor",
     "accessor.LivingEntityAccessor",
+    "accessor.ServerLevelAccessor",
     "fabric.AbstractMinecartMixin",
     "fabric.EntityMixin"
   ],
   "client": [
+    "CameraMixin",
     "DestroyProgressMixin",
     "EntityContraptionInteractionMixin",
     "FixNormalScalingMixin",
-    "HeavyBootsOnPlayerMixin",
-    "WindowResizeMixin",
     "GameRendererMixin",
+    "HeavyBootsOnPlayerMixin",
+    "MapRendererMixin",
+    "WindowResizeMixin",
     "accessor.AgeableListModelAccessor",
     "accessor.GameRendererAccessor",
     "accessor.ParticleEngineAccessor"

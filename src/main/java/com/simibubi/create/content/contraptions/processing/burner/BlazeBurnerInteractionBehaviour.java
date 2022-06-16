@@ -55,6 +55,13 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 				return true;
 
 			if (train.runtime.getSchedule() != null) {
+				if (train.runtime.paused) {
+					train.runtime.paused = false;
+					AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
+					player.displayClientMessage(Lang.translate("schedule.continued"), true);
+					return true;
+				}
+
 				if (!itemInHand.isEmpty()) {
 					AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
 					player.displayClientMessage(Lang.translate("schedule.remove_with_empty_hand"), true);
@@ -75,11 +82,6 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 			Schedule schedule = ScheduleItem.getSchedule(itemInHand);
 			if (schedule == null)
 				return false;
-			if (train.heldForAssembly) {
-				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
-				player.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
-				return true;
-			}
 
 			if (schedule.entries.isEmpty()) {
 				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);

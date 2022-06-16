@@ -328,8 +328,15 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (wasBoiler != boiler.isActive()) {
 			if (boiler.isActive())
 				setWindows(false);
-			refreshCapability();
+
+			for (int yOffset = 0; yOffset < height; yOffset++)
+				for (int xOffset = 0; xOffset < width; xOffset++)
+					for (int zOffset = 0; zOffset < width; zOffset++)
+						if (level.getBlockEntity(
+							worldPosition.offset(xOffset, yOffset, zOffset))instanceof FluidTankTileEntity fte)
+							fte.refreshCapability();
 		}
+
 		if (changed)
 			notifyUpdate();
 	}
@@ -522,7 +529,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public void preventConnectivityUpdate() { updateConnectivity = false; }
+	public void preventConnectivityUpdate() {
+		updateConnectivity = false;
+	}
 
 	@Override
 	public void notifyMultiUpdated() {
@@ -530,21 +539,26 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (FluidTankBlock.isTank(state)) { // safety
 			state = state.setValue(FluidTankBlock.BOTTOM, getController().getY() == getBlockPos().getY());
 			state = state.setValue(FluidTankBlock.TOP, getController().getY() + height - 1 == getBlockPos().getY());
-			level.setBlock(getBlockPos(), state, 22);
+			level.setBlock(getBlockPos(), state, 6);
 		}
-		setWindows(window);
+		if (isController())
+			setWindows(window);
 		onFluidStackChanged(tankInventory.getFluid());
+		updateBoilerState();
 		setChanged();
 	}
 
 	@Override
 	public void setExtraData(@Nullable Object data) {
-		if (data instanceof Boolean) window = (boolean)data;
+		if (data instanceof Boolean)
+			window = (boolean) data;
 	}
 
 	@Override
 	@Nullable
-	public Object getExtraData() { return window; }
+	public Object getExtraData() {
+		return window;
+	}
 
 	@Override
 	public Object modifyExtraData(Object data) {
@@ -556,34 +570,51 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public Direction.Axis getMainConnectionAxis() { return Direction.Axis.Y; }
+	public Direction.Axis getMainConnectionAxis() {
+		return Direction.Axis.Y;
+	}
 
 	@Override
 	public int getMaxLength(Direction.Axis longAxis, int width) {
-		if (longAxis == Direction.Axis.Y) return getMaxHeight();
+		if (longAxis == Direction.Axis.Y)
+			return getMaxHeight();
 		return getMaxWidth();
 	}
 
 	@Override
-	public int getMaxWidth() { return MAX_SIZE; }
+	public int getMaxWidth() {
+		return MAX_SIZE;
+	}
 
 	@Override
-	public int getHeight() { return height; }
+	public int getHeight() {
+		return height;
+	}
 
 	@Override
-	public void setHeight(int height) { this.height = height; }
+	public void setHeight(int height) {
+		this.height = height;
+	}
 
 	@Override
-	public int getWidth() { return width; }
+	public int getWidth() {
+		return width;
+	}
 
 	@Override
-	public void setWidth(int width) { this.width = width; }
+	public void setWidth(int width) {
+		this.width = width;
+	}
 
 	@Override
-	public boolean hasTank() { return true; }
+	public boolean hasTank() {
+		return true;
+	}
 
 	@Override
-	public long getTankSize(int tank) { return getCapacityMultiplier(); }
+	public long getTankSize(int tank) {
+		return getCapacityMultiplier();
+	}
 
 	@Override
 	public void setTankSize(int tank, int blocks) {
@@ -597,7 +628,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	@Override
 	public FluidStack getFluid(int tank) {
-		return tankInventory.getFluid().copy();
+		return tankInventory.getFluid()
+			.copy();
 	}
 
 	@Nullable

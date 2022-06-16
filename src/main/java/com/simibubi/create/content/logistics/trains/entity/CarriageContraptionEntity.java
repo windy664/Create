@@ -11,21 +11,23 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Strings;
-import com.jozufozu.flywheel.repack.joml.Math;
 import com.simibubi.create.AllEntityDataSerializers;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUDUpdatePacket;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
@@ -39,10 +41,12 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.KeybindComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -52,6 +56,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraftforge.network.PacketDistributor;
 
 public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
@@ -75,6 +80,13 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	private boolean arrivalSoundPlaying;
 	private boolean arrivalSoundReversed;
 	private int arrivalSoundTicks;
+
+	private Vec3 serverPrevPos;
+
+	@OnlyIn(Dist.CLIENT)
+	public CarriageSounds sounds;
+	@OnlyIn(Dist.CLIENT)
+	public CarriageParticles particles;
 
 	public CarriageContraptionEntity(EntityType<?> type, Level world) {
 		super(type, world);
@@ -125,7 +137,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		}
 	}
 
-	private CarriageSyncData getCarriageData() {
+	public CarriageSyncData getCarriageData() {
 		return entityData.get(CARRIAGE_DATA);
 	}
 
@@ -133,8 +145,19 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		return entityData.get(SCHEDULED);
 	}
 
+	public void setServerSidePrevPosition() {
+		serverPrevPos = position();
+	}
+
+	@Override
+	public Vec3 getPrevPositionVec() {
+		if (!level.isClientSide() && serverPrevPos != null)
+			return serverPrevPos;
+		return super.getPrevPositionVec();
+	}
+
 	public boolean isLocalCoordWithin(BlockPos localPos, int min, int max) {
-		if (!(getContraption()instanceof CarriageContraption cc))
+		if (!(getContraption() instanceof CarriageContraption cc))
 			return false;
 		Direction facing = cc.getAssemblyDirection();
 		Axis axis = facing.getClockWise()
@@ -172,7 +195,21 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	@Override
+	public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
+		if (carriage == null)
+			return;
+		carriage.forEachPresentEntity(cce -> {
+			cce.contraption.getBlocks()
+				.put(localPos, newInfo);
+			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> cce),
+				new ContraptionBlockChangedPacket(cce.getId(), localPos, newInfo.state));
+		});
+	}
+
+	@Override
 	protected void tickContraption() {
+		if (nonDamageTicks > 0)
+			nonDamageTicks--;
 		if (!(contraption instanceof CarriageContraption cc))
 			return;
 		if (carriage == null) {
@@ -240,6 +277,14 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		zo = getZ();
 
 		dce.alignEntity(this);
+
+		if (sounds == null)
+			sounds = new CarriageSounds(this);
+		sounds.tick(dce);
+
+		if (particles == null)
+			particles = new CarriageParticles(this);
+		particles.tick(dce);
 
 		double distanceTo = 0;
 		if (!firstPositionUpdate) {
@@ -317,8 +362,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	@Override
 	protected boolean isActorActive(MovementContext context, MovementBehaviour actor) {
-		return (contraption instanceof CarriageContraption cc) && (cc.notInPortal() || level.isClientSide())
-			&& super.isActorActive(context, actor);
+		if (!(contraption instanceof CarriageContraption cc))
+			return false;
+		if (!super.isActorActive(context, actor))
+			return false;
+		return cc.notInPortal() || level.isClientSide();
 	}
 
 	@Override
@@ -381,6 +429,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			carriage.trailingBogey().couplingAnchors = Couple.create(null, null);
 		}
 		firstPositionUpdate = true;
+		if (sounds != null)
+			sounds.stop();
 	}
 
 	@Override
@@ -433,10 +483,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			return false;
 		if (carriage.train.derailed)
 			return false;
-		if (carriage.train.heldForAssembly) {
-			player.displayClientMessage(Lang.translate("schedule.train_still_assembling"), true);
-			return false;
-		}
 
 		Train train = carriage.train;
 		if (train.runtime.getSchedule() != null && !train.runtime.paused)
@@ -455,6 +501,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	double navDistanceTotal = 0;
+	int hudPacketCooldown = 0;
 
 	@Override
 	public boolean control(BlockPos controlsLocalPos, Collection<Integer> heldControls, Player player) {
@@ -479,6 +526,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			inverted = !info.state.getValue(ControlsBlock.FACING)
 				.equals(initialOrientation);
 
+		if (hudPacketCooldown-- <= 0 && player instanceof ServerPlayer sp) {
+			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> sp), new TrainHUDUpdatePacket(carriage.train));
+			hudPacketCooldown = 5;
+		}
+
 		int targetSpeed = 0;
 		if (heldControls.contains(0))
 			targetSpeed++;
@@ -498,23 +550,29 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		if (targetSpeed != 0)
 			carriage.train.burnFuel();
-		
+
 		boolean slow = inverted ^ targetSpeed < 0;
 		boolean spaceDown = heldControls.contains(4);
 		GlobalStation currentStation = carriage.train.getCurrentStation();
 		if (currentStation != null && spaceDown) {
-			player.displayClientMessage(new TextComponent("<i> Arrived at ").withStyle(ChatFormatting.GREEN)
-				.append(new TextComponent(currentStation.name).withStyle(ChatFormatting.WHITE)), true);
+			sendPrompt(player, Lang.translate("train.arrived_at",
+				new TextComponent(currentStation.name).withStyle(ChatFormatting.DARK_GREEN)), false);
 			return true;
+		}
+
+		if (carriage.train.speedBeforeStall != null && targetSpeed != 0
+			&& Math.signum(carriage.train.speedBeforeStall) != Math.signum(targetSpeed)) {
+			carriage.train.cancelStall();
 		}
 
 		if (currentStation != null && targetSpeed != 0) {
 			stationMessage = false;
-			player.displayClientMessage(new TextComponent("<i> Departing from ").withStyle(ChatFormatting.YELLOW)
-				.append(new TextComponent(currentStation.name).withStyle(ChatFormatting.WHITE)), true);
+			sendPrompt(player, Lang.translate("train.departing_from",
+				new TextComponent(currentStation.name).withStyle(ChatFormatting.DARK_GREEN)), false);
 		}
 
 		if (currentStation == null) {
+
 			Navigation nav = carriage.train.navigation;
 			if (nav.destination != null) {
 				if (!spaceDown)
@@ -523,14 +581,19 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 					double f = (nav.distanceToDestination / navDistanceTotal);
 					int progress = (int) (Mth.clamp(1 - ((1 - f) * (1 - f)), 0, 1) * 30);
 					boolean arrived = progress == 0;
-					TextComponent whiteComponent =
-						new TextComponent(Strings.repeat("|", progress) + (arrived ? " ->" : " <-"));
-					TextComponent greenComponent =
-						new TextComponent((arrived ? "<- " : "-> ") + Strings.repeat("|", 30 - progress));
-					int mixedColor = Color.mixColors(0x00_91EA44, 0x00_FFC244, progress / 30f);
-					int targetColor = arrived ? 0x00_91EA44 : 0x00_ffffff;
-					player.displayClientMessage(greenComponent.withStyle(st -> st.withColor(mixedColor))
-						.append(whiteComponent.withStyle(st -> st.withColor(targetColor))), true);
+					TextComponent whiteComponent = new TextComponent(Strings.repeat("|", progress));
+					TextComponent greenComponent = new TextComponent(Strings.repeat("|", 30 - progress));
+
+					int fromColor = 0x00_FFC244;
+					int toColor = 0x00_529915;
+
+					int mixedColor = Color.mixColors(toColor, fromColor, progress / 30f);
+					int targetColor = arrived ? toColor : 0x00_544D45;
+
+					MutableComponent component = greenComponent.withStyle(st -> st.withColor(mixedColor))
+						.append(whiteComponent.withStyle(st -> st.withColor(targetColor)));
+					sendPrompt(player, component, true);
+					carriage.train.manualTick = true;
 					return true;
 				}
 			}
@@ -554,22 +617,35 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		carriage.train.manualSteer =
 			targetSteer < 0 ? SteerDirection.RIGHT : targetSteer > 0 ? SteerDirection.LEFT : SteerDirection.NONE;
-		double topSpeed = carriage.train.maxSpeed();
-		carriage.train.targetSpeed = topSpeed * targetSpeed;
+
+		double topSpeed = carriage.train.maxSpeed() * AllConfigs.SERVER.trains.manualTrainSpeedModifier.getF();
+		double cappedTopSpeed = topSpeed * carriage.train.throttle;
+
+		if (carriage.getLeadingPoint().edge != null && carriage.getLeadingPoint().edge.isTurn()
+			|| carriage.getTrailingPoint().edge != null && carriage.getTrailingPoint().edge.isTurn())
+			topSpeed = carriage.train.maxTurnSpeed();
+
 		if (slow)
-			carriage.train.targetSpeed /= 8;
+			topSpeed /= 4;
+		carriage.train.targetSpeed = Math.min(topSpeed, cappedTopSpeed) * targetSpeed;
+
 		boolean counteringAcceleration = Math.abs(Math.signum(targetSpeed) - Math.signum(carriage.train.speed)) > 1.5f;
 		carriage.train.manualTick = true;
 		carriage.train.approachTargetSpeed(counteringAcceleration ? 2 : 1);
 		return true;
 	}
 
+	private void sendPrompt(Player player, MutableComponent component, boolean shadow) {
+		if (player instanceof ServerPlayer sp)
+			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> sp), new TrainPromptPacket(component, shadow));
+	}
+
 	boolean stationMessage = false;
 
 	private void displayApproachStationMessage(Player player, GlobalStation station) {
-		player.displayClientMessage(
+		sendPrompt(player,
 			Lang.translate("contraption.controls.approach_station", new KeybindComponent("key.jump"), station.name),
-			true);
+			false);
 		stationMessage = true;
 	}
 
@@ -612,7 +688,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		this.carriageIndex = carriage.train.carriages.indexOf(carriage);
 		if (contraption instanceof CarriageContraption cc)
 			cc.swapStorageAfterAssembly(this);
-		
+
 		DimensionalCarriageEntity dimensional = carriage.getDimensional(level);
 		dimensional.pivot = null;
 		carriage.updateContraptionAnchors();

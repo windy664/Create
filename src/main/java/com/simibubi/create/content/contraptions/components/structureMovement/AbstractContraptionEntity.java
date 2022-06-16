@@ -27,8 +27,12 @@ import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsStopControllingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.mixin.accessor.ServerLevelAccessor;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -67,6 +71,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
@@ -122,6 +127,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			if (seatOf != null && seatOf.equals(contraption.getSeats()
 				.get(seatIndex))) {
 				if (entity instanceof Player)
+					return;
+				if (!(passenger instanceof Player))
 					return;
 				entity.stopRiding();
 			}
@@ -301,7 +308,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		if (!initialized)
 			contraptionInitialize();
 
-		contraption.storage.entityTick(this);
+		contraption.tickStorage(this);
 		tickContraption();
 		super.tick();
 
@@ -340,6 +347,12 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			living.yHeadRot = angle;
 		} else
 			living.setYRot(angle);
+	}
+
+	public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
+		contraption.blocks.put(localPos, newInfo);
+		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+			new ContraptionBlockChangedPacket(getId(), localPos, newInfo.state));
 	}
 
 	protected abstract void tickContraption();
@@ -424,7 +437,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			StructureBlockInfo blockInfo = pair.left;
 			MovementBehaviour actor = AllMovementBehaviours.of(blockInfo.state);
 			if (actor instanceof PortableStorageInterfaceMovement && isActorActive(context, actor))
-				actor.visitNewPosition(context, new BlockPos(context.position));
+				if (context.position != null)
+					actor.visitNewPosition(context, new BlockPos(context.position));
 		}
 	}
 
@@ -444,9 +458,19 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			return false;
 
 		context.motion = actorPosition.subtract(previousPosition);
+
+		if (!level.isClientSide() && context.contraption.entity instanceof CarriageContraptionEntity cce
+			&& cce.getCarriage() != null) {
+			Train train = cce.getCarriage().train;
+			double actualSpeed = train.speedBeforeStall != null ? train.speedBeforeStall : train.speed;
+			context.motion = context.motion.normalize()
+				.scale(Math.abs(actualSpeed));
+		}
+
 		Vec3 relativeMotion = context.motion;
 		relativeMotion = reverseRotation(relativeMotion, 1);
 		context.relativeMotion = relativeMotion;
+
 		return !new BlockPos(previousPosition).equals(gridPosition)
 			|| (context.relativeMotion.length() > 0 || context.contraption instanceof CarriageContraption)
 				&& context.firstMovement;
@@ -647,25 +671,36 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	@Environment(EnvType.CLIENT)
 	static void handleStallPacket(ContraptionStallPacket packet) {
-		Entity entity = Minecraft.getInstance().level.getEntity(packet.entityID);
-		if (!(entity instanceof AbstractContraptionEntity))
-			return;
-		AbstractContraptionEntity ce = (AbstractContraptionEntity) entity;
-		ce.handleStallInformation(packet.x, packet.y, packet.z, packet.angle);
+		if (Minecraft.getInstance().level.getEntity(packet.entityID) instanceof AbstractContraptionEntity ce)
+			ce.handleStallInformation(packet.x, packet.y, packet.z, packet.angle);
 	}
 
 	@Environment(EnvType.CLIENT)
+	static void handleBlockChangedPacket(ContraptionBlockChangedPacket packet) {
+		if (Minecraft.getInstance().level.getEntity(packet.entityID) instanceof AbstractContraptionEntity ce)
+			ce.handleBlockChange(packet.localPos, packet.newState);
+	}
+
+	@OnlyIn(Dist.CLIENT)
 	static void handleDisassemblyPacket(ContraptionDisassemblyPacket packet) {
-		Entity entity = Minecraft.getInstance().level.getEntity(packet.entityID);
-		if (!(entity instanceof AbstractContraptionEntity))
-			return;
-		AbstractContraptionEntity ce = (AbstractContraptionEntity) entity;
-		ce.moveCollidedEntitiesOnDisassembly(packet.transform);
+		if (Minecraft.getInstance().level.getEntity(packet.entityID) instanceof AbstractContraptionEntity ce)
+			ce.moveCollidedEntitiesOnDisassembly(packet.transform);
 	}
 
 	protected abstract float getStalledAngle();
 
 	protected abstract void handleStallInformation(float x, float y, float z, float angle);
+
+	@OnlyIn(Dist.CLIENT)
+	protected void handleBlockChange(BlockPos localPos, BlockState newState) {
+		if (contraption == null || !contraption.blocks.containsKey(localPos))
+			return;
+		StructureBlockInfo info = contraption.blocks.get(localPos);
+		contraption.blocks.put(localPos, new StructureBlockInfo(info.pos, newState, info.nbt));
+		if (info.state != newState && !(newState.getBlock() instanceof SlidingDoorBlock))
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ContraptionRenderDispatcher.invalidate(contraption));
+		contraption.invalidateColliders();
+	}
 
 	@Override
 	public CompoundTag saveWithoutId(CompoundTag nbt) {

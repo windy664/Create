@@ -134,6 +134,10 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankTileEntity;
 import com.simibubi.create.content.curiosities.bell.BellRenderer;
 import com.simibubi.create.content.curiosities.bell.HauntedBellTileEntity;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellTileEntity;
+import com.simibubi.create.content.curiosities.deco.PlacardRenderer;
+import com.simibubi.create.content.curiosities.deco.PlacardTileEntity;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorRenderer;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorTileEntity;
 import com.simibubi.create.content.curiosities.toolbox.ToolBoxInstance;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxRenderer;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxTileEntity;
@@ -179,10 +183,13 @@ import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import com.simibubi.create.content.logistics.trains.IBogeyTileEntityRenderer;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayRenderer;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverRenderer;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalRenderer;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationRenderer;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.track.FakeTrackTileEntity;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
 import com.simibubi.create.content.logistics.trains.track.TrackInstance;
 import com.simibubi.create.content.logistics.trains.track.TrackRenderer;
@@ -647,6 +654,12 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
 		.register();
+	
+	public static final BlockEntityEntry<PlacardTileEntity> PLACARD = Create.registrate()
+		.tileEntity("placard", PlacardTileEntity::new)
+		.validBlocks(AllBlocks.PLACARD)
+		.renderer(() -> PlacardRenderer::new)
+		.register();
 
 	public static final BlockEntityEntry<CartAssemblerTileEntity> CART_ASSEMBLER = Create.registrate()
 		.tileEntity("cart_assembler", CartAssemblerTileEntity::new)
@@ -768,6 +781,11 @@ public class AllTileEntities {
 		.renderer(() -> TrackRenderer::new)
 		.validBlocks(AllBlocks.TRACK)
 		.register();
+	
+	public static final BlockEntityEntry<FakeTrackTileEntity> FAKE_TRACK = Create.registrate()
+		.tileEntity("fake_track", FakeTrackTileEntity::new)
+		.validBlocks(AllBlocks.FAKE_TRACK)
+		.register();
 
 	public static final BlockEntityEntry<StandardBogeyTileEntity> BOGEY = Create.registrate()
 		.tileEntity("bogey", StandardBogeyTileEntity::new)
@@ -779,6 +797,12 @@ public class AllTileEntities {
 		.tileEntity("track_station", StationTileEntity::new)
 		.renderer(() -> StationRenderer::new)
 		.validBlocks(AllBlocks.TRACK_STATION)
+		.register();
+	
+	public static final BlockEntityEntry<SlidingDoorTileEntity> SLIDING_DOOR = Create.registrate()
+		.tileEntity("sliding_door", SlidingDoorTileEntity::new)
+		.renderer(() -> SlidingDoorRenderer::new)
+		.validBlocks(AllBlocks.TRAIN_DOOR, AllBlocks.FRAMED_GLASS_DOOR)
 		.register();
 
 	public static final BlockEntityEntry<FlapDisplayTileEntity> FLAP_DISPLAY = Create.registrate()
@@ -792,6 +816,12 @@ public class AllTileEntities {
 		.tileEntity("track_signal", SignalTileEntity::new)
 		.renderer(() -> SignalRenderer::new)
 		.validBlocks(AllBlocks.TRACK_SIGNAL)
+		.register();
+	
+	public static final BlockEntityEntry<TrackObserverTileEntity> TRACK_OBSERVER = Create.registrate()
+		.tileEntity("track_observer", TrackObserverTileEntity::new)
+		.renderer(() -> TrackObserverRenderer::new)
+		.validBlocks(AllBlocks.TRACK_OBSERVER)
 		.register();
 
 	public static void register() {}

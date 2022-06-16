@@ -28,29 +28,36 @@ public enum AllPaletteStoneTypes {
 	TUFF(VANILLA_RANGE, r -> () -> Blocks.TUFF),
 
 	ASURINE(STANDARD_RANGE, r -> r.paletteStoneBlock("asurine", () -> Blocks.DEEPSLATE, true)
-		.properties(p -> p.destroyTime(1.25f))
+		.properties(p -> p.destroyTime(1.25f)
+			.color(MaterialColor.COLOR_BLUE))
 		.register()),
 
 	CRIMSITE(STANDARD_RANGE, r -> r.paletteStoneBlock("crimsite", () -> Blocks.DEEPSLATE, true)
-		.properties(p -> p.destroyTime(1.25f))
+		.properties(p -> p.destroyTime(1.25f)
+			.color(MaterialColor.COLOR_RED))
 		.register()),
 
 	LIMESTONE(STANDARD_RANGE, r -> r.paletteStoneBlock("limestone", () -> Blocks.SANDSTONE, true)
-		.properties(p -> p.destroyTime(1.25f))
+		.properties(p -> p.destroyTime(1.25f)
+			.color(MaterialColor.SAND))
 		.register()),
 
 	OCHRUM(STANDARD_RANGE, r -> r.paletteStoneBlock("ochrum", () -> Blocks.CALCITE, true)
-		.properties(p -> p.destroyTime(1.25f))
+		.properties(p -> p.destroyTime(1.25f)
+			.color(MaterialColor.TERRACOTTA_YELLOW))
 		.register()),
 
 	SCORIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scoria", () -> Blocks.BLACKSTONE, true)
+		.properties(p -> p.color(MaterialColor.COLOR_BROWN))
 		.register()),
 
 	SCORCHIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scorchia", () -> Blocks.BLACKSTONE, true)
+		.properties(p -> p.color(MaterialColor.TERRACOTTA_GRAY))
 		.register()),
 
 	VERIDIUM(STANDARD_RANGE, r -> r.paletteStoneBlock("veridium", () -> Blocks.TUFF, true)
-		.properties(p -> p.destroyTime(1.25f))
+		.properties(p -> p.destroyTime(1.25f)
+			.color(MaterialColor.WARPED_NYLIUM))
 		.register())
 
 	;
@@ -81,7 +88,8 @@ public enum AllPaletteStoneTypes {
 			NonNullSupplier<Block> baseBlock = paletteStoneVariants.factory.apply(registrate);
 			paletteStoneVariants.baseBlock = baseBlock;
 			String id = Lang.asId(paletteStoneVariants.name());
-			paletteStoneVariants.materialTag = AllTags.optionalTag(Registry.ITEM, Create.asResource("stone_types/" + id));
+			paletteStoneVariants.materialTag =
+				AllTags.optionalTag(Registry.ITEM, Create.asResource("stone_types/" + id));
 			paletteStoneVariants.variants = new PalettesVariantEntry(id, paletteStoneVariants);
 		}
 	}

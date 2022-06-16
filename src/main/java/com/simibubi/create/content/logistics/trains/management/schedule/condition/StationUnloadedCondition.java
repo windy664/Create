@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -30,13 +31,18 @@ public class StationUnloadedCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	protected void write(CompoundTag tag) {}
+	protected void writeAdditional(CompoundTag tag) {}
 
 	@Override
-	protected void read(CompoundTag tag) {}
+	protected void readAdditional(CompoundTag tag) {}
 
 	@Override
 	public ResourceLocation getId() {
 		return Create.asResource("unloaded");
+	}
+
+	@Override
+	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
+		return Lang.translate("schedule.condition.unloaded.status");
 	}
 }

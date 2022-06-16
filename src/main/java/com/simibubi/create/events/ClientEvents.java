@@ -20,6 +20,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
@@ -39,6 +40,8 @@ import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
+import com.simibubi.create.content.logistics.trains.CameraDistanceModifier;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.CarriageCouplingRenderer;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingClient;
@@ -47,7 +50,6 @@ import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction
 import com.simibubi.create.content.logistics.trains.track.TrackBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
-import com.simibubi.create.content.logistics.trains.track.TrackRemoval;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.OpenCreateMenuButton;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -165,6 +167,7 @@ public class ClientEvents {
 		ScrollValueRenderer.tick();
 		ChassisRangeDisplay.tick();
 		EdgeInteractionRenderer.tick();
+		GirderWrenchBehavior.tick();
 		WorldshaperRenderHandler.tick();
 		CouplingHandlerClient.tick();
 		CouplingRenderer.tickDebugModeRenders();
@@ -181,10 +184,11 @@ public class ClientEvents {
 		ToolboxHandlerClient.clientTick();
 		TrackTargetingClient.clientTick();
 		TrackPlacement.clientTick();
-		TrackRemoval.clientTick();
 		TrainRelocator.clientTick();
 		DisplayLinkBlockItem.clientTick();
 		CurvedTrackInteraction.clientTick();
+		CameraDistanceModifier.tick();
+		TrainHUD.tick();
 	}
 
 	public static boolean onRenderSelection(LevelRenderer context, Camera info, HitResult target, float partialTicks, PoseStack matrix, MultiBufferSource buffers) { return false; }
@@ -281,6 +285,23 @@ public class ClientEvents {
 		if (!isGameActive())
 			return;
 		TurntableHandler.gameRenderTick();
+	}
+
+	@SubscribeEvent
+	public static void onMount(EntityMountEvent event) {
+		if (event.getEntityMounting() != Minecraft.getInstance().player)
+			return;
+
+		if (event.isDismounting()) {
+			CameraDistanceModifier.reset();
+			return;
+		}
+
+		if (!event.isMounting() || !(event.getEntityBeingMounted() instanceof CarriageContraptionEntity carriage)) {
+			return;
+		}
+
+		CameraDistanceModifier.zoomOut();
 	}
 
 	protected static boolean isGameActive() {

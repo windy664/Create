@@ -27,9 +27,9 @@ public abstract class MovingInteractionBehaviour {
 
 	protected void setContraptionBlockData(AbstractContraptionEntity contraptionEntity, BlockPos pos,
 		StructureBlockInfo info) {
-		contraptionEntity.contraption.blocks.put(pos, info);
-		if (contraptionEntity.level.isClientSide)
-			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> invalidate(contraptionEntity.contraption));
+		if (contraptionEntity.level.isClientSide())
+			return;
+		contraptionEntity.setBlock(pos, info);
 	}
 
 	@Environment(EnvType.CLIENT)

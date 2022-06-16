@@ -63,7 +63,7 @@ public class CurvedTrackInteraction {
 
 			breakTicks++;
 			breakTimeout = 2;
-			breakProgress += creative ? 0.25f : blockState.getDestroyProgress(player, level, breakPos);
+			breakProgress += creative ? 0.125f : blockState.getDestroyProgress(player, level, breakPos) / 8f;
 
 			Vec3 vec = VecHelper.offsetRandomly(result.vec(), level.random, 0.25f);
 			level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockState), vec.x, vec.y, vec.z, 0, 0, 0);

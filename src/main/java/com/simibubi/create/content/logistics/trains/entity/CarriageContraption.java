@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
@@ -20,6 +21,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mou
 import com.simibubi.create.content.contraptions.components.structureMovement.NonStationaryLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.TrainCargoManager;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
@@ -74,6 +76,7 @@ public class CarriageContraption extends Contraption {
 		soundQueue = new ArrivalSoundQueue();
 		portalCutoffMin = Integer.MIN_VALUE;
 		portalCutoffMax = Integer.MAX_VALUE;
+		storage = new TrainCargoManager();
 	}
 
 	public void setSoundQueueOffset(int offset) {
@@ -127,7 +130,7 @@ public class CarriageContraption extends Contraption {
 		// carriage manages it instead
 		Carriage carriage = cce.getCarriage();
 		if (carriage.storage == null) {
-			carriage.storage = storage;
+			carriage.storage = (TrainCargoManager) storage;
 			storage = new MountedStorageManager();
 		}
 		storageProxy = carriage.storage;
@@ -220,6 +223,11 @@ public class CarriageContraption extends Contraption {
 	@Override
 	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
 		return false;
+	}
+
+	@Override
+	protected MountedStorageManager getStorageForSpawnPacket() {
+		return storageProxy;
 	}
 
 	@Override
@@ -325,5 +333,16 @@ public class CarriageContraption extends Contraption {
 		return storageProxy.getFluids();
 	}
 
+	public void handleContraptionFluidPacket(BlockPos localPos, FluidStack containedFluid) {
+		storage.updateContainedFluid(localPos, containedFluid);
+	}
+
+	@Override
+	public void tickStorage(AbstractContraptionEntity entity) {
+		if (entity.level.isClientSide)
+			storage.entityTick(entity);
+		else if (storageProxy != null)
+			storageProxy.entityTick(entity);
+	}
 
 }

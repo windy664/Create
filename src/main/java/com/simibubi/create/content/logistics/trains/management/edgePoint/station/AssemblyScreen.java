@@ -29,12 +29,10 @@ public class AssemblyScreen extends AbstractStationScreen {
 
 	private List<ResourceLocation> iconTypes;
 	private ScrollInput iconTypeScroll;
-	private boolean assemblyCompleted;
 
 	public AssemblyScreen(StationTileEntity te, GlobalStation station) {
 		super(te, station);
 		background = AllGuiTextures.STATION_ASSEMBLING;
-		assemblyCompleted = false;
 	}
 
 	@Override
@@ -65,14 +63,14 @@ public class AssemblyScreen extends AbstractStationScreen {
 		iconTypeScroll.active = iconTypeScroll.visible = false;
 		addRenderableWidget(iconTypeScroll);
 
-		toggleAssemblyButton = new WideIconButton(x + 83, by, AllGuiTextures.I_ASSEMBLE_TRAIN);
+		toggleAssemblyButton = new WideIconButton(x + 94, by, AllGuiTextures.I_ASSEMBLE_TRAIN);
 		toggleAssemblyButton.active = false;
 		toggleAssemblyButton.setToolTip(new TextComponent("Assemble Train"));
 		toggleAssemblyButton.withCallback(() -> {
 			AllPackets.channel.sendToServer(StationEditPacket.tryAssemble(te.getBlockPos()));
 		});
 
-		quitAssembly = new IconButton(x + 62, by, AllIcons.I_DISABLE);
+		quitAssembly = new IconButton(x + 73, by, AllIcons.I_DISABLE);
 		quitAssembly.active = true;
 		quitAssembly.setToolTip(new TextComponent("Cancel Assembly"));
 		quitAssembly.withCallback(() -> {
@@ -84,10 +82,11 @@ public class AssemblyScreen extends AbstractStationScreen {
 		completeAssembly.active = false;
 		completeAssembly.setToolTip(new TextComponent("Complete Assembly"));
 		completeAssembly.withCallback(() -> {
-			assemblyCompleted = true;
 			AllPackets.channel.sendToServer(StationEditPacket.configure(te.getBlockPos(), false, station.name));
 			minecraft.setScreen(new StationScreen(te, station));
 		});
+
+		completeAssembly.visible = false;
 
 		addRenderableWidget(toggleAssemblyButton);
 		addRenderableWidget(quitAssembly);
@@ -103,39 +102,28 @@ public class AssemblyScreen extends AbstractStationScreen {
 		Train train = displayedTrain.get();
 		toggleAssemblyButton.active = te.bogeyCount > 0 || train != null;
 
-		if (train != null)
+		if (train != null) {
+			AllPackets.channel.sendToServer(StationEditPacket.configure(te.getBlockPos(), false, station.name));
+			minecraft.setScreen(new StationScreen(te, station));
 			for (Carriage carriage : train.carriages)
 				carriage.updateConductors();
+		}
 	}
 
 	private void tickTrainDisplay() {
-		Train train = displayedTrain.get();
-		Train imminentTrain = getImminent();
-
-		if (train == null) {
-			if (imminentTrain != null) {
-				displayedTrain = new WeakReference<>(imminentTrain);
-				completeAssembly.active = true;
-				quitAssembly.active = false;
-				iconTypeScroll.active = iconTypeScroll.visible = true;
-				toggleAssemblyButton.setToolTip(new TextComponent("Disassemble Train"));
-				toggleAssemblyButton.setIcon(AllGuiTextures.I_DISASSEMBLE_TRAIN);
-				toggleAssemblyButton.withCallback(() -> {
-					AllPackets.channel.sendToServer(StationEditPacket.tryDisassemble(te.getBlockPos()));
-				});
-			}
+		if (getImminent() == null) {
+			displayedTrain = new WeakReference<>(null);
+			completeAssembly.active = false;
+			quitAssembly.active = true;
+			iconTypeScroll.active = iconTypeScroll.visible = false;
+			toggleAssemblyButton.setToolTip(new TextComponent("Assemble Train"));
+			toggleAssemblyButton.setIcon(AllGuiTextures.I_ASSEMBLE_TRAIN);
+			toggleAssemblyButton.withCallback(() -> {
+				AllPackets.channel.sendToServer(StationEditPacket.tryAssemble(te.getBlockPos()));
+			});
 		} else {
-			if (imminentTrain == null) {
-				displayedTrain = new WeakReference<>(null);
-				completeAssembly.active = false;
-				quitAssembly.active = true;
-				iconTypeScroll.active = iconTypeScroll.visible = false;
-				toggleAssemblyButton.setToolTip(new TextComponent("Assemble Train"));
-				toggleAssemblyButton.setIcon(AllGuiTextures.I_ASSEMBLE_TRAIN);
-				toggleAssemblyButton.withCallback(() -> {
-					AllPackets.channel.sendToServer(StationEditPacket.tryAssemble(te.getBlockPos()));
-				});
-			}
+			AllPackets.channel.sendToServer(StationEditPacket.configure(te.getBlockPos(), false, station.name));
+			minecraft.setScreen(new StationScreen(te, station));
 		}
 	}
 
@@ -151,6 +139,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 		Train train = displayedTrain.get();
 		if (train != null) {
 
+			// note: the code below becomes redundant if Train.heldForAssembly is removed
 			TrainIconType icon = train.icon;
 			int offset = 0;
 			int trainIconWidth = getTrainIconWidth(train);
@@ -220,8 +209,8 @@ public class AssemblyScreen extends AbstractStationScreen {
 			new TextComponent(bogeyCount == 0 ? "No Bogeys" : bogeyCount + (bogeyCount == 1 ? " Bogey" : " Bogeys"));
 		font.draw(ms, text, x + 97 - font.width(text) / 2, y + 47, 0x7A7A7A);
 
-		font.drawWordWrap(new TextComponent("Use Railway Casing on highlighted Tracks to create bogeys."), x + 28, y + 62, 134,
-			0x7A7A7A);
+		font.drawWordWrap(new TextComponent("Use Train Casing on highlighted Tracks to create bogeys."), x + 28, y + 62,
+			134, 0x7A7A7A);
 		font.drawWordWrap(new TextComponent("Remove bogeys by breaking the block on top."), x + 28, y + 94, 134,
 			0x7A7A7A);
 		font.drawWordWrap(new TextComponent("Build carriages attached to one or two bogeys each."), x + 28, y + 117,
@@ -235,7 +224,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 		if (train != null) {
 			ResourceLocation iconId = iconTypes.get(iconTypeScroll.getState());
 			train.icon = TrainIconType.byId(iconId);
-			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, "", !assemblyCompleted, iconId));
+			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, "", iconId));
 		}
 	}
 

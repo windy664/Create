@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
 import com.simibubi.create.content.contraptions.fluids.pipes.AxisPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.VanillaFluidTargets;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -127,8 +128,10 @@ public class FluidPropagator {
 		BlockPos neighborPos, boolean isMoving) {
 		if (world.isClientSide)
 			return null;
-		// calling getblockstate() as otherBlock param seems to contain the block which was replaced
-		otherBlock = world.getBlockState(neighborPos).getBlock();
+		// calling getblockstate() as otherBlock param seems to contain the block which
+		// was replaced
+		otherBlock = world.getBlockState(neighborPos)
+			.getBlock();
 		if (otherBlock instanceof FluidPipeBlock)
 			return null;
 		if (otherBlock instanceof AxisPipeBlock)
@@ -186,30 +189,13 @@ public class FluidPropagator {
 		return AllConfigs.SERVER.fluids.mechanicalPumpRange.get();
 	}
 
-//	static AABB smallCenter = new AABB(BlockPos.ZERO).shrink(.25);
-//
-//	@Deprecated
-//	public static OutlineParams showBlockFace(BlockFace face) {
-//		MutableObject<OutlineParams> params = new MutableObject<>(new OutlineParams());
-//		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
-//			Vector3d directionVec = new Vector3d(face.getFace()
-//				.getDirectionVec());
-//			Vector3d scaleVec = directionVec.scale(-.25f * face.getFace()
-//				.getAxisDirection()
-//				.getOffset());
-//			directionVec = directionVec.scale(.45f);
-//			params.setValue(CreateClient.outliner.showAABB(face,
-//				FluidPropagator.smallCenter.offset(directionVec.add(new Vector3d(face.getPos())))
-//					.grow(scaleVec.x, scaleVec.y, scaleVec.z)
-//					.grow(1 / 16f)));
-//		});
-//		return params.getValue()
-//			.lineWidth(1 / 16f);
-//	}
-
 	public static boolean hasFluidCapability(BlockGetter world, BlockPos pos, Direction side) {
 		BlockEntity tileEntity = world.getBlockEntity(pos);
-		return tileEntity != null && TransferUtil.getFluidStorage(tileEntity, side) != null;
+		if (tileEntity == null)
+			return false;
+		LazyOptional<IFluidHandler> capability =
+			tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+		return capability.isPresent();
 	}
 
 	@Nullable

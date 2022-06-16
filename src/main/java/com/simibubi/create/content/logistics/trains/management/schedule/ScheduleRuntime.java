@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Objects;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData.TrainDeparturePrediction;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.TimedWaitCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduledDelay;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
@@ -19,6 +20,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -47,6 +49,8 @@ public class ScheduleRuntime {
 	int ticksInTransit;
 	List<Integer> predictionTicks;
 
+	public boolean displayLinkUpdateRequested;
+
 	public ScheduleRuntime(Train train) {
 		this.train = train;
 		reset();
@@ -57,6 +61,9 @@ public class ScheduleRuntime {
 			return;
 		state = State.POST_TRANSIT;
 		conditionProgress.clear();
+		displayLinkUpdateRequested = true;
+		for (Carriage carriage : train.carriages)
+			carriage.storage.resetIdleCargoTracker();
 
 		if (ticksInTransit > 0) {
 			int current = predictionTicks.get(currentEntry);
@@ -138,11 +145,19 @@ public class ScheduleRuntime {
 
 			CompoundTag tag = conditionContext.get(i);
 			ScheduleWaitCondition condition = list.get(progress);
+			int prevVersion = tag.getInt("StatusVersion");
+
 			if (condition.tickCompletion(level, train, tag)) {
 				conditionContext.set(i, new CompoundTag());
 				conditionProgress.set(i, progress + 1);
+				displayLinkUpdateRequested |= i == 0;
 			}
+
+			displayLinkUpdateRequested |= i == 0 && prevVersion != tag.getInt("StatusVersion");
 		}
+
+		for (Carriage carriage : train.carriages)
+			carriage.storage.tickIdleCargoTracker();
 	}
 
 	public GlobalStation startCurrentInstruction() {
@@ -150,14 +165,21 @@ public class ScheduleRuntime {
 		ScheduleInstruction instruction = entry.instruction;
 
 		if (instruction instanceof DestinationInstruction destination) {
-			String regex = destination.getFilter()
-				.replace("*", ".*");
+			String regex = destination.getFilterForRegex();
 			GlobalStation best = null;
 			double bestCost = Double.MAX_VALUE;
+			boolean anyMatch = false;
+
+			if (!train.hasForwardConductor() && !train.hasBackwardConductor()) {
+				train.status.missingConductor();
+				cooldown = INTERVAL;
+				return null;
+			}
 
 			for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
 				if (!globalStation.name.matches(regex))
 					continue;
+				anyMatch = true;
 				boolean matchesCurrent = train.currentStation != null && train.currentStation.equals(globalStation.id);
 				double cost = matchesCurrent ? 0 : train.navigation.startNavigation(globalStation, bestCost, true);
 				if (cost < 0)
@@ -169,7 +191,10 @@ public class ScheduleRuntime {
 			}
 
 			if (best == null) {
-				train.status.failedNavigation();
+				if (anyMatch)
+					train.status.failedNavigation();
+				else
+					train.status.failedNavigationNoTarget(destination.getFilter());
 				cooldown = INTERVAL;
 				return null;
 			}
@@ -196,6 +221,7 @@ public class ScheduleRuntime {
 		train.status.newSchedule();
 		predictionTicks = new ArrayList<>();
 		schedule.entries.forEach($ -> predictionTicks.add(-1));
+		displayLinkUpdateRequested = true;
 	}
 
 	public Schedule getSchedule() {
@@ -322,8 +348,8 @@ public class ScheduleRuntime {
 		ScheduleEntry scheduleEntry = schedule.entries.get(index);
 		for (List<ScheduleWaitCondition> list : scheduleEntry.conditions)
 			for (ScheduleWaitCondition condition : list)
-				if (condition instanceof TimedWaitCondition wait)
-					return wait.timeUnit.ticksPer * wait.value;
+				if (condition instanceof ScheduledDelay wait)
+					return wait.totalWaitTicks();
 
 		return 5; // TODO properly ask conditions for time prediction
 	}
@@ -402,6 +428,21 @@ public class ScheduleRuntime {
 
 	public void setSchedulePresentClientside(boolean present) {
 		schedule = present ? new Schedule() : null;
+	}
+
+	public MutableComponent getWaitingStatus(Level level) {
+		List<List<ScheduleWaitCondition>> conditions = schedule.entries.get(currentEntry).conditions;
+		if (conditions.isEmpty() || conditionProgress.isEmpty() || conditionContext.isEmpty())
+			return TextComponent.EMPTY.copy();
+
+		List<ScheduleWaitCondition> list = conditions.get(0);
+		int progress = conditionProgress.get(0);
+		if (progress >= list.size())
+			return TextComponent.EMPTY.copy();
+
+		CompoundTag tag = conditionContext.get(0);
+		ScheduleWaitCondition condition = list.get(progress);
+		return condition.getWaitingStatus(level, train, tag);
 	}
 
 }

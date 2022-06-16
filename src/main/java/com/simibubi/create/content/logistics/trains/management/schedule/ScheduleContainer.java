@@ -16,8 +16,9 @@ import net.minecraft.world.item.ItemStack;
 public class ScheduleContainer extends GhostItemContainer<ItemStack> {
 
 	public boolean slotsActive = true;
-	public boolean targetSlotActive = true;
+	public int targetSlotsActive = 1;
 
+	static final int slots = 2;
 	public ScheduleContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
@@ -28,7 +29,7 @@ public class ScheduleContainer extends GhostItemContainer<ItemStack> {
 
 	@Override
 	protected ItemStackHandler createGhostInventory() {
-		return new ItemStackHandler(1);
+		return new ItemStackHandler(slots);
 	}
 
 	@Override
@@ -50,7 +51,8 @@ public class ScheduleContainer extends GhostItemContainer<ItemStack> {
 	@Override
 	protected void addSlots() {
 		addPlayerSlots(46, 140);
-		addSlot(new InactiveItemHandlerSlot(ghostInventory, 0, 54, 88));
+		for (int i = 0; i < slots; i++)
+			addSlot(new InactiveItemHandlerSlot(ghostInventory, i, i, 54 + 20 * i, 88));
 	}
 
 	@Override
@@ -84,14 +86,17 @@ public class ScheduleContainer extends GhostItemContainer<ItemStack> {
 	}
 
 	class InactiveItemHandlerSlot extends SlotItemHandler {
+private int targetIndex;
 
-		public InactiveItemHandlerSlot(ItemStackHandler itemHandler, int index, int xPosition, int yPosition) {
+		public InactiveItemHandlerSlot(ItemStackHandler itemHandler, int targetIndex, int index, int xPosition,
+			int yPosition) {
 			super(itemHandler, index, xPosition, yPosition);
+			this.targetIndex = targetIndex;
 		}
 
 		@Override
 		public boolean isActive() {
-			return slotsActive && targetSlotActive;
+			return slotsActive && targetIndex < targetSlotsActive;
 		}
 
 	}

@@ -294,9 +294,9 @@ public class TrackGraph {
 						frontier.add(connected.getLocation());
 
 				if (target != null) {
-					transfer(level, currentNode, target);
 					if (preAssignedIds != null && preAssignedIds.containsKey(currentNode.getNetId()))
 						target.setId(preAssignedIds.get(currentNode.getNetId()));
+					transfer(level, currentNode, target);
 				}
 			}
 
@@ -331,16 +331,18 @@ public class TrackGraph {
 			}
 		}
 
-		for (Iterator<UUID> iterator = trains.keySet()
-			.iterator(); iterator.hasNext();) {
-			UUID uuid = iterator.next();
-			Train train = trains.get(uuid);
-			if (train.graph != this)
-				continue;
-			if (!train.isTravellingOn(node))
-				continue;
-			train.graph = target;
-		}
+		if (level != null)
+			for (Iterator<UUID> iterator = trains.keySet()
+				.iterator(); iterator.hasNext();) {
+				UUID uuid = iterator.next();
+				Train train = trains.get(uuid);
+				if (train.graph != this)
+					continue;
+				if (!train.isTravellingOn(node))
+					continue;
+				train.graph = target;
+				train.syncTrackGraphChanges();
+			}
 
 		nodes.remove(nodeLoc);
 		nodesById.remove(node.getNetId());
@@ -353,11 +355,16 @@ public class TrackGraph {
 	}
 
 	public Map<TrackNode, TrackEdge> getConnectionsFrom(TrackNode node) {
+		if (node == null)
+			return null;
 		return connectionsByNode.getOrDefault(node, new HashMap<>());
 	}
 
 	public TrackEdge getConnection(Couple<TrackNode> nodes) {
-		return getConnectionsFrom(nodes.getFirst()).get(nodes.getSecond());
+		Map<TrackNode, TrackEdge> connectionsFrom = getConnectionsFrom(nodes.getFirst());
+		if (connectionsFrom == null)
+			return null;
+		return connectionsFrom.get(nodes.getSecond());
 	}
 
 	public void connectNodes(LevelAccessor reader, TrackNodeLocation location, TrackNodeLocation location2,

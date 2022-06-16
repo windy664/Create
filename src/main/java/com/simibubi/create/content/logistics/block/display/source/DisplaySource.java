@@ -6,12 +6,12 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.block.display.DisplayBehaviour;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkScreen.LineBuilder;
 import com.simibubi.create.content.logistics.block.display.target.DisplayBoardTarget;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -42,9 +42,9 @@ public abstract class DisplaySource extends DisplayBehaviour {
 	}
 
 	public void onSignalReset(DisplayLinkContext context) {};
-	
+
 	public void populateData(DisplayLinkContext context) {};
-	
+
 	public int getPassiveRefreshTicks() {
 		return 100;
 	};
@@ -55,6 +55,10 @@ public abstract class DisplaySource extends DisplayBehaviour {
 
 	public Component getName() {
 		return new TranslatableComponent(id.getNamespace() + ".display_source." + getTranslationKey());
+	}
+
+	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay, FlapDisplayLayout layout, int lineIndex) {
+		loadFlapDisplayLayout(context, flapDisplay, layout);
 	}
 
 	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay,
@@ -70,6 +74,6 @@ public abstract class DisplaySource extends DisplayBehaviour {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {}
+	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {}
 
 }

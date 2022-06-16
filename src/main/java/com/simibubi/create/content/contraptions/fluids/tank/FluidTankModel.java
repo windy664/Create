@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class FluidTankModel extends CTModel {
 
 	public static FluidTankModel standard(BakedModel originalModel) {
-		return new FluidTankModel(originalModel, AllSpriteShifts.FLUID_TANK, AllSpriteShifts.COPPER_CASING);
+		return new FluidTankModel(originalModel, AllSpriteShifts.FLUID_TANK, AllSpriteShifts.FLUID_TANK_TOP);
 	}
 
 	public static FluidTankModel creative(BakedModel originalModel) {

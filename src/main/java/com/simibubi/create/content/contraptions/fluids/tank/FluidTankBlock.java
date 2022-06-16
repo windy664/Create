@@ -119,6 +119,16 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		return InteractionResult.SUCCESS;
 	}
 
+	static final VoxelShape CAMPFIRE_SMOKE_CLIP = Block.box(0, 4, 0, 16, 16, 16);
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
+		CollisionContext pContext) {
+		if (pContext == CollisionContext.empty())
+			return CAMPFIRE_SMOKE_CLIP;
+		return pState.getShape(pLevel, pPos);
+	}
+
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
@@ -331,9 +341,9 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	public static void updateBoilerState(BlockState pState, Level pLevel, BlockPos tankPos) {
 		BlockState tankState = pLevel.getBlockState(tankPos);
-		if (!FluidTankBlock.isTank(tankState))
+		if (!(tankState.getBlock() instanceof FluidTankBlock tank))
 			return;
-		FluidTankTileEntity tankTE = FluidTankConnectivityHandler.anyTankAt(pLevel, tankPos);
+		FluidTankTileEntity tankTE = tank.getTileEntity(pLevel, tankPos);
 		if (tankTE == null)
 			return;
 		FluidTankTileEntity controllerTE = tankTE.getControllerTE();

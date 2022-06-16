@@ -21,9 +21,12 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.FlwContraption;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
@@ -86,8 +89,14 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		Vec3 vec = context.position.subtract(facingVec.scale(2));
 
 		float xRot = AbstractContraptionEntity.pitchFromVector(facingVec) - 90;
-		if (Math.abs(xRot) > 89)
-			facingVec = context.rotation.apply(new Vec3(0, 0, 1));
+		if (Math.abs(xRot) > 89) {
+			Vec3 initial = new Vec3(0, 0, 1);
+			if (context.contraption.entity instanceof OrientedContraptionEntity oce)
+				initial = VecHelper.rotate(initial, oce.getInitialYaw(), Axis.Y);
+			if (context.contraption.entity instanceof CarriageContraptionEntity cce)
+				initial = VecHelper.rotate(initial, 90, Axis.Y);
+			facingVec = context.rotation.apply(initial);
+		}
 
 		player.setYRot(AbstractContraptionEntity.yawFromVector(facingVec));
 		player.setXRot(xRot);
@@ -181,6 +190,21 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
+	public void cancelStall(MovementContext context) {
+		if (context.world.isClientSide)
+			return;
+
+		MovementBehaviour.super.cancelStall(context);
+		DeployerFakePlayer player = getPlayer(context);
+		if (player == null)
+			return;
+		if (player.blockBreakingProgress == null)
+			return;
+		context.world.destroyBlockProgress(player.getId(), player.blockBreakingProgress.getKey(), -1);
+		player.blockBreakingProgress = null;
+	}
+
+	@Override
 	public void stopMoving(MovementContext context) {
 		if (context.world.isClientSide)
 			return;
@@ -189,6 +213,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		if (player == null)
 			return;
 
+		cancelStall(context);
 		context.tileData.put("Inventory", player.getInventory()
 			.save(new ListTag()));
 		player.discard();
@@ -264,7 +289,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
-		if (!Backend.isOn())
+		if (!FlwContraption.canInstance())
 			DeployerRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 

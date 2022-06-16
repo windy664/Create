@@ -240,7 +240,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		MECHANICAL_PRESS = create(AllBlocks.MECHANICAL_PRESS).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.define('C', I.andesiteCasing())
+				.define('S', I.shaft())
 				.define('I', AllTags.forgeItemTag("storage_blocks/iron"))
+				.pattern("S")
 				.pattern("C")
 				.pattern("I")),
 
@@ -253,7 +255,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("I")),
 
 		MECHANICAL_PISTON = create(AllBlocks.MECHANICAL_PISTON).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.define('B', ItemTags.PLANKS)
+			.viaShaped(b -> b.define('B', ItemTags.WOODEN_SLABS)
 				.define('C', I.andesiteCasing())
 				.define('I', AllBlocks.PISTON_EXTENSION_POLE.get())
 				.pattern("B")
@@ -281,12 +283,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("P")),
 
 		GANTRY_PINION = create(AllBlocks.GANTRY_CARRIAGE).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.define('B', ItemTags.PLANKS)
-				.define('S', I.cog())
+			.viaShaped(b -> b.define('B', ItemTags.WOODEN_SLABS)
 				.define('C', I.andesiteCasing())
+				.define('I', I.cog())
 				.pattern("B")
 				.pattern("C")
-				.pattern("S")),
+				.pattern("I")),
 
 		GANTRY_SHAFT = create(AllBlocks.GANTRY_SHAFT).returns(8)
 			.unlockedBy(I::andesite)
@@ -295,6 +297,31 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("A")
 				.pattern("R")
 				.pattern("A")),
+
+		PLACARD = create(AllBlocks.PLACARD).returns(1)
+			.unlockedByTag(() -> I.brass())
+			.viaShapeless(b -> b.requires(Items.ITEM_FRAME)
+				.requires(I.brassSheet())),
+
+		TRAIN_DOOR = create(AllBlocks.TRAIN_DOOR).returns(1)
+			.unlockedByTag(() -> I.brass())
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_DOORS)
+				.requires(I.brassSheet())),
+
+		TRAIN_TRAPDOOR = create(AllBlocks.TRAIN_TRAPDOOR).returns(1)
+			.unlockedByTag(() -> I.brass())
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_TRAPDOORS)
+				.requires(I.brassSheet())),
+
+		FRAMED_GLASS_DOOR = create(AllBlocks.FRAMED_GLASS_DOOR).returns(1)
+			.unlockedBy(AllPaletteBlocks.FRAMED_GLASS::get)
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_DOORS)
+				.requires(AllPaletteBlocks.FRAMED_GLASS.get())),
+
+		FRAMED_GLASS_TRAPDOOR = create(AllBlocks.FRAMED_GLASS_TRAPDOOR).returns(1)
+			.unlockedBy(AllPaletteBlocks.FRAMED_GLASS::get)
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_TRAPDOORS)
+				.requires(AllPaletteBlocks.FRAMED_GLASS.get())),
 
 		ANALOG_LEVER = create(AllBlocks.ANALOG_LEVER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('S', I.andesiteCasing())
@@ -366,7 +393,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		ENCASED_FAN = create(AllBlocks.ENCASED_FAN).unlockedByTag(I::ironSheet)
 			.viaShaped(b -> b.define('A', I.andesiteCasing())
+				.define('S', I.shaft())
 				.define('P', AllItems.PROPELLER.get())
+				.pattern("S")
 				.pattern("A")
 				.pattern("P")),
 
@@ -388,20 +417,24 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("R")),
 
 		WINDMILL_BEARING = create(AllBlocks.WINDMILL_BEARING).unlockedBy(I::andesite)
-			.viaShaped(b -> b.define('B', AllBlocks.TURNTABLE.get())
+			.viaShaped(b -> b.define('B', ItemTags.WOODEN_SLABS)
 				.define('C', I.stone())
+				.define('I', I.shaft())
 				.pattern("B")
-				.pattern("C")),
+				.pattern("C")
+				.pattern("I")),
 
 		MECHANICAL_BEARING = create(AllBlocks.MECHANICAL_BEARING).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.define('B', AllBlocks.TURNTABLE.get())
+			.viaShaped(b -> b.define('B', ItemTags.WOODEN_SLABS)
 				.define('C', I.andesiteCasing())
+				.define('I', I.shaft())
 				.pattern("B")
-				.pattern("C")),
+				.pattern("C")
+				.pattern("I")),
 
 		CLOCKWORK_BEARING = create(AllBlocks.CLOCKWORK_BEARING).unlockedBy(I::brassCasing)
 			.viaShaped(b -> b.define('S', I.electronTube())
-				.define('B', AllBlocks.TURNTABLE.get())
+				.define('B', I.woodSlab())
 				.define('C', I.brassCasing())
 				.pattern("B")
 				.pattern("C")
@@ -456,6 +489,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.define('C', I.copper())
 				.pattern("SCS")),
 
+		FLUID_PIPE_2 = create(AllBlocks.FLUID_PIPE).withSuffix("_vertical")
+			.returns(4)
+			.unlockedBy(I::copper)
+			.viaShaped(b -> b.define('S', I.copperSheet())
+				.define('C', I.copper())
+				.pattern("S")
+				.pattern("C")
+				.pattern("S")),
+
 		MECHANICAL_PUMP = create(AllBlocks.MECHANICAL_PUMP).unlockedBy(I::copper)
 			.viaShapeless(b -> b.requires(I.cog())
 				.requires(AllBlocks.FLUID_PIPE.get())),
@@ -503,12 +545,25 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaShapeless(b -> b.requires(I.railwayCasing())
 				.requires(I.electronTube())),
 
-		TRAIN_SCHEDULE = create(AllItems.SCHEDULE).unlockedByTag(I::reinforcedSheet)
+		TRAIN_OBSERVER = create(AllBlocks.TRACK_OBSERVER).unlockedBy(I::railwayCasing)
+			.returns(2)
+			.viaShapeless(b -> b.requires(I.railwayCasing())
+				.requires(ItemTags.WOODEN_PRESSURE_PLATES)),
+
+		TRAIN_OBSERVER_2 = create(AllBlocks.TRACK_OBSERVER).withSuffix("_from_other_plates")
+			.unlockedBy(I::railwayCasing)
+			.returns(2)
+			.viaShapeless(b -> b.requires(I.railwayCasing())
+				.requires(Ingredient.of(Items.STONE_PRESSURE_PLATE, Items.POLISHED_BLACKSTONE_PRESSURE_PLATE,
+					Items.HEAVY_WEIGHTED_PRESSURE_PLATE, Items.LIGHT_WEIGHTED_PRESSURE_PLATE))),
+
+		TRAIN_SCHEDULE = create(AllItems.SCHEDULE).unlockedByTag(I::sturdySheet)
 			.returns(4)
-			.viaShapeless(b -> b.requires(I.reinforcedSheet())
+			.viaShapeless(b -> b.requires(I.sturdySheet())
 				.requires(Items.PAPER)),
 
 		TRAIN_STATION = create(AllBlocks.TRACK_STATION).unlockedBy(I::railwayCasing)
+			.returns(2)
 			.viaShapeless(b -> b.requires(I.railwayCasing())
 				.requires(Items.COMPASS)),
 
@@ -599,7 +654,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		MECHANICAL_MIXER = create(AllBlocks.MECHANICAL_MIXER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('C', I.andesiteCasing())
+				.define('S', I.cog())
 				.define('I', AllItems.WHISK.get())
+				.pattern("S")
 				.pattern("C")
 				.pattern("I")),
 
@@ -677,7 +734,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		ENCASED_CHAIN_DRIVE = create(AllBlocks.ENCASED_CHAIN_DRIVE).unlockedBy(I::andesiteCasing)
 			.viaShapeless(b -> b.requires(I.andesiteCasing())
-				.requires(Items.CHAIN)),
+				.requires(I.ironNugget())
+				.requires(I.ironNugget())
+				.requires(I.ironNugget())),
 
 		FLYWHEEL = create(AllBlocks.FLYWHEEL).unlockedByTag(I::brass)
 			.viaShaped(b -> b.define('C', I.brass())
@@ -700,7 +759,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("B")
 				.pattern("C")),
 
-		NIXIE_TUBE = create(AllBlocks.ORANGE_NIXIE_TUBE).unlockedBy(I::brassCasing)
+		NIXIE_TUBE = create(AllBlocks.ORANGE_NIXIE_TUBE).returns(4)
+			.unlockedBy(I::brassCasing)
 			.viaShapeless(b -> b.requires(I.electronTube())
 				.requires(I.electronTube())),
 
@@ -737,12 +797,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern(" C ")),
 
 		SEQUENCED_GEARSHIFT = create(AllBlocks.SEQUENCED_GEARSHIFT).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.define('B', I.electronTube())
-				.define('C', I.brassCasing())
-				.define('I', Items.CLOCK)
-				.pattern("B")
-				.pattern("C")
-				.pattern("I"))
+			.viaShapeless(b -> b.requires(I.brassCasing())
+				.requires(I.cog())
+				.requires(I.electronTube()))
 
 	;
 
@@ -768,7 +825,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		BRASS_FUNNEL = create(AllBlocks.BRASS_FUNNEL).returns(2)
 			.unlockedByTag(I::brass)
-			.viaShaped(b -> b.define('A', I.brassSheet())
+			.viaShaped(b -> b.define('A', I.brass())
 				.define('K', Items.DRIED_KELP)
 				.define('E', I.electronTube())
 				.pattern("E")

@@ -13,6 +13,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -258,7 +259,7 @@ public class TrackPlacement {
 				info.end2Extent = (int) Math.round(dist2 - dist1);
 
 			double turnSize = Math.min(dist1, dist2);
-			if (intersect[0] < 0)
+			if (intersect[0] < 0 || intersect[1] < 0)
 				return info.withMessage("too_sharp")
 					.tooJumbly();
 			if (turnSize < 2)
@@ -443,7 +444,9 @@ public class TrackPlacement {
 	private static void paveTracks(Level level, PlacementInfo info, BlockItem blockItem, boolean simulate) {
 		Block block = blockItem.getBlock();
 		info.requiredPavement = 0;
-		if (block == null || block instanceof EntityBlock)
+		if (block == null || block instanceof EntityBlock || block.defaultBlockState()
+			.getCollisionShape(level, info.pos1)
+			.isEmpty())
 			return;
 
 		Set<BlockPos> visited = new HashSet<>();
@@ -496,13 +499,13 @@ public class TrackPlacement {
 				if (simulate)
 					continue;
 
-				if (stateAtPos.getBlock()instanceof ITrackBlock trackAtPos) {
+				if (stateAtPos.getBlock() instanceof ITrackBlock trackAtPos) {
 					toPlace = trackAtPos.overlay(level, offsetPos, stateAtPos, toPlace);
 					canPlace = true;
 				}
 
 				if (canPlace)
-					level.setBlock(offsetPos, toPlace, 3);
+					level.setBlock(offsetPos, ProperWaterloggedBlock.withWater(level, toPlace, offsetPos), 3);
 			}
 		}
 
@@ -511,14 +514,14 @@ public class TrackPlacement {
 
 		if (!simulate) {
 			BlockState stateAtPos = level.getBlockState(targetPos1);
-			level.setBlock(targetPos1,
+			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
 				(stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1).setValue(TrackBlock.HAS_TE, true),
-				3);
+				targetPos1), 3);
 
 			stateAtPos = level.getBlockState(targetPos2);
-			level.setBlock(targetPos2,
+			level.setBlock(targetPos2, ProperWaterloggedBlock.withWater(level,
 				(stateAtPos.getBlock() == state2.getBlock() ? stateAtPos : state2).setValue(TrackBlock.HAS_TE, true),
-				3);
+				targetPos2), 3);
 		}
 
 		BlockEntity te1 = level.getBlockEntity(targetPos1);

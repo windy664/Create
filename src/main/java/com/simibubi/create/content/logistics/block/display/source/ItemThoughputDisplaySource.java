@@ -3,9 +3,9 @@ package com.simibubi.create.content.logistics.block.display.source;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkScreen.LineBuilder;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +26,7 @@ public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySourc
 		CompoundTag conf = context.sourceConfig();
 		if (conf.contains("Inactive"))
 			return new TextComponent("0");
-		
+
 		double interval = 20 * Math.pow(60, conf.getInt("Interval"));
 		double rate = conf.getFloat("Rate") * interval;
 
@@ -101,7 +101,7 @@ public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySourc
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void initConfigurationWidgets(DisplayLinkContext context, LineBuilder builder, boolean isFirstLine) {
+	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
 		super.initConfigurationWidgets(context, builder, isFirstLine);
 		if (isFirstLine)
 			return;

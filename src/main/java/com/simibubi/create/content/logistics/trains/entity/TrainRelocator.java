@@ -149,9 +149,11 @@ public class TrainRelocator {
 		Vec3 lookAngle = mc.player.getLookAngle();
 		boolean direction = bezierSelection != null && lookAngle.dot(bezierSelection.direction()) < 0;
 		boolean result = relocate(relocating, mc.level, blockPos, hoveredBezier, direction, lookAngle, true);
-		if (!simulate && result)
+		if (!simulate && result) {
+			relocating.carriages.forEach(c -> c.forEachPresentEntity(e -> e.nonDamageTicks = 10));			
 			AllPackets.channel.sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, hoveredBezier,
 				direction, lookAngle, relocatingEntityId));
+		}
 
 		return lastHoveredResult = result;
 	}
@@ -234,12 +236,12 @@ public class TrainRelocator {
 
 		train.leaveStation();
 		train.derailed = false;
-		train.heldForAssembly = false;
 		train.navigation.waitingForSignal = null;
 		train.occupiedSignalBlocks.clear();
 		train.graph = graph;
 		train.speed = 0;
 		train.migratingPoints.clear();
+		train.cancelStall();
 
 		if (train.navigation.destination != null)
 			train.navigation.cancelNavigation();

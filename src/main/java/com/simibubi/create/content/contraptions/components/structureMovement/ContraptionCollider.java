@@ -39,9 +39,11 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -79,6 +81,8 @@ public class ContraptionCollider {
 		List<Entity> entitiesWithinAABB = world.getEntitiesOfClass(Entity.class, bounds.inflate(2)
 			.expandTowards(0, 32, 0), contraptionEntity::canCollideWith);
 		for (Entity entity : entitiesWithinAABB) {
+			if (!entity.isAlive())
+				continue;
 
 			PlayerType playerType = getPlayerType(entity);
 			if (playerType == PlayerType.REMOTE)
@@ -117,17 +121,18 @@ public class ContraptionCollider {
 
 			// Use simplified bbs when present
 			final Vec3 motionCopy = motion;
-			List<AABB> collidableBBs = contraption.getSimplifiedEntityColliders().orElseGet(() -> {
+			List<AABB> collidableBBs = contraption.getSimplifiedEntityColliders()
+				.orElseGet(() -> {
 
-				// Else find 'nearby' individual block shapes to collide with
-				List<AABB> bbs = new ArrayList<>();
-				List<VoxelShape> potentialHits =
-					getPotentiallyCollidedShapes(world, contraption, localBB.expandTowards(motionCopy));
-				potentialHits.forEach(shape -> shape.toAabbs()
-					.forEach(bbs::add));
-				return bbs;
+					// Else find 'nearby' individual block shapes to collide with
+					List<AABB> bbs = new ArrayList<>();
+					List<VoxelShape> potentialHits =
+						getPotentiallyCollidedShapes(world, contraption, localBB.expandTowards(motionCopy));
+					potentialHits.forEach(shape -> shape.toAabbs()
+						.forEach(bbs::add));
+					return bbs;
 
-			});
+				});
 
 			MutableObject<Vec3> collisionResponse = new MutableObject<>(Vec3.ZERO);
 			MutableObject<Vec3> normal = new MutableObject<>(Vec3.ZERO);
@@ -234,7 +239,19 @@ public class ContraptionCollider {
 					.scale(.5f));
 				if (temporalCollision)
 					collisionLocation = collisionLocation.add(0, motionResponse.y, 0);
-				BlockPos pos = new BlockPos(contraptionEntity.toLocalVector(collisionLocation, 0));
+
+				BlockPos pos = new BlockPos(contraptionEntity.toLocalVector(entity.position(), 0));
+				if (contraption.getBlocks()
+					.containsKey(pos)) {
+					BlockState blockState = contraption.getBlocks()
+						.get(pos).state;
+					if (blockState.is(BlockTags.CLIMBABLE)) {
+						surfaceCollision.setTrue();
+						totalResponse = totalResponse.add(0, .1f, 0);
+					}
+				}
+
+				pos = new BlockPos(contraptionEntity.toLocalVector(collisionLocation, 0));
 				if (contraption.getBlocks()
 					.containsKey(pos)) {
 					BlockState blockState = contraption.getBlocks()
@@ -309,25 +326,36 @@ public class ContraptionCollider {
 				entityPosition.z + allowedMovement.z);
 			entityPosition = entity.position();
 
-			if (contraptionEntity instanceof CarriageContraptionEntity cce && entity.isOnGround()) {
-				if (AllConfigs.SERVER.trains.trainsCauseDamage.get()) {
-					Vec3 diffMotion = contraptionMotion.subtract(entity.getDeltaMovement());
-					if (diffMotion.length() > 0.35f && contraptionMotion.length() > 0.35f) {
-						EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
-						double damage = diffMotion.length();
-						if (playerType == PlayerType.CLIENT)
+			if (contraptionEntity instanceof CarriageContraptionEntity cce && entity.isOnGround()
+				&& !(entity instanceof ItemEntity) && cce.nonDamageTicks == 0
+				&& AllConfigs.SERVER.trains.trainsCauseDamage.get()) {
+
+				Vec3 diffMotion = contraptionMotion.subtract(entity.getDeltaMovement());
+				if (diffMotion.length() > 0.35f && contraptionMotion.length() > 0.35f) {
+
+					EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
+					double damage = diffMotion.length();
+					if (entity.getClassification(false) == MobCategory.MONSTER)
+						damage *= 2;
+
+					if (!(entity instanceof Player p) || !p.isCreative() && !p.isSpectator()) {
+						if (playerType == PlayerType.CLIENT) {
 							AllPackets.channel
 								.sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
-						else
+							world.playSound((Player) entity, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
+								SoundSource.NEUTRAL, 1, .75f);
+						} else {
 							entity.hurt(pSource, (int) (damage * 16));
-						if (!(entity instanceof Player p) || !p.isCreative() && !p.isSpectator())
-							entityMotion = entityMotion.add(entity.position()
-								.subtract(contraptionPosition)
-								.multiply(1, 0, 1)
-								.normalize()
-								.add(0, .25, 0)
-								.scale(damage * 4))
-								.add(diffMotion);
+							world.playSound(null, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
+								SoundSource.NEUTRAL, 1, .75f);
+						}
+
+						Vec3 added = entityMotion.add(contraptionMotion.multiply(1, 0, 1)
+							.normalize()
+							.add(0, .25, 0)
+							.scale(damage * 4))
+							.add(diffMotion);
+						entityMotion = VecHelper.clamp(added, 3);
 					}
 				}
 			}

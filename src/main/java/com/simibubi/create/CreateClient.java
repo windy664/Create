@@ -5,6 +5,7 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.trinkets.Trinkets;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueSelectionHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
@@ -123,6 +124,7 @@ public class CreateClient implements ClientModInitializer {
 
 	private static void registerOverlays() {
 		// Register overlays in reverse order
+		// TODO TRAIN PORT TrainHUD.OVERLAY
 		OverlayRenderCallback.EVENT.register(((stack, partialTicks, window, type) -> {
 			if (type == OverlayRenderCallback.Types.AIR)
 				CopperBacktankArmorLayer.renderRemainingAirOverlay(stack, partialTicks, window);

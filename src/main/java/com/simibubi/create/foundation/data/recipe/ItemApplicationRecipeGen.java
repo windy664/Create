@@ -14,10 +14,10 @@ import net.minecraft.world.level.ItemLike;
 public class ItemApplicationRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe ANDESITE = woodCasing("andesite", I::andesite, I::andesiteCasing);
-	GeneratedRecipe COPPER = woodCasingTag("copper", I::copperSheet, I::copperCasing);
-	GeneratedRecipe BRASS = woodCasingTag("brass", I::brassSheet, I::brassCasing);
+	GeneratedRecipe COPPER = woodCasing("copper", I::copper, I::copperCasing);
+	GeneratedRecipe BRASS = woodCasingTag("brass", I::brass, I::brassCasing);
 	GeneratedRecipe RAILWAY = create("railway_casing", b -> b.require(I.brassCasing())
-		.require(I.reinforcedSheet())
+		.require(I.sturdySheet())
 		.output(I.railwayCasing()));
 
 	protected GeneratedRecipe woodCasing(String type, Supplier<ItemLike> ingredient, Supplier<ItemLike> output) {

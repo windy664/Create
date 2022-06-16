@@ -20,12 +20,10 @@ public class TrainEditPacket extends SimplePacketBase {
 	private String name;
 	private UUID id;
 	private ResourceLocation iconType;
-	private boolean heldForAssembly;
 
-	public TrainEditPacket(UUID id, String name, boolean heldForAssembly, ResourceLocation iconType) {
+	public TrainEditPacket(UUID id, String name, ResourceLocation iconType) {
 		this.name = name;
 		this.id = id;
-		this.heldForAssembly = heldForAssembly;
 		this.iconType = iconType;
 	}
 
@@ -33,7 +31,6 @@ public class TrainEditPacket extends SimplePacketBase {
 		id = buffer.readUUID();
 		name = buffer.readUtf(256);
 		iconType = buffer.readResourceLocation();
-		heldForAssembly = buffer.readBoolean();
 	}
 
 	@Override
@@ -41,7 +38,6 @@ public class TrainEditPacket extends SimplePacketBase {
 		buffer.writeUUID(id);
 		buffer.writeUtf(name);
 		buffer.writeResourceLocation(iconType);
-		buffer.writeBoolean(heldForAssembly);
 	}
 
 	@Override
@@ -56,9 +52,8 @@ public class TrainEditPacket extends SimplePacketBase {
 			if (!name.isBlank())
 				train.name = new TextComponent(name);
 			train.icon = TrainIconType.byId(iconType);
-			train.heldForAssembly = heldForAssembly;
 			if (sender != null)
-				AllPackets.channel.sendToClientsInServer(new TrainEditReturnPacket(id, name, heldForAssembly, iconType),
+				AllPackets.channel.sendToClientsInServer(new TrainEditReturnPacket(id, name, iconType),
 						level.getServer());
 		});
 		ctx.setPacketHandled(true);
@@ -70,8 +65,8 @@ public class TrainEditPacket extends SimplePacketBase {
 			super(buffer);
 		}
 
-		public TrainEditReturnPacket(UUID id, String name, boolean heldForAssembly, ResourceLocation iconType) {
-			super(id, name, heldForAssembly, iconType);
+		public TrainEditReturnPacket(UUID id, String name, ResourceLocation iconType) {
+			super(id, name, iconType);
 		}
 
 	}
