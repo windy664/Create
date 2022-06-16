@@ -497,15 +497,32 @@ public class AllArmInteractionPointTypes {
 		@Override
 		protected Vec3 getInteractionPositionVector() {
 			Direction facing = FunnelBlock.getFunnelFacing(cachedState);
-			return VecHelper.getCenterOf(pos)  // FIXME SHOULD NEVER BE NULL
-				.add(Vec3.atLowerCornerOf(facing == null ? Vec3i.ZERO : facing
-					.getNormal()).scale(-.15f));
+			if (facing == null) {
+				logNullFacing();
+				return VecHelper.getCenterOf(pos).add(Vec3.atLowerCornerOf(Vec3i.ZERO).scale(-.15f));
+			}
+			return VecHelper.getCenterOf(pos)
+					.add(Vec3.atLowerCornerOf(facing
+							.getNormal()).scale(-.15f));
 		}
 
 		@Override
 		protected Direction getInteractionDirection() {
 			Direction facing = FunnelBlock.getFunnelFacing(cachedState);
-			return facing != null ? facing : Direction.UP; // FIXME SHOULD NEVER BE NULL
+			if (facing == null) {
+				logNullFacing();
+				return Direction.UP;
+			}
+			return facing.getOpposite();
+		}
+
+		public void logNullFacing() {
+			// FIXME SHOULD NEVER BE NULL
+			Create.LOGGER.error("A funnel arm interaction point has an invalid cached blockstate. If you see this message, please report it to Create!");
+			Create.LOGGER.error("https://github.com/Fabricators-of-Create/Create/issues");
+			Create.LOGGER.error("point: [{}] pos: [{}] mode: [{}] level: [{}]", this, this.pos, this.mode, this.level);
+			Create.LOGGER.error("state: [{}] valid: [{}] updated state: [{}]",  cachedState, isValid(), cachedState);
+			new Throwable().printStackTrace();
 		}
 
 		@Override
