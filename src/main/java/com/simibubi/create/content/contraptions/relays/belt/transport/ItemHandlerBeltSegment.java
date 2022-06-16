@@ -17,13 +17,14 @@ public class ItemHandlerBeltSegment implements SingleSlotStorage<ItemVariant> {
 	@Override
 	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 		if (this.beltInventory.canInsertAt(offset)) {
-			TransportedItemStack newStack = new TransportedItemStack(resource.toStack());
+			int toInsert = Math.min((int) maxAmount, resource.getItem().getMaxStackSize());
+			TransportedItemStack newStack = new TransportedItemStack(resource.toStack(toInsert));
 			newStack.insertedAt = offset;
 			newStack.beltPosition = offset + .5f + (beltInventory.beltMovementPositive ? -1 : 1) / 16f;
 			newStack.prevBeltPosition = newStack.beltPosition;
 			this.beltInventory.snapshotParticipant.updateSnapshots(transaction);
 			this.beltInventory.addItem(newStack);
-			return 1;
+			return toInsert;
 		}
 		return 0;
 	}
