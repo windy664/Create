@@ -8,6 +8,8 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.AxeItemAccessor;
+import me.shedaniel.rei.plugin.client.DefaultClientPlugin.DummyAxeItem;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -19,6 +21,8 @@ import net.minecraft.world.item.ItemStack.TooltipPart;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Just in case players don't know about that vanilla feature
@@ -44,7 +48,7 @@ public class LogStrippingFakeRecipes {
 			return;
 		BlockState state = blockItem.getBlock()
 			.defaultBlockState();
-		BlockState strippedState = AxeItem.getAxeStrippingState(state);
+		BlockState strippedState = getStrippedState(state);
 		if (strippedState == null)
 			return;
 		Item resultItem = strippedState.getBlock()
@@ -63,4 +67,11 @@ public class LogStrippingFakeRecipes {
 				.build();
 	}
 
+	@Nullable
+	public static BlockState getStrippedState(BlockState state) {
+		if (Items.IRON_AXE instanceof AxeItemAccessor axe) {
+			return axe.porting_lib$getStripped(state).orElse(null);
+		}
+		return null;
+	}
 }

@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipeBuilder;
 
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.TagValueAccessor;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -65,10 +66,10 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 			.loops(1)
 			.addStep(DeployerApplicationRecipe::new,
 				rb -> rb.require(Ingredient.fromValues(
-					Stream.of(new Ingredient.TagValue(I.ironNugget()), new Ingredient.TagValue(I.zincNugget())))))
+					Stream.of(TagValueAccessor.createTagValue(I.ironNugget()), TagValueAccessor.createTagValue(I.zincNugget())))))
 			.addStep(DeployerApplicationRecipe::new,
 				rb -> rb.require(Ingredient.fromValues(
-					Stream.of(new Ingredient.TagValue(I.ironNugget()), new Ingredient.TagValue(I.zincNugget())))))
+					Stream.of(TagValueAccessor.createTagValue(I.ironNugget()), TagValueAccessor.createTagValue(I.zincNugget())))))
 			.addStep(PressingRecipe::new, rb -> rb))
 
 	;

@@ -252,7 +252,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		return create(name + "_ore", b -> {
 			String prefix = "ores/";
 			return b.duration(400)
-				.withCondition(new NotCondition(new TagEmptyCondition("forge", prefix + name)))
+				.withCondition(DefaultResourceConditions.itemTagsPopulated(AllTags.forgeItemTag(prefix + name)))
 				.require(AllTags.forgeItemTag(prefix + name))
 				.output(result.get(), 1)
 				.output(.75f, result.get(), 1)

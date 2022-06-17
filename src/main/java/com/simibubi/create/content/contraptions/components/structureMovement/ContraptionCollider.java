@@ -335,7 +335,7 @@ public class ContraptionCollider {
 
 					EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
 					double damage = diffMotion.length();
-					if (entity.getClassification(false) == MobCategory.MONSTER)
+					if (entity.getType().getCategory() == MobCategory.MONSTER)
 						damage *= 2;
 
 					if (!(entity instanceof Player p) || !p.isCreative() && !p.isSpectator()) {
