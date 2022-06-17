@@ -92,6 +92,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -108,6 +109,8 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -117,6 +120,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -400,12 +404,10 @@ public class ClientEvents {
 
 	}
 
-//	 TODO TRAIN PORT
-	public static void addEntityRendererLayers(final Map<EntityType<?>, EntityRenderer<?>> renderers, final Map<String, EntityRenderer<? extends Player>> skinMap) {
-		EntityRenderDispatcher dispatcher = Minecraft.getInstance()
-				.getEntityRenderDispatcher();
-//		CopperBacktankArmorLayer.registerOnAll(dispatcher);
-		TrainHatArmorLayer.registerOnAll(dispatcher);
+	public static void addEntityRendererLayers(EntityType<? extends LivingEntity> entityType, LivingEntityRenderer<?, ?> entityRenderer,
+											   RegistrationHelper registrationHelper, EntityRendererProvider.Context context) {
+		CopperBacktankArmorLayer.registerOn(entityRenderer, registrationHelper);
+		TrainHatArmorLayer.registerOn(entityRenderer, registrationHelper);
 	}
 
 	public static void register() {
@@ -428,7 +430,7 @@ public class ClientEvents {
 		AttackAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
 		UseBlockCallback.EVENT.register(TrackBlockItem::sendExtenderPacket);
 		MountEntityCallback.EVENT.register(ClientEvents::onMount);
-		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((type, renderer, helper, context) -> CopperBacktankArmorLayer.registerOn(renderer, helper));
+		LivingEntityFeatureRendererRegistrationCallback.EVENT.register(ClientEvents::addEntityRendererLayers);
 
 		// External Events
 

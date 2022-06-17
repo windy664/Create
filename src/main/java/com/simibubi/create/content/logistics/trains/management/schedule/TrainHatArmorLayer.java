@@ -10,6 +10,8 @@ import com.simibubi.create.foundation.mixin.accessor.AgeableListModelAccessor;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.Couple;
 
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ModelPartAccessor;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.AxolotlModel;
 import net.minecraft.client.model.EntityModel;
@@ -22,7 +24,6 @@ import net.minecraft.client.model.geom.ModelPart.Cube;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -59,17 +60,17 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		boolean valid = false;
 		TransformStack msr = TransformStack.cast(ms);
 
-		if (entityModel instanceof AgeableListModel<?> model) {
+		if (entityModel instanceof AgeableListModel<?> model && entityModel instanceof io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AgeableListModelAccessor access) {
 			if (model.young) {
-				if (model.scaleHead) {
-					float f = 1.5F / model.babyHeadScale;
+				if (access.porting_lib$scaleHead()) {
+					float f = 1.5F / access.porting_lib$babyHeadScale();
 					ms.scale(f, f, f);
 				}
-				ms.translate(0.0D, model.babyYHeadOffset / 16.0F, model.babyZHeadOffset / 16.0F);
+				ms.translate(0.0D, access.porting_lib$babyYHeadOffset() / 16.0F, access.porting_lib$babyZHeadOffset() / 16.0F);
 			}
 
 			ModelPart head = getHeadPart(model);
-			if (head != null) {
+			if (head != null && (Object) head instanceof ModelPartAccessor partAccess) {
 				head.translateAndRotate(ms);
 
 				if (model instanceof WolfModel)
@@ -80,7 +81,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 				ms.translate(offset.x / 16f, offset.y / 16f, offset.z / 16f);
 
 				if (!head.isEmpty()) {
-					Cube cube = head.cubes.get(0);
+					Cube cube = partAccess.porting_lib$cubes().get(0);
 					ms.translate(offset.x / 16f, (cube.minY - cube.maxY + offset.y) / 16f, offset.z / 16f);
 					float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / 8f;
 					ms.scale(max, max, max);
@@ -92,13 +93,13 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 		else if (entityModel instanceof HierarchicalModel<?> model) {
 			boolean slime = model instanceof SlimeModel || model instanceof LavaSlimeModel;
-			ModelPart head = model.root().children.get(slime ? "cube" : "head");
+			ModelPart head = ((ModelPartAccessor) ((Object) model.root())).porting_lib$children().get(slime ? "cube" : "head");
 
-			if (head != null) {
+			if (head != null && (Object) head instanceof ModelPartAccessor access) {
 				head.translateAndRotate(ms);
 
 				if (!head.isEmpty()) {
-					Cube cube = head.cubes.get(0);
+					Cube cube = access.porting_lib$cubes().get(0);
 					ms.translate(offset.x, (cube.minY - cube.maxY + offset.y) / 16f, offset.z / 16f);
 					float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / (slime ? 6.5f : 8f);
 					ms.scale(max, max, max);
@@ -147,16 +148,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		return validSides != null;
 	}
 
-	public static void registerOnAll(EntityRenderDispatcher renderManager) {
-		for (EntityRenderer<? extends Player> renderer : renderManager.getSkinMap()
-			.values())
-			registerOn(renderer);
-		for (EntityRenderer<?> renderer : renderManager.renderers.values())
-			registerOn(renderer);
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void registerOn(EntityRenderer<?> entityRenderer) {
+	public static void registerOn(EntityRenderer<?> entityRenderer, RegistrationHelper helper) {
 		if (!(entityRenderer instanceof LivingEntityRenderer<?, ?> livingRenderer))
 			return;
 
@@ -167,7 +159,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 		Vec3 offset = TrainHatOffsets.getOffset(model);
 		TrainHatArmorLayer<?, ?> layer = new TrainHatArmorLayer<>(livingRenderer, offset);
-		livingRenderer.addLayer((TrainHatArmorLayer) layer);
+		helper.register(layer);
 	}
 
 	private static ModelPart getHeadPart(AgeableListModel<?> model) {
