@@ -7,7 +7,7 @@ import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileE
 import com.simibubi.create.foundation.item.CountedItemStackList;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 
 import com.simibubi.create.foundation.utility.LongAttached;
 

@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.LevelAccessor;
 public class ControlsServerHandler {
 
 	public static WorldAttached<Map<UUID, ControlsContext>> receivedInputs = new WorldAttached<>($ -> new HashMap<>());
-	static final int TIMEOUT = 30;
+	static final long TIMEOUT = 30;
 
 	public static void tick(LevelAccessor world) {
 		Map<UUID, ControlsContext> map = receivedInputs.get(world);
@@ -104,7 +104,7 @@ public class ControlsServerHandler {
 
 	}
 
-	static class ManuallyPressedKey extends IntAttached<Integer> {
+	static class ManuallyPressedKey extends LongAttached<Integer> {
 
 		public ManuallyPressedKey(Integer second) {
 			super(TIMEOUT, second);

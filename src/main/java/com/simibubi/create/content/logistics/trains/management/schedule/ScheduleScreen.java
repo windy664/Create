@@ -45,7 +45,7 @@ import com.simibubi.create.foundation.gui.widget.Indicator.State;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -308,7 +308,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		});
 	}
 
-	private List<IntAttached<String>> getViableStations(IScheduleInput field) {
+	private List<LongAttached<String>> getViableStations(IScheduleInput field) {
 		GlobalRailwayManager railwayManager = Create.RAILWAYS.sided(null);
 		Set<TrackGraph> viableGraphs = new HashSet<>(railwayManager.trackNetworks.values());
 
@@ -341,7 +341,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				.stream())
 			.filter(station -> station.tilePos != null)
 			.filter(station -> visited.add(station.name))
-			.map(station -> IntAttached.with((int) Vec3.atBottomCenterOf(station.tilePos)
+			.map(station -> LongAttached.with((int) Vec3.atBottomCenterOf(station.tilePos)
 				.distanceTo(position), station.name))
 			.toList();
 	}

@@ -15,7 +15,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.IRedstoneLinkable;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ public class LinkedControllerServerHandler {
 
 	public static WorldAttached<Map<UUID, Collection<ManualFrequencyEntry>>> receivedInputs =
 		new WorldAttached<>($ -> new HashMap<>());
-	static final int TIMEOUT = 30;
+	static final long TIMEOUT = 30;
 
 	public static void tick(LevelAccessor world) {
 		Map<UUID, Collection<ManualFrequencyEntry>> map = receivedInputs.get(world);
@@ -76,7 +76,7 @@ public class LinkedControllerServerHandler {
 		}
 	}
 
-	static class ManualFrequencyEntry extends IntAttached<Couple<Frequency>> implements IRedstoneLinkable {
+	static class ManualFrequencyEntry extends LongAttached<Couple<Frequency>> implements IRedstoneLinkable {
 
 		private BlockPos pos;
 

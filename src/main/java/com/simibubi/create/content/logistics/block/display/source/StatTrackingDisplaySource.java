@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -21,7 +21,7 @@ import net.fabricmc.api.Environment;
 public abstract class StatTrackingDisplaySource extends ScoreboardDisplaySource {
 
 	@Override
-	protected Stream<IntAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
+	protected Stream<LongAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
 		Level level = context.te()
 			.getLevel();
 		if (!(level instanceof ServerLevel sLevel))

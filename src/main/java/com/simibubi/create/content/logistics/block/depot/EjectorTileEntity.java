@@ -20,7 +20,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -72,7 +72,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class EjectorTileEntity extends KineticTileEntity implements ItemTransferable {
 
-	List<IntAttached<ItemStack>> launchedItems;
+	List<LongAttached<ItemStack>> launchedItems;
 	ScrollValueBehaviour maxStackSize;
 	DepotBehaviour depotBehaviour;
 	EntityLauncher launcher;
@@ -270,7 +270,7 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 			scanCooldown = AllConfigs.SERVER.kinetics.ejectorScanInterval.get();
 			trackedItem = stack;
 		}
-		return launchedItems.add(IntAttached.withZero(stack));
+		return launchedItems.add(LongAttached.withZero(stack));
 	}
 
 	protected Direction getFacing() {
@@ -297,17 +297,17 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 			activateDeferred();
 		}
 
-		for (Iterator<IntAttached<ItemStack>> iterator = launchedItems.iterator(); iterator.hasNext();) {
-			IntAttached<ItemStack> intAttached = iterator.next();
+		for (Iterator<LongAttached<ItemStack>> iterator = launchedItems.iterator(); iterator.hasNext();) {
+			LongAttached<ItemStack> LongAttached = iterator.next();
 			boolean hit = false;
-			if (intAttached.getSecond() == trackedItem)
-				hit = scanTrajectoryForObstacles(intAttached.getFirst());
+			if (LongAttached.getSecond() == trackedItem)
+				hit = scanTrajectoryForObstacles(LongAttached.getFirst());
 			float maxTime = earlyTarget != null ? Math.min(earlyTargetTime, totalTime) : totalTime;
-			if (hit || intAttached.exceeds((int) maxTime)) {
-				placeItemAtTarget(doLogic, maxTime, intAttached);
+			if (hit || LongAttached.exceeds((int) maxTime)) {
+				placeItemAtTarget(doLogic, maxTime, LongAttached);
 				iterator.remove();
 			}
-			intAttached.increment();
+			LongAttached.increment();
 		}
 
 		if (state == State.LAUNCHING) {
@@ -354,7 +354,7 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 			notifyUpdate();
 	}
 
-	private boolean scanTrajectoryForObstacles(int time) {
+	private boolean scanTrajectoryForObstacles(long time) {
 		if (time <= 2)
 			return false;
 
@@ -435,25 +435,25 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 		notifyUpdate();
 	}
 
-	protected void placeItemAtTarget(boolean doLogic, float maxTime, IntAttached<ItemStack> intAttached) {
+	protected void placeItemAtTarget(boolean doLogic, float maxTime, LongAttached<ItemStack> LongAttached) {
 		if (!doLogic)
 			return;
-		if (intAttached.getSecond() == trackedItem)
+		if (LongAttached.getSecond() == trackedItem)
 			trackedItem = null;
 
 		DirectBeltInputBehaviour targetOpenInv = getTargetOpenInv();
 		if (targetOpenInv != null) {
-			ItemStack remainder = targetOpenInv.handleInsertion(intAttached.getValue(), Direction.UP, false);
-			intAttached.setSecond(remainder);
+			ItemStack remainder = targetOpenInv.handleInsertion(LongAttached.getValue(), Direction.UP, false);
+			LongAttached.setSecond(remainder);
 		}
 
-		if (intAttached.getValue()
+		if (LongAttached.getValue()
 			.isEmpty())
 			return;
 
 		Vec3 ejectVec = earlyTarget != null ? earlyTarget.getFirst() : getLaunchedItemLocation(maxTime);
 		Vec3 ejectMotionVec = getLaunchedItemMotion(maxTime);
-		ItemEntity item = new ItemEntity(level, ejectVec.x, ejectVec.y, ejectVec.z, intAttached.getValue());
+		ItemEntity item = new ItemEntity(level, ejectVec.x, ejectVec.y, ejectVec.z, LongAttached.getValue());
 		item.setDeltaMovement(ejectMotionVec);
 		item.setDefaultPickUpDelay();
 		level.addFreshEntity(item);
@@ -476,10 +476,10 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 	}
 
 	public void dropFlyingItems() {
-		for (IntAttached<ItemStack> intAttached : launchedItems) {
-			Vec3 ejectVec = getLaunchedItemLocation(intAttached.getFirst());
-			Vec3 ejectMotionVec = getLaunchedItemMotion(intAttached.getFirst());
-			ItemEntity item = new ItemEntity(level, 0, 0, 0, intAttached.getValue());
+		for (LongAttached<ItemStack> LongAttached : launchedItems) {
+			Vec3 ejectVec = getLaunchedItemLocation(LongAttached.getFirst());
+			Vec3 ejectMotionVec = getLaunchedItemMotion(LongAttached.getFirst());
+			ItemEntity item = new ItemEntity(level, 0, 0, 0, LongAttached.getValue());
 			item.setPosRaw(ejectVec.x, ejectVec.y, ejectVec.z);
 			item.setDeltaMovement(ejectMotionVec);
 			item.setDefaultPickUpDelay();
@@ -542,7 +542,7 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		lidProgress.readNBT(compound.getCompound("Lid"), false);
 		launchedItems = NBTHelper.readCompoundList(compound.getList("LaunchedItems", Tag.TAG_COMPOUND),
-			nbt -> IntAttached.read(nbt, ItemStack::of));
+			nbt -> LongAttached.read(nbt, ItemStack::of));
 
 		earlyTarget = null;
 		earlyTargetTime = 0;

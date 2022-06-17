@@ -18,7 +18,7 @@ import com.simibubi.create.content.logistics.trains.management.display.FlapDispl
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.network.chat.MutableComponent;
@@ -90,8 +90,8 @@ public abstract class ValueListDisplaySource extends DisplaySource {
 	}
 
 	protected List<MutableComponent> createComponentsFromEntry(DisplayLinkContext context,
-		IntAttached<MutableComponent> entry) {
-		int number = entry.getFirst();
+		LongAttached<MutableComponent> entry) {
+		long number = entry.getFirst();
 		MutableComponent name = entry.getSecond()
 			.append(WHITESPACE);
 
@@ -137,7 +137,7 @@ public abstract class ValueListDisplaySource extends DisplaySource {
 		layout.configure(layoutKey, valueFirst ? Arrays.asList(value, name) : Arrays.asList(name, value));
 	}
 
-	private Couple<MutableComponent> shorten(int number) {
+	private Couple<MutableComponent> shorten(long number) {
 		if (number >= 1000000)
 			return Couple.create(new TextComponent(String.valueOf(number / 1000000)),
 				Lang.translate("display_source.value_list.million")

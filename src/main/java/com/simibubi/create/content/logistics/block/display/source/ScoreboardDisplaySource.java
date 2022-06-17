@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.Lang;
 
 import com.simibubi.create.foundation.utility.LongAttached;
@@ -44,12 +44,12 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 			.stream()
 			.limit(maxRows)
 			.map(score -> LongAttached.with(score.getScore(), new TextComponent(score.getOwner()).copy()))
-			.sorted(IntAttached.comparator());
+			.sorted(LongAttached.comparator());
 	}
 
 	private ImmutableList<LongAttached<MutableComponent>> notFound(String objective) {
 		return ImmutableList
-			.of(IntAttached.with(404, Lang.translate("display_source.scoreboard.objective_not_found", objective)));
+			.of(LongAttached.with(404, Lang.translate("display_source.scoreboard.objective_not_found", objective)));
 	}
 
 	@Override

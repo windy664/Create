@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -17,7 +17,7 @@ import net.minecraft.util.Mth;
 public class DestinationSuggestions extends CommandSuggestions {
 
 	private EditBox textBox;
-	private List<IntAttached<String>> viableStations;
+	private List<LongAttached<String>> viableStations;
 	private String previous = "<>";
 	private Font font;
 	private boolean active;
@@ -26,7 +26,7 @@ public class DestinationSuggestions extends CommandSuggestions {
 	private int yOffset;
 
 	public DestinationSuggestions(Minecraft pMinecraft, Screen pScreen, EditBox pInput, Font pFont,
-		List<IntAttached<String>> viableStations, int yOffset) {
+		List<LongAttached<String>> viableStations, int yOffset) {
 		super(pMinecraft, pScreen, pInput, pFont, true, true, 0, 7, false, 0xee_303030);
 		this.textBox = pInput;
 		this.font = pFont;
@@ -62,7 +62,7 @@ public class DestinationSuggestions extends CommandSuggestions {
 					.toLowerCase()
 					.startsWith(value.toLowerCase()))
 			.sorted((ia1, ia2) -> Long.compare(ia1.getFirst(), ia2.getFirst()))
-			.map(IntAttached::getValue)
+			.map(LongAttached::getValue)
 			.map(s -> new Suggestion(new StringRange(0, s.length()), s))
 			.toList();
 

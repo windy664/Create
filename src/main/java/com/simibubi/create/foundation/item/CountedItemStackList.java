@@ -8,8 +8,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.IntAttached;
-
 import com.simibubi.create.foundation.utility.LongAttached;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -39,9 +37,9 @@ public class CountedItemStackList {
 		return items.values()
 			.stream()
 			.flatMap(Collection::stream)
-			.sorted(IntAttached.comparator())
+			.sorted(LongAttached.comparator())
 			.limit(limit)
-			.map(entry -> IntAttached.with(entry.count(), entry.stack()
+			.map(entry -> LongAttached.with(entry.count(), entry.stack()
 				.getHoverName()
 				.copy()));
 	}
@@ -74,13 +72,13 @@ public class CountedItemStackList {
 		return items.get(stack.getItem());
 	}
 
-	public static class ItemStackEntry extends IntAttached<ItemStack> {
+	public static class ItemStackEntry extends LongAttached<ItemStack> {
 
 		public ItemStackEntry(ItemStack stack) {
 			this(stack, stack.getCount());
 		}
 
-		public ItemStackEntry(ItemStack stack, int amount) {
+		public ItemStackEntry(ItemStack stack, long amount) {
 			super(amount, stack);
 		}
 
@@ -92,11 +90,11 @@ public class CountedItemStackList {
 			return getSecond();
 		}
 
-		public void grow(int amount) {
+		public void grow(long amount) {
 			setFirst(getFirst() + amount);
 		}
 
-		public int count() {
+		public long count() {
 			return getFirst();
 		}
 

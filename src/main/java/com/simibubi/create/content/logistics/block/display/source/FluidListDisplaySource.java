@@ -29,7 +29,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FluidFormatter;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -75,13 +75,13 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 				.limit(maxRows)
 				.map(entry -> LongAttached.with(
 						entry.getValue(),
-						FluidVariantAttributes.getName(fluidNames.get(entry.getKey()).getType()))
+						FluidVariantAttributes.getName(fluidNames.get(entry.getKey()).getType()).copy())
 				);
 	}
 
 	@Override
-	protected List<MutableComponent> createComponentsFromEntry(DisplayLinkContext context, IntAttached<MutableComponent> entry) {
-		int amount = entry.getFirst();
+	protected List<MutableComponent> createComponentsFromEntry(DisplayLinkContext context, LongAttached<MutableComponent> entry) {
+		long amount = entry.getFirst();
 		MutableComponent name = entry.getSecond().append(WHITESPACE);
 
 		Couple<MutableComponent> formatted = FluidFormatter.asComponents(amount, shortenNumbers(context));

@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankB
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -116,8 +116,8 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 				.relative(direction))
 			.getBlock() instanceof BasinBlock;
 
-		for (IntAttached<ItemStack> intAttached : basin.visualizedOutputItems) {
-			float progress = 1 - (intAttached.getFirst() - partialTicks) / BasinTileEntity.OUTPUT_ANIMATION_TIME;
+		for (LongAttached<ItemStack> LongAttached : basin.visualizedOutputItems) {
+			float progress = 1 - (LongAttached.getFirst() - partialTicks) / BasinTileEntity.OUTPUT_ANIMATION_TIME;
 
 			if (!outToBasin && progress > .35f)
 				continue;
@@ -129,7 +129,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 				.translate(directionVec.scale(progress * .5f))
 				.rotateY(AngleHelper.horizontalAngle(direction))
 				.rotateX(progress * 180);
-			renderItem(ms, buffer, light, overlay, intAttached.getValue());
+			renderItem(ms, buffer, light, overlay, LongAttached.getValue());
 			ms.popPose();
 		}
 	}

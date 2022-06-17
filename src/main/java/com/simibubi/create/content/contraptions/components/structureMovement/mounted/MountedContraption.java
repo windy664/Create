@@ -162,7 +162,7 @@ public class MountedContraption extends Contraption {
 
 	public void addExtraInventories(Entity cart) {
 		if (cart instanceof Container container)
-			storage.attachExternal(new ContraptionInvWrapper(true, new InvWrapper(container)));
+			storage.attachExternal(new ContraptionInvWrapper(true, InventoryStorage.of(container, null)));
 	}
 
 	@Override

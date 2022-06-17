@@ -19,6 +19,10 @@ public class LongAttached<V> extends Pair<Long, V> {
 		return new LongAttached<>(0L, value);
 	}
 
+	public void setFirst(long first) {
+		super.setFirst(first);
+	}
+
 	public boolean isZero() {
 		return first == 0;
 	}

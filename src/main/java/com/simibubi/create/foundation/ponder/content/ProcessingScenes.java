@@ -23,7 +23,7 @@ import com.simibubi.create.foundation.ponder.element.EntityElement;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pointing;
@@ -421,7 +421,7 @@ public class ProcessingScenes {
 		scene.idle(80);
 		scene.world.modifyTileNBT(util.select.position(basin), BasinTileEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
-				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, purple)), ia -> NBTSerializer.serializeNBTCompound(ia.getValue())));
+				NBTHelper.writeCompoundList(ImmutableList.of(LongAttached.with(1, purple)), ia -> NBTSerializer.serializeNBTCompound(ia.getValue())));
 		});
 		scene.idle(4);
 		scene.world.createItemOnBelt(util.grid.at(1, 1, 1), Direction.UP, purple);
@@ -502,7 +502,7 @@ public class ProcessingScenes {
 			.makeCompactingParticleEffect(util.vector.centerOf(basin), copper));
 		scene.world.modifyTileNBT(util.select.position(basin), BasinTileEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
-				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, copperBlock)), ia -> NBTSerializer.serializeNBTCompound(ia.getValue())));
+				NBTHelper.writeCompoundList(ImmutableList.of(LongAttached.with(1, copperBlock)), ia -> NBTSerializer.serializeNBTCompound(ia.getValue())));
 		});
 		scene.idle(4);
 		scene.world.createItemOnBelt(util.grid.at(1, 1, 1), Direction.UP, copperBlock);
@@ -527,7 +527,7 @@ public class ProcessingScenes {
 			.makeCompactingParticleEffect(util.vector.centerOf(basin), log));
 		scene.world.modifyTileNBT(util.select.position(basin), BasinTileEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
-				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, bark)), ia -> NBTSerializer.serializeNBTCompound(ia.getValue())));
+				NBTHelper.writeCompoundList(ImmutableList.of(LongAttached.with(1, bark)), ia -> NBTSerializer.serializeNBTCompound(ia.getValue())));
 		});
 		scene.idle(4);
 		scene.world.createItemOnBelt(util.grid.at(1, 1, 1), Direction.UP, bark);
@@ -830,7 +830,7 @@ public class ProcessingScenes {
 			.makeCompactingParticleEffect(util.vector.centerOf(basinPos), stack));
 		scene.world.modifyTileNBT(util.select.position(basinPos), BasinTileEntity.class, nbt -> {
 			nbt.put("VisualizedItems",
-				NBTHelper.writeCompoundList(ImmutableList.of(IntAttached.with(1, new ItemStack(Blocks.BRICKS))),
+				NBTHelper.writeCompoundList(ImmutableList.of(LongAttached.with(1, new ItemStack(Blocks.BRICKS))),
 					ia -> NBTSerializer.serializeNBTCompound(ia.getValue())));
 		});
 		scene.idle(4);
