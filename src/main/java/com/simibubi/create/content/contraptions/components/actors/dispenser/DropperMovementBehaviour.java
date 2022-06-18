@@ -121,8 +121,7 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 		if (location.isInternal()) {
 			return getStacks(context).get(location.getSlot());
 		} else {
-			return context.contraption.getSharedInventory()
-				.getStackInSlot(location.getSlot());
+			return location.getVariant().toStack(location.getCount());
 		}
 	}
 
@@ -133,7 +132,7 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 			try (Transaction t = TransferUtil.getTransaction()) {
 				context.contraption.getSharedInventory()
 				.extract(location.getVariant(), location.getCount(), t);
-				context.contraption.inventory.insert(ItemVariant.of(stack), stack.getCount(), t);
+				context.contraption.getSharedInventory().insert(ItemVariant.of(stack), stack.getCount(), t);
 				t.commit();
 			}
 		}

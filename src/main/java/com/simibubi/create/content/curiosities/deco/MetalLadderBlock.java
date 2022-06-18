@@ -34,11 +34,11 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 		super(p_54345_);
 	}
 
-	@Override
-	@Environment(EnvType.CLIENT)
-	public boolean supportsExternalFaceHiding(BlockState state) {
-		return false;
-	}
+//	@Override // fabric: difficult to implement with little to gain
+//	@Environment(EnvType.CLIENT)
+//	public boolean supportsExternalFaceHiding(BlockState state) {
+//		return false;
+//	}
 
 	@Override
 	@Environment(EnvType.CLIENT)

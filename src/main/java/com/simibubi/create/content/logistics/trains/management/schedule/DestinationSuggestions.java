@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.simibubi.create.foundation.utility.LongAttached;
 
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.CommandSuggestions$SuggestionsListAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.CommandSuggestions;
@@ -79,7 +80,7 @@ public class DestinationSuggestions extends CommandSuggestions {
 		for (Suggestion suggestion : currentSuggestions)
 			width = Math.max(width, this.font.width(suggestion.getText()));
 		int x = Mth.clamp(textBox.getScreenX(0), 0, textBox.getScreenX(0) + textBox.getInnerWidth() - width);
-		suggestions = new CommandSuggestions.SuggestionsList(x, 72 + yOffset, width, currentSuggestions, false);
+		suggestions = CommandSuggestions$SuggestionsListAccessor.port_lib$create(this, x, 72 + yOffset, width, currentSuggestions, false);
 	}
 
 }

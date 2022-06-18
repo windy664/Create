@@ -30,6 +30,8 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 			return 0;
 		int toInsert = Math.min((int) maxAmount, resource.getItem().getMaxStackSize());
 		ItemStack stack = resource.toStack(toInsert);
+		if (!te.isItemValid(stack))
+			return 0;
 		ItemStack remainder = te.insert(new TransportedItemStack(stack), transaction);
 		return stack.getCount() - remainder.getCount();
 	}
@@ -101,12 +103,6 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 		public long getAmount() {
 			ItemStack stack = getStack();
 			return stack.isEmpty() ? 0 : stack.getCount();
-		}
-
-		// TODO TRAIN PORT
-		@Override
-		public boolean isItemValid(int slot, ItemStack stack) {
-			return slot == MAIN_SLOT && te.isItemValid(stack);
 		}
 
 		@Override

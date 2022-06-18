@@ -176,10 +176,10 @@ public class WhistleExtenderBlock extends Block implements IWrenchable {
 		}
 	}
 
-	@Override
-	public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState,
-		Direction dir) {
-		return AllBlocks.STEAM_WHISTLE.has(neighborState) && dir == Direction.DOWN;
-	}
+//	@Override // fabric: difficult to implement with little to gain
+//	public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState,
+//		Direction dir) {
+//		return AllBlocks.STEAM_WHISTLE.has(neighborState) && dir == Direction.DOWN;
+//	}
 
 }

@@ -319,10 +319,10 @@ public class FluidPipeBlock extends PipeBlock
 		return AllTileEntities.FLUID_PIPE.get();
 	}
 
-	@Override
-	public boolean supportsExternalFaceHiding(BlockState state) {
-		return false;
-	}
+//	@Override // fabric: difficult to implement with little to gain
+//	public boolean supportsExternalFaceHiding(BlockState state) {
+//		return false;
+//	}
 
 	@Override
 	public VoxelShape getOcclusionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
