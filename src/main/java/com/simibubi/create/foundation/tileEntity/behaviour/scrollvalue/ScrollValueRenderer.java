@@ -40,7 +40,7 @@ public class ScrollValueRenderer {
 			return;
 		if (!behaviour.isActive())
 			return;
-		if (behaviour.needsWrench && !AllItems.WRENCH.is(mc.player.getMainHandItem()))
+		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
 			return;
 		boolean highlight = behaviour.testHit(target.getLocation());
 

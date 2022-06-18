@@ -147,7 +147,7 @@ public class ArmInteractionPointHandler {
 	}
 
 	private static void checkForWrench(ItemStack heldItem) {
-		if (!AllItems.WRENCH.is(heldItem)) {
+		if (!AllItems.WRENCH.isIn(heldItem)) {
 			return;
 		}
 

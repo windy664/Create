@@ -60,7 +60,7 @@ public class SuperGlueHandler {
 		ItemStack itemstack = placer.getOffhandItem();
 		if (!AllItems.SUPER_GLUE.isIn(itemstack))
 			return InteractionResult.PASS;
-		if (AllItems.WRENCH.is(placer.getMainHandItem()))
+		if (AllItems.WRENCH.isIn(placer.getMainHandItem()))
 			return InteractionResult.PASS;
 		if (placedAgainst == IPlacementHelper.ID)
 			return InteractionResult.PASS;

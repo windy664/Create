@@ -45,7 +45,8 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			return false;
 
 		ItemStack heldStack = player.getItemInHand(activeHand);
-		if (AllItems.WRENCH.is(heldStack)) {
+		if (heldStack.getItem()
+				.equals(AllItems.WRENCH.get())) {
 			DeployerTileEntity.Mode mode = NBTHelper.readEnum(ctx.tileData, "Mode", DeployerTileEntity.Mode.class);
 			NBTHelper.writeEnum(ctx.tileData, "Mode",
 				mode == DeployerTileEntity.Mode.PUNCH ? DeployerTileEntity.Mode.USE : DeployerTileEntity.Mode.PUNCH);

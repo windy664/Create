@@ -80,7 +80,7 @@ public class WrenchItem extends Item {
 		if (!(target instanceof AbstractMinecart))
 			return InteractionResult.PASS;
 		ItemStack heldItem = player.getMainHandItem();
-		if (!AllItems.WRENCH.is(heldItem))
+		if (!AllItems.WRENCH.isIn(heldItem))
 			return InteractionResult.PASS;
 		if (player.isCreative())
 			return InteractionResult.PASS;

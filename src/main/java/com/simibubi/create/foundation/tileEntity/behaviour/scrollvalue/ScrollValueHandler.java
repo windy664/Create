@@ -47,7 +47,7 @@ public class ScrollValueHandler {
 			return false;
 		if (!mc.player.mayBuild())
 			return false;
-		if (scrolling.needsWrench && !AllItems.WRENCH.is(mc.player.getMainHandItem()))
+		if (scrolling.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
 			return false;
 
 		passiveScrollDirection = (float) -delta;

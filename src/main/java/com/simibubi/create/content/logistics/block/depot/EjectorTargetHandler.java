@@ -170,7 +170,7 @@ public class EjectorTargetHandler {
 
 	protected static void drawArc() {
 		Minecraft mc = Minecraft.getInstance();
-		boolean wrench = AllItems.WRENCH.is(mc.player.getMainHandItem());
+		boolean wrench = AllItems.WRENCH.isIn(mc.player.getMainHandItem());
 
 		if (currentSelection == null)
 			return;
@@ -226,7 +226,7 @@ public class EjectorTargetHandler {
 	}
 
 	private static void checkForWrench(ItemStack heldItem) {
-		if (!AllItems.WRENCH.is(heldItem))
+		if (!AllItems.WRENCH.isIn(heldItem))
 			return;
 		HitResult objectMouseOver = Minecraft.getInstance().hitResult;
 		if (!(objectMouseOver instanceof BlockHitResult))

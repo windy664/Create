@@ -224,6 +224,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 					long inserted = handler.insert(ItemVariant.of(inEntity), inEntity.getCount(), t);
 					if (inEntity.getCount() == inserted) {
 						itemEntity.discard();
+					} else {
+						inEntity.shrink((int) inserted);
 					}
 					t.commit();
 				}
