@@ -2,11 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.tterrag.registrate.fabric.EnvExecutor;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -22,7 +17,7 @@ public abstract class MovingInteractionBehaviour {
 		contraptionEntity.contraption.actors.remove(index);
 		contraptionEntity.contraption.actors.add(index, MutablePair.of(info, ctx));
 		if (contraptionEntity.level.isClientSide)
-			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> invalidate(contraptionEntity.contraption));
+			contraptionEntity.contraption.deferInvalidate = true;
 	}
 
 	protected void setContraptionBlockData(AbstractContraptionEntity contraptionEntity, BlockPos pos,
@@ -30,11 +25,6 @@ public abstract class MovingInteractionBehaviour {
 		if (contraptionEntity.level.isClientSide())
 			return;
 		contraptionEntity.setBlock(pos, info);
-	}
-
-	@Environment(EnvType.CLIENT)
-	protected void invalidate(Contraption contraption) {
-		ContraptionRenderDispatcher.invalidate(contraption);
 	}
 
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,

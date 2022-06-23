@@ -10,9 +10,11 @@ import com.simibubi.create.content.contraptions.components.steam.whistle.Whistle
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock.WhistleExtenderShape;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -47,7 +49,9 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		registerAwardables(behaviours, AllAdvancements.STEAM_WHISTLE);
+	}
 
 	public void updatePitch() {
 		BlockPos currentPos = worldPosition.above();
@@ -64,14 +68,22 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		}
 		if (prevPitch == pitch)
 			return;
+
 		notifyUpdate();
+
+		FluidTankTileEntity tank = getTank();
+		if (tank != null && tank.boiler != null)
+			tank.boiler.checkPipeOrganAdvancement(tank);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		if (!level.isClientSide())
+		if (!level.isClientSide()) {
+			if (isPowered())
+				award(AllAdvancements.STEAM_WHISTLE);
 			return;
+		}
 
 		FluidTankTileEntity tank = getTank();
 		boolean powered = isPowered() && tank != null && tank.boiler.isActive()
@@ -95,8 +107,11 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		String[] pitches = "F#;F;E;D#;D;C#;C;B;A#;A;G#;G".split(";");
-		tooltip.add(new TextComponent(spacing + "Pitch: " + pitches[pitch % pitches.length]));
+		String[] pitches = Lang.translate("generic.notes")
+			.getString()
+			.split(";");
+		TextComponent textComponent = new TextComponent(spacing);
+		tooltip.add(textComponent.append(Lang.translate("generic.pitch", pitches[pitch % pitches.length])));
 		return true;
 	}
 
@@ -154,6 +169,12 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		Vec3 m = offset.subtract(Vec3.atLowerCornerOf(facing.getNormal())
 			.scale(.75f));
 		level.addParticle(new SteamJetParticleData(1), v.x, v.y, v.z, m.x, m.y, m.z);
+	}
+
+	public int getPitchId() {
+		return pitch + 100 * getBlockState().getOptionalValue(WhistleBlock.SIZE)
+			.orElse(WhistleSize.MEDIUM)
+			.ordinal();
 	}
 
 	public FluidTankTileEntity getTank() {

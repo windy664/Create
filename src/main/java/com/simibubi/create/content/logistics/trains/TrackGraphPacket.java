@@ -9,12 +9,13 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 public abstract class TrackGraphPacket extends SimplePacketBase {
 
 	public UUID graphId;
+	public int netId;
 	public boolean packetDeletesGraph;
 
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get()
-			.enqueueWork(() -> handle(CreateClient.RAILWAYS, CreateClient.RAILWAYS.getOrCreateGraph(graphId)));
+			.enqueueWork(() -> handle(CreateClient.RAILWAYS, CreateClient.RAILWAYS.getOrCreateGraph(graphId, netId)));
 		context.get()
 			.setPacketHandled(true);
 	}

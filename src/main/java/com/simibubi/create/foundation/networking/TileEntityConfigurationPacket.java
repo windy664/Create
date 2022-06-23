@@ -46,6 +46,8 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 				BlockEntity tileEntity = world.getBlockEntity(pos);
 				if (tileEntity instanceof SyncedTileEntity) {
 					applySettings(player, (TE) tileEntity);
+					if (!causeUpdate())
+						return;
 					((SyncedTileEntity) tileEntity).sendData();
 					tileEntity.setChanged();
 				}
@@ -65,6 +67,10 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 
 	protected void applySettings(ServerPlayer player, TE te) {
 		applySettings(te);
+	}
+	
+	protected boolean causeUpdate() {
+		return true;
 	}
 
 	protected abstract void applySettings(TE te);

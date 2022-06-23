@@ -65,6 +65,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -163,7 +164,9 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 					.offset(new BlockPos(bestAxis.scale(neg ? -1 : 1)));
 
 				if (level.getBlockState(offset)
-					.isFaceSturdy(level, offset, Direction.UP)) {
+					.isFaceSturdy(level, offset, Direction.UP)
+					&& !level.getBlockState(offset.above())
+						.isFaceSturdy(level, offset, Direction.DOWN)) {
 					if (best == TrackShape.XO)
 						best = neg ? TrackShape.AW : TrackShape.AE;
 					if (best == TrackShape.ZO)
@@ -180,6 +183,19 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 	}
 
 	@Override
+	public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
+		super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
+		if (pLevel.isClientSide())
+			return;
+		if (!pPlayer.isCreative())
+			return;
+		withTileEntityDo(pLevel, pPos, te -> {
+			te.cancelDrops = true;
+			te.removeInboundConnections();
+		});
+	}
+
+	@Override
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
 		if (pOldState.getBlock() == this && pState.setValue(HAS_TE, true) == pOldState.setValue(HAS_TE, true))
 			return;
@@ -189,6 +205,12 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 		if (!blockTicks.hasScheduledTick(pPos, this))
 			pLevel.scheduleTick(pPos, this, 1);
 		updateGirders(pState, pLevel, pPos, blockTicks);
+	}
+
+	@Override
+	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
+		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		withTileEntityDo(pLevel, pPos, TrackTileEntity::validateConnections);
 	}
 
 	@Override

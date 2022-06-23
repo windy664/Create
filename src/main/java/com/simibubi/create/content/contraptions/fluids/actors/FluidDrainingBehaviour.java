@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
@@ -189,7 +189,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			Fluid finalFluid = fluid;
 			TransactionCallback.onSuccess(ctx, () -> {
 				playEffect(world, currentPos, finalFluid, true);
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getBlockPos(), 8);
+				tileEntity.award(AllAdvancements.HOSE_PULLEY);
 
 				if (infinite) {
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_FLUID.constructTriggerFor(FluidHelper.convertToStill(finalFluid)), world, tileEntity.getBlockPos(), 8);
@@ -197,9 +197,8 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			});
 
 			if (infinite) {
-				AllTriggers.triggerForNearbyPlayers(
-					AllTriggers.INFINITE_FLUID.constructTriggerFor(FluidHelper.convertToStill(fluid)), world,
-					tileEntity.getBlockPos(), 8);
+				if (FluidHelper.isLava(fluid))
+					tileEntity.award(AllAdvancements.HOSE_PULLEY_LAVA);
 				return true;
 			}
 

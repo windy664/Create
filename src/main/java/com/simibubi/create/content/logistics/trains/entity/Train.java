@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -58,6 +59,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime.State;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
@@ -132,6 +134,9 @@ public class Train {
 
 	int tickOffset;
 	double[] stress;
+
+	// advancements
+	public Player backwardsDriver;
 
 	public Train(UUID id, UUID owner, TrackGraph graph, List<Carriage> carriages, List<Integer> carriageSpacing,
 		boolean doubleEnded) {
@@ -371,6 +376,7 @@ public class Train {
 			if (index == 0) {
 				distance = actualDistance;
 				collideWithOtherTrains(level, carriage);
+				backwardsDriver = null;
 				if (graph == null)
 					return;
 			}
@@ -387,7 +393,6 @@ public class Train {
 			navigation.cancelNavigation();
 			runtime.tick(level);
 			derailed = true;
-			syncTrackGraphChanges();
 			status.highStress();
 
 		} else if (speed != 0)
@@ -430,6 +435,11 @@ public class Train {
 			SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(groupId);
 			if (signalEdgeGroup == null)
 				return false;
+
+			if ((runtime.getSchedule() == null || runtime.paused) && signalEdgeGroup.isOccupiedUnless(this))
+				carriages.forEach(c -> c.forEachPresentEntity(cce -> cce.getControllingPlayer()
+					.ifPresent(uuid -> AllAdvancements.RED_SIGNAL.awardTo(cce.level.getPlayerByUUID(uuid)))));
+
 			signalEdgeGroup.reserved = signal;
 			occupy(groupId, signal.id);
 			return false;
@@ -663,8 +673,22 @@ public class Train {
 		speed = -Mth.clamp(speed, -.5, .5);
 		derailed = true;
 		graph = null;
-		syncTrackGraphChanges();
 		status.crash();
+
+		for (Carriage carriage : carriages)
+			carriage.forEachPresentEntity(e -> e.getIndirectPassengers()
+				.forEach(entity -> {
+					if (!(entity instanceof Player p))
+						return;
+					Optional<UUID> controllingPlayer = e.getControllingPlayer();
+					if (controllingPlayer.isPresent() && controllingPlayer.get()
+						.equals(p.getUUID()))
+						return;
+					AllAdvancements.TRAIN_CRASH.awardTo(p);
+				}));
+
+		if (backwardsDriver != null)
+			AllAdvancements.TRAIN_CRASH_BACKWARDS.awardTo(backwardsDriver);
 	}
 
 	public boolean disassemble(ServerPlayer sender, Direction assemblyDirection, BlockPos pos) {
@@ -805,7 +829,6 @@ public class Train {
 			migrationCooldown = 40;
 			status.failedMigration();
 			derailed = true;
-			syncTrackGraphChanges();
 			return;
 		}
 
@@ -824,14 +847,8 @@ public class Train {
 				currentStation.reserveFor(this);
 			updateSignalBlocks = true;
 			migrationCooldown = 0;
-			syncTrackGraphChanges();
 			return;
 		}
-	}
-
-	public void syncTrackGraphChanges() {
-		for (Carriage carriage : carriages)
-			carriage.forEachPresentEntity(e -> e.setGraph(graph == null ? null : graph.id));
 	}
 
 	public int getTotalLength() {

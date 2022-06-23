@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -49,8 +50,10 @@ public class HonkPacket extends SimplePacketBase {
 					train.honkTicks = train.honkTicks == 0 ? 20 : 13;
 				else
 					train.honkTicks = train.honkTicks > 5 ? 6 : 0;
-			} else
+			} else {
+				AllAdvancements.TRAIN_WHISTLE.awardTo(sender);
 				AllPackets.channel.sendToClientsInCurrentServer(new HonkPacket(train, isHonk));
+			}
 
 		});
 		c.setPacketHandled(true);

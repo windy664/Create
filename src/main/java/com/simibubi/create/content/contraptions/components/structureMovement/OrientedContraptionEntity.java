@@ -25,8 +25,7 @@ import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -76,7 +75,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	public float prevPitch;
 	public float pitch;
-	
+
 	public int nonDamageTicks;
 
 	public OrientedContraptionEntity(EntityType<?> type, Level world) {
@@ -606,5 +605,11 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		}
 
 		return Vec3.ZERO;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void handleRelocationPacket(ContraptionRelocationPacket packet) {
+		if (Minecraft.getInstance().level.getEntity(packet.entityID) instanceof OrientedContraptionEntity oce)
+			oce.nonDamageTicks = 10;
 	}
 }

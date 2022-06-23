@@ -38,6 +38,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePoi
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItem;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -96,7 +97,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 
 	int flagYRot = -1;
 	boolean flagFlipped;
-	
+
 	public Component lastDisassembledTrainName;
 
 	public StationTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -114,6 +115,8 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		behaviours.add(depotBehaviour = new DepotBehaviour(this).onlyAccepts(AllItems.SCHEDULE::isIn)
 			.withCallback(s -> applyAutoSchedule()));
 		depotBehaviour.addSubBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS, AllAdvancements.TRAIN,
+			AllAdvancements.LONG_TRAIN, AllAdvancements.CONDUCTOR);
 	}
 
 	@Override
@@ -122,6 +125,9 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		failedCarriageIndex = tag.getInt("FailedCarriageIndex");
 		super.read(tag, clientPacket);
 		invalidateRenderBoundingBox();
+
+		if (tag.contains("PrevTrainName"))
+			lastDisassembledTrainName = Component.Serializer.fromJson(tag.getString("PrevTrainName"));
 
 		if (!clientPacket)
 			return;
@@ -145,6 +151,9 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		AssemblyException.write(tag, lastException);
 		tag.putInt("FailedCarriageIndex", failedCarriageIndex);
+
+		if (lastDisassembledTrainName != null)
+			tag.putString("PrevTrainName", Component.Serializer.toJson(lastDisassembledTrainName));
 
 		super.write(tag, clientPacket);
 
@@ -396,12 +405,12 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	}
 
 	public boolean isValidBogeyOffset(int i) {
-		if ((i < 4 || bogeyCount == 0) && i != 0)
+		if ((i < 3 || bogeyCount == 0) && i != 0)
 			return false;
 		for (int j : bogeyLocations) {
 			if (j == -1)
 				break;
-			if (i >= j - 3 && i <= j + 3)
+			if (i >= j - 2 && i <= j + 2)
 				return false;
 		}
 		return true;
@@ -464,13 +473,21 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			return;
 
 		List<Double> pointOffsets = new ArrayList<>();
+		int iPrevious = -100;
 		for (int i = 0; i < bogeyLocations.length; i++) {
 			int loc = bogeyLocations[i];
 			if (loc == -1)
 				break;
+
+			if (loc - iPrevious < 3) {
+				exception(new AssemblyException(Lang.translate("train_assembly.bogeys_too_close", i, i + 1)), -1);
+				return;
+			}
+
 			double bogeySize = bogeyTypes[i].getWheelPointSpacing();
 			pointOffsets.add(Double.valueOf(loc + .5 - bogeySize / 2));
 			pointOffsets.add(Double.valueOf(loc + .5 + bogeySize / 2));
+			iPrevious = loc;
 		}
 
 		List<TravellingPoint> points = new ArrayList<>();
@@ -612,15 +629,19 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 
 		Train train = new Train(UUID.randomUUID(), playerUUID, graph, carriages, spacing, contraptions.stream()
 			.anyMatch(CarriageContraption::hasBackwardControls));
-		
+
 		if (lastDisassembledTrainName != null) {
 			train.name = lastDisassembledTrainName;
 			lastDisassembledTrainName = null;
 		}
 
-		for (int i = 0; i < contraptions.size(); i++)
-			carriages.get(i)
-				.setContraption(level, contraptions.get(i));
+		for (int i = 0; i < contraptions.size(); i++) {
+			CarriageContraption contraption = contraptions.get(i);
+			Carriage carriage = carriages.get(i);
+			carriage.setContraption(level, contraption);
+			if (contraption.containsBlockBreakers())
+				award(AllAdvancements.CONTRAPTION_ACTORS);
+		}
 
 		GlobalStation station = getStation();
 		if (station != null) {
@@ -632,6 +653,10 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		Create.RAILWAYS.addTrain(train);
 		AllPackets.channel.sendToClientsInServer(new TrainPacket(train, true), level.getServer());
 		clearException();
+
+		award(AllAdvancements.TRAIN);
+		if (contraptions.size() >= 6)
+			award(AllAdvancements.LONG_TRAIN);
 	}
 
 	public void cancelAssembly() {
@@ -687,6 +712,8 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		Train imminentTrain = station.getImminentTrain();
 		if (imminentTrain == null || imminentTrain.getCurrentStation() != station)
 			return;
+
+		award(AllAdvancements.CONDUCTOR);
 		imminentTrain.runtime.setSchedule(schedule, true);
 		AllSoundEvents.CONFIRM.playOnServer(level, worldPosition, 1, 1);
 

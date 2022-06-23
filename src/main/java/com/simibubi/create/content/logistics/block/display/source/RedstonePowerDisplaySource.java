@@ -6,6 +6,8 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -17,8 +19,8 @@ public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySourc
 	}
 
 	@Override
-	protected String formatNumeric(Float currentLevel) {
-		return String.valueOf((int) (currentLevel * 15));
+	protected MutableComponent formatNumeric(DisplayLinkContext context, Float currentLevel) {
+		return new TextComponent(String.valueOf((int) (currentLevel * 15)));
 	}
 
 	@Override

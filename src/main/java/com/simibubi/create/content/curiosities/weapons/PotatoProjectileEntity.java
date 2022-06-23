@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
@@ -186,8 +186,17 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 			return;
 		if (owner instanceof LivingEntity)
 			((LivingEntity) owner).setLastHurtMob(target);
-		if (target instanceof PotatoProjectileEntity && tickCount < 10 && target.tickCount < 10)
-			return;
+
+		if (target instanceof PotatoProjectileEntity ppe) {
+			if (tickCount < 10 && target.tickCount < 10)
+				return;
+			if (ppe.getProjectileType() != getProjectileType()) {
+				if (owner instanceof Player p)
+					AllAdvancements.POTATO_CANNON_COLLIDE.awardTo(p);
+				if (ppe.getOwner() instanceof Player p)
+					AllAdvancements.POTATO_CANNON_COLLIDE.awardTo(p);
+			}
+		}
 
 		pop(hit);
 
@@ -249,9 +258,8 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (onServer && owner instanceof ServerPlayer) {
 			ServerPlayer serverplayerentity = (ServerPlayer) owner;
 			if (!target.isAlive() && target.getType()
-				.getCategory() == MobCategory.MONSTER
-				|| (target instanceof Player && target != owner))
-				AllTriggers.POTATO_KILL.trigger(serverplayerentity);
+				.getCategory() == MobCategory.MONSTER || (target instanceof Player && target != owner))
+				AllAdvancements.POTATO_CANNON.awardTo(serverplayerentity);
 		}
 
 		if (type.isSticky() && target.isAlive()) {
@@ -301,7 +309,8 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (!stack.isEmpty()) {
 			for (int i = 0; i < 7; i++) {
 				Vec3 m = VecHelper.offsetRandomly(Vec3.ZERO, this.random, .25f);
-				level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), hit.x, hit.y, hit.z, m.x, m.y, m.z);
+				level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), hit.x, hit.y, hit.z, m.x, m.y,
+					m.z);
 			}
 		}
 		if (!level.isClientSide)

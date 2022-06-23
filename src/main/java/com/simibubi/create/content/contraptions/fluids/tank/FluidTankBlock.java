@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidHelper.FluidExchange;
@@ -32,6 +33,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -54,6 +56,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, CustomSoundTypeBlock {
@@ -71,6 +74,12 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	public static FluidTankBlock creative(Properties p_i48440_1_) {
 		return new FluidTankBlock(p_i48440_1_, true);
+	}
+
+	@Override
+	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
+		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
 
 	protected FluidTankBlock(Properties p_i48440_1_, boolean creative) {
@@ -131,7 +140,12 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			return CAMPFIRE_SMOKE_CLIP;
 		return pState.getShape(pLevel, pPos);
 	}
-
+	
+	@Override
+	public VoxelShape getBlockSupportShape(BlockState pState, BlockGetter pReader, BlockPos pPos) {
+		return Shapes.block();
+	}
+	
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
@@ -191,6 +205,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 				.createLegacyBlock();
 			soundevent = FluidVariantAttributes.getEmptySound(FluidVariant.of(fluid));
 		}
+		
 		if (exchange == FluidExchange.TANK_TO_ITEM) {
 			if (creative && !onClient)
 				if (fluidTank instanceof CreativeSmartFluidTank)

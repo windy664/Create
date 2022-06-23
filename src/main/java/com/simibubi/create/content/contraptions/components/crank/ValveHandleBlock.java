@@ -5,7 +5,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import io.github.fabricators_of_create.porting_lib.util.TagUtil;
+import com.simibubi.create.foundation.utility.Couple;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -73,6 +73,10 @@ public class ValveHandleBlock extends HandCrankBlock {
 	@Override
 	public int getRotationSpeed() {
 		return 16;
+	}
+
+	public static Couple<Integer> getSpeedRange() {
+		return Couple.create(16, 16);
 	}
 
 }

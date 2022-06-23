@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
@@ -56,6 +57,8 @@ public class PumpTileEntity extends KineticTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		behaviours.add(new PumpFluidTransferBehaviour(this));
+		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
+		registerAwardables(behaviours, AllAdvancements.PUMP);
 	}
 
 	@Override
@@ -103,8 +106,10 @@ public class PumpTileEntity extends KineticTileEntity {
 
 		if (previousSpeed == getSpeed())
 			return;
-		if (speed != 0)
+		if (speed != 0) {
 			reversed = speed < 0;
+			award(AllAdvancements.PUMP);
+		}
 		if (level.isClientSide && !isVirtual())
 			return;
 

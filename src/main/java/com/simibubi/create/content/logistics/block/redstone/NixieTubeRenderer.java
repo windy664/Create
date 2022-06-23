@@ -199,5 +199,10 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		ms.popPose();
 
 	}
+	
+	@Override
+	public int getViewDistance() {
+		return 128;
+	}
 
 }

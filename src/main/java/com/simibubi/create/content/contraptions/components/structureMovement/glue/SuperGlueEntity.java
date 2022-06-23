@@ -58,6 +58,7 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -76,7 +77,8 @@ public class SuperGlueEntity extends Entity
 			for (SuperGlueEntity glueEntity : cached)
 				if (glueEntity.contains(blockPos) && glueEntity.contains(targetPos))
 					return true;
-		for (SuperGlueEntity glueEntity : level.getEntitiesOfClass(SuperGlueEntity.class, span(blockPos, targetPos))) {
+		for (SuperGlueEntity glueEntity : level.getEntitiesOfClass(SuperGlueEntity.class,
+			span(blockPos, targetPos).inflate(16))) {
 			if (!glueEntity.contains(blockPos) || !glueEntity.contains(targetPos))
 				continue;
 			if (cached != null)
@@ -298,6 +300,11 @@ public class SuperGlueEntity extends Entity
 		return getBoundingBox().contains(Vec3.atCenterOf(pos));
 	}
 
+	@Override
+	public PushReaction getPistonPushReaction() {
+		return PushReaction.IGNORE;
+	}
+	
 	@Override
 	public PortalInfo findDimensionEntryPoint(ServerLevel pDestination) {
 		portalEntrancePos = blockPosition();

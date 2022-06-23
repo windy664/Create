@@ -10,8 +10,10 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
@@ -22,6 +24,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -58,6 +61,12 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 		super.createBlockStateDefinition(pBuilder.add(FACE, FACING, WATERLOGGED));
 	}
 
+	@Override
+	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
+		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
+	}
+	
 	@Override
 	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
 		return canAttach(pLevel, pPos, getConnectedDirection(pState).getOpposite());
@@ -194,6 +203,10 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 				s -> BlockHelper.copyProperties(s, AllBlocks.POWERED_SHAFT.getDefaultState())
 					.setValue(PoweredShaftBlock.AXIS, axis));
 		}
+	}
+	
+	public static Couple<Integer> getSpeedRange() {
+		return Couple.create(16, 64);
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionDisassemblyPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRelocationPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.TrainCollisionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionUpdatePacket;
@@ -29,6 +30,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartControllerUpdatePacket;
 import com.simibubi.create.content.contraptions.fluids.actors.FluidSplashPacket;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
+import com.simibubi.create.content.contraptions.relays.gauge.GaugeObservedPacket;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectPacket;
 import com.simibubi.create.content.curiosities.symmetry.ConfigureSymmetryWandPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
@@ -40,6 +42,7 @@ import com.simibubi.create.content.curiosities.weapons.PotatoCannonPacket;
 import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
 import com.simibubi.create.content.curiosities.zapper.ZapperBeamPacket;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.ConfigureWorldshaperPacket;
+import com.simibubi.create.content.logistics.block.depot.EjectorAwardPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorElytraPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorPlacementPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorTriggerPacket;
@@ -52,6 +55,8 @@ import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
+import com.simibubi.create.content.logistics.trains.TrackGraphRequestPacket;
+import com.simibubi.create.content.logistics.trains.TrackGraphRollCallPacket;
 import com.simibubi.create.content.logistics.trains.TrackGraphSyncPacket;
 import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
 import com.simibubi.create.content.logistics.trains.entity.TrainPromptPacket;
@@ -64,7 +69,6 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleEditPacket;
 import com.simibubi.create.content.logistics.trains.track.CurvedTrackDestroyPacket;
 import com.simibubi.create.content.logistics.trains.track.PlaceExtendedCurvePacket;
-import com.simibubi.create.content.logistics.trains.track.TrackRemovalPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
@@ -130,7 +134,6 @@ public enum AllPackets {
 	C_CONFIGURE_TRAIN(TrainEditPacket.class, TrainEditPacket::new, PLAY_TO_SERVER),
 	RELOCATE_TRAIN(TrainRelocationPacket.class, TrainRelocationPacket::new, PLAY_TO_SERVER),
 	CONTROLS_INPUT(ControlsInputPacket.class, ControlsInputPacket::new, PLAY_TO_SERVER),
-	REMOVE_TRACKS(TrackRemovalPacket.class, TrackRemovalPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_DATA_GATHERER(DisplayLinkConfigurationPacket.class, DisplayLinkConfigurationPacket::new, PLAY_TO_SERVER),
 	DESTROY_CURVED_TRACK(CurvedTrackDestroyPacket.class, CurvedTrackDestroyPacket::new, PLAY_TO_SERVER),
 	SELECT_CURVED_TRACK(CurvedTrackSelectionPacket.class, CurvedTrackSelectionPacket::new, PLAY_TO_SERVER),
@@ -140,6 +143,9 @@ public enum AllPackets {
 	TRAIN_COLLISION(TrainCollisionPacket.class, TrainCollisionPacket::new, PLAY_TO_SERVER),
 	C_TRAIN_HUD(TrainHUDUpdatePacket.Serverbound.class, TrainHUDUpdatePacket.Serverbound::new, PLAY_TO_SERVER),
 	C_TRAIN_HONK(HonkPacket.Serverbound.class, HonkPacket.Serverbound::new, PLAY_TO_SERVER),
+	OBSERVER_STRESSOMETER(GaugeObservedPacket.class, GaugeObservedPacket::new, PLAY_TO_SERVER),
+	EJECTOR_AWARD(EjectorAwardPacket.class, EjectorAwardPacket::new, PLAY_TO_SERVER),
+	TRACK_GRAPH_REQUEST(TrackGraphRequestPacket.class, TrackGraphRequestPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),
@@ -174,6 +180,8 @@ public enum AllPackets {
 	S_TRAIN_HUD(TrainHUDUpdatePacket.class, TrainHUDUpdatePacket::new, PLAY_TO_CLIENT),
 	S_TRAIN_HONK(HonkPacket.class, HonkPacket::new, PLAY_TO_CLIENT),
 	S_TRAIN_PROMPT(TrainPromptPacket.class, TrainPromptPacket::new, PLAY_TO_CLIENT),
+	CONTRAPTION_RELOCATION(ContraptionRelocationPacket.class, ContraptionRelocationPacket::new, PLAY_TO_CLIENT),
+	TRACK_GRAPH_ROLL_CALL(TrackGraphRollCallPacket.class, TrackGraphRollCallPacket::new, PLAY_TO_CLIENT),
 
 	;
 

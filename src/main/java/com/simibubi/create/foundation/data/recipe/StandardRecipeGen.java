@@ -98,6 +98,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			metalCompacting(ImmutableList.of(AllItems.ZINC_NUGGET, AllItems.ZINC_INGOT, AllBlocks.ZINC_BLOCK),
 				ImmutableList.of(I::zincNugget, I::zinc, I::zincBlock)),
 
+		ROSE_QUARTZ_CYCLE =
+			conversionCycle(ImmutableList.of(AllBlocks.ROSE_QUARTZ_TILES, AllBlocks.SMALL_ROSE_QUARTZ_TILES)),
+
 		ANDESITE_ALLOY = create(AllItems.ANDESITE_ALLOY).unlockedByTag(I::iron)
 			.viaShaped(b -> b.define('A', Blocks.ANDESITE)
 				.define('B', Tags.Items.NUGGETS_IRON)
@@ -157,16 +160,32 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaShaped(b -> b.define('I', I.brassBlock())
 				.define('P', I.brassSheet())
 				.pattern("I")
-				.pattern("P"))
+				.pattern("P")),
+
+		CAKE = create(() -> Items.CAKE).unlockedByTag(() -> AllTags.forgeItemTag("dough"))
+			.viaShaped(b -> b.define('E', Tags.Items.EGGS)
+				.define('S', Items.SUGAR)
+				.define('P', AllTags.forgeItemTag("dough"))
+				.define('M', () -> Items.MILK_BUCKET)
+				.pattern(" M ")
+				.pattern("SES")
+				.pattern(" P "))
 
 	;
 
 	private Marker KINETICS = enterSection(AllSections.KINETICS);
 
-	GeneratedRecipe BASIN = create(AllBlocks.BASIN).unlockedBy(I::andesite)
+	GeneratedRecipe ANDESITE_LADDER = create(AllBlocks.ANDESITE_LADDER).returns(4)
+		.unlockedBy(I::andesite)
 		.viaShaped(b -> b.define('A', I.andesite())
 			.pattern("A A")
-			.pattern("AAA")),
+			.pattern("AAA")
+			.pattern("A A")),
+
+		BASIN = create(AllBlocks.BASIN).unlockedBy(I::andesite)
+			.viaShaped(b -> b.define('A', I.andesite())
+				.pattern("A A")
+				.pattern("AAA")),
 
 		GOGGLES = create(AllItems.GOGGLES).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('G', Tags.Items.GLASS)
@@ -328,6 +347,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.define('P', Tags.Items.RODS_WOODEN)
 				.pattern("P")
 				.pattern("S")),
+
+		ROSE_QUARTZ_LAMP = create(AllBlocks.ROSE_QUARTZ_LAMP).unlockedByTag(I::zinc)
+			.viaShapeless(b -> b.requires(AllItems.POLISHED_ROSE_QUARTZ.get())
+				.requires(I.redstone())
+				.requires(I.zinc())),
 
 		BELT_CONNECTOR = create(AllItems.BELT_CONNECTOR).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('D', Items.DRIED_KELP)
@@ -958,8 +982,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	GeneratedRecipe
 
-	DOUGH = create(AllItems.DOUGH).unlockedBy(AllItems.WHEAT_FLOUR::get)
-		.viaShapeless(b -> b.requires(AllItems.WHEAT_FLOUR.get())
+	DOUGH = create(AllItems.DOUGH).unlockedByTag(I::wheatFlour)
+		.viaShapeless(b -> b.requires(I.wheatFlour())
 			.requires(Items.WATER_BUCKET)),
 
 		DIVING_HELMET = create(AllItems.DIVING_HELMET).unlockedBy(I::copper)

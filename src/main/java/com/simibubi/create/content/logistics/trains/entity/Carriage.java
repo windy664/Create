@@ -24,13 +24,13 @@ import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import org.apache.commons.lang3.mutable.MutableDouble;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.TrainCargoManager;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -745,6 +745,7 @@ public class Carriage {
 					.getLevel(other.getKey());
 				sp.teleportTo(level, loc.x, loc.y, loc.z, sp.getYRot(), sp.getXRot());
 				sp.setPortalCooldown();
+				AllAdvancements.TRAIN_PORTAL.awardTo(sp);
 			}
 		}
 
@@ -764,7 +765,7 @@ public class Carriage {
 
 		@Environment(EnvType.CLIENT)
 		private void invalidate(CarriageContraptionEntity entity) {
-			ContraptionRenderDispatcher.invalidate(entity.getContraption());
+			entity.getContraption().deferInvalidate = true;
 			entity.updateRenderedPortalCutoff();
 		}
 
@@ -780,7 +781,6 @@ public class Carriage {
 			entity.moveTo(positionAnchor);
 			this.entity = new WeakReference<>(cce);
 
-			cce.setGraph(train.graph == null ? null : train.graph.id);
 			cce.setCarriage(Carriage.this);
 			cce.syncCarriage();
 

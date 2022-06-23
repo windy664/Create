@@ -28,6 +28,7 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -106,6 +107,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 		filtering = new FilteringBehaviour(this, new SawFilterSlot()).forRecipes();
 		behaviours.add(filtering);
 		behaviours.add(new DirectBeltInputBehaviour(this).allowingBeltFunnelsWhen(this::canProcess));
+		registerAwardables(behaviours, AllAdvancements.SAW_PROCESSING);
 	}
 
 	@Override
@@ -349,10 +351,11 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 				ItemHelper.addToList(stack, list);
 			}
 		}
-		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++) {
+		
+		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++) 
 			inventory.setStackInSlot(slot + 1, list.get(slot));
-		}
 
+		award(AllAdvancements.SAW_PROCESSING);
 	}
 
 	private List<? extends Recipe<?>> getRecipes() {

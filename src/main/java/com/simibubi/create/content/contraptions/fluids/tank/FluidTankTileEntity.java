@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
@@ -337,8 +338,10 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 							fte.refreshCapability();
 		}
 
-		if (changed)
+		if (changed) {
 			notifyUpdate();
+			boiler.checkPipeOrganAdvancement(this);
+		}
 	}
 
 	@Override
@@ -498,7 +501,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		registerAwardables(behaviours, AllAdvancements.STEAM_ENGINE_MAXED, AllAdvancements.PIPE_ORGAN);
+	}
 
 	public FluidTank getTankInventory() {
 		return tankInventory;

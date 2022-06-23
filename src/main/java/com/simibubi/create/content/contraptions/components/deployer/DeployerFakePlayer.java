@@ -51,6 +51,7 @@ public class DeployerFakePlayer extends FakeServerPlayer {
 	public static final FakePlayerBuilder BUILDER = new FakePlayerBuilder(Create.asResource("deployer"));
 	Pair<BlockPos, Float> blockBreakingProgress;
 	ItemStack spawnedItemEffects;
+	public boolean placedTracks;
 
 	public DeployerFakePlayer(ServerLevel world) {
 		super(BUILDER, world.getServer(), world, DEPLOYER_PROFILE);

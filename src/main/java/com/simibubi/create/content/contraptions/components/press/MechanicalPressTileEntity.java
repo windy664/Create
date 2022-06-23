@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.press;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
@@ -13,8 +14,9 @@ import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEnt
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.advancement.ITriggerable;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
@@ -27,12 +29,7 @@ import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -49,6 +46,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity implemen
 	private static final Object compressingRecipesKey = new Object();
 
 	public PressingBehaviour pressingBehaviour;
+	private int tracksCreated;
 
 	public MechanicalPressTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -65,6 +63,19 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity implemen
 		super.addBehaviours(behaviours);
 		pressingBehaviour = new PressingBehaviour(this);
 		behaviours.add(pressingBehaviour);
+
+		registerAwardables(behaviours, AllAdvancements.PRESS, AllAdvancements.COMPACTING,
+			AllAdvancements.TRACK_CRAFTING);
+	}
+
+	public void onItemPressed(ItemStack result) {
+		award(AllAdvancements.PRESS);
+		if (AllBlocks.TRACK.isIn(result))
+			tracksCreated += result.getCount();
+		if (tracksCreated >= 1000) {
+			award(AllAdvancements.TRACK_CRAFTING);
+			tracksCreated = 0;
+		}
 	}
 
 	public PressingBehaviour getPressingBehaviour() {
@@ -91,6 +102,19 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity implemen
 	}
 
 	@Override
+	protected void write(CompoundTag compound, boolean clientPacket) {
+		super.write(compound, clientPacket);
+		if (getBehaviour(AdvancementBehaviour.TYPE).isOwnerPresent())
+			compound.putInt("TracksCreated", tracksCreated);
+	}
+
+	@Override
+	protected void read(CompoundTag compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
+		tracksCreated = compound.getInt("TracksCreated");
+	}
+
+	@Override
 	public boolean tryProcessInWorld(ItemEntity itemEntity, boolean simulate) {
 		ItemStack item = itemEntity.getItem();
 		Optional<PressingRecipe> recipe = getRecipe(item);
@@ -99,12 +123,17 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity implemen
 		if (simulate)
 			return true;
 
+		ItemStack itemCreated = ItemStack.EMPTY;
 		pressingBehaviour.particleItems.add(item);
 		if (canProcessInBulk() || item.getCount() == 1) {
 			InWorldProcessing.applyRecipeOn(itemEntity, recipe.get());
+			itemCreated = itemEntity.getItem()
+				.copy();
 		} else {
 			for (ItemStack result : InWorldProcessing.applyRecipeOn(ItemHandlerHelper.copyStackWithSize(item, 1),
 				recipe.get())) {
+				if (itemCreated.isEmpty())
+					itemCreated = result.copy();
 				ItemEntity created =
 					new ItemEntity(level, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result);
 				created.setDefaultPickUpDelay();
@@ -114,7 +143,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity implemen
 			item.shrink(1);
 		}
 
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, level, worldPosition, 4);
+		if (!itemCreated.isEmpty())
+			onItemPressed(itemCreated);
 		return true;
 	}
 
@@ -126,9 +156,17 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity implemen
 		if (simulate)
 			return true;
 		pressingBehaviour.particleItems.add(input.stack);
-		outputList.addAll(InWorldProcessing.applyRecipeOn(
-			canProcessInBulk() ? input.stack : ItemHandlerHelper.copyStackWithSize(input.stack, 1), recipe.get()));
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, level, worldPosition, 4);
+		List<ItemStack> outputs = InWorldProcessing.applyRecipeOn(
+			canProcessInBulk() ? input.stack : ItemHandlerHelper.copyStackWithSize(input.stack, 1), recipe.get());
+
+		for (ItemStack created : outputs) {
+			if (!created.isEmpty()) {
+				onItemPressed(created);
+				break;
+			}
+		}
+
+		outputList.addAll(outputs);
 		return true;
 	}
 
@@ -210,8 +248,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity implemen
 	}
 
 	@Override
-	protected Optional<ITriggerable> getProcessedRecipeTrigger() {
-		return Optional.of(AllTriggers.PRESS_COMPACT);
+	protected Optional<CreateAdvancement> getProcessedRecipeTrigger() {
+		return Optional.of(AllAdvancements.COMPACTING);
 	}
 
 }

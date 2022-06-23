@@ -7,6 +7,7 @@ import com.simibubi.create.AllRecipeTypes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.ForgeMod;
 
 public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
@@ -16,15 +17,18 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-		HONEY_BOTTLE = create("honey_bottle", b -> b
-			.require(Items.HONEY_BOTTLE)
-			.output(AllFluids.HONEY.get(), AllFluids.HONEY_BOTTLE_AMOUNT)
+	HONEY_BOTTLE = create("honey_bottle", b -> b.require(Items.HONEY_BOTTLE)
+		.output(AllFluids.HONEY.get(), AllFluids.HONEY_BOTTLE_AMOUNT)
+		.output(Items.GLASS_BOTTLE)),
+
+		BUILDERS_TEA = create("builders_tea", b -> b.require(AllItems.BUILDERS_TEA.get())
+			.output(AllFluids.TEA.get(), FluidConstants.BOTTLE)
 			.output(Items.GLASS_BOTTLE)),
 
-		BUILDERS_TEA = create("builders_tea", b -> b
-			.require(AllItems.BUILDERS_TEA.get())
-			.output(AllFluids.TEA.get(), FluidConstants.BOTTLE)
-			.output(Items.GLASS_BOTTLE))
+		FD_MILK = create(Mods.FD.recipeId("milk_bottle"), b -> b.require(Mods.FD, "milk_bottle")
+			.output(ForgeMod.MILK.get(), 250)
+			.output(Items.GLASS_BOTTLE)
+			.whenModLoaded(Mods.FD.getId()))
 
 	;
 

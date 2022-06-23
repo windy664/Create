@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
+import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -44,6 +45,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -179,8 +181,8 @@ public class DeployerHandler {
 				}
 				if (!success && stack.isEdible() && entity instanceof Player) {
 					Player playerEntity = (Player) entity;
-					if (playerEntity.canEat(item.getFoodProperties()
-						.canAlwaysEat())) {
+					FoodProperties foodProperties = item.getFoodProperties(stack, player);
+					if (playerEntity.canEat(foodProperties.canAlwaysEat())) {
 						playerEntity.eat(world, stack);
 						player.spawnedItemEffects = stack.copy();
 						success = true;
@@ -308,8 +310,12 @@ public class DeployerHandler {
 
 		// 'Inert' item use behaviour & block placement
 		InteractionResult onItemUse = stack.useOn(itemusecontext);
-		if (onItemUse.consumesAction())
+		if (onItemUse.consumesAction()) {
+			if (stack.getItem() instanceof BlockItem bi
+				&& (bi.getBlock() instanceof IForgeBaseRailBlock || bi.getBlock() instanceof ITrackBlock))
+				player.placedTracks = true;
 			return;
+		}
 		if (item == Items.ENDER_PEARL)
 			return;
 

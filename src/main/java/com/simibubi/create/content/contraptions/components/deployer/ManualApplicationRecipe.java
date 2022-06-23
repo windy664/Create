@@ -3,11 +3,14 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
@@ -59,7 +62,9 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 		level.playSound(null, pos, SoundEvents.COPPER_BREAK, SoundSource.PLAYERS, 1, 1.45f);
 		ManualApplicationRecipe recipe = (ManualApplicationRecipe) foundRecipe.get();
 		level.destroyBlock(pos, false);
-		level.setBlock(pos, recipe.transformBlock(blockState), 3);
+
+		BlockState transformedBlock = recipe.transformBlock(blockState);
+		level.setBlock(pos, transformedBlock, 3);
 		recipe.rollResults()
 			.forEach(stack -> Block.popResource(level, pos, stack));
 
@@ -74,7 +79,26 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 				heldItem.shrink(1);
 		}
 
+		awardAdvancements(player, transformedBlock);
+
 		return InteractionResult.SUCCESS;
+	}
+
+	private static void awardAdvancements(Player player, BlockState placed) {
+		CreateAdvancement advancement = null;
+
+		if (AllBlocks.ANDESITE_CASING.has(placed))
+			advancement = AllAdvancements.ANDESITE_CASING;
+		else if (AllBlocks.BRASS_CASING.has(placed))
+			advancement = AllAdvancements.BRASS_CASING;
+		else if (AllBlocks.COPPER_CASING.has(placed))
+			advancement = AllAdvancements.COPPER_CASING;
+		else if (AllBlocks.RAILWAY_CASING.has(placed))
+			advancement = AllAdvancements.TRAIN_CASING;
+		else
+			return;
+
+		advancement.awardTo(player);
 	}
 
 	public ManualApplicationRecipe(ProcessingRecipeParams params) {
@@ -104,7 +128,7 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 	public BlockState transformBlock(BlockState in) {
 		ProcessingOutput mainOutput = results.get(0);
 		ItemStack output = mainOutput.rollOutput();
-		if (output.getItem()instanceof BlockItem bi)
+		if (output.getItem() instanceof BlockItem bi)
 			return BlockHelper.copyProperties(in, bi.getBlock()
 				.defaultBlockState());
 		return Blocks.AIR.defaultBlockState();

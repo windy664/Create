@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
 
@@ -81,6 +82,8 @@ public class CartAssemblerBlockItem extends BlockItem {
 		if (!player.isCreative())
 			context.getItemInHand()
 				.shrink(1);
+		
+		AdvancementBehaviour.setPlacedBy(world, pos, player);
 		return true;
 	}
 }

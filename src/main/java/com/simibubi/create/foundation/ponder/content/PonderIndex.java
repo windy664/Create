@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.ponder.content.fluid.HosePulleyScenes;
 import com.simibubi.create.foundation.ponder.content.fluid.PipeScenes;
 import com.simibubi.create.foundation.ponder.content.fluid.PumpScenes;
 import com.simibubi.create.foundation.ponder.content.fluid.SpoutScenes;
+import com.simibubi.create.foundation.ponder.content.trains.TrackScenes;
 
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
@@ -294,6 +295,15 @@ public class PonderIndex {
 		HELPER.forComponents(AllBlocks.REDSTONE_LINK)
 			.addStoryBoard("redstone_link", RedstoneScenes::redstoneLink);
 
+		// Trains
+		HELPER.forComponents(AllBlocks.TRACK)
+			.addStoryBoard("train_track/placement", TrackScenes::placement)
+			.addStoryBoard("train_track/portal", TrackScenes::portal);
+
+		//Display Link
+		HELPER.forComponents(AllBlocks.DISPLAY_LINK)
+				.addStoryBoard("display/link", DisplayScenes::link);
+
 		// Debug scenes, can be found in game via the Brass Hand
 		if (REGISTER_DEBUG_SCENES)
 			DebugScenes.registerAll();
@@ -460,6 +470,35 @@ public class PonderIndex {
 			.add(Blocks.BELL)
 			.add(Blocks.DISPENSER)
 			.add(Blocks.DROPPER);
+
+		PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES)
+				.add(AllBlocks.SEATS.get(DyeColor.WHITE))
+				.add(AllBlocks.ORANGE_NIXIE_TUBE)
+				.add(AllBlocks.STOCKPILE_SWITCH)
+				.add(AllBlocks.CONTENT_OBSERVER)
+				.add(AllBlocks.ANDESITE_TUNNEL)
+				.add(AllBlocks.TRACK_OBSERVER)
+				.add(AllBlocks.TRACK_STATION)
+				.add(AllBlocks.DISPLAY_LINK)
+				.add(AllBlocks.BRASS_TUNNEL)
+				.add(AllBlocks.CUCKOO_CLOCK)
+				.add(AllBlocks.STRESSOMETER)
+				.add(AllBlocks.SPEEDOMETER)
+				.add(AllBlocks.FLUID_TANK)
+				.add(AllItems.BELT_CONNECTOR)
+				.add(Blocks.ENCHANTING_TABLE)
+				.add(Blocks.RESPAWN_ANCHOR)
+				.add(Blocks.COMMAND_BLOCK)
+				.add(Blocks.TARGET)
+		;
+
+		PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS)
+				.add(AllBlocks.ORANGE_NIXIE_TUBE)
+				.add(AllBlocks.DISPLAY_BOARD)
+				.add(AllBlocks.DISPLAY_LINK)
+				.add(Blocks.OAK_SIGN)
+				.add(Blocks.LECTERN);
+
 	}
 
 }

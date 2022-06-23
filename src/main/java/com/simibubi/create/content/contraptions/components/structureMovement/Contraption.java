@@ -39,6 +39,8 @@ import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.BlockBreakingMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.actors.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftTileEntity;
@@ -158,6 +160,7 @@ public abstract class Contraption {
 	public List<BlockEntity> specialRenderedTileEntities;
 
 	protected ContraptionWorld world;
+	public boolean deferInvalidate;
 
 	public Contraption() {
 		blocks = new HashMap<>();
@@ -1317,6 +1320,15 @@ public abstract class Contraption {
 
 	public void tickStorage(AbstractContraptionEntity entity) {
 		storage.entityTick(entity);
+	}
+
+	public boolean containsBlockBreakers() {
+		for (MutablePair<StructureBlockInfo, MovementContext> pair : actors) {
+			MovementBehaviour behaviour = AllMovementBehaviours.of(pair.getLeft().state);
+			if (behaviour instanceof BlockBreakingMovementBehaviour || behaviour instanceof HarvesterMovementBehaviour)
+				return true;
+		}
+		return false;
 	}
 
 }

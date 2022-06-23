@@ -94,6 +94,8 @@ public class KineticTileEntity extends SmartTileEntity
 
 		super.tick();
 		effects.tick();
+		
+		preventSpeedUpdate = 0;
 
 		if (level.isClientSide) {
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> this.tickAudio());

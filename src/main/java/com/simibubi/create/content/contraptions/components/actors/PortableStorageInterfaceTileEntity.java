@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -39,6 +40,8 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	}
 
 	public void startTransferringTo(Contraption contraption, float distance) {
+		if (connectedEntity == contraption.entity)
+			return;
 		this.distance = Math.min(2, distance);
 		connectedEntity = contraption.entity;
 		startConnecting();
@@ -47,6 +50,7 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 
 	protected void stopTransferring() {
 		connectedEntity = null;
+		level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
 	}
 
 	public boolean canTransfer() {
@@ -184,6 +188,7 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	public void onContentTransferred() {
 		int timeUnit = getTransferTimeout();
 		transferTimer = timeUnit + ANIMATION;
+		award(AllAdvancements.PSI);
 		sendData();
 	}
 
@@ -192,6 +197,8 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		registerAwardables(behaviours, AllAdvancements.PSI);
+	}
 
 }

@@ -4,7 +4,9 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRelocationPacket;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -94,8 +96,11 @@ public class TrainRelocationPacket extends SimplePacketBase {
 			if (TrainRelocator.relocate(train, sender.level, pos, hoveredBezier, direction, lookAngle, false)) {
 				sender.displayClientMessage(Lang.translate("train.relocate.success")
 					.withStyle(ChatFormatting.GREEN), true);
-				train.syncTrackGraphChanges();
-				train.carriages.forEach(c -> c.forEachPresentEntity(e -> e.nonDamageTicks = 10));
+				train.carriages.forEach(c -> c.forEachPresentEntity(e -> {
+					e.nonDamageTicks = 10;
+					AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> e),
+						new ContraptionRelocationPacket(e.getId()));
+				}));
 				return;
 			}
 

@@ -32,7 +32,6 @@ import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -649,7 +648,6 @@ public class AllArmInteractionPointTypes {
 			TransactionCallback.onSuccess(ctx, () -> {
 				jukeboxBE.setRecord(toInsert);
 				level.levelEvent(null, 1010, pos, Item.getId(item));
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.MUSICAL_ARM, level, pos, 10);
 			});
 			return remainder;
 		}

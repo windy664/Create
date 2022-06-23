@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 import java.util.Set;
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -58,6 +59,8 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 			SuperGlueEntity entity = new SuperGlueEntity(player.level, bb);
 			player.level.addFreshEntity(entity);
 			entity.spawnParticles();
+
+			AllAdvancements.SUPER_GLUE.awardTo(player);
 		});
 		ctx.setPacketHandled(true);
 	}
