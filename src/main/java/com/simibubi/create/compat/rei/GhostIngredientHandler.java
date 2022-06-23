@@ -4,6 +4,7 @@ import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
 import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.container.GhostItemContainer;
 
@@ -82,7 +83,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 
 	@Override
 	public <R extends Screen> boolean isHandingScreen(R screen) {
-		return screen instanceof AbstractFilterScreen || screen instanceof BlueprintScreen || screen instanceof LinkedControllerScreen;
+		return screen instanceof AbstractFilterScreen || screen instanceof BlueprintScreen || screen instanceof LinkedControllerScreen || screen instanceof ScheduleScreen;
 	}
 
 	private static class GhostTarget<I, T extends GhostItemContainer<?>> implements BoundsProvider {

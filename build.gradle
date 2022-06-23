@@ -176,6 +176,8 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand properties
     }
+
+    duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
 tasks.withType(JavaCompile).configureEach {

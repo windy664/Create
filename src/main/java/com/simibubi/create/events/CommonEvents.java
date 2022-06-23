@@ -26,6 +26,7 @@ import io.github.fabricators_of_create.porting_lib.event.common.ProjectileImpact
 import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
@@ -114,9 +115,9 @@ public class CommonEvents {
 		CapabilityMinecartController.onChunkUnloaded(world, chunk);
 	}
 
-	public static void playerLoggedIn(ServerPlayer player) {
-		ToolboxHandler.playerLogin(player);
-		Create.RAILWAYS.playerLogin(player);
+	public static void playerLoggedIn(ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) {
+		ToolboxHandler.playerLogin(handler.getPlayer());
+		Create.RAILWAYS.playerLogin(handler.getPlayer());
 	}
 
 	public static void playerLoggedOut(ServerGamePacketListenerImpl handler, MinecraftServer server) {
@@ -248,7 +249,7 @@ public class CommonEvents {
 		EntityEvents.START_TRACKING_TAIL.register(CommonEvents::startTracking);
 		EntityEvents.ENTERING_SECTION.register(CommonEvents::onEntityEnterSection);
 		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
-		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
+		ServerPlayConnectionEvents.JOIN.register(CommonEvents::playerLoggedIn);
 		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(CommonEvents::onDatapackSync);
 		CommonEvents.addReloadListeners();

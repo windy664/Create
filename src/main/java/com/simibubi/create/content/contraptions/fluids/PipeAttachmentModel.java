@@ -67,10 +67,10 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 		context.popTransform();
 
-		BakedModel bracket = pipeData.getBracket();
+		FabricBakedModel bracketModel = (FabricBakedModel) data.getBracket();
 		if (bracket != null)
-			quads.addAll(bracket.getQuads(state, side, rand, data));
-		if (hideAttachmentConnector && side == Direction.UP)
+			bracketModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		if (hideAttachmentConnector)
 			return;
 		for (Direction d : Iterate.directions)
 			if (data.hasRim(d))
