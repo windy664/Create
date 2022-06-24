@@ -53,6 +53,8 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 		int toExtract = Math.min((int) maxAmount, Math.min(stack.getCount(), te.maxStackSize.get()));
 		stack = stack.copy();
 		stack.shrink(toExtract);
+		if (stack.isEmpty())
+			stack = ItemStack.EMPTY;
 		te.snapshotParticipant.updateSnapshots(transaction);
 		te.heldItem.stack = stack;
 		if (stack.isEmpty())
