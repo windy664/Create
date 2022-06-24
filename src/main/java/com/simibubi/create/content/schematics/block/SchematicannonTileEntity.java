@@ -32,7 +32,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
@@ -523,10 +522,12 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		// Find and remove
 		boolean success = false;
 		long amountFound = 0;
-		ItemVariant variant = ItemVariant.of(required);
 		try (Transaction t = transaction.openNested()) {
 			for (Storage<ItemVariant> iItemHandler : attachedInventories) {
-				amountFound += iItemHandler.extract(variant, required.getCount(), t);
+				amountFound += ItemHelper
+						.extract(iItemHandler, required::matches, ExtractionCountMode.UPTO,
+								required.stack.getCount(), false)
+						.getCount();
 
 				if (amountFound < required.stack.getCount())
 					continue;
