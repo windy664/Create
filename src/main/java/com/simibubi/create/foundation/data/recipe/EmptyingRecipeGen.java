@@ -4,10 +4,10 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 
+import io.github.tropheusj.milk.Milk;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.ForgeMod;
 
 public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
@@ -26,7 +26,7 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.GLASS_BOTTLE)),
 
 		FD_MILK = create(Mods.FD.recipeId("milk_bottle"), b -> b.require(Mods.FD, "milk_bottle")
-			.output(ForgeMod.MILK.get(), 250)
+			.output(Milk.FLOWING_MILK, FluidConstants.BOTTLE)
 			.output(Items.GLASS_BOTTLE)
 			.whenModLoaded(Mods.FD.getId()))
 

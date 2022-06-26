@@ -4,10 +4,9 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public class ContraptionRelocationPacket extends SimplePacketBase {
 
@@ -29,7 +28,7 @@ public class ContraptionRelocationPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
 				() -> () -> OrientedContraptionEntity.handleRelocationPacket(this)));
 		context.get()
 			.setPacketHandled(true);

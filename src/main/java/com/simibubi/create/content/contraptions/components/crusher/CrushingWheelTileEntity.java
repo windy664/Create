@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.crusher;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;

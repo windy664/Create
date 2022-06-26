@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayer;
 
 public class AdvancementBehaviour extends TileEntityBehaviour {
 
@@ -30,12 +30,12 @@ public class AdvancementBehaviour extends TileEntityBehaviour {
 		this.advancements = new HashSet<>();
 		add(advancements);
 	}
-	
+
 	public void add(CreateAdvancement... advancements) {
 		for (CreateAdvancement advancement : advancements)
 			this.advancements.add(advancement);
 	}
-	
+
 	public boolean isOwnerPresent() {
 		return playerId != null;
 	}
@@ -54,7 +54,7 @@ public class AdvancementBehaviour extends TileEntityBehaviour {
 		super.initialize();
 		removeAwarded();
 	}
-	
+
 	private void removeAwarded() {
 		Player player = getPlayer();
 		if (player == null)
@@ -123,7 +123,7 @@ public class AdvancementBehaviour extends TileEntityBehaviour {
 		AdvancementBehaviour behaviour = TileEntityBehaviour.get(worldIn, pos, TYPE);
 		if (behaviour == null)
 			return;
-		if (placer instanceof FakePlayer)
+		if (placer instanceof FakeServerPlayer)
 			return;
 		if (placer instanceof ServerPlayer)
 			behaviour.setPlayer(placer.getUUID());
