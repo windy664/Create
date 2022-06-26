@@ -75,7 +75,7 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 		BlockHitResult hit) {
 
 		ItemStack heldItem = player.getItemInHand(handIn);
-		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem) || !canInsertIntoFunnel(state);
+		boolean shouldntInsertItem = heldItem.isEmpty() || AllBlocks.MECHANICAL_ARM.isIn(heldItem) || !canInsertIntoFunnel(state);
 
 		if (AllItems.WRENCH.isIn(heldItem))
 			return InteractionResult.PASS;

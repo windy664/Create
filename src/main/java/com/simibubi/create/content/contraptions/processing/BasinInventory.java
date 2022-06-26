@@ -15,6 +15,15 @@ public class BasinInventory extends SmartInventory {
 	public BasinInventory(int slots, BasinTileEntity te) {
 		super(slots, te, 16, true);
 		this.te = te;
+		this.whenContentsChanged(te::notifyChangeOfContents);
+	}
+
+	@Override
+	public SmartInventory whenContentsChanged(Runnable updateCallback) {
+		return super.whenContentsChanged(() -> {
+			updateCallback.run();
+			te.notifyChangeOfContents();
+		});
 	}
 
 	@Override
@@ -22,10 +31,11 @@ public class BasinInventory extends SmartInventory {
 		if (!insertionAllowed)
 			return 0;
 		// Only insert if no other slot already has a stack of this item
+		maxAmount = Math.min(maxAmount, stackSize);
 		for (int i = 0; i < handler.stacks.length; i++) {
 			ItemStack stack = handler.stacks[i];
 			if (resource.matches(stack) && isItemValid(i, resource)) { // we already have this item - make sure it all fits in 1 stack
-				int max = stack.getMaxStackSize();
+				int max = Math.min(stack.getMaxStackSize(), stackSize);
 				int space = max - stack.getCount();
 				int toInsert = (int) Math.min(space, maxAmount);
 				if (toInsert > 0) {
