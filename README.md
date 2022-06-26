@@ -33,3 +33,6 @@ Check out the in-game Documentation for further info on how to use the added fea
 <hr>
 <h4 align="center">Find out more about Create on our <a href="https://www.curseforge.com/minecraft/mc-mods/create-fabric">CurseForge</a> page or our <a href="https://modrinth.com/mod/create-fabric">Modrinth</a> page.</h4>
 <h4 align="center">Looking for the Forge version? <a href="https://github.com/Creators-of-Create/Create">Find it here</a></h4>
+
+<h3 align="center">Development</h3>
+Looking to make an addon for Create? A template mod for a Fabric addon can be found [here](https://github.com/Fabricators-of-Create/create-fabric-addon-template).
