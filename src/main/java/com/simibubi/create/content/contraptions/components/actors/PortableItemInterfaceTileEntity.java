@@ -1,13 +1,12 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-
-import net.fabricmc.fabric.impl.lookup.block.ServerWorldCache;
 
 import net.minecraft.core.Direction;
 
@@ -19,6 +18,8 @@ import com.simibubi.create.foundation.item.ItemHandlerWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.Iterator;
 
 public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTileEntity implements ItemTransferable {
 
@@ -68,10 +69,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 				return 0;
 			long extracted = super.extract(resource, maxAmount, transaction);
 			if (extracted != 0) {
-				transaction.addOuterCloseCallback(result -> {
-					if (result.wasCommitted())
-						onContentTransferred();
-				});
+				TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
 			}
 			return extracted;
 		}
@@ -82,12 +80,21 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 				return 0;
 			long inserted = super.insert(resource, maxAmount, transaction);
 			if (inserted != 0) {
-				transaction.addOuterCloseCallback(result -> {
-					if (result.wasCommitted())
-						onContentTransferred();
-				});
+				TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
 			}
 			return inserted;
+		}
+
+		@Override
+		public @Nullable StorageView<ItemVariant> exactView(TransactionContext transaction, ItemVariant resource) {
+			TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
+			return super.exactView(transaction, resource);
+		}
+
+		@Override
+		public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
+			TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
+			return super.iterator(transaction);
 		}
 
 		private void setWrapped(Storage<ItemVariant> wrapped) {

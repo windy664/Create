@@ -85,8 +85,10 @@ public class GenericItemFilling {
 //			return FluidConstants.BUCKET;
 //		}
 
-		long filled = tank.simulateInsert(availableFluid.getType(), availableFluid.getAmount(), null);
-		return filled == 0 ? -1 : filled;
+		try (Transaction t = TransferUtil.getTransaction()) {
+			long filled = tank.insert(availableFluid.getType(), availableFluid.getAmount(), t);
+			return filled == 0 ? -1 : filled;
+		}
 	}
 
 	private static boolean canFillGlassBottleInternally(FluidStack availableFluid) {

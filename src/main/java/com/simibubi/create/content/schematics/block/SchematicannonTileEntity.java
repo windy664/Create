@@ -32,7 +32,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
@@ -389,7 +388,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		if (!requirement.isEmpty()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
 				for (ItemRequirement.StackRequirement required : requiredItems) {
-					if (!grabItemsFromAttachedInventories(required.item, required.usage, t)) {
+					if (!grabItemsFromAttachedInventories(required, t)) {
 						if (skipMissing) {
 							statusMsg = "skipping";
 							blockSkipped = true;
@@ -400,7 +399,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 							return;
 						}
 
-						missingItem = required.item;
+						missingItem = required.stack;
 						state = State.PAUSED;
 						statusMsg = "missingBlock";
 						return;
@@ -413,7 +412,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 
 		// Success
 		state = State.RUNNING;
-		ItemStack icon = requirement.isEmpty() || requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).item;
+		ItemStack icon = requirement.isEmpty() || requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).stack;
 		printer.handleCurrentTarget((target, blockState, tile) -> {
 			// Launch block
 			statusMsg = blockState.getBlock() != Blocks.AIR ? "placing" : "clearing";
@@ -482,11 +481,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		return item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item);
 	}
 
-	protected boolean grabItemsFromAttachedInventories(ItemStack required, ItemUseType usage, TransactionContext transaction) {
+	protected boolean grabItemsFromAttachedInventories(ItemRequirement.StackRequirement required, TransactionContext transaction) {
 		if (hasCreativeCrate)
 			return true;
 
 //		attachedInventories.removeIf(cap -> !cap.isPresent()); // fabric - already cleared on neighbor update, not needed?
+
+		ItemUseType usage = required.usage;
 
 		// Find and apply damage
 		if (usage == ItemUseType.DAMAGE) {
@@ -496,7 +497,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 						if (view.isResourceBlank()) continue;
 						ItemVariant variant = view.getResource();
 						ItemStack stack = variant.toStack();
-						if (!ItemRequirement.validate(required, stack))
+						if (!required.matches(stack))
 							continue;
 						if (!stack.isDamageableItem())
 							continue;
@@ -514,26 +515,27 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 					}
 				}
 			}
+
+			return false;
 		}
 
 		// Find and remove
 		boolean success = false;
-		if (usage == ItemUseType.CONSUME && !required.isEmpty()) {
-			long amountFound = 0;
-			ItemVariant variant = ItemVariant.of(required);
-			try (Transaction t = transaction.openNested()) {
-				for (Storage<ItemVariant> iItemHandler : attachedInventories) {
-					amountFound += iItemHandler.extract(variant, required.getCount(), t);
+		long amountFound = 0;
+		try (Transaction t = transaction.openNested()) {
+			for (Storage<ItemVariant> iItemHandler : attachedInventories) {
+				amountFound += ItemHelper
+						.extract(iItemHandler, required::matches, ExtractionCountMode.UPTO,
+								required.stack.getCount(), false)
+						.getCount();
 
-					if (amountFound < required.getCount())
-						continue;
+				if (amountFound < required.stack.getCount())
+					continue;
 
-					success = true;
-					break;
-				}
-				if (success) t.commit();
+				success = true;
+				break;
 			}
-
+			if (success) t.commit();
 		}
 
 		return success;
