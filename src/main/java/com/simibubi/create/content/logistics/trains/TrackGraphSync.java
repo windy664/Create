@@ -176,7 +176,7 @@ public class TrackGraphSync {
 	}
 
 	private void sendRollCall() {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrackGraphRollCallPacket());
+		AllPackets.channel.sendToClientsInCurrentServer(new TrackGraphRollCallPacket());
 	}
 
 	private TrackGraphSyncPacket flushAndCreateNew(TrackGraph graph, ServerPlayer player, TrackGraphSyncPacket packet) {

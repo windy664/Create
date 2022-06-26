@@ -141,7 +141,7 @@ public class OpenEndedPipe extends FlowSource {
 		FluidStack empty = FluidStack.EMPTY;
 		if (world == null)
 			return empty;
-		if (!LevelUtil.isLoaded(world, outputPos))
+		if (!world.isLoaded(outputPos))
 			return empty;
 
 		BlockState state = world.getBlockState(outputPos);
@@ -150,9 +150,9 @@ public class OpenEndedPipe extends FlowSource {
 
 		FluidStack drainBlock = VanillaFluidTargets.drainBlock(world, outputPos, state, ctx);
 		if (!drainBlock.isEmpty()) {
-			if (!simulate && state.hasProperty(BlockStateProperties.LEVEL_HONEY)
+			if (state.hasProperty(BlockStateProperties.LEVEL_HONEY)
 				&& AllFluids.HONEY.is(drainBlock.getFluid()))
-				AdvancementBehaviour.tryAward(world, pos, AllAdvancements.HONEY_DRAIN);
+				TransactionCallback.onSuccess(ctx, () -> AdvancementBehaviour.tryAward(world, pos, AllAdvancements.HONEY_DRAIN));
 			return drainBlock;
 		}
 
@@ -261,7 +261,7 @@ public class OpenEndedPipe extends FlowSource {
 			// Never allow being filled when a source is attached
 			if (world == null)
 				return 0;
-			if (!LevelUtil.isLoaded(world, outputPos))
+			if (!world.isLoaded(outputPos))
 				return 0;
 			if (resource.isBlank())
 				return 0;
@@ -296,7 +296,7 @@ public class OpenEndedPipe extends FlowSource {
 		public long extract(FluidVariant extractedVariant, long maxAmount, TransactionContext transaction) {
 			if (world == null)
 				return 0;
-			if (!LevelUtil.isLoaded(world, outputPos))
+			if (!world.isLoaded(outputPos))
 				return 0;
 			if (maxAmount == 0)
 				return 0;

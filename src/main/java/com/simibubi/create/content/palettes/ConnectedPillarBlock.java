@@ -58,7 +58,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 			Move: for (Direction movement : Iterate.directionsInAxis(axis)) {
 				currentPos.set(pos);
 				for (int i = 0; i < 1000; i++) {
-					if (!LevelUtil.isLoaded(level, currentPos))
+					if (!level.isLoaded(currentPos))
 						break;
 
 					BlockState other1 = currentPos.equals(pos) ? state : level.getBlockState(currentPos);

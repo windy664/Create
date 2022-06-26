@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
@@ -190,18 +191,14 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			TransactionCallback.onSuccess(ctx, () -> {
 				playEffect(world, currentPos, finalFluid, true);
 				tileEntity.award(AllAdvancements.HOSE_PULLEY);
-
-				if (infinite) {
-					AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_FLUID.constructTriggerFor(FluidHelper.convertToStill(finalFluid)), world, tileEntity.getBlockPos(), 8);
-				}
+				if (infinite && FluidHelper.isLava(finalFluid))
+					tileEntity.award(AllAdvancements.HOSE_PULLEY_LAVA);
 			});
 
-			if (infinite) {
-				if (FluidHelper.isLava(fluid))
-					tileEntity.award(AllAdvancements.HOSE_PULLEY_LAVA);
-				return true;
+			if (!tileEntity.isVirtual()) {
+				world.updateSnapshots(ctx);
+				world.setBlock(currentPos, emptied, 2 | 16);
 			}
-
 			affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
 
 			BlockPosEntry e = queue.dequeue();
@@ -211,10 +208,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				reset(ctx);
 			} else if (!validationSet.contains(currentPos)) {
 				reset(ctx);
-			}
-			if (!tileEntity.isVirtual()) {
-				((LevelExtensions) world).updateSnapshots(ctx);
-				world.setBlock(currentPos, emptied, 2 | 16);
 			}
 			return true;
 		}

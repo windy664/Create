@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.block.BaseRailBlock;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
@@ -181,7 +183,7 @@ public class DeployerHandler {
 				}
 				if (!success && stack.isEdible() && entity instanceof Player) {
 					Player playerEntity = (Player) entity;
-					FoodProperties foodProperties = item.getFoodProperties(stack, player);
+					FoodProperties foodProperties = item.getFoodProperties();
 					if (playerEntity.canEat(foodProperties.canAlwaysEat())) {
 						playerEntity.eat(world, stack);
 						player.spawnedItemEffects = stack.copy();
@@ -312,7 +314,7 @@ public class DeployerHandler {
 		InteractionResult onItemUse = stack.useOn(itemusecontext);
 		if (onItemUse.consumesAction()) {
 			if (stack.getItem() instanceof BlockItem bi
-				&& (bi.getBlock() instanceof IForgeBaseRailBlock || bi.getBlock() instanceof ITrackBlock))
+				&& (bi.getBlock() instanceof BaseRailBlock || bi.getBlock() instanceof ITrackBlock))
 				player.placedTracks = true;
 			return;
 		}
