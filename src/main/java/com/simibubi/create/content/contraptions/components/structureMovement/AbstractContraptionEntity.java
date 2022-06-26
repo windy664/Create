@@ -9,9 +9,9 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.tterrag.registrate.fabric.EnvExecutor;
-
 import io.github.fabricators_of_create.porting_lib.entity.RemovalFromWorldListener;
+
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -176,7 +176,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	@Override
 	public Vec3 getDismountLocationForPassenger(LivingEntity pLivingEntity) {
 		Vec3 loc = super.getDismountLocationForPassenger(pLivingEntity);
-		CompoundTag data = pLivingEntity.getPersistentData();
+		CompoundTag data = pLivingEntity.getExtraCustomData();
 		if (!data.contains("ContraptionDismountLocation"))
 			return loc;
 		return VecHelper.readNBT(data.getList("ContraptionDismountLocation", Tag.TAG_DOUBLE));
@@ -334,7 +334,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		super.tick();
 
 		if (level.isClientSide())
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 				if (!contraption.deferInvalidate)
 					return;
 				contraption.deferInvalidate = false;

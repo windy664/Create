@@ -98,8 +98,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 					.withStyle(ChatFormatting.GREEN), true);
 				train.carriages.forEach(c -> c.forEachPresentEntity(e -> {
 					e.nonDamageTicks = 10;
-					AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> e),
-						new ContraptionRelocationPacket(e.getId()));
+					AllPackets.channel.sendToClientsTracking(new ContraptionRelocationPacket(e.getId()), e);
 				}));
 				return;
 			}
