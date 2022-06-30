@@ -86,8 +86,9 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		}
 
 		FluidTankTileEntity tank = getTank();
-		boolean powered = isPowered() && tank != null && tank.boiler.isActive()
-			&& (tank.boiler.passiveHeat || tank.boiler.activeHeat > 0);
+		boolean powered = isPowered()
+			&& (tank != null && tank.boiler.isActive() && (tank.boiler.passiveHeat || tank.boiler.activeHeat > 0)
+				|| isVirtual());
 		animation.chase(powered ? 1 : 0, powered ? .5f : .4f, powered ? Chaser.EXP : Chaser.LINEAR);
 		animation.tickChaser();
 		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> this.tickAudio(getOctave(), powered));

@@ -227,6 +227,7 @@ public class GlobalRailwayManager {
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
+				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
 				continue;
 			}
 
@@ -242,6 +243,7 @@ public class GlobalRailwayManager {
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
+				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
 				continue;
 			}
 
@@ -250,7 +252,6 @@ public class GlobalRailwayManager {
 			waitingTrains.add(train);
 			iterator.remove();
 		}
-
 
 	}
 
