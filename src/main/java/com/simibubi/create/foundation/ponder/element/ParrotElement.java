@@ -54,7 +54,7 @@ public class ParrotElement extends AnimatedSceneElement {
 		entity.zOld = 0;
 		entity.setXRot(entity.xRotO = 0);
 		entity.setYRot(entity.yRotO = 180);
-		entity.getPersistentData()
+		entity.getExtraCustomData()
 			.remove("TrainHat");
 		deferConductor = false;
 	}
@@ -110,13 +110,13 @@ public class ParrotElement extends AnimatedSceneElement {
 		entity.xRotO = entity.getXRot();
 		entity.yRotO = entity.getYRot();
 	}
-	
+
 	public void setConductor(boolean isConductor) {
 		if (entity == null) {
 			deferConductor = isConductor;
 			return;
 		}
-		CompoundTag data = entity.getPersistentData();
+		CompoundTag data = entity.getExtraCustomData();
 		if (isConductor)
 			data.putBoolean("TrainHat", true);
 		else

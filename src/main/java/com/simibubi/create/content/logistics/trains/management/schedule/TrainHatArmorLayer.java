@@ -126,7 +126,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 	private boolean shouldRenderOn(LivingEntity entity) {
 		if (entity == null)
 			return false;
-		if (entity.getPersistentData()
+		if (entity.getExtraCustomData()
 			.contains("TrainHat"))
 			return true;
 		if (!entity.isPassenger())
