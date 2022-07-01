@@ -10,7 +10,7 @@
       "item": "minecraft:redstone_torch"
     },
     "A": {
-      "tag": "forge:plates/copper"
+      "tag": "c:plates/copper"
     },
     "S": {
       "item": "create:brass_casing"

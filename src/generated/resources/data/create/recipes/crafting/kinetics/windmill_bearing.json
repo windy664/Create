@@ -10,7 +10,7 @@
       "tag": "minecraft:wooden_slabs"
     },
     "C": {
-      "tag": "forge:stone"
+      "tag": "c:stone"
     },
     "I": {
       "item": "create:shaft"

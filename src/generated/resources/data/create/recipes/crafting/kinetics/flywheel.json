@@ -7,7 +7,7 @@
   ],
   "key": {
     "C": {
-      "tag": "forge:ingots/brass"
+      "tag": "c:ingots/brass"
     },
     "A": {
       "item": "create:shaft"

@@ -7,7 +7,7 @@
   ],
   "key": {
     "P": {
-      "tag": "forge:plates/gold"
+      "tag": "c:plates/gold"
     },
     "C": {
       "item": "minecraft:copper_block"

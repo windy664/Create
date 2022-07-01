@@ -2,7 +2,7 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "tag": "forge:flour/wheat"
+      "tag": "c:flour/wheat"
     }
   ],
   "results": [

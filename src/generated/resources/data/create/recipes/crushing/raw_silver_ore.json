@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "forge:raw_materials/silver"
+      "tag": "c:raw_materials/silver"
     }
   ],
   "results": [
@@ -15,13 +15,12 @@
     }
   ],
   "processingTime": 400,
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "value": {
-        "tag": "forge:raw_materials/silver",
-        "type": "forge:tag_empty"
-      },
-      "type": "forge:not"
+      "condition": "fabric:item_tags_populated",
+      "values": [
+        "c:raw_materials/silver"
+      ]
     }
   ]
 }

@@ -2,7 +2,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "tag": "forge:flour/wheat"
+      "tag": "c:flour/wheat"
     },
     {
       "fluid": "minecraft:water",

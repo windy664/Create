@@ -11,10 +11,12 @@
     }
   ],
   "processingTime": 50,
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "architects_palette",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "architects_palette"
+      ]
     }
   ]
 }

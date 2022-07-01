@@ -10,14 +10,16 @@
       "item": "minecraft:glass_bottle"
     },
     {
-      "fluid": "minecraft:milk",
-      "amount": 250
+      "fluid": "milk:still_milk",
+      "amount": 27000
     }
   ],
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "farmersdelight",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "farmersdelight"
+      ]
     }
   ]
 }

@@ -2,7 +2,7 @@
   "type": "create:item_application",
   "ingredients": [
     {
-      "tag": "forge:stripped_logs"
+      "tag": "c:stripped_logs"
     },
     {
       "item": "minecraft:copper_ingot"

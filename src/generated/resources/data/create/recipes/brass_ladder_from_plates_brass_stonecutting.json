@@ -1,7 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "tag": "forge:plates/brass"
+    "tag": "c:plates/brass"
   },
   "result": "create:brass_ladder",
   "count": 2

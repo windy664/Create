@@ -5,10 +5,10 @@
       "item": "create:polished_rose_quartz"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     },
     {
-      "tag": "forge:ingots/zinc"
+      "tag": "c:ingots/zinc"
     }
   ],
   "result": {

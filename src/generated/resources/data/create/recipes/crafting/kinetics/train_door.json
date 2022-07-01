@@ -5,7 +5,7 @@
       "tag": "minecraft:wooden_doors"
     },
     {
-      "tag": "forge:plates/brass"
+      "tag": "c:plates/brass"
     }
   ],
   "result": {

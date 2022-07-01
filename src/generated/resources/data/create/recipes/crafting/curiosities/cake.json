@@ -7,13 +7,13 @@
   ],
   "key": {
     "E": {
-      "tag": "forge:eggs"
+      "tag": "c:eggs"
     },
     "S": {
       "item": "minecraft:sugar"
     },
     "P": {
-      "tag": "forge:dough"
+      "tag": "c:dough"
     },
     "M": {
       "item": "minecraft:milk_bucket"
