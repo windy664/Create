@@ -268,11 +268,6 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
 		UseBlockCallback.EVENT.register(DisplayLinkBlockItem::gathererItemAlwaysPlacesWhenUsed);
 		UseEntityCallback.EVENT.register(ScheduleItemRetrieval::removeScheduleFromConductor);
-		CommonEvents.addReloadListeners();
-		CommonEvents.onBiomeLoad(); // Fabric Biome API requires biomes to only be registered once
-
-		// External Events
-
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
 		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
