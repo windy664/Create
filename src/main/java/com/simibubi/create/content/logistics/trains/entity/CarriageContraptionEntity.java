@@ -31,7 +31,6 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -220,6 +219,11 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 			return;
 		}
 
+		if (!Create.RAILWAYS.sided(level).trains.containsKey(carriage.train.id)) {
+			discard();
+			return;
+		}
+
 		tickActors();
 		boolean isStalled = isStalled();
 		carriage.stalled = isStalled;
@@ -265,10 +269,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		carriageData.approach(this, carriage, 1f / getType().updateInterval());
 
-		if (!Create.RAILWAYS.sided(null).trains.containsKey(carriage.train.id)) {
-			discard();
-			return;
-		}
 		if (!carriage.train.derailed)
 			carriage.updateContraptionAnchors();
 
@@ -587,7 +587,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		GlobalStation currentStation = carriage.train.getCurrentStation();
 		if (currentStation != null && spaceDown) {
 			sendPrompt(player, Lang.translate("train.arrived_at",
-				new TextComponent(currentStation.name).withStyle(ChatFormatting.DARK_GREEN)), false);
+				new TextComponent(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
 			return true;
 		}
 
@@ -599,7 +599,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		if (currentStation != null && targetSpeed != 0) {
 			stationMessage = false;
 			sendPrompt(player, Lang.translate("train.departing_from",
-				new TextComponent(currentStation.name).withStyle(ChatFormatting.DARK_GREEN)), false);
+				new TextComponent(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
 		}
 
 		if (currentStation == null) {
