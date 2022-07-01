@@ -67,11 +67,11 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 		context.popTransform();
 
-		FabricBakedModel bracketModel = (FabricBakedModel) data.getBracket();
-		if (bracket != null)
-			bracketModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		BakedModel bracketModel = data.getBracket();
+		if (bracketModel != null)
+			((FabricBakedModel) bracketModel).emitBlockQuads(blockView, state, pos, randomSupplier, context);
 		if (hideAttachmentConnector)
-			return;
+			context.pushTransform(quad -> quad.cullFace() != Direction.UP);
 		for (Direction d : Iterate.directions)
 			if (data.hasRim(d))
 				((FabricBakedModel) AllBlockPartials.PIPE_ATTACHMENTS.get(data.getRim(d))
@@ -81,6 +81,8 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 		if (data.isEncased())
 			((FabricBakedModel) AllBlockPartials.FLUID_PIPE_CASING.get())
 				.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		if (hideAttachmentConnector)
+			context.popTransform();
 	}
 
 	private static class PipeModelData {
