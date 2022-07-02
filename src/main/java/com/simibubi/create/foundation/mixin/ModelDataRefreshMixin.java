@@ -14,11 +14,11 @@ package com.simibubi.create.foundation.mixin;
 //import net.fabricmc.api.Environment;
 //import net.minecraftforge.client.model.ModelDataManager;
 
-//@Environment(EnvType.CLIENT)
+//@Environment(EnvType.CLIENT) // fabric: forge mixin, unneeded
 //@Mixin(ModelDataManager.class)
 //public class ModelDataRefreshMixin {
 
-//	/** forge mixin, unneeded
+//	/**
 //	 * Normally ModelDataManager will throw an exception if a tile entity tries
 //	 * to refresh its model data from a world the client isn't currently in,
 //	 * but we need that to not happen for tile entities in fake schematic

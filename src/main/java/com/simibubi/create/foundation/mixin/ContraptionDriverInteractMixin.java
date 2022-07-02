@@ -14,7 +14,7 @@
 //import net.minecraftforge.common.capabilities.CapabilityProvider;
 //import net.minecraftforge.common.extensions.IForgeEntity;
 //
-//@Mixin(Entity.class)
+//@Mixin(Entity.class) // fabric: unnecessary
 //@Implements(@Interface(iface = IForgeEntity.class, prefix = "iForgeEntity$"))
 //public abstract class ContraptionDriverInteractMixin extends CapabilityProvider<Entity> {
 //

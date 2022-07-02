@@ -7,7 +7,6 @@
   "mixins": [
     "CustomItemUseEffectsMixin",
     "MapItemSavedDataMixin",
-    //"ContraptionDriverInteractMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
