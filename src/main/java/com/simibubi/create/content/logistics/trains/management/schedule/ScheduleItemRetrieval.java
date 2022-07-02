@@ -64,7 +64,7 @@ public class ScheduleItemRetrieval {
 		if (directions == null)
 			return InteractionResult.PASS;
 
-		if (train.runtime.paused) {
+		if (train.runtime.paused && !train.runtime.completed) {
 			train.runtime.paused = false;
 			AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
 			player.displayClientMessage(Lang.translate("schedule.continued"), true);
