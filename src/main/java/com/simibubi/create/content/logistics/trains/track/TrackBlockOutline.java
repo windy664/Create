@@ -193,7 +193,7 @@ public class TrackBlockOutline {
 		});
 
 		ms.popPose();
-		return !cancelled.get();
+		return cancelled.get();
 	}
 
 	private static void renderShape(VoxelShape s, PoseStack ms, VertexConsumer vb, Boolean valid) {
