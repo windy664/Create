@@ -65,7 +65,10 @@ public class InputEvents {
 		boolean isAttack = button == attack;
 
 		// fabric: filter only presses
-		if (action == 1 && CurvedTrackInteraction.onClickInput(isUse, isAttack)) {
+		if (action != 1)
+			return InteractionResult.PASS;
+
+		if (CurvedTrackInteraction.onClickInput(isUse, isAttack)) {
 			return InteractionResult.SUCCESS;
 		}
 

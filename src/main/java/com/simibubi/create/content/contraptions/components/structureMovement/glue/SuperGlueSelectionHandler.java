@@ -22,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -208,6 +209,7 @@ public class SuperGlueSelectionHandler {
 					return false;
 		}
 
+		player.swing(InteractionHand.MAIN_HAND);
 		if (firstPos != null && currentCluster != null) {
 			boolean canReach = currentCluster.contains(hoveredPos);
 			boolean canAfford = SuperGlueSelectionHelper.collectGlueFromInventory(player, glueRequired, true);
