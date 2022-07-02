@@ -9,13 +9,13 @@ import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ChangeThrottleInstruction extends ScheduleInstruction {
 
@@ -23,7 +23,7 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 		super();
 		data.putInt("Value", 100);
 	}
-	
+
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
 		return Pair.of(icon(), formatted());
@@ -57,7 +57,7 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addScrollInput(0, 50, (si, l) -> {
 			si.withRange(5, 101)
