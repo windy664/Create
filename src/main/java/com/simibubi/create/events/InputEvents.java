@@ -13,8 +13,11 @@ import io.github.fabricators_of_create.porting_lib.event.client.KeyInputCallback
 import io.github.fabricators_of_create.porting_lib.event.client.MouseButtonCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.MouseScrolledCallback;
 
-import net.minecraft.client.KeyMapping;
+import io.github.fabricators_of_create.porting_lib.event.client.OnStartUseItemCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.PickBlockCallback;
+import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 
 public class InputEvents {
@@ -56,25 +59,37 @@ public class InputEvents {
 		if (mc.screen != null)
 			return InteractionResult.PASS;
 
-		if (CurvedTrackInteraction.onClickInput(button, action, mods)) {
+		int use = KeyBindingHelper.getKeyCode(mc.options.keyUse).getValue();
+		int attack = KeyBindingHelper.getKeyCode(mc.options.keyAttack).getValue();
+		boolean isUse = button == use;
+		boolean isAttack = button == attack;
+
+		// fabric: filter only presses
+		if (action == 1 && CurvedTrackInteraction.onClickInput(isUse, isAttack)) {
 			return InteractionResult.SUCCESS;
 		}
-		boolean cancel = false;
-		if (action == 0 || action == 1) {
-			if (CreateClient.GLUE_HANDLER.onMouseInput(action == 1))
-				cancel = true;
-		}
 
-		if (mc.options.keyPickItem.isDown()) {
-			if (ToolboxHandlerClient.onPickItem())
+
+		if (isUse || isAttack) {
+			if (CreateClient.GLUE_HANDLER.onMouseInput(isAttack))
 				return InteractionResult.SUCCESS;
-			return InteractionResult.PASS;
 		}
 
-		if (button != 1)
-			return InteractionResult.PASS;
-		LinkedControllerClientHandler.deactivateInLectern();
-		return TrainRelocator.onClicked(button, action, mods) == InteractionResult.SUCCESS || cancel ? InteractionResult.SUCCESS : InteractionResult.PASS;
+		return InteractionResult.PASS;
+	}
+
+	public static InteractionResult onStartUseItem(InteractionHand hand) {
+		if (Minecraft.getInstance().screen == null) {
+			LinkedControllerClientHandler.deactivateInLectern();
+			TrainRelocator.onClicked();
+		}
+		return InteractionResult.PASS;
+	}
+
+	public static boolean onPickBlock() {
+		if (Minecraft.getInstance().screen != null)
+			return false;
+		return ToolboxHandlerClient.onPickItem();
 	}
 
 	public static void register() {
@@ -82,6 +97,8 @@ public class InputEvents {
 		MouseScrolledCallback.EVENT.register(InputEvents::onMouseScrolled);
 		MouseButtonCallback.EVENT.register(InputEvents::onMouseInput);
 		MouseButtonCallback.EVENT.register(InputEvents::onClickInput);
+		OnStartUseItemCallback.EVENT.register(InputEvents::onStartUseItem);
+		PickBlockCallback.EVENT.register(InputEvents::onPickBlock);
 	}
 
 }

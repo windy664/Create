@@ -101,7 +101,7 @@ public class CurvedTrackInteraction {
 		breakPos = null;
 	}
 
-	public static boolean onClickInput(int button, int action, int mods) {
+	public static boolean onClickInput(boolean isUse, boolean isAttack) {
 		BezierPointSelection result = TrackBlockOutline.result;
 		if (result == null)
 			return false;
@@ -113,7 +113,7 @@ public class CurvedTrackInteraction {
 		if (player == null || level == null)
 			return false;
 
-		if (button == 1) {
+		if (isUse) {
 			ItemStack heldItem = player.getMainHandItem();
 			Item item = heldItem.getItem();
 			if (AllBlocks.TRACK.isIn(heldItem)) {
@@ -138,7 +138,7 @@ public class CurvedTrackInteraction {
 			}
 		}
 
-		if (button == 0)
+		if (isAttack)
 			return true;
 
 		return false;

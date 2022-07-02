@@ -20,6 +20,8 @@ import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
+import com.simibubi.create.foundation.utility.fabric.ReachUtil;
+
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -30,7 +32,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -62,8 +63,8 @@ public class TrackBlockOutline {
 
 		result = null;
 
-		AttributeInstance range = player.getAttribute(ReachEntityAttributes.REACH);
-		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range.getValue()) + 1, origin);
+		double range = ReachUtil.reach(mc.player);
+		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range) + 1, origin);
 		Map<BlockPos, TrackTileEntity> turns = TRACKS_WITH_TURNS.get(mc.level);
 
 		for (TrackTileEntity te : turns.values()) {

@@ -72,7 +72,7 @@ public class TrainRelocator {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static InteractionResult onClicked(int button, int action, int mods) {
+	public static InteractionResult onClicked() {
 		if (relocatingTrain == null)
 			return InteractionResult.PASS;
 
@@ -150,7 +150,7 @@ public class TrainRelocator {
 		boolean direction = bezierSelection != null && lookAngle.dot(bezierSelection.direction()) < 0;
 		boolean result = relocate(relocating, mc.level, blockPos, hoveredBezier, direction, lookAngle, true);
 		if (!simulate && result) {
-			relocating.carriages.forEach(c -> c.forEachPresentEntity(e -> e.nonDamageTicks = 10));			
+			relocating.carriages.forEach(c -> c.forEachPresentEntity(e -> e.nonDamageTicks = 10));
 			AllPackets.channel.sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, hoveredBezier,
 				direction, lookAngle, relocatingEntityId));
 		}
