@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.simibubi.create.AllTags;
 
+import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -90,7 +92,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement,
-		BlockPickInteractionAware, CustomPathNodeTypeBlock, DestroyProgressRenderingHandler {
+		BlockPickInteractionAware, CustomPathNodeTypeBlock, DestroyProgressRenderingHandler, ReducedDestroyEffects {
 
 	public static final Property<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
 	public static final Property<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
@@ -102,11 +104,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			.setValue(PART, BeltPart.START)
 			.setValue(CASING, false));
 	}
-
-//	@Environment(EnvType.CLIENT)
-//	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
-//		consumer.accept(new RenderProperties());
-//	}
 
 	@Override
 	public void fillItemCategory(CreativeModeTab p_149666_1_, NonNullList<ItemStack> p_149666_2_) {

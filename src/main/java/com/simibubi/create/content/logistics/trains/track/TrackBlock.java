@@ -101,7 +101,7 @@ import net.minecraft.world.ticks.LevelTickAccess;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, DestroyProgressRenderingHandler {
+public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, DestroyProgressRenderingHandler, ReducedDestroyEffects {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
