@@ -30,6 +30,7 @@ public class AllCommands {
 				.then(FixLightingCommand.register())
 				.then(HighlightCommand.register())
 				.then(KillTrainCommand.register())
+				.then(PassengerCommand.register())
 				.then(CouplingCommand.register())
 				.then(ConfigCommand.register())
 				.then(PonderCommand.register())
@@ -57,6 +58,7 @@ public class AllCommands {
 				.then(ReplaceInCommandBlocksCommand.register())
 				.then(ClearBufferCacheCommand.register())
 				.then(CameraDistanceCommand.register())
+				.then(CameraAngleCommand.register())
 				.then(FlySpeedCommand.register())
 				//.then(KillTPSCommand.register())
 				.build();

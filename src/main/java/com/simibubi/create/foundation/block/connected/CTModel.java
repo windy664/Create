@@ -72,7 +72,7 @@ public class CTModel extends ForwardingBakedModel {
 
 		SpriteFinder spriteFinder = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS));
 		context.pushTransform(quad -> {
-			CTSpriteShiftEntry spriteShift = behaviour.get(state, quad.lightFace());
+			CTSpriteShiftEntry spriteShift = behaviour.get(state, quad.lightFace(), quad.getSprite());
 			if (spriteShift != null) {
 				TextureAtlasSprite sprite = spriteFinder.find(quad, 0);
 				if (sprite == spriteShift.getOriginal()) {
