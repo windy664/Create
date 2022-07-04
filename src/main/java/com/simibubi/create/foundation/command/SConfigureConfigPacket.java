@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.command;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
+
 import org.apache.logging.log4j.LogManager;
 
 import com.simibubi.create.Create;
@@ -228,7 +230,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			}
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private static void camAngleTarget(String value, boolean yaw) {
 			try {
 				float v = Float.parseFloat(value);
@@ -244,7 +246,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			}
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private static void camAngleFunction(String value) {
 			CameraAngleAnimationService.Mode mode = CameraAngleAnimationService.Mode.LINEAR;
 			String modeString = value;

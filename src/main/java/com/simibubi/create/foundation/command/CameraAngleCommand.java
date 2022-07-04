@@ -14,7 +14,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.PacketDistributor;
 
 public class CameraAngleCommand {
 
@@ -53,9 +52,8 @@ public class CameraAngleCommand {
 		String optionName = (yaw ? SConfigureConfigPacket.Actions.camAngleYawTarget : SConfigureConfigPacket.Actions.camAnglePitchTarget).name();
 
 		getPlayersFromContext(ctx).forEach(player -> {
-			AllPackets.channel.send(
-					PacketDistributor.PLAYER.with(() -> player),
-					new SConfigureConfigPacket(optionName, String.valueOf(angleTarget))
+			AllPackets.channel.sendToClient(
+					new SConfigureConfigPacket(optionName, String.valueOf(angleTarget)), player
 			);
 			targets.incrementAndGet();
 		});
@@ -67,9 +65,8 @@ public class CameraAngleCommand {
 		AtomicInteger targets = new AtomicInteger(0);
 
 		getPlayersFromContext(ctx).forEach(player -> {
-			AllPackets.channel.send(
-					PacketDistributor.PLAYER.with(() -> player),
-					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.camAngleFunction.name(), value)
+			AllPackets.channel.sendToClient(
+					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.camAngleFunction.name(), value), player
 			);
 			targets.incrementAndGet();
 		});
@@ -81,9 +78,8 @@ public class CameraAngleCommand {
 		AtomicInteger targets = new AtomicInteger(0);
 
 		getPlayersFromContext(ctx).forEach(player -> {
-			AllPackets.channel.send(
-					PacketDistributor.PLAYER.with(() -> player),
-					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.camAngleFunction.name(), value + ":" + speed)
+			AllPackets.channel.sendToClient(
+					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.camAngleFunction.name(), value + ":" + speed), player
 			);
 			targets.incrementAndGet();
 		});

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;

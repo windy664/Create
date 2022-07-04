@@ -72,6 +72,8 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
+import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback.CameraInfo;
 import io.github.fabricators_of_create.porting_lib.event.client.DrawSelectionEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.EntityAddedLayerCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.AttackAirCallback;
@@ -252,15 +254,15 @@ public class ClientEvents {
 		ms.popPose();
 	}
 
-	@SubscribeEvent
-	public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+	public static boolean onCameraSetup(CameraInfo info) {
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
 		if (CameraAngleAnimationService.isYawAnimating())
-			event.setYaw(CameraAngleAnimationService.getYaw(partialTicks));
+			info.yaw = CameraAngleAnimationService.getYaw(partialTicks);
 
 		if (CameraAngleAnimationService.isPitchAnimating())
-			event.setPitch(CameraAngleAnimationService.getPitch(partialTicks));
+			info.pitch = CameraAngleAnimationService.getPitch(partialTicks);
+		return false;
 	}
 
 	public static RenderTooltipBorderColorCallback.BorderColorEntry getItemTooltipColor(ItemStack stack, int originalBorderColorStart, int originalBorderColorEnd) {
@@ -444,6 +446,7 @@ public class ClientEvents {
 		UseBlockCallback.EVENT.register(TrackBlockItem::sendExtenderPacket);
 		MountEntityCallback.EVENT.register(ClientEvents::onMount);
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register(ClientEvents::addEntityRendererLayers);
+		CameraSetupCallback.EVENT.register(ClientEvents::onCameraSetup);
 
 		// External Events
 
