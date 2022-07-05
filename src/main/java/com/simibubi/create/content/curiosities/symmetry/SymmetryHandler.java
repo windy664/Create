@@ -54,6 +54,8 @@ public class SymmetryHandler {
 			return InteractionResult.PASS;
 
 		Player player = (Player) context.getPlayer();
+		if (player == null)
+			return InteractionResult.PASS;
 		Inventory inv = player.getInventory();
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			if (!inv.getItem(i)
