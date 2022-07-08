@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.foundation.tileEntity.IMergeableTE;
 
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
@@ -234,9 +233,7 @@ public class BlockHelper {
 			state = PlantUtil.getPlant(state.getBlock());
 
 		if (world.dimensionType()
-			.ultraWarm()
-			&& state.getFluidState()
-				.is(FluidTags.WATER)) {
+			.ultraWarm() && state.getFluidState().is(FluidTags.WATER)) {
 			int i = target.getX();
 			int j = target.getY();
 			int k = target.getZ();

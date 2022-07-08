@@ -245,9 +245,9 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 		int step = sequencedAssemblyRecipe.getStep(stack);
 		int total = length * sequencedAssemblyRecipe.loops;
 		toolTip.add(new TextComponent(""));
-		toolTip.add(Lang.translate("recipe.sequenced_assembly")
+		toolTip.add(Lang.translateDirect("recipe.sequenced_assembly")
 			.withStyle(ChatFormatting.GRAY));
-		toolTip.add(Lang.translate("recipe.assembly.progress", step, total)
+		toolTip.add(Lang.translateDirect("recipe.assembly.progress", step, total)
 			.withStyle(ChatFormatting.DARK_GRAY));
 
 		int remaining = total - step;
@@ -258,7 +258,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 			Component textComponent = sequencedRecipe.getAsAssemblyRecipe()
 				.getDescriptionForAssembly();
 			if (i == 0)
-				toolTip.add(Lang.translate("recipe.assembly.next", textComponent)
+				toolTip.add(Lang.translateDirect("recipe.assembly.next", textComponent)
 					.withStyle(ChatFormatting.AQUA));
 			else
 				toolTip.add(new TextComponent("-> ").append(textComponent)

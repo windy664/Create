@@ -180,7 +180,7 @@ public class OpenEndedPipe extends FlowSource {
 	private boolean provideFluidToSpace(FluidStack fluid, TransactionContext ctx) {
 		if (world == null)
 			return false;
-		if (!LevelUtil.isAreaLoaded(world, outputPos, 0))
+		if (!LevelUtil.isLoaded(world, outputPos))
 			return false;
 
 		BlockState state = world.getBlockState(outputPos);
@@ -207,9 +207,7 @@ public class OpenEndedPipe extends FlowSource {
 			return false;
 
 		if (world.dimensionType()
-			.ultraWarm()
-			&& fluid.getFluid()
-				.is(FluidTags.WATER)) {
+			.ultraWarm() && FluidHelper.isTag(fluid, FluidTags.WATER)) {
 			int i = outputPos.getX();
 			int j = outputPos.getY();
 			int k = outputPos.getZ();
@@ -395,8 +393,7 @@ public class OpenEndedPipe extends FlowSource {
 	public static class MilkEffectHandler implements IEffectHandler {
 		@Override
 		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
-			return fluid.getFluid()
-				.is(Tags.Fluids.MILK);
+			return FluidHelper.isTag(fluid, Tags.Fluids.MILK);
 		}
 
 		@Override
@@ -415,8 +412,7 @@ public class OpenEndedPipe extends FlowSource {
 	public static class WaterEffectHandler implements IEffectHandler {
 		@Override
 		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
-			return fluid.getFluid()
-				.is(FluidTags.WATER);
+			return FluidHelper.isTag(fluid, FluidTags.WATER);
 		}
 
 		@Override
@@ -449,8 +445,7 @@ public class OpenEndedPipe extends FlowSource {
 	public static class LavaEffectHandler implements IEffectHandler {
 		@Override
 		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
-			return fluid.getFluid()
-				.is(FluidTags.LAVA);
+			return FluidHelper.isTag(fluid, FluidTags.LAVA);
 		}
 
 		@Override

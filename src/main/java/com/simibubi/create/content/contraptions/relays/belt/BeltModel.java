@@ -21,24 +21,37 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BeltModel extends ForwardingBakedModel {
 
+	private static final SpriteShiftEntry SPRITE_SHIFT = AllSpriteShifts.ANDESIDE_BELT_CASING;
+
 	public BeltModel(BakedModel template) {
 		wrapped = template;
 	}
 
 	@Override
-	public boolean isVanillaAdapter() {
-		return false;
-	}
+	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData extraData) {
+		List<BakedQuad> quads = super.getQuads(state, side, rand, extraData);
+		if (!extraData.hasProperty(CASING_PROPERTY))
+			return quads;
+		CasingType type = extraData.getData(CASING_PROPERTY);
+		if (type == CasingType.NONE || type == CasingType.BRASS)
+			return quads;
 
-	@Override
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-		boolean applyTransform = false;
-		if (blockView instanceof RenderAttachedBlockView attachmentProvider) {
-			Object attachment = attachmentProvider.getBlockEntityRenderAttachment(pos);
-			if (attachment instanceof CasingType casingType) {
-				if (casingType != CasingType.NONE && casingType != CasingType.BRASS) {
-					applyTransform =  true;
-				}
+		quads = new ArrayList<>(quads);
+
+		for (int i = 0; i < quads.size(); i++) {
+			BakedQuad quad = quads.get(i);
+			TextureAtlasSprite original = quad.getSprite();
+			if (original != SPRITE_SHIFT.getOriginal())
+				continue;
+
+			BakedQuad newQuad = QuadHelper.clone(quad);
+			int[] vertexData = newQuad.getVertices();
+
+			for (int vertex = 0; vertex < 4; vertex++) {
+				float u = QuadHelper.getU(vertexData, vertex);
+				float v = QuadHelper.getV(vertexData, vertex);
+				QuadHelper.setU(vertexData, vertex, SPRITE_SHIFT.getTargetU(u));
+				QuadHelper.setV(vertexData, vertex, SPRITE_SHIFT.getTargetV(v));
 			}
 		}
 		if (applyTransform) {

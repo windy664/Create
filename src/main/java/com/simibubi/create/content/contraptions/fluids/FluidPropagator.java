@@ -64,7 +64,7 @@ public class FluidPropagator {
 
 			for (Direction direction : getPipeConnections(currentState, pipe)) {
 				BlockPos target = currentPos.relative(direction);
-				if (!LevelUtil.isAreaLoaded(world,target, 0))
+				if (world instanceof Level l && !l.isLoaded(target))
 					continue;
 
 				BlockEntity tileEntity = world.getBlockEntity(target);

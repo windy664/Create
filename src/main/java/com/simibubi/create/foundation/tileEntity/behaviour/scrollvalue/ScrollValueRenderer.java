@@ -72,7 +72,7 @@ public class ScrollValueRenderer {
 		}
 
 		if (behaviour.canInteract(Minecraft.getInstance().player))
-			box.scrollTooltip(new TextComponent("[").append(Lang.translate("action.scroll")).append("]"));
+			box.scrollTooltip(new TextComponent("[").append(Lang.translateDirect("action.scroll")).append("]"));
 		box.offsetLabel(behaviour.textShift.add(20, -10, 0))
 				.withColors(0x5A5D5A, 0xB5B7B6)
 				.passive(!highlight);

@@ -102,10 +102,14 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 	}
 
 	public static void renderRemainingAirOverlay(PoseStack poseStack, float partialTicks, Window window) {
-		LocalPlayer player = Minecraft.getInstance().player;
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+			return;
+
+		LocalPlayer player = mc.player;
 		if (player == null)
 			return;
-		if (player.isSpectator() || player.isCreative())
+		if (player.isCreative())
 			return;
 		if (!player.getExtraCustomData()
 			.contains("VisualBacktankAir"))

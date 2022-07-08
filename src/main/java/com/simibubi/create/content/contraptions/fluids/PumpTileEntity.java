@@ -160,7 +160,7 @@ public class PumpTileEntity extends KineticTileEntity {
 				int distance = entry.getFirst();
 				BlockPos currentPos = entry.getSecond();
 
-				if (!LevelUtil.isAreaLoaded(level, currentPos, 0))
+				if (!LevelUtil.isLoaded(level, currentPos))
 					continue;
 				if (visited.contains(currentPos))
 					continue;
@@ -174,7 +174,7 @@ public class PumpTileEntity extends KineticTileEntity {
 					BlockFace blockFace = new BlockFace(currentPos, face);
 					BlockPos connectedPos = blockFace.getConnectedPos();
 
-					if (!LevelUtil.isAreaLoaded(level, connectedPos, 0))
+					if (!LevelUtil.isLoaded(level, connectedPos))
 						continue;
 					if (blockFace.isEquivalent(start))
 						continue;

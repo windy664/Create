@@ -140,12 +140,12 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			return CAMPFIRE_SMOKE_CLIP;
 		return pState.getShape(pLevel, pPos);
 	}
-	
+
 	@Override
 	public VoxelShape getBlockSupportShape(BlockState pState, BlockGetter pReader, BlockPos pPos) {
 		return Shapes.block();
 	}
-	
+
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
@@ -205,7 +205,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 				.createLegacyBlock();
 			soundevent = FluidVariantAttributes.getEmptySound(FluidVariant.of(fluid));
 		}
-		
+
 		if (exchange == FluidExchange.TANK_TO_ITEM) {
 			if (creative && !onClient)
 				if (fluidTank instanceof CreativeSmartFluidTank)
@@ -359,7 +359,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	public static void updateBoilerState(BlockState pState, Level pLevel, BlockPos tankPos) {
 		BlockState tankState = pLevel.getBlockState(tankPos);
-		if (!(tankState.getBlock() instanceof FluidTankBlock tank))
+		if (!(tankState.getBlock()instanceof FluidTankBlock tank))
 			return;
 		FluidTankTileEntity tankTE = tank.getTileEntity(pLevel, tankPos);
 		if (tankTE == null)

@@ -128,7 +128,7 @@ public interface ItemAttribute {
 
 	@Environment(value = EnvType.CLIENT)
 	default TranslatableComponent format(boolean inverted) {
-		return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
+		return Lang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
 			getTranslationParameters());
 	}
 
@@ -305,7 +305,7 @@ public interface ItemAttribute {
 		@Override
 		@Environment(value = EnvType.CLIENT)
 		public TranslatableComponent format(boolean inverted) {
-			return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
+			return Lang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
 				group.getDisplayName());
 		}
 

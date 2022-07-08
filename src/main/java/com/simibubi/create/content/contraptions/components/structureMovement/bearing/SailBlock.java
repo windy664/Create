@@ -110,7 +110,7 @@ public class SailBlock extends WrenchableDirectionalBlock implements BlockPickIn
 		return InteractionResult.PASS;
 	}
 
-	protected void applyDye(BlockState state, Level world, BlockPos pos, Vec3 hit, @Nullable DyeColor color) {
+	public void applyDye(BlockState state, Level world, BlockPos pos, Vec3 hit, @Nullable DyeColor color) {
 		BlockState newState =
 			(color == null ? AllBlocks.SAIL_FRAME : AllBlocks.DYED_SAILS.get(color)).getDefaultState();
 		newState = BlockHelper.copyProperties(state, newState);

@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Blo
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.tileEntity.IMergeableTE;
+import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
@@ -97,7 +98,7 @@ public class SchematicPrinter {
 
 		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, new BlockPos(activeTemplate.getSize())
 			.offset(-1, -1, -1));
-		blockReader.bounds.encapsulate(BoundingBox.fromCorners(extraBounds, extraBounds));
+		blockReader.bounds = BBHelper.encapsulate(blockReader.bounds, extraBounds);
 
 		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
 			settings.getRotation(), settings.getMirror());
@@ -194,7 +195,7 @@ public class SchematicPrinter {
 		BlockState toReplace = world.getBlockState(pos);
 		BlockEntity toReplaceTE = world.getBlockEntity(pos);
 		BlockState toReplaceOther = null;
-		
+
 		if (state.hasProperty(BlockStateProperties.BED_PART) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)
 				&& state.getValue(BlockStateProperties.BED_PART) == BedPart.FOOT)
 			toReplaceOther = world.getBlockState(pos.relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
@@ -238,7 +239,7 @@ public class SchematicPrinter {
 			BlockState required = blockReader.getBlockState(relPos);
 			BlockEntity requiredTE = blockReader.getBlockEntity(relPos);
 
-			if (!LevelUtil.isAreaLoaded(world, pos.offset(schematicAnchor), 0)) {
+			if (!LevelUtil.isLoaded(world, pos.offset(schematicAnchor))) {
 				checklist.warnBlockNotLoaded();
 				continue;
 			}

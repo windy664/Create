@@ -285,7 +285,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 
 		ItemStack handItem = player.getItemInHand(hand);
 		if (!player.isCreative() && !AllBlocks.RAILWAY_CASING.isIn(handItem)) {
-			player.displayClientMessage(Lang.translate("train_assembly.requires_casing"), true);
+			player.displayClientMessage(Lang.translateDirect("train_assembly.requires_casing"), true);
 			return false;
 		}
 
@@ -299,7 +299,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 
 		BlockState bogeyAnchor = ProperWaterloggedBlock.withWater(level, track.getBogeyAnchor(level, pos, state), pos);
 		level.setBlock(targetPos, bogeyAnchor, 3);
-		player.displayClientMessage(Lang.translate("train_assembly.bogey_created"), true);
+		player.displayClientMessage(Lang.translateDirect("train_assembly.bogey_created"), true);
 		SoundType soundtype = bogeyAnchor.getBlock()
 			.getSoundType(state);
 		level.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F,
@@ -346,9 +346,11 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		if (!edgePoint.hasValidTrack())
 			return;
 
-		GlobalStation station = getStation();
-		if (station == null || station.getPresentTrain() != null)
-			return;
+		if (!isVirtual()) {
+			GlobalStation station = getStation();
+			if (station == null || station.getPresentTrain() != null)
+				return;
+		}
 
 		int prevLength = assemblyLength;
 		BlockPos targetPosition = edgePoint.getGlobalPosition();
@@ -398,6 +400,8 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		if (level.isClientSide)
 			return;
 		if (prevLength == assemblyLength)
+			return;
+		if (isVirtual())
 			return;
 
 		Map<BlockPos, BoundingBox> map = assemblyAreas.get(level);
@@ -449,7 +453,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			return;
 
 		if (bogeyLocations[0] != 0) {
-			exception(new AssemblyException(Lang.translate("train_assembly.frontmost_bogey_at_station")), -1);
+			exception(new AssemblyException(Lang.translateDirect("train_assembly.frontmost_bogey_at_station")), -1);
 			return;
 		}
 
@@ -482,7 +486,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 				break;
 
 			if (loc - iPrevious < 3) {
-				exception(new AssemblyException(Lang.translate("train_assembly.bogeys_too_close", i, i + 1)), -1);
+				exception(new AssemblyException(Lang.translateDirect("train_assembly.bogeys_too_close", i, i + 1)), -1);
 				return;
 			}
 
@@ -558,7 +562,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		}
 
 		if (points.size() == 0) {
-			exception(new AssemblyException(Lang.translate("train_assembly.no_bogeys")), -1);
+			exception(new AssemblyException(Lang.translateDirect("train_assembly.no_bogeys")), -1);
 			return;
 		}
 
@@ -580,7 +584,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 				atLeastOneForwardControls |= contraption.hasForwardControls();
 				contraption.setSoundQueueOffset(offset);
 				if (!success) {
-					exception(new AssemblyException(Lang.translate("train_assembly.nothing_attached", bogeyIndex + 1)),
+					exception(new AssemblyException(Lang.translateDirect("train_assembly.nothing_attached", bogeyIndex + 1)),
 						-1);
 					return;
 				}
@@ -599,7 +603,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			if (secondBogeyPos != null) {
 				if (bogeyIndex == bogeyCount - 1 || !secondBogeyPos
 					.equals(bogeyPosOffset.relative(assemblyDirection, bogeyLocations[bogeyIndex + 1] + 1))) {
-					exception(new AssemblyException(Lang.translate("train_assembly.not_connected_in_order")),
+					exception(new AssemblyException(Lang.translateDirect("train_assembly.not_connected_in_order")),
 						contraptions.size() + 1);
 					return;
 				}
@@ -610,7 +614,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 				bogeyIndex++;
 
 			} else if (!typeOfFirstBogey.allowsSingleBogeyCarriage()) {
-				exception(new AssemblyException(Lang.translate("train_assembly.single_bogey_carriage")),
+				exception(new AssemblyException(Lang.translateDirect("train_assembly.single_bogey_carriage")),
 					contraptions.size() + 1);
 				return;
 			}
@@ -620,7 +624,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		}
 
 		if (!atLeastOneForwardControls) {
-			exception(new AssemblyException(Lang.translate("train_assembly.no_controls")), -1);
+			exception(new AssemblyException(Lang.translateDirect("train_assembly.no_controls")), -1);
 			return;
 		}
 

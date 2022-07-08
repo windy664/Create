@@ -146,7 +146,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		if (!context.contraption.hasUniversalCreativeCrate) {
 			Storage<ItemVariant> iItemHandler = context.contraption.getSharedInventory();
 			for (ItemRequirement.StackRequirement required : requiredItems) {
-				ItemStack stack = ItemHelper
+				ItemStack stack= ItemHelper
 					.extract(iItemHandler, required::matches, ExtractionCountMode.EXACTLY,
 						required.stack.getCount(), true)
 					;

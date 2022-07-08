@@ -63,9 +63,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 		addRenderableWidget(resetButton);
 		addRenderableWidget(confirmButton);
 
-		extraAreas = ImmutableList.of(
-			new Rect2i(x + background.width, y + background.height - 36, 56, 44)
-		);
+		extraAreas = ImmutableList.of(new Rect2i(x + background.width, y + background.height - 36, 56, 44));
 	}
 
 	@Override
@@ -80,8 +78,8 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 		background.render(ms, x, y, this);
 		font.draw(ms, title, x + 15, y + 4, 0xFFFFFF);
 
-		GuiGameElement.of(AllBlockPartials.CRAFTING_BLUEPRINT_1x1)
-			.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 20, y + background.height - 32, 0)
+		GuiGameElement.of(AllBlockPartials.CRAFTING_BLUEPRINT_1x1).<GuiGameElement
+			.GuiRenderBuilder>at(x + background.width + 20, y + background.height - 32, 0)
 			.rotate(45, -45, 22.5f)
 			.scale(40)
 			.render(ms);
@@ -111,26 +109,26 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 			return list;
 
 		if (slot < 9) {
-			list.add(Lang.createTranslationTextComponent("crafting_blueprint.crafting_slot")
+			list.add(Lang.translateDirect("crafting_blueprint.crafting_slot")
 				.withStyle(ChatFormatting.GOLD));
 			if (isEmptySlot)
-				list.add(Lang.createTranslationTextComponent("crafting_blueprint.filter_items_viable")
+				list.add(Lang.translateDirect("crafting_blueprint.filter_items_viable")
 					.withStyle(ChatFormatting.GRAY));
 
 		} else if (slot == 9) {
-			list.add(Lang.createTranslationTextComponent("crafting_blueprint.display_slot")
+			list.add(Lang.translateDirect("crafting_blueprint.display_slot")
 				.withStyle(ChatFormatting.GOLD));
 			if (!isEmptySlot)
 				list.add(Lang
-					.createTranslationTextComponent("crafting_blueprint."
-						+ (menu.contentHolder.inferredIcon ? "inferred" : "manually_assigned"))
+					.translateDirect(
+						"crafting_blueprint." + (menu.contentHolder.inferredIcon ? "inferred" : "manually_assigned"))
 					.withStyle(ChatFormatting.GRAY));
 
 		} else if (slot == 10) {
-			list.add(Lang.createTranslationTextComponent("crafting_blueprint.secondary_display_slot")
+			list.add(Lang.translateDirect("crafting_blueprint.secondary_display_slot")
 				.withStyle(ChatFormatting.GOLD));
 			if (isEmptySlot)
-				list.add(Lang.createTranslationTextComponent("crafting_blueprint.optional")
+				list.add(Lang.translateDirect("crafting_blueprint.optional")
 					.withStyle(ChatFormatting.GRAY));
 		}
 

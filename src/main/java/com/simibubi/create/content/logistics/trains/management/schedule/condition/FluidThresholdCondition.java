@@ -105,12 +105,12 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	@Override
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
-			Lang.translate("schedule.condition.threshold.train_holds",
-				Lang.translate("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
-			Lang.translate("schedule.condition.threshold.x_units_of_item", getThreshold(),
-				Lang.translate("schedule.condition.threshold.buckets"),
+			Lang.translateDirect("schedule.condition.threshold.train_holds",
+				Lang.translateDirect("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
+			Lang.translateDirect("schedule.condition.threshold.x_units_of_item", getThreshold(),
+				Lang.translateDirect("schedule.condition.threshold.buckets"),
 				compareStack.getItem() instanceof FilterItem
-					? Lang.translate("schedule.condition.threshold.matching_content")
+					? Lang.translateDirect("schedule.condition.threshold.matching_content")
 					: loadFluid().getDisplayName())
 				.withStyle(ChatFormatting.DARK_AQUA));
 	}
@@ -135,7 +135,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		super.initConfigurationWidgets(builder);
 		builder.addSelectionScrollInput(71, 50, (i, l) -> {
-			i.forOptions(ImmutableList.of(Lang.translate("schedule.condition.threshold.buckets")))
+			i.forOptions(ImmutableList.of(Lang.translateDirect("schedule.condition.threshold.buckets")))
 				.titled(null);
 		}, "Measure");
 	}
@@ -146,8 +146,8 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 		if (lastDisplaySnapshot == -1)
 			return TextComponent.EMPTY.copy();
 		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;
-		return Lang.translate("schedule.condition.threshold.status", lastDisplaySnapshot,
-			Math.max(0, getThreshold() + offset), Lang.translate("schedule.condition.threshold.buckets"));
+		return Lang.translateDirect("schedule.condition.threshold.status", lastDisplaySnapshot,
+			Math.max(0, getThreshold() + offset), Lang.translateDirect("schedule.condition.threshold.buckets"));
 	}
 
 }

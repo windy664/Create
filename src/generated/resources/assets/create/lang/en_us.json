@@ -2348,6 +2348,8 @@
 	"create.ponder.creative_motor.text_1": "Creative motors are a compact and configurable source of Rotational Force",
 	"create.ponder.creative_motor.text_2": "Scrolling on the back panel changes the RPM of the motors' rotational output",
 
+	"create.ponder.creative_motor_mojang.header": "Mojang's Enigma",
+
 	"create.ponder.crushing_wheels.header": "Processing Items with Crushing Wheels",
 	"create.ponder.crushing_wheels.text_1": "A pair of Crushing Wheels can grind items very effectively",
 	"create.ponder.crushing_wheels.text_2": "Their Rotational Input has to make them spin into each other",
@@ -2970,7 +2972,8 @@
 	"create.ponder.train_assembly.text_11": "An optional second one allows departure from Stations in both directions",
 	"create.ponder.train_assembly.text_12": "Open the Station UI and confirm the Assembly process",
 	"create.ponder.train_assembly.text_13": "Trains can be disassembled back into blocks at stations only",
-	"create.ponder.train_assembly.text_14": "Assembled Trains can be relocated to nearby Tracks using the Wrench",
+	"create.ponder.train_assembly.text_14": "When used on a station, maps will add a labeled marker at the location",
+	"create.ponder.train_assembly.text_15": "Assembled Trains can be relocated to nearby Tracks using the Wrench",
 	"create.ponder.train_assembly.text_2": "Stations are the Waypoints of your Track Network",
 	"create.ponder.train_assembly.text_3": "To create a new Train, open the UI and switch to Assembly Mode",
 	"create.ponder.train_assembly.text_4": "During Assembly no scheduled trains will approach this station",

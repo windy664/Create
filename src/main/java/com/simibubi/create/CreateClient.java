@@ -129,11 +129,11 @@ public class CreateClient implements ClientModInitializer {
 				CopperBacktankArmorLayer.renderRemainingAirOverlay(stack, partialTicks, window);
 			else {
 				TrainHUD.renderOverlay(stack, partialTicks, window);
-				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window);
 				GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window);
 				BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window);
 				LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window);
 				SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window);
+				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window);
 			}
 			return false;
 		}));

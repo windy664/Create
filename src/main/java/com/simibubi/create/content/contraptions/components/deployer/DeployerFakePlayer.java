@@ -69,7 +69,7 @@ public class DeployerFakePlayer extends FakeServerPlayer {
 
 	@Override
 	public Component getDisplayName() {
-		return Lang.translate("block.deployer.damage_source_name");
+		return Lang.translateDirect("block.deployer.damage_source_name");
 	}
 
 	@Override

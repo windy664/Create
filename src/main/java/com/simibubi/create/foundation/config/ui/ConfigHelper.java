@@ -33,14 +33,15 @@ public class ConfigHelper {
 	public static final Pattern annotationPattern = Pattern.compile("\\[@cui:([^:]*)(?::(.*))?]");
 
 	public static final Map<String, ConfigChange> changes = new HashMap<>();
-	private static final LoadingCache<String, EnumMap<ModConfig.Type, ModConfig>> configCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build(
-			new CacheLoader<String, EnumMap<ModConfig.Type, ModConfig>>() {
+	private static final LoadingCache<String, EnumMap<ModConfig.Type, ModConfig>> configCache =
+		CacheBuilder.newBuilder()
+			.expireAfterAccess(5, TimeUnit.MINUTES)
+			.build(new CacheLoader<String, EnumMap<ModConfig.Type, ModConfig>>() {
 				@Override
 				public EnumMap<ModConfig.Type, ModConfig> load(@Nonnull String key) {
 					return findModConfigsUncached(key);
 				}
-			}
-	);
+			});
 
 	// FIXME compat with other config libs?
 	private static EnumMap<ModConfig.Type, ModConfig> findModConfigsUncached(String modID) {
@@ -56,7 +57,9 @@ public class ConfigHelper {
 
 	public static IConfigSpec<?> findConfigSpecFor(ModConfig.Type type, String modID) {
 		if (!modID.equals(Create.ID))
-			return configCache.getUnchecked(modID).get(type).getSpec();
+			return configCache.getUnchecked(modID)
+				.get(type)
+				.getSpec();
 		return AllConfigs.byType(type).specification;
 	}
 
@@ -71,13 +74,17 @@ public class ConfigHelper {
 
 	public static boolean hasAnyConfig(String modID) {
 		if (!modID.equals(Create.ID))
-			return !configCache.getUnchecked(modID).isEmpty();
+			return !configCache.getUnchecked(modID)
+				.isEmpty();
 		return true;
 	}
 
 	public static boolean hasAnyForgeConfig(String modID) {
 		if (!modID.equals(Create.ID))
-			return configCache.getUnchecked(modID).values().stream().anyMatch(config -> config.getSpec() instanceof ForgeConfigSpec);
+			return configCache.getUnchecked(modID)
+				.values()
+				.stream()
+				.anyMatch(config -> config.getSpec() instanceof ForgeConfigSpec);
 		return true;
 	}
 
@@ -89,7 +96,8 @@ public class ConfigHelper {
 
 		List<String> pathList = Arrays.asList(path.getPath());
 		ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(pathList);
-		ForgeConfigSpec.ConfigValue<T> configValue = spec.getValues().get(pathList);
+		ForgeConfigSpec.ConfigValue<T> configValue = spec.getValues()
+			.get(pathList);
 		T v = (T) CConfigureConfigPacket.deserialize(configValue.get(), value);
 		if (!valueSpec.test(v))
 			throw new InvalidValueException();
@@ -98,7 +106,8 @@ public class ConfigHelper {
 	}
 
 	// Add a value to the current UI's changes list
-	public static <T> void setValue(String path, ForgeConfigSpec.ConfigValue<T> configValue, T value, @Nullable Map<String, String> annotations) {
+	public static <T> void setValue(String path, ForgeConfigSpec.ConfigValue<T> configValue, T value,
+		@Nullable Map<String, String> annotations) {
 		if (value.equals(configValue.get())) {
 			changes.remove(path);
 		} else {
@@ -106,11 +115,12 @@ public class ConfigHelper {
 		}
 	}
 
-	// Get a value from the current UI's changes list or the config value, if its unchanged
+	// Get a value from the current UI's changes list or the config value, if its
+	// unchanged
 	public static <T> T getValue(String path, ForgeConfigSpec.ConfigValue<T> configValue) {
 		ConfigChange configChange = changes.get(path);
 		if (configChange != null)
-			//noinspection unchecked
+			// noinspection unchecked
 			return (T) configChange.value;
 		else
 			return configValue.get();
@@ -121,7 +131,8 @@ public class ConfigHelper {
 		Map<String, String> annotations = new HashMap<>();
 
 		commentLines.removeIf(line -> {
-			if (line.trim().isEmpty()) {
+			if (line.trim()
+				.isEmpty()) {
 				return true;
 			}
 
@@ -216,5 +227,7 @@ public class ConfigHelper {
 		}
 	}
 
-	public static class InvalidValueException extends Exception {}
+	public static class InvalidValueException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
 }

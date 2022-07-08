@@ -363,7 +363,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		}
 
 		// Check block
-		if (!LevelUtil.isAreaLoaded(getLevel(), printer.getCurrentTarget(), 0)) {
+		if (!LevelUtil.isLoaded(getLevel(), printer.getCurrentTarget())) {
 			positionNotLoaded = true;
 			statusMsg = "targetNotLoaded";
 			state = State.PAUSED;
@@ -779,7 +779,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 
 	@Override
 	public Component getDisplayName() {
-		return Lang.translate("gui.schematicannon.title");
+		return Lang.translateDirect("gui.schematicannon.title");
 	}
 
 	public void updateChecklist() {

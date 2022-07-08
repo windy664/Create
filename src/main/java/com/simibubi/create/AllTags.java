@@ -387,9 +387,11 @@ public class AllTags {
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.CAMPFIRES);
 		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
 
-		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE, Blocks.SOUL_FIRE,
-			Blocks.SOUL_CAMPFIRE);
+		AllBlockTags.FAN_HEATERS.includeAll(BlockTags.FIRE);
+		AllBlockTags.FAN_HEATERS.includeAll(BlockTags.CAMPFIRES);
+		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.LAVA);
 		AllBlockTags.FAN_HEATERS.includeIn(AllBlockTags.PASSIVE_BOILER_HEATERS);
+
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.SIGNS);
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.BANNERS);
 

@@ -39,7 +39,6 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -47,8 +46,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class KineticTileEntity extends SmartTileEntity
-	implements IHaveGoggleInformation, IHaveHoveringInformation, CustomRenderBoundingBoxBlockEntity {
+public class KineticTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IHaveHoveringInformation, CustomRenderBoundingBoxBlockEntity {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;
@@ -94,7 +92,7 @@ public class KineticTileEntity extends SmartTileEntity
 
 		super.tick();
 		effects.tick();
-		
+
 		preventSpeedUpdate = 0;
 
 		if (level.isClientSide) {
@@ -400,9 +398,9 @@ public class KineticTileEntity extends SmartTileEntity
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translate("gui.stressometer.overstressed")
+				.append(Lang.translateDirect("gui.stressometer.overstressed")
 					.withStyle(GOLD)));
-			Component hint = Lang.translate("gui.contraptions.network_overstressed");
+			Component hint = Lang.translateDirect("gui.contraptions.network_overstressed");
 			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add(componentSpacing.plainCopy()
@@ -412,10 +410,11 @@ public class KineticTileEntity extends SmartTileEntity
 
 		if (notFastEnough) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translate("tooltip.speedRequirement")
+				.append(Lang.translateDirect("tooltip.speedRequirement")
 					.withStyle(GOLD)));
-			Component hint = Lang.translate("gui.contraptions.not_fast_enough", I18n.get(getBlockState().getBlock()
-				.getDescriptionId()));
+			Component hint =
+				Lang.translateDirect("gui.contraptions.not_fast_enough", I18n.get(getBlockState().getBlock()
+					.getDescriptionId()));
 			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add(componentSpacing.plainCopy()
@@ -429,29 +428,30 @@ public class KineticTileEntity extends SmartTileEntity
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		boolean added = false;
+
+		if (!StressImpact.isEnabled())
+			return added;
 		float stressAtBase = calculateStressApplied();
+		if (Mth.equal(stressAtBase, 0))
+			return added;
 
-		if (calculateStressApplied() != 0 && StressImpact.isEnabled()) {
-			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translate("gui.goggles.kinetic_stats")));
-			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translate("tooltip.stressImpact")
-					.withStyle(ChatFormatting.GRAY)));
+		Lang.translate("gui.goggles.kinetic_stats")
+			.forGoggles(tooltip);
+		Lang.translate("tooltip.stressImpact")
+			.style(GRAY)
+			.forGoggles(tooltip);
 
-			float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
+		float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
 
-			tooltip.add(componentSpacing.plainCopy()
-				.append(new TextComponent(" " + IHaveGoggleInformation.format(stressTotal))
-					.append(Lang.translate("generic.unit.stress"))
-					.append(" ")
-					.withStyle(ChatFormatting.AQUA))
-				.append(Lang.translate("gui.goggles.at_current_speed")
-					.withStyle(ChatFormatting.DARK_GRAY)));
+		Lang.number(stressTotal)
+			.translate("generic.unit.stress")
+			.style(ChatFormatting.AQUA)
+			.space()
+			.add(Lang.translate("gui.goggles.at_current_speed")
+				.style(ChatFormatting.DARK_GRAY))
+			.forGoggles(tooltip, 1);
 
-			added = true;
-		}
-
-		return added;
+		return true;
 
 	}
 
@@ -583,7 +583,7 @@ public class KineticTileEntity extends SmartTileEntity
 	protected boolean isNoisy() {
 		return true;
 	}
-	
+
 	public int getRotationAngleOffset(Axis axis) {
 		return 0;
 	}

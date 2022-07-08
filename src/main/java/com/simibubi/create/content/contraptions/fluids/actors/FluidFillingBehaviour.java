@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import io.github.fabricators_of_create.porting_lib.extensions.LevelExtensions;
@@ -164,7 +165,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		int maxRangeSq = maxRange * maxRange;
 		int maxBlocks = maxBlocks();
 		boolean evaporate = world.dimensionType()
-			.ultraWarm() && fluid.is(FluidTags.WATER);
+			.ultraWarm() && FluidHelper.isTag(fluid, FluidTags.WATER);
 		boolean canPlaceSources = AllConfigs.SERVER.fluids.placeFluidSourceBlocks.get();
 
 		if ((!fillInfinite() && infinite) || evaporate || !canPlaceSources) {
@@ -242,7 +243,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 						serverTickList.clearArea(new BoundingBox(currentPos));
 					}
 
-					affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
+					affectedArea = BBHelper.encapsulate(affectedArea, currentPos);
 				});
 			}
 

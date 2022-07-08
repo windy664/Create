@@ -171,7 +171,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 
 				CachedBufferer.partial(AllBlockPartials.SIGNAL_WHITE_CUBE, blockState)
 					.light(0xf000f0)
-					.disableDiffuseMult()
+					.disableDiffuse()
 					.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
 					.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
 
@@ -181,7 +181,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 							: yellow ? AllBlockPartials.SIGNAL_YELLOW_GLOW : AllBlockPartials.SIGNAL_WHITE_GLOW,
 						blockState)
 					.light(0xf000f0)
-					.disableDiffuseMult()
+					.disableDiffuse()
 					.scale(vert ? longSideGlow : 2, vert ? 2 : longSideGlow, 2)
 					.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
 			}
@@ -190,7 +190,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 				.partial(first ? AllBlockPartials.SIGNAL_RED
 					: yellow ? AllBlockPartials.SIGNAL_YELLOW : AllBlockPartials.SIGNAL_WHITE, blockState)
 				.light(0xF000F0)
-				.disableDiffuseMult()
+				.disableDiffuse()
 				.scale(1 + 1 / 16f)
 				.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
 

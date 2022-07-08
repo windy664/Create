@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,7 +25,7 @@ public class BeltHelper {
 	}
 
 	public static BeltTileEntity getSegmentTE(LevelAccessor world, BlockPos pos) {
-		if (!LevelUtil.isAreaLoaded(world, pos, 0))
+		if (world instanceof Level l && !l.isLoaded(pos))
 			return null;
 		BlockEntity tileEntity = world.getBlockEntity(pos);
 		if (!(tileEntity instanceof BeltTileEntity))

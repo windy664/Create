@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
+import com.simibubi.create.content.contraptions.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
@@ -143,6 +144,7 @@ public class Create implements ModInitializer {
 			SchematicProcessor.register();
 			AllWorldFeatures.registerFeatures();
 			AllWorldFeatures.registerPlacementTypes();
+			BoilerHeaters.registerDefaults();
 //		});
 	}
 

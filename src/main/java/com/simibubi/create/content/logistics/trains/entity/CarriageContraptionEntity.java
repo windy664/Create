@@ -510,6 +510,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	@Override
 	public boolean startControlling(BlockPos controlsLocalPos, Player player) {
+		if (player == null || player.isSpectator())
+			return false;
 		if (carriage == null)
 			return false;
 		if (carriage.train.derailed)
@@ -527,7 +529,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	@Override
 	public Component getDisplayName() {
 		if (carriage == null)
-			return Lang.translate("train");
+			return Lang.translateDirect("train");
 		return carriage.train.name;
 	}
 
@@ -586,7 +588,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		boolean spaceDown = heldControls.contains(4);
 		GlobalStation currentStation = carriage.train.getCurrentStation();
 		if (currentStation != null && spaceDown) {
-			sendPrompt(player, Lang.translate("train.arrived_at",
+			sendPrompt(player, Lang.translateDirect("train.arrived_at",
 				new TextComponent(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
 			return true;
 		}
@@ -598,7 +600,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		if (currentStation != null && targetSpeed != 0) {
 			stationMessage = false;
-			sendPrompt(player, Lang.translate("train.departing_from",
+			sendPrompt(player, Lang.translateDirect("train.departing_from",
 				new TextComponent(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
 		}
 
@@ -679,7 +681,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private void displayApproachStationMessage(Player player, GlobalStation station) {
 		sendPrompt(player,
-			Lang.translate("contraption.controls.approach_station", new KeybindComponent("key.jump"), station.name),
+			Lang.translateDirect("contraption.controls.approach_station", new KeybindComponent("key.jump"), station.name),
 			false);
 		stationMessage = true;
 	}

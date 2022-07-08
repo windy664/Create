@@ -16,6 +16,7 @@
     "fabric.EntityMixin"
   ],
   "client": [
+    "MapItemSavedDataMixinClient",
     "CameraMixin",
     "DestroyProgressMixin",
     "EntityContraptionInteractionMixin",

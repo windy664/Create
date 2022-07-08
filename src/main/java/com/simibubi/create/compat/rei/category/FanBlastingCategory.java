@@ -1,5 +1,7 @@
 package com.simibubi.create.compat.rei.category;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.category.animations.AnimatedKinetics;
@@ -22,7 +24,7 @@ public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookin
 	}
 
 	@Override
-	protected void renderAttachedBlock(PoseStack matrixStack) {
+	protected void renderAttachedBlock(@NotNull PoseStack matrixStack) {
 		GuiGameElement.of(Fluids.LAVA)
 			.scale(SCALE)
 			.atLocal(0, 0, 2)

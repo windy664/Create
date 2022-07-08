@@ -87,7 +87,7 @@ public class PonderTooltipHandler {
 
 		float renderPartialTicks = Minecraft.getInstance()
 			.getFrameTime();
-		Component component = subject ? Lang.createTranslationTextComponent(SUBJECT)
+		Component component = subject ? Lang.translateDirect(SUBJECT)
 			.withStyle(ChatFormatting.GREEN)
 			: makeProgressBar(Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f));
 		if (toolTip.size() < 2)
@@ -148,7 +148,7 @@ public class PonderTooltipHandler {
 
 	private static Component makeProgressBar(float progress) {
 		MutableComponent holdW = Lang
-			.translate(HOLD_TO_PONDER,
+			.translateDirect(HOLD_TO_PONDER,
 				((MutableComponent) ponderKeybind().getTranslatedKeyMessage()).withStyle(ChatFormatting.GRAY))
 			.withStyle(ChatFormatting.DARK_GRAY);
 

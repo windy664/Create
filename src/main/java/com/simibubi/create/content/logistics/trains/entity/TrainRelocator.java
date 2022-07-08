@@ -80,11 +80,13 @@ public class TrainRelocator {
 		LocalPlayer player = mc.player;
 		if (player == null)
 			return InteractionResult.PASS;
+		if (player.isSpectator())
+			return;
 
 		if (!player.position()
 			.closerThan(relocatingOrigin, 24) || player.isSteppingCarefully()) {
 			relocatingTrain = null;
-			player.displayClientMessage(Lang.translate("train.relocate.abort")
+			player.displayClientMessage(Lang.translateDirect("train.relocate.abort")
 				.withStyle(ChatFormatting.RED), true);
 			return InteractionResult.PASS;
 		}
@@ -296,14 +298,14 @@ public class TrainRelocator {
 			if (entity instanceof AbstractContraptionEntity ce && Math.abs(ce.getPosition(0)
 				.subtract(ce.getPosition(1))
 				.lengthSqr()) > 1 / 1024d) {
-				player.displayClientMessage(Lang.translate("train.cannot_relocate_moving")
+				player.displayClientMessage(Lang.translateDirect("train.cannot_relocate_moving")
 					.withStyle(ChatFormatting.RED), true);
 				relocatingTrain = null;
 				return;
 			}
 
 			if (!AllItems.WRENCH.isIn(player.getMainHandItem())) {
-				player.displayClientMessage(Lang.translate("train.relocate.abort")
+				player.displayClientMessage(Lang.translateDirect("train.relocate.abort")
 					.withStyle(ChatFormatting.RED), true);
 				relocatingTrain = null;
 				return;
@@ -311,19 +313,19 @@ public class TrainRelocator {
 
 			if (!player.position()
 				.closerThan(relocatingOrigin, 24)) {
-				player.displayClientMessage(Lang.translate("train.relocate.too_far")
+				player.displayClientMessage(Lang.translateDirect("train.relocate.too_far")
 					.withStyle(ChatFormatting.RED), true);
 				return;
 			}
 
 			Boolean success = relocateClient(relocating, true);
 			if (success == null)
-				player.displayClientMessage(Lang.translate("train.relocate", relocating.name), true);
+				player.displayClientMessage(Lang.translateDirect("train.relocate", relocating.name), true);
 			else if (success.booleanValue())
-				player.displayClientMessage(Lang.translate("train.relocate.valid")
+				player.displayClientMessage(Lang.translateDirect("train.relocate.valid")
 					.withStyle(ChatFormatting.GREEN), true);
 			else
-				player.displayClientMessage(Lang.translate("train.relocate.invalid")
+				player.displayClientMessage(Lang.translateDirect("train.relocate.invalid")
 					.withStyle(ChatFormatting.RED), true);
 			return;
 		}

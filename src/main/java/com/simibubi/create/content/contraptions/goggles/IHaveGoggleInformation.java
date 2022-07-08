@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
@@ -28,18 +29,25 @@ import net.minecraft.network.chat.TranslatableComponent;
 * */
 public interface IHaveGoggleInformation {
 
-	Format numberFormat = new Format();
+	/**
+	 * Use Lang.[...].forGoggles(list)
+	 */
 	String spacing = "    ";
+
+	/**
+	 * Use Lang.[...].forGoggles(list)
+	 */
+	@Deprecated
 	Component componentSpacing = new TextComponent(spacing);
 
 	/**
 	 * this method will be called when looking at a TileEntity that implemented this
 	 * interface
 	 *
-	 * @return {@code true} if the tooltip creation was successful and should be displayed,
-	 * or {@code false} if the overlay should not be displayed
-	* */
-	default boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking){
+	 * @return {@code true} if the tooltip creation was successful and should be
+	 *         displayed, or {@code false} if the overlay should not be displayed
+	 */
+	default boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return false;
 	}
 
@@ -56,7 +64,9 @@ public interface IHaveGoggleInformation {
 		if (handler == null)
 			return false;
 
-		Component indent = new TextComponent(spacing + " ");
+		LangBuilder mb = Lang.translate("generic.unit.millibuckets");
+		Lang.translate("gui.goggles.fluid_container")
+			.forGoggles(tooltip);
 
 		boolean isEmpty = true;
 		try (Transaction t = TransferUtil.getTransaction()) {
@@ -72,19 +82,19 @@ public interface IHaveGoggleInformation {
 				if (amount == 0)
 					continue;
 
-				long tankCapacity = view.getCapacity();
-				Component fluidName = FluidVariantAttributes.getName(view.getResource()).copy().withStyle(ChatFormatting.GRAY);
-				Component contained = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(amount, unit, simplify)).append(mb).withStyle(ChatFormatting.GOLD);
-				Component slash = new TextComponent(" / ").withStyle(ChatFormatting.GRAY);
-				Component capacity = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(
-						tankCapacity, unit, simplify)).append(mb).withStyle(ChatFormatting.DARK_GRAY);
+			Lang.fluidName(fluidStack)
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip, 1);
 
-				tooltip.add(indent.plainCopy()
-						.append(fluidName));
-				tooltip.add(indent.plainCopy()
-						.append(contained)
-						.append(slash)
-						.append(capacity));
+				Lang.builder()
+				.add(Lang.number(fluidStack.getAmount())
+						.add(mb)
+				.style(ChatFormatting.GOLD))
+				.text(ChatFormatting.GRAY, " / ")
+				.add(Lang.number(tank.getTankCapacity(i))
+						.add(mb)
+						.style(ChatFormatting.DARK_GRAY))
+						.forGoggles(tooltip, 1);
 
 				isEmpty = false;
 			}
@@ -98,33 +108,16 @@ public interface IHaveGoggleInformation {
 			if (!isEmpty)
 				return true;
 
-			Component capacity = Lang.translate("gui.goggles.fluid_container.capacity").withStyle(ChatFormatting.GRAY);
-			Component amount = new TextComponent(FluidTextUtil.getUnicodeMillibuckets(first.getCapacity(), unit, simplify)).append(mb).withStyle(ChatFormatting.GOLD);
+		Lang.translate("gui.goggles.fluid_container.capacity")
+			.add(Lang.number(tank.getTankCapacity(0))
+				.add(mb)
+				.style(ChatFormatting.GOLD))
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip, 1);
 
-			tooltip.add(indent.plainCopy()
-					.append(capacity)
-					.append(amount));
+
 			return true;
 		}
-	}
-
-	class Format {
-
-		private NumberFormat format = NumberFormat.getNumberInstance(Locale.ROOT);
-
-		private Format() {}
-
-		public NumberFormat get() {
-			return format;
-		}
-
-		public void update() {
-			format = NumberFormat.getInstance(MinecraftClientUtil.getLocale());
-			format.setMaximumFractionDigits(2);
-			format.setMinimumFractionDigits(0);
-			format.setGroupingUsed(true);
-		}
-
 	}
 
 }

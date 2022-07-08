@@ -57,7 +57,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 		if (player.isSteppingCarefully() && stack.hasTag()) {
 			if (level.isClientSide)
 				return InteractionResult.SUCCESS;
-			player.displayClientMessage(Lang.translate("display_link.clear"), true);
+			player.displayClientMessage(Lang.translateDirect("display_link.clear"), true);
 			stack.setTag(null);
 			return InteractionResult.SUCCESS;
 		}
@@ -67,7 +67,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 				return InteractionResult.SUCCESS;
 			CompoundTag stackTag = stack.getOrCreateTag();
 			stackTag.put("SelectedPos", NbtUtils.writeBlockPos(pos));
-			player.displayClientMessage(Lang.translate("display_link.set"), true);
+			player.displayClientMessage(Lang.translateDirect("display_link.set"), true);
 			stack.setTag(stackTag);
 			return InteractionResult.SUCCESS;
 		}
@@ -80,7 +80,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 			.isReplaceable() ? 0 : 1);
 
 		if (!selectedPos.closerThan(placedPos, AllConfigs.SERVER.logistics.displayLinkRange.get())) {
-			player.displayClientMessage(Lang.translate("display_link.too_far")
+			player.displayClientMessage(Lang.translateDirect("display_link.too_far")
 				.withStyle(ChatFormatting.RED), true);
 			return InteractionResult.FAIL;
 		}
@@ -95,7 +95,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 		ItemStack itemInHand = player.getItemInHand(pContext.getHand());
 		if (!itemInHand.isEmpty())
 			itemInHand.setTag(null);
-		player.displayClientMessage(Lang.translate("display_link.success")
+		player.displayClientMessage(Lang.translateDirect("display_link.success")
 			.withStyle(ChatFormatting.GREEN), true);
 		return useOn;
 	}

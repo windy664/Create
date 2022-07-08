@@ -26,6 +26,8 @@ public class ScheduleItemRetrieval {
 	public static InteractionResult removeScheduleFromConductor(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
 		if (player == null || entity == null)
 			return InteractionResult.PASS;
+		if (player.isSpectator())
+			return;
 
 		Entity rootVehicle = entity.getRootVehicle();
 		if (!(rootVehicle instanceof CarriageContraptionEntity))
@@ -67,20 +69,20 @@ public class ScheduleItemRetrieval {
 		if (train.runtime.paused && !train.runtime.completed) {
 			train.runtime.paused = false;
 			AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
-			player.displayClientMessage(Lang.translate("schedule.continued"), true);
+			player.displayClientMessage(Lang.translateDirect("schedule.continued"), true);
 			return InteractionResult.SUCCESS;
 		}
 
 		ItemStack itemInHand = player.getItemInHand(hand);
 		if (!itemInHand.isEmpty()) {
 			AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
-			player.displayClientMessage(Lang.translate("schedule.remove_with_empty_hand"), true);
+			player.displayClientMessage(Lang.translateDirect("schedule.remove_with_empty_hand"), true);
 			return InteractionResult.SUCCESS;
 		}
 
 		AllSoundEvents.playItemPickup(player);
 		player.displayClientMessage(
-			Lang.translate(
+			Lang.translateDirect(
 				train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
 			true);
 

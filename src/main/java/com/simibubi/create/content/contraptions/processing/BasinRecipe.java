@@ -8,8 +8,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-
-import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;

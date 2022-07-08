@@ -107,8 +107,9 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			ResourceLocation registryName = Registry.ITEM.getKey(tag.getMainItem()
 					.getItem());
 
-			PonderButton b = new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10)
+			PonderButton b = new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 48, itemCenterY - 10)
 					.showing(tag.getMainItem());
+			b.withCustomBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_IMPORTANT));
 
 			if (PonderRegistry.ALL.containsKey(registryName)) {
 				b.withCallback((mouseX, mouseY) -> {
@@ -201,7 +202,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 				.withBounds(30, 30)
 				.render(ms);
 
-		font.draw(ms, Lang.translate(PonderUI.PONDERING), x, y - 6, Theme.i(Theme.Key.TEXT_DARKER));
+		font.draw(ms, Lang.translateDirect(PonderUI.PONDERING), x, y - 6, Theme.i(Theme.Key.TEXT_DARKER));
 		y += 8;
 		x += 0;
 		ms.translate(x, y, 0);
@@ -245,7 +246,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		int x = (int) (width * itemXmult);
 		int y = getItemsY();
 
-		String relatedTitle = Lang.translate(ASSOCIATED).getString();
+		String relatedTitle = Lang.translateDirect(ASSOCIATED).getString();
 		int stringWidth = font.width(relatedTitle);
 
 		ms.pushPose();

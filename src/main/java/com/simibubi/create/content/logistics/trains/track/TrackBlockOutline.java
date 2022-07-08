@@ -142,6 +142,10 @@ public class TrackBlockOutline {
 	}
 
 	public static void drawCurveSelection(PoseStack ms, MultiBufferSource buffer) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+			return;
+
 		BezierPointSelection result = TrackBlockOutline.result;
 		if (result == null)
 			return;
