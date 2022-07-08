@@ -309,24 +309,6 @@ public class CreateREI implements REIClientPlugin {
 		registry.register(new BlueprintTransferHandler());
 	}
 
-	// TODO PORT
-	// some garbage to anger the compiler since this can't be forgotten
-	sajdosajfsaj-fdajf
-//	@Override
-//	public void registerRecipes(IRecipeRegistration registration) {
-//		ingredientManager = registration.getIngredientManager();
-//
-//		allCategories.forEach(c -> c.registerRecipes(registration));
-//
-//		registration.addRecipes(RecipeTypes.CRAFTING, ToolboxColoringRecipeMaker.createRecipes().toList());
-//	}
-//
-//	@Override
-//	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-//		allCategories.forEach(c -> c.recipeCatalysts.forEach(s -> registration.addRecipeCatalyst(s.get(), c.getRecipeType())));
-//	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void registerEntries(EntryRegistry registry) {
 		registry.removeEntryIf(entryStack -> {
@@ -351,7 +333,6 @@ public class CreateREI implements REIClientPlugin {
 		public CategoryBuilder(String name, Supplier<CreateRecipeCategory<T>> category) {
 			this.category = category.get();
 			this.category.setCategoryId(name);
-			mezz.jei.api.recipe.RecipeType<T> recipeType = this.category.getRecipeType();
 			predicate = cRecipes -> true;
 		}
 
@@ -385,15 +366,15 @@ public class CreateREI implements REIClientPlugin {
 		}
 
 		public CategoryBuilder<T> addTypedRecipes(Supplier<RecipeType<? extends T>> recipeType) {
-			return addRecipeListConsumer(recipes -> CreateJEI.<T>consumeTypedRecipes(recipes::add, recipeType.get()));
+			return addRecipeListConsumer(recipes -> CreateREI.<T>consumeTypedRecipes(recipes::add, recipeType.get()));
 		}
 
 		public CategoryBuilder<T> addTypedRecipes(Supplier<RecipeType<? extends T>> recipeType, Function<Recipe<?>, T> converter) {
-			return addRecipeListConsumer(recipes -> CreateJEI.<T>consumeTypedRecipes(recipe -> recipes.add(converter.apply(recipe)), recipeType.get()));
+			return addRecipeListConsumer(recipes -> CreateREI.<T>consumeTypedRecipes(recipe -> recipes.add(converter.apply(recipe)), recipeType.get()));
 		}
 
 		public CategoryBuilder<T> addTypedRecipesIf(Supplier<RecipeType<? extends T>> recipeType, Predicate<Recipe<?>> pred) {
-			return addRecipeListConsumer(recipes -> CreateJEI.<T>consumeTypedRecipes(recipe -> {
+			return addRecipeListConsumer(recipes -> CreateREI.<T>consumeTypedRecipes(recipe -> {
 				if (pred.test(recipe)) {
 					recipes.add(recipe);
 				}
@@ -404,7 +385,7 @@ public class CreateREI implements REIClientPlugin {
 			Supplier<RecipeType<? extends T>> excluded) {
 			return addRecipeListConsumer(recipes -> {
 				List<Recipe<?>> excludedRecipes = getTypedRecipes(excluded.get());
-				CreateJEI.<T>consumeTypedRecipes(recipe -> {
+				CreateREI.<T>consumeTypedRecipes(recipe -> {
 					for (Recipe<?> excludedRecipe : excludedRecipes) {
 						if (doInputsMatch(recipe, excludedRecipe)) {
 							return;
@@ -449,6 +430,7 @@ public class CreateREI implements REIClientPlugin {
 			return this;
 		}
 
+		@SuppressWarnings("unchecked")
 		public CreateRecipeCategory<T> build() {
 				category.recipes.add(() -> {
 					List<T> recipes = new ArrayList<>();
@@ -456,7 +438,7 @@ public class CreateREI implements REIClientPlugin {
 						for (Consumer<List<T>> consumer : recipeListConsumers)
 							consumer.accept(recipes);
 					}
-					return recipes;
+					return (List<Recipe<?>>) recipes;
 				});
 			allCategories.add(category);
 			return category;

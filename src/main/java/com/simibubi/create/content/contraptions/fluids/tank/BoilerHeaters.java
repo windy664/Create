@@ -16,13 +16,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class BoilerHeaters {
-	private static final Map<IRegistryDelegate<Block>, Heater> BLOCK_HEATERS = new HashMap<>();
+	private static final Map<Block, Heater> BLOCK_HEATERS = new HashMap<>();
 	private static final List<HeaterProvider> GLOBAL_HEATERS = new ArrayList<>();
 
-	public static void registerHeater(IRegistryDelegate<Block> block, Heater heater) {
+	public static void registerHeater(Block block, Heater heater) {
 		BLOCK_HEATERS.put(block, heater);
 	}
 
@@ -36,7 +35,7 @@ public class BoilerHeaters {
 	 * All other positive values are used as the amount of active heat.
 	 */
 	public static float getActiveHeat(Level level, BlockPos pos, BlockState state) {
-		Heater heater = BLOCK_HEATERS.get(state.getBlock().delegate);
+		Heater heater = BLOCK_HEATERS.get(state.getBlock());
 		if (heater != null) {
 			return heater.getActiveHeat(level, pos, state);
 		}
@@ -52,7 +51,7 @@ public class BoilerHeaters {
 	}
 
 	public static void registerDefaults() {
-		registerHeater(AllBlocks.BLAZE_BURNER.get().delegate, (level, pos, state) -> {
+		registerHeater(AllBlocks.BLAZE_BURNER.get(), (level, pos, state) -> {
 			HeatLevel value = state.getValue(BlazeBurnerBlock.HEAT_LEVEL);
 			if (value == HeatLevel.NONE) {
 				return -1;

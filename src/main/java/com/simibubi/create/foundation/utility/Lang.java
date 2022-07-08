@@ -6,19 +6,19 @@ import java.util.Locale;
 
 import com.simibubi.create.Create;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.FluidStack;
 
 public class Lang {
 
 	/**
 	 * legacy-ish. Use Lang.translate and other builder methods where possible
-	 * 
+	 *
 	 * @param key
 	 * @param args
 	 * @return

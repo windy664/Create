@@ -9,7 +9,6 @@ import com.simibubi.create.compat.rei.category.animations.AnimatedMixer;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 
-import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
@@ -44,9 +43,8 @@ public class MixingCategory extends BasinCategory {
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		super.draw(recipe, iRecipeSlotsView, matrixStack, mouseX, mouseY);
-
+	public void draw(BasinRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		super.draw(recipe, matrixStack, mouseX, mouseY);
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (requiredHeat != HeatCondition.NONE)
 			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())

@@ -143,76 +143,76 @@ public class RemovedGuiUtils {
 //		backgroundColor = colorEvent.getBackgroundStart();
 //		borderColorStart = colorEvent.getBorderStart();
 //		borderColorEnd = colorEvent.getBorderEnd();
-
-			if (mouseX > screenWidth / 2)
-				tooltipX = mouseX - 16 - tooltipTextWidth;
-			else
-				tooltipX = mouseX + 12;
-		}
-
-		int tooltipY = mouseY - 12;
-		int tooltipHeight = 8;
-
-		if (textLines.size() > 1) {
-			tooltipHeight += (textLines.size() - 1) * 10;
-			if (textLines.size() > titleLinesCount)
-				tooltipHeight += 2; // gap between title lines and next lines
-		}
-
-		if (tooltipY < 4)
-			tooltipY = 4;
-		else if (tooltipY + tooltipHeight + 4 > screenHeight)
-			tooltipY = screenHeight - tooltipHeight - 4;
-
-		final int zLevel = 400;
-		RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, pStack, tooltipX, tooltipY,
-			font, backgroundColor, borderColorStart, borderColorEnd, list);
-		MinecraftForge.EVENT_BUS.post(colorEvent);
-		backgroundColor = colorEvent.getBackgroundStart();
-		borderColorStart = colorEvent.getBorderStart();
-		borderColorEnd = colorEvent.getBorderEnd();
-
-		pStack.pushPose();
-		Matrix4f mat = pStack.last()
-			.pose();
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3,
-			tooltipY - 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3,
-			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
-			tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3,
-			backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3,
-			tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1,
-			tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1,
-			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
-			tooltipY - 3 + 1, borderColorStart, borderColorStart);
-		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2,
-			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
-
-		MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance()
-			.getBuilder());
-		pStack.translate(0.0D, 0.0D, zLevel);
-
-		for (int lineNumber = 0; lineNumber < list.size(); ++lineNumber) {
-			ClientTooltipComponent line = list.get(lineNumber);
-
-			if (line != null)
-				line.renderText(font, tooltipX, tooltipY, mat, renderType);
-
-			if (lineNumber + 1 == titleLinesCount)
-				tooltipY += 2;
-
-			tooltipY += 10;
-		}
-
-		renderType.endBatch();
-		pStack.popPose();
-
-		RenderSystem.enableDepthTest();
+//
+//			if (mouseX > screenWidth / 2)
+//				tooltipX = mouseX - 16 - tooltipTextWidth;
+//			else
+//				tooltipX = mouseX + 12;
+//		}
+//
+//		int tooltipY = mouseY - 12;
+//		int tooltipHeight = 8;
+//
+//		if (textLines.size() > 1) {
+//			tooltipHeight += (textLines.size() - 1) * 10;
+//			if (textLines.size() > titleLinesCount)
+//				tooltipHeight += 2; // gap between title lines and next lines
+//		}
+//
+//		if (tooltipY < 4)
+//			tooltipY = 4;
+//		else if (tooltipY + tooltipHeight + 4 > screenHeight)
+//			tooltipY = screenHeight - tooltipHeight - 4;
+//
+//		final int zLevel = 400;
+//		RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, pStack, tooltipX, tooltipY,
+//			font, backgroundColor, borderColorStart, borderColorEnd, list);
+//		MinecraftForge.EVENT_BUS.post(colorEvent);
+//		backgroundColor = colorEvent.getBackgroundStart();
+//		borderColorStart = colorEvent.getBorderStart();
+//		borderColorEnd = colorEvent.getBorderEnd();
+//
+//		pStack.pushPose();
+//		Matrix4f mat = pStack.last()
+//			.pose();
+//		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3,
+//			tooltipY - 3, backgroundColor, backgroundColor);
+//		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3,
+//			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
+//		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
+//			tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
+//		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3,
+//			backgroundColor, backgroundColor);
+//		GuiUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3,
+//			tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
+//		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1,
+//			tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
+//		GuiUtils.drawGradientRect(mat, zLevel, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1,
+//			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
+//		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
+//			tooltipY - 3 + 1, borderColorStart, borderColorStart);
+//		GuiUtils.drawGradientRect(mat, zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2,
+//			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
+//
+//		MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(Tesselator.getInstance()
+//			.getBuilder());
+//		pStack.translate(0.0D, 0.0D, zLevel);
+//
+//		for (int lineNumber = 0; lineNumber < list.size(); ++lineNumber) {
+//			ClientTooltipComponent line = list.get(lineNumber);
+//
+//			if (line != null)
+//				line.renderText(font, tooltipX, tooltipY, mat, renderType);
+//
+//			if (lineNumber + 1 == titleLinesCount)
+//				tooltipY += 2;
+//
+//			tooltipY += 10;
+//		}
+//
+//		renderType.endBatch();
+//		pStack.popPose();
+//
+//		RenderSystem.enableDepthTest();
 	}
 }
