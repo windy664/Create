@@ -2,9 +2,15 @@ package com.simibubi.create.events;
 
 import java.util.concurrent.Executor;
 
+import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
 import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
 
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerHandler;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItemRetrieval;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
@@ -20,8 +26,11 @@ import io.github.fabricators_of_create.porting_lib.event.common.ProjectileImpact
 
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.packs.PackType;
 
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +58,7 @@ import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManag
 import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
+import com.simibubi.create.content.logistics.trains.entity.CarriageEntityHandler;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -98,14 +108,21 @@ public class CommonEvents {
 		Create.SCHEMATIC_RECEIVER.tick();
 		Create.LAGGER.tick();
 		ServerSpeedProvider.serverTick(server);
+		Create.RAILWAYS.sync.serverTick();
 	}
 
 	public static void onChunkUnloaded(Level world, LevelChunk chunk) {
 		CapabilityMinecartController.onChunkUnloaded(world, chunk);
 	}
 
-	public static void playerLoggedIn(ServerPlayer player) {
-		ToolboxHandler.playerLogin(player);
+	public static void playerLoggedIn(ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) {
+		ToolboxHandler.playerLogin(handler.getPlayer());
+		Create.RAILWAYS.playerLogin(handler.getPlayer());
+	}
+
+	public static void playerLoggedOut(ServerGamePacketListenerImpl handler, MinecraftServer server) {
+		Player player = handler.getPlayer();
+		Create.RAILWAYS.playerLogout(player);
 	}
 
 	public static BlockState whenFluidsMeet(LevelAccessor world, BlockPos pos, BlockState blockState) {
@@ -134,6 +151,8 @@ public class CommonEvents {
 			CapabilityMinecartController.tick(world);
 			CouplingPhysics.tick(world);
 			LinkedControllerServerHandler.tick(world);
+			ControlsServerHandler.tick(world);
+			Create.RAILWAYS.tick(world);
 		}
 	}
 
@@ -157,6 +176,10 @@ public class CommonEvents {
 		AllCommands.register(dispatcher);
 	}
 
+	public static void onEntityEnterSection(Entity entity, long packedOldPos, long packedNewPos) {
+		CarriageEntityHandler.onEntityEnterSection(entity, packedOldPos, packedNewPos);
+	}
+
 	public static void addReloadListeners() {
 		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(RecipeFinder.LISTENER);
 		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
@@ -173,6 +196,7 @@ public class CommonEvents {
 	public static void onLoadWorld(Executor executor, LevelAccessor world) {
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onLoadWorld(world);
 		Create.TORQUE_PROPAGATOR.onLoadWorld(world);
+		Create.RAILWAYS.levelLoaded(world);
 	}
 
 	public static void onUnloadWorld(Executor executor, LevelAccessor world) {
@@ -219,11 +243,13 @@ public class CommonEvents {
 		ServerLifecycleEvents.SERVER_STOPPED.register(CommonEvents::serverStopping);
 		ServerWorldEvents.LOAD.register(CommonEvents::onLoadWorld);
 		ServerWorldEvents.UNLOAD.register(CommonEvents::onUnloadWorld);
+		ServerPlayConnectionEvents.DISCONNECT.register(CommonEvents::playerLoggedOut);
 		AttackEntityCallback.EVENT.register(CommonEvents::onEntityAttackedByPlayer);
 		CommandRegistrationCallback.EVENT.register(CommonEvents::registerCommands);
 		EntityEvents.START_TRACKING_TAIL.register(CommonEvents::startTracking);
+		EntityEvents.ENTERING_SECTION.register(CommonEvents::onEntityEnterSection);
 		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
-		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
+		ServerPlayConnectionEvents.JOIN.register(CommonEvents::playerLoggedIn);
 		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(CommonEvents::onDatapackSync);
 		CommonEvents.addReloadListeners();
@@ -238,6 +264,10 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
 		UseBlockCallback.EVENT.register(EdgeInteractionHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
+		UseBlockCallback.EVENT.register(SuperGlueItem::glueItemAlwaysPlacesWhenUsed);
+		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
+		UseBlockCallback.EVENT.register(DisplayLinkBlockItem::gathererItemAlwaysPlacesWhenUsed);
+		UseEntityCallback.EVENT.register(ScheduleItemRetrieval::removeScheduleFromConductor);
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);

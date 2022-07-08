@@ -1,13 +1,14 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.RayTraceWorld;
 
@@ -32,14 +33,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class SuperGlueHandler {
 
-	public static Map<Direction, SuperGlueEntity> gatherGlue(LevelAccessor world, BlockPos pos) {
-		List<SuperGlueEntity> entities = world.getEntitiesOfClass(SuperGlueEntity.class, new AABB(pos));
-		Map<Direction, SuperGlueEntity> map = new HashMap<>();
-		for (SuperGlueEntity entity : entities)
-			map.put(entity.getAttachedDirection(pos), entity);
-		return map;
-	}
-
 	public static InteractionResult glueListensForBlockPlacement(BlockPlaceContext context) {
 		LevelAccessor world = context.getLevel();
 		Entity entity = context.getPlayer();
@@ -50,9 +43,13 @@ public class SuperGlueHandler {
 		if (world.isClientSide())
 			return InteractionResult.PASS;
 
-		Map<Direction, SuperGlueEntity> gatheredGlue = gatherGlue(world, pos);
-		for (Direction direction : gatheredGlue.keySet())
-			AllPackets.channel.sendToClientsTrackingAndSelf(new GlueEffectPacket(pos, direction, true), entity);
+		Set<SuperGlueEntity> cached = new HashSet<>();
+		for (Direction direction : Iterate.directions) {
+			BlockPos relative = pos.relative(direction);
+			if (SuperGlueEntity.isGlued(world, pos, direction, cached)
+				&& BlockMovementChecks.isMovementNecessary(world.getBlockState(relative), entity.level, relative))
+				AllPackets.channel.sendToClientsTrackingAndSelf(new GlueEffectPacket(pos, direction, true), entity);
+		}
 
 		if (entity instanceof Player)
 			return glueInOffHandAppliesOnBlockPlace(context.getLevel().getBlockState(context.getClickedPos().relative(context.getClickedFace().getOpposite())), pos, (Player) entity);
@@ -76,29 +73,31 @@ public class SuperGlueHandler {
 
 		RayTraceWorld rayTraceWorld =
 			new RayTraceWorld(world, (p, state) -> p.equals(pos) ? Blocks.AIR.defaultBlockState() : state);
-		BlockHitResult ray = rayTraceWorld.clip(
-			new ClipContext(start, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, placer));
+		BlockHitResult ray =
+			rayTraceWorld.clip(new ClipContext(start, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, placer));
 
 		Direction face = ray.getDirection();
 		if (face == null || ray.getType() == Type.MISS)
 			return InteractionResult.PASS;
 
-		if (!ray.getBlockPos()
-			.relative(face)
+		BlockPos gluePos = ray.getBlockPos();
+		if (!gluePos.relative(face)
 			.equals(pos)) {
 			return InteractionResult.SUCCESS;
 		}
 
-		SuperGlueEntity entity = new SuperGlueEntity(world, ray.getBlockPos(), face.getOpposite());
+		if (SuperGlueEntity.isGlued(world, gluePos, face, null))
+			return InteractionResult.PASS;
+
+		SuperGlueEntity entity = new SuperGlueEntity(world, SuperGlueEntity.span(gluePos, gluePos.relative(face)));
 		CompoundTag compoundnbt = itemstack.getTag();
 		if (compoundnbt != null)
 			EntityType.updateCustomEntityTag(world, placer, entity, compoundnbt);
 
-		if (entity.onValidSurface()) {
+		if (SuperGlueEntity.isValidFace(world, gluePos, face)) {
 			if (!world.isClientSide) {
-				entity.playPlaceSound();
 				world.addFreshEntity(entity);
-				AllPackets.channel.sendToClientsTracking(new GlueEffectPacket(ray.getBlockPos(), face, true), entity);
+				AllPackets.channel.sendToClientsTracking(new GlueEffectPacket(gluePos, face, true), entity);
 			}
 			itemstack.hurtAndBreak(1, placer, SuperGlueItem::onBroken);
 		}

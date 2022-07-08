@@ -3,10 +3,13 @@ package com.simibubi.create.foundation.command;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
+
 import org.apache.logging.log4j.LogManager;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
+import com.simibubi.create.content.logistics.trains.CameraDistanceModifier;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
@@ -111,7 +114,11 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		fixLighting(() -> Actions::experimentalLighting),
 		overlayReset(() -> Actions::overlayReset),
 		openPonder(() -> Actions::openPonder),
-		fabulousWarning(() -> Actions::fabulousWarning)
+		fabulousWarning(() -> Actions::fabulousWarning),
+		zoomMultiplier(() -> Actions::zoomMultiplier),
+		camAngleYawTarget(() -> value -> camAngleTarget(value, true)),
+		camAnglePitchTarget(() -> value -> camAngleTarget(value, false)),
+		camAngleFunction(() -> Actions::camAngleFunction)
 
 		;
 
@@ -208,6 +215,55 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			Minecraft.getInstance().gui.handleChat(ChatType.CHAT,
 				new TextComponent("Disabled Fabulous graphics warning"),
 				Minecraft.getInstance().player.getUUID());
+		}
+
+		@Environment(EnvType.CLIENT)
+		private static void zoomMultiplier(String value) {
+			try {
+				float v = Float.parseFloat(value);
+				if (v <= 0)
+					return;
+
+				CameraDistanceModifier.zoomOut(v);
+			} catch (NumberFormatException ignored) {
+				Create.LOGGER.debug("Received non-float value {} in zoom packet, ignoring", value);
+			}
+		}
+
+		@Environment(EnvType.CLIENT)
+		private static void camAngleTarget(String value, boolean yaw) {
+			try {
+				float v = Float.parseFloat(value);
+
+				if (yaw) {
+					CameraAngleAnimationService.setYawTarget(v);
+				} else {
+					CameraAngleAnimationService.setPitchTarget(v);
+				}
+
+			} catch (NumberFormatException ignored) {
+				Create.LOGGER.debug("Received non-float value {} in camAngle packet, ignoring", value);
+			}
+		}
+
+		@Environment(EnvType.CLIENT)
+		private static void camAngleFunction(String value) {
+			CameraAngleAnimationService.Mode mode = CameraAngleAnimationService.Mode.LINEAR;
+			String modeString = value;
+			float speed = -1;
+			String[] split = value.split(":");
+			if (split.length > 1) {
+				modeString = split[0];
+				try {
+					speed = Float.parseFloat(split[1]);
+				} catch (NumberFormatException ignored) {}
+			}
+			try {
+				mode = CameraAngleAnimationService.Mode.valueOf(modeString);
+			} catch (IllegalArgumentException ignored) {}
+
+			CameraAngleAnimationService.setAnimationMode(mode);
+			CameraAngleAnimationService.setAnimationSpeed(speed);
 		}
 
 		private static MutableComponent boolToText(boolean b) {

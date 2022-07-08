@@ -33,7 +33,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 
 	@Override
 	public void startTransferringTo(Contraption contraption, float distance) {
-		capability.setWrapped(contraption.fluidInventory);
+		capability.setWrapped(contraption.getSharedFluidTanks());
 		super.startTransferringTo(contraption, distance);
 	}
 

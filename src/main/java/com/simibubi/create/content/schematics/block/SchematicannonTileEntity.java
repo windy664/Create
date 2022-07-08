@@ -15,7 +15,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.content.schematics.MaterialChecklist;
@@ -715,7 +715,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			return blockState;
 
 		return AllBlocks.SHAFT.getDefaultState()
-			.setValue(AbstractShaftBlock.AXIS, slope == BeltSlope.SIDEWAYS ? Axis.Y :
+			.setValue(AbstractSimpleShaftBlock.AXIS, slope == BeltSlope.SIDEWAYS ? Axis.Y :
 				facing.getClockWise()
 					.getAxis());
 	}

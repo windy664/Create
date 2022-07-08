@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.simibubi.create.AllTags;
 
+import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -31,7 +33,6 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
@@ -91,7 +92,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement,
-		BlockPickInteractionAware, CustomPathNodeTypeBlock, DestroyProgressRenderingHandler {
+		BlockPickInteractionAware, CustomPathNodeTypeBlock, DestroyProgressRenderingHandler, ReducedDestroyEffects {
 
 	public static final Property<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
 	public static final Property<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
@@ -103,11 +104,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			.setValue(PART, BeltPart.START)
 			.setValue(CASING, false));
 	}
-
-//	@Environment(EnvType.CLIENT)
-//	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
-//		consumer.accept(new RenderProperties());
-//	}
 
 	@Override
 	public void fillItemCategory(CreativeModeTab p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
@@ -318,7 +314,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (AllBlocks.BRASS_CASING.isIn(heldItem)) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
-			AllTriggers.triggerFor(AllTriggers.CASING_BELT, player);
 			withTileEntityDo(world, pos, te -> te.setCasingType(CasingType.BRASS));
 			return InteractionResult.SUCCESS;
 		}
@@ -326,7 +321,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (AllBlocks.ANDESITE_CASING.isIn(heldItem)) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
-			AllTriggers.triggerFor(AllTriggers.CASING_BELT, player);
 			withTileEntityDo(world, pos, te -> te.setCasingType(CasingType.ANDESITE));
 			return InteractionResult.SUCCESS;
 		}
@@ -502,10 +496,10 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 					belt.getInventory()
 						.ejectAll();
 
-				belt.setRemoved();
 				hasPulley = belt.hasPulley();
 			}
 
+			world.removeBlockEntity(currentPos);
 			BlockState shaftState = AllBlocks.SHAFT.getDefaultState()
 				.setValue(BlockStateProperties.AXIS, getRotationAxis(currentState));
 			world.setBlock(currentPos, hasPulley ? shaftState : Blocks.AIR.defaultBlockState(), 3);

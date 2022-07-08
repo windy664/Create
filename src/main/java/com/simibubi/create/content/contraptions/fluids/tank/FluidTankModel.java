@@ -20,15 +20,18 @@ import net.minecraft.world.level.block.state.BlockState;
 public class FluidTankModel extends CTModel {
 
 	public static FluidTankModel standard(BakedModel originalModel) {
-		return new FluidTankModel(originalModel, AllSpriteShifts.FLUID_TANK, AllSpriteShifts.COPPER_CASING);
+		return new FluidTankModel(originalModel, AllSpriteShifts.FLUID_TANK, AllSpriteShifts.FLUID_TANK_TOP,
+			AllSpriteShifts.FLUID_TANK_INNER);
 	}
 
 	public static FluidTankModel creative(BakedModel originalModel) {
-		return new FluidTankModel(originalModel, AllSpriteShifts.CREATIVE_FLUID_TANK, AllSpriteShifts.CREATIVE_CASING);
+		return new FluidTankModel(originalModel, AllSpriteShifts.CREATIVE_FLUID_TANK, AllSpriteShifts.CREATIVE_CASING,
+			AllSpriteShifts.CREATIVE_CASING);
 	}
 
-	private FluidTankModel(BakedModel originalModel, CTSpriteShiftEntry side, CTSpriteShiftEntry top) {
-		super(originalModel, new FluidTankCTBehaviour(side, top));
+	private FluidTankModel(BakedModel originalModel, CTSpriteShiftEntry side, CTSpriteShiftEntry top,
+		CTSpriteShiftEntry inner) {
+		super(originalModel, new FluidTankCTBehaviour(side, top, inner));
 	}
 
 	@Override

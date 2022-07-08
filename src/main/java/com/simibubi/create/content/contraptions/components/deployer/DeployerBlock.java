@@ -65,7 +65,8 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
 			withTileEntityDo(worldIn, pos, te -> {
 				if (te.player != null && !isMoving) {
-					te.player.getInventory().dropAll();
+					te.player.getInventory()
+						.dropAll();
 					te.overflowItems.forEach(itemstack -> te.player.drop(itemstack, true, false));
 					te.player.discard();
 					te.player = null;
@@ -123,8 +124,8 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_,
-		BlockPos p_220069_5_, boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
+		boolean p_220069_6_) {
 		withTileEntityDo(world, pos, DeployerTileEntity::redstoneUpdate);
 	}
 
@@ -135,7 +136,9 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 
 	@Override
 	protected Direction getFacingForPlacement(BlockPlaceContext context) {
-		if (context instanceof AssemblyOperatorUseContext) return Direction.DOWN;
-		else return super.getFacingForPlacement(context);
+		if (context instanceof AssemblyOperatorUseContext)
+			return Direction.DOWN;
+		else
+			return super.getFacingForPlacement(context);
 	}
 }

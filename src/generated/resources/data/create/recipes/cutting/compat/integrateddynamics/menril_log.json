@@ -1,0 +1,22 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "integrateddynamics:menril_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "integrateddynamics:menril_log_stripped"
+    }
+  ],
+  "processingTime": 50,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "integrateddynamics"
+      ]
+    }
+  ]
+}

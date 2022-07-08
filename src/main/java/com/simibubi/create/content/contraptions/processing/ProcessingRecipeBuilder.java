@@ -6,10 +6,14 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.simibubi.create.foundation.data.SimpleDatagenIngredient;
+import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
+import com.tterrag.registrate.util.DataIngredient;
+
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
@@ -116,6 +120,16 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return this;
 	}
 
+	public ProcessingRecipeBuilder<T> require(Mods mod, String id) {
+		params.ingredients.add(new SimpleDatagenIngredient(mod, id));
+		return this;
+	}
+
+	public ProcessingRecipeBuilder<T> require(ResourceLocation ingredient) {
+		params.ingredients.add(DataIngredient.ingredient(null, ingredient));
+		return this;
+	}
+
 	public ProcessingRecipeBuilder<T> require(Fluid fluid, long amount) {
 		return require(FluidIngredient.fromFluid(fluid, amount));
 	}
@@ -150,12 +164,19 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 	}
 
 	public ProcessingRecipeBuilder<T> output(float chance, ItemStack output) {
-		params.results.add(new ProcessingOutput(output, chance));
-		return this;
+		return output(new ProcessingOutput(output, chance));
+	}
+
+	public ProcessingRecipeBuilder<T> output(float chance, Mods mod, String id, int amount) {
+		return output(new ProcessingOutput(Pair.of(mod.asResource(id), amount), chance));
 	}
 
 	public ProcessingRecipeBuilder<T> output(float chance, ResourceLocation registryName, int amount) {
-		params.results.add(new ProcessingOutput(Pair.of(registryName, amount), chance));
+		return output(new ProcessingOutput(Pair.of(registryName, amount), chance));
+	}
+
+	public ProcessingRecipeBuilder<T> output(ProcessingOutput output) {
+		params.results.add(output);
 		return this;
 	}
 

@@ -20,7 +20,6 @@ import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
@@ -28,12 +27,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FurnaceBlock;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -107,10 +103,11 @@ public class KineticsScenes {
 		scene.world.setKineticSpeed(shaft, 32);
 
 		scene.idle(10);
-		scene.overlay.showText(1000)
+		scene.overlay.showText(100)
 			.placeNearTarget()
 			.text("Brass or Andesite Casing can be used to decorate Shafts")
 			.pointAt(util.vector.topOf(1, 1, 2));
+		scene.idle(70);
 	}
 
 	public static void cogAsRelay(SceneBuilder scene, SceneBuildingUtil util) {
@@ -148,7 +145,9 @@ public class KineticsScenes {
 		scene.overlay.showText(100)
 			.text("Neighbouring shafts connected like this will rotate in opposite directions")
 			.placeNearTarget()
+			.attachKeyFrame()
 			.pointAt(util.vector.blockSurface(util.grid.at(1, 1, 2), Direction.NORTH));
+		scene.idle(70);
 
 	}
 
@@ -197,6 +196,7 @@ public class KineticsScenes {
 			.pointAt(util.vector.blockSurface(util.grid.at(1, 2, 3), Direction.WEST));
 		scene.effects.rotationSpeedIndicator(util.grid.at(3, 1, 3));
 		scene.effects.rotationSpeedIndicator(util.grid.at(4, 2, 3));
+		scene.idle(60);
 
 	}
 
@@ -969,94 +969,6 @@ public class KineticsScenes {
 		scene.world.toggleRedstonePower(util.select.position(5, 1, 1));
 		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 0));
 		scene.world.setKineticSpeed(outputKinetics, 0);
-	}
-
-	public static void furnaceEngine(SceneBuilder scene, SceneBuildingUtil util) {
-		furnaceEngine(scene, util, false);
-	}
-
-	public static void flywheel(SceneBuilder scene, SceneBuildingUtil util) {
-		furnaceEngine(scene, util, true);
-	}
-
-	private static void furnaceEngine(SceneBuilder scene, SceneBuildingUtil util, boolean flywheel) {
-		scene.title(flywheel ? "flywheel" : "furnace_engine",
-			"Generating Rotational Force using the " + (flywheel ? "Flywheel" : "Furnace Engine"));
-		scene.configureBasePlate(0, 0, 6);
-		scene.world.showSection(util.select.layer(0), Direction.UP);
-
-		BlockPos furnacePos = util.grid.at(4, 1, 3);
-		BlockPos cogPos = util.grid.at(1, 1, 2);
-		BlockPos gaugePos = util.grid.at(1, 1, 1);
-
-		scene.idle(5);
-		Selection furnaceSelect = util.select.position(furnacePos);
-		scene.world.showSection(furnaceSelect, Direction.DOWN);
-		scene.idle(10);
-		scene.world.showSection(util.select.position(furnacePos.west()), Direction.DOWN);
-		scene.idle(10);
-		scene.world.showSection(util.select.position(furnacePos.west(3)), Direction.EAST);
-		scene.idle(10);
-
-		String text = flywheel ? "Flywheels are required for generating rotational force with the Furnace Engine"
-			: "Furnace Engines generate Rotational Force while their attached Furnace is running";
-		scene.overlay.showText(80)
-			.attachKeyFrame()
-			.placeNearTarget()
-			.pointAt(util.vector.topOf(furnacePos.west(flywheel ? 3 : 1)))
-			.text(text);
-		scene.idle(90);
-
-		scene.overlay.showControls(
-			new InputWindowElement(util.vector.topOf(furnacePos), Pointing.DOWN).withItem(new ItemStack(Items.OAK_LOG)),
-			30);
-		scene.idle(5);
-		scene.overlay
-			.showControls(new InputWindowElement(util.vector.blockSurface(furnacePos, Direction.NORTH), Pointing.RIGHT)
-				.withItem(new ItemStack(Items.COAL)), 30);
-		scene.idle(7);
-		scene.world.cycleBlockProperty(furnacePos, FurnaceBlock.LIT);
-		scene.effects.emitParticles(util.vector.of(4.5, 1.2, 2.9), Emitter.simple(ParticleTypes.LAVA, Vec3.ZERO), 4, 1);
-		scene.world.setKineticSpeed(util.select.fromTo(1, 1, 3, 1, 1, 1), 16);
-		scene.idle(40);
-
-		scene.world.showSection(util.select.position(cogPos), Direction.SOUTH);
-		scene.idle(15);
-		scene.effects.rotationSpeedIndicator(cogPos);
-		scene.world.showSection(util.select.position(gaugePos), Direction.SOUTH);
-		scene.idle(15);
-
-		scene.overlay.showText(80)
-			.attachKeyFrame()
-			.placeNearTarget()
-			.colored(PonderPalette.GREEN)
-			.pointAt(util.vector.blockSurface(gaugePos, Direction.WEST))
-			.text("The provided Rotational Force has a very large stress capacity");
-		scene.idle(90);
-
-		ElementLink<WorldSectionElement> engine =
-			scene.world.makeSectionIndependent(util.select.fromTo(3, 1, 3, 1, 1, 1));
-		scene.world.moveSection(engine, util.vector.of(0, 1, 0), 15);
-		scene.idle(10);
-		scene.world.hideSection(furnaceSelect, Direction.NORTH);
-		scene.idle(15);
-		scene.world.setBlock(furnacePos, Blocks.BLAST_FURNACE.defaultBlockState()
-			.setValue(FurnaceBlock.FACING, Direction.NORTH)
-			.setValue(FurnaceBlock.LIT, true), false);
-		scene.world.showSection(furnaceSelect, Direction.NORTH);
-		scene.idle(10);
-		scene.world.moveSection(engine, util.vector.of(0, -1, 0), 15);
-		scene.idle(10);
-		scene.world.setKineticSpeed(util.select.fromTo(1, 1, 3, 1, 1, 1), 32);
-		scene.idle(5);
-		scene.effects.rotationSpeedIndicator(cogPos);
-
-		scene.overlay.showText(80)
-			.placeNearTarget()
-			.colored(PonderPalette.MEDIUM)
-			.pointAt(util.vector.topOf(furnacePos.west()))
-			.text("Using a Blast Furnace will double the efficiency of the Engine");
-
 	}
 
 	public static void speedController(SceneBuilder scene, SceneBuildingUtil util) {

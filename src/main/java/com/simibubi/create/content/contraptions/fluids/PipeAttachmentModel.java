@@ -23,8 +23,19 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PipeAttachmentModel extends ForwardingBakedModel {
 
-	public PipeAttachmentModel(BakedModel template) {
+	private boolean hideAttachmentConnector;
+
+	public static PipeAttachmentModel opaque(BakedModel template) {
+		return new PipeAttachmentModel(template, false);
+	}
+
+	public static PipeAttachmentModel transparent(BakedModel template) {
+		return new PipeAttachmentModel(template, true);
+	}
+
+	public PipeAttachmentModel(BakedModel template, boolean hideAttachmentConnector) {
 		wrapped = template;
+		this.hideAttachmentConnector = hideAttachmentConnector;
 	}
 
 	@Override
@@ -34,8 +45,6 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-
 		PipeModelData data = new PipeModelData();
 		FluidTransportBehaviour transport = TileEntityBehaviour.get(blockView, pos, FluidTransportBehaviour.TYPE);
 		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(blockView, pos, BracketedTileEntityBehaviour.TYPE);
@@ -48,6 +57,21 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 
 		data.setEncased(FluidPipeBlock.shouldDrawCasing(blockView, pos, state));
 
+		context.pushTransform(quad -> {
+			Direction cullFace = quad.cullFace();
+			if (cullFace != null) {
+				return !data.hasRim(cullFace);
+			}
+			return true;
+		});
+		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		context.popTransform();
+
+		BakedModel bracketModel = data.getBracket();
+		if (bracketModel != null)
+			((FabricBakedModel) bracketModel).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		if (hideAttachmentConnector)
+			context.pushTransform(quad -> quad.cullFace() != Direction.UP);
 		for (Direction d : Iterate.directions)
 			if (data.hasRim(d))
 				((FabricBakedModel) AllBlockPartials.PIPE_ATTACHMENTS.get(data.getRim(d))
@@ -57,9 +81,8 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 		if (data.isEncased())
 			((FabricBakedModel) AllBlockPartials.FLUID_PIPE_CASING.get())
 				.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-		BakedModel bracketModel = data.getBracket();
-		if (bracketModel != null)
-			((FabricBakedModel) bracketModel).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		if (hideAttachmentConnector)
+			context.popTransform();
 	}
 
 	private static class PipeModelData {

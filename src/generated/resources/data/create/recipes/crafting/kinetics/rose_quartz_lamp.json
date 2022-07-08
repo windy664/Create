@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:polished_rose_quartz"
+    },
+    {
+      "tag": "c:dusts/redstone"
+    },
+    {
+      "tag": "c:ingots/zinc"
+    }
+  ],
+  "result": {
+    "item": "create:rose_quartz_lamp"
+  }
+}

@@ -8,10 +8,8 @@ import com.jozufozu.flywheel.backend.IrisShaderHandler;
 import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.DiffuseLightCalculator;
-import com.jozufozu.flywheel.util.transform.Rotate;
-import com.jozufozu.flywheel.util.transform.Scale;
 import com.jozufozu.flywheel.util.transform.TStack;
-import com.jozufozu.flywheel.util.transform.Translate;
+import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -35,7 +33,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
-public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperByteBuffer>, Rotate<SuperByteBuffer>, TStack<SuperByteBuffer> {
+public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
 	private final VertexList template;
 	private final IntPredicate shadedPredicate;
@@ -87,19 +85,24 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 			return;
 
 		Matrix4f modelMat = input.last()
-				.pose()
-				.copy();
+			.pose()
+			.copy();
 		Matrix4f localTransforms = transforms.last()
-				.pose();
+			.pose();
 		modelMat.multiply(localTransforms);
 
 		Matrix3f normalMat;
 		if (fullNormalTransform) {
-			normalMat = input.last().normal().copy();
-			Matrix3f localNormalTransforms = transforms.last().normal();
+			normalMat = input.last()
+				.normal()
+				.copy();
+			Matrix3f localNormalTransforms = transforms.last()
+				.normal();
 			normalMat.mul(localNormalTransforms);
 		} else {
-			normalMat = transforms.last().normal().copy();
+			normalMat = transforms.last()
+				.normal()
+				.copy();
 		}
 
 		if (useWorldLight) {
@@ -111,7 +114,8 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 		final Vector4f lightPos = new Vector4f();
 
 		DiffuseLightCalculator diffuseCalculator = ForcedDiffuseState.getForcedCalculator();
-		final boolean disableDiffuseMult = this.disableDiffuseMult || (IrisShaderHandler.isShaderPackInUse() && diffuseCalculator == null);
+		final boolean disableDiffuseMult =
+			this.disableDiffuseMult || (IrisShaderHandler.isShaderPackInUse() && diffuseCalculator == null);
 		if (diffuseCalculator == null) {
 			diffuseCalculator = this.diffuseCalculator;
 			if (diffuseCalculator == null) {
@@ -267,6 +271,22 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 		return this;
 	}
 
+	@Override
+	public SuperByteBuffer mulPose(Matrix4f pose) {
+		transforms.last()
+			.pose()
+			.multiply(pose);
+		return this;
+	}
+
+	@Override
+	public SuperByteBuffer mulNormal(Matrix3f normal) {
+		transforms.last()
+			.normal()
+			.mul(normal);
+		return this;
+	}
+
 	public SuperByteBuffer transform(PoseStack stack) {
 		transforms.last()
 			.pose()
@@ -314,8 +334,9 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	}
 
 	/**
-	 * Prevents vertex colors from being multiplied by the diffuse value calculated from the final transformed normal vector.
-	 * Useful for entity rendering, when diffuse is applied automatically later.
+	 * Prevents vertex colors from being multiplied by the diffuse value calculated
+	 * from the final transformed normal vector. Useful for entity rendering, when
+	 * diffuse is applied automatically later.
 	 */
 	public SuperByteBuffer disableDiffuseMult() {
 		disableDiffuseMult = true;
@@ -339,10 +360,15 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	}
 
 	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollV) {
+		return this.shiftUVScrolling(entry, 0, scrollV);
+	}
+
+	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollU, float scrollV) {
 		this.spriteShiftFunc = (builder, u, v) -> {
 			float targetU = u - entry.getOriginal()
 				.getU0() + entry.getTarget()
-					.getU0();
+					.getU0()
+				+ scrollU;
 			float targetV = v - entry.getOriginal()
 				.getV0() + entry.getTarget()
 					.getV0()
@@ -398,8 +424,9 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	}
 
 	/**
-	 * Uses max light from calculated light (world light or custom light) and vertex light for the final light value.
-	 * Ineffective if any other light method was not called.
+	 * Uses max light from calculated light (world light or custom light) and vertex
+	 * light for the final light value. Ineffective if any other light method was
+	 * not called.
 	 */
 	public SuperByteBuffer hybridLight() {
 		hybridLight = true;
@@ -407,7 +434,8 @@ public class SuperByteBuffer implements Scale<SuperByteBuffer>, Translate<SuperB
 	}
 
 	/**
-	 * Transforms normals not only by the local matrix stack, but also by the passed matrix stack.
+	 * Transforms normals not only by the local matrix stack, but also by the passed
+	 * matrix stack.
 	 */
 	public SuperByteBuffer fullNormalTransform() {
 		fullNormalTransform = true;

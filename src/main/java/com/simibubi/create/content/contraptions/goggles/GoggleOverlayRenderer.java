@@ -12,6 +12,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
+import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CClient;
 import com.simibubi.create.foundation.gui.Theme;
@@ -68,6 +69,7 @@ public class GoggleOverlayRenderer {
 		BlockPos pos = result.getBlockPos();
 		BlockEntity te = world.getBlockEntity(pos);
 
+		int prevHoverTicks = hoverTicks;
 		if (lastHovered == null || lastHovered.equals(pos))
 			hoverTicks++;
 		else
@@ -106,6 +108,11 @@ public class GoggleOverlayRenderer {
 				hoverAddedInformation = true;
 			}
 		}
+
+		if (!hasHoveringInformation)
+			if (hasHoveringInformation =
+				hoverAddedInformation = TrainRelocator.addToTooltip(tooltip, mc.player.isShiftKeyDown()))
+				hoverTicks = prevHoverTicks + 1;
 
 		// break early if goggle or hover returned false when present
 		if ((hasGoggleInformation && !goggleAddedInformation) && (hasHoveringInformation && !hoverAddedInformation))
@@ -163,15 +170,15 @@ public class GoggleOverlayRenderer {
 
 		float fade = Mth.clamp((hoverTicks + partialTicks) / 12f, 0, 1);
 		Boolean useCustom = cfg.overlayCustomColor.get();
-		Color colorBackground = useCustom ?
-				new Color(cfg.overlayBackgroundColor.get()) :
-				Theme.c(Theme.Key.VANILLA_TOOLTIP_BACKGROUND).scaleAlpha(.75f);
-		Color colorBorderTop = useCustom ?
-				new Color(cfg.overlayBorderColorTop.get()) :
-				Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, true).copy();
-		Color colorBorderBot = useCustom ?
-				new Color(cfg.overlayBorderColorBot.get()) :
-				Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, false).copy();
+		Color colorBackground = useCustom ? new Color(cfg.overlayBackgroundColor.get())
+			: Theme.c(Theme.Key.VANILLA_TOOLTIP_BACKGROUND)
+				.scaleAlpha(.75f);
+		Color colorBorderTop = useCustom ? new Color(cfg.overlayBorderColorTop.get())
+			: Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, true)
+				.copy();
+		Color colorBorderBot = useCustom ? new Color(cfg.overlayBorderColorBot.get())
+			: Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, false)
+				.copy();
 
 		if (fade < 1) {
 			poseStack.translate((1 - fade) * Math.signum(cfg.overlayOffsetX.get() + .5f) * 4, 0, 0);
@@ -180,8 +187,8 @@ public class GoggleOverlayRenderer {
 			colorBorderBot.scaleAlpha(fade);
 		}
 
-		GuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(), -1,
-			colorBackground.getRGB(), colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
+		GuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(), -1, colorBackground.getRGB(),
+			colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		GuiGameElement.of(item)

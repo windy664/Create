@@ -13,20 +13,19 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
+import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.Lang;
 import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -42,23 +41,7 @@ public class LinkedControllerClientHandler {
 	public static Collection<Integer> currentlyPressed = new HashSet<>();
 	private static BlockPos lecternPos;
 	private static BlockPos selectedLocation = BlockPos.ZERO;
-	private static Vector<KeyMapping> controls;
-
 	private static int packetCooldown;
-
-	public static Vector<KeyMapping> getControls() {
-		if (controls == null) {
-			Options gameSettings = Minecraft.getInstance().options;
-			controls = new Vector<>(6);
-			controls.add(gameSettings.keyUp);
-			controls.add(gameSettings.keyDown);
-			controls.add(gameSettings.keyLeft);
-			controls.add(gameSettings.keyRight);
-			controls.add(gameSettings.keyJump);
-			controls.add(gameSettings.keyShift);
-		}
-		return controls;
-	}
 
 	public static void toggleBindMode(BlockPos location) {
 		if (MODE == Mode.IDLE) {
@@ -99,7 +82,7 @@ public class LinkedControllerClientHandler {
 	}
 
 	protected static void onReset() {
-		getControls().forEach(kb -> kb.setDown(isActuallyPressed(kb)));
+		ControlsUtil.getControls().forEach(kb -> kb.setDown(ControlsUtil.isActuallyPressed(kb)));
 		packetCooldown = 0;
 		selectedLocation = BlockPos.ZERO;
 
@@ -112,15 +95,6 @@ public class LinkedControllerClientHandler {
 		currentlyPressed.clear();
 
 		LinkedControllerItemRenderer.resetButtons();
-	}
-
-	protected static boolean isActuallyPressed(KeyMapping kb) {
-		InputConstants.Key key = KeyBindingHelper.getKeyCode(kb);
-		if (key.getType() == InputConstants.Type.MOUSE) {
-			return AllKeys.isMouseButtonDown(key.getValue());
-		} else {
-			return AllKeys.isKeyDown(key.getValue());
-		}
 	}
 
 	public static void tick() {
@@ -169,10 +143,10 @@ public class LinkedControllerClientHandler {
 			return;
 		}
 
-		Vector<KeyMapping> controls = getControls();
+		Vector<KeyMapping> controls = ControlsUtil.getControls();
 		Collection<Integer> pressedKeys = new HashSet<>();
 		for (int i = 0; i < controls.size(); i++) {
-			if (isActuallyPressed(controls.get(i)))
+			if (ControlsUtil.isActuallyPressed(controls.get(i)))
 				pressedKeys.add(i);
 		}
 
@@ -240,7 +214,7 @@ public class LinkedControllerClientHandler {
 		tooltipScreen.init(mc, window.getGuiScaledWidth(), window.getGuiScaledHeight());
 
 		Object[] keys = new Object[6];
-		Vector<KeyMapping> controls = getControls();
+		Vector<KeyMapping> controls = ControlsUtil.getControls();
 		for (int i = 0; i < controls.size(); i++) {
 			KeyMapping keyBinding = controls.get(i);
 			keys[i] = keyBinding.getTranslatedKeyMessage()

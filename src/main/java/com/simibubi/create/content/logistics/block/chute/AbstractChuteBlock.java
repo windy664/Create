@@ -3,7 +3,9 @@ package com.simibubi.create.content.logistics.block.chute;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -15,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +31,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
+public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity>, ReducedDestroyEffects {
 
 	public AbstractChuteBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
@@ -66,6 +69,12 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 
 	public boolean isTransparent(BlockState state) {
 		return false;
+	}
+
+	@Override
+	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
+		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
 
 	@Override

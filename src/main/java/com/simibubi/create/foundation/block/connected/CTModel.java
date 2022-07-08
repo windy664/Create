@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
@@ -72,7 +71,7 @@ public class CTModel extends ForwardingBakedModel {
 
 		SpriteFinder spriteFinder = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS));
 		context.pushTransform(quad -> {
-			CTSpriteShiftEntry spriteShift = behaviour.get(state, quad.lightFace());
+			CTSpriteShiftEntry spriteShift = behaviour.get(state, quad.lightFace(), quad.getSprite());
 			if (spriteShift != null) {
 				TextureAtlasSprite sprite = spriteFinder.find(quad, 0);
 				if (sprite == spriteShift.getOriginal()) {

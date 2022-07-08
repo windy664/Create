@@ -58,7 +58,6 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 		else
 			succ(context, pos);
 
-
 	}
 
 	private void extract(MovementContext context, BlockPos pos) {
@@ -68,23 +67,22 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 		if (context.state.getValue(FunnelBlock.FACING) != Direction.DOWN)
 			entityPos = entityPos.add(0, -.5f, 0);
 
-		if (!world.getBlockState(pos).getCollisionShape(world, pos).isEmpty())
-			return;//only drop items if the target block is a empty space
+		if (!world.getBlockState(pos)
+			.getCollisionShape(world, pos)
+			.isEmpty())
+			return;
 
-		if (!world.getEntitiesOfClass(ItemEntity.class, new AABB(new BlockPos(entityPos))).isEmpty())
-			return;//don't drop items if there already are any in the target block space
+		if (!world.getEntitiesOfClass(ItemEntity.class, new AABB(new BlockPos(entityPos)))
+			.isEmpty())
+			return;
 
 		ItemStack filter = getFilter(context);
 		int filterAmount = context.tileData.getInt("FilterAmount");
 		if (filterAmount <= 0)
 			filterAmount = hasFilter ? AllConfigs.SERVER.logistics.defaultExtractionLimit.get() : 1;
 
-		ItemStack extract = ItemHelper.extract(
-				context.contraption.inventory,
-				s -> FilterItem.test(world, s, filter),
-				ItemHelper.ExtractionCountMode.UPTO,
-				filterAmount,
-				false);
+		ItemStack extract = ItemHelper.extract(context.contraption.getSharedInventory(),
+			s -> FilterItem.test(world, s, filter), ItemHelper.ExtractionCountMode.UPTO, filterAmount, false);
 
 		if (extract.isEmpty())
 			return;
@@ -92,12 +90,10 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 		if (world.isClientSide)
 			return;
 
-
-
 		ItemEntity entity = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, extract);
 		entity.setDeltaMovement(Vec3.ZERO);
 		entity.setPickUpDelay(5);
-		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1/16f, .1f);
+		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1 / 16f, .1f);
 		world.addFreshEntity(entity);
 	}
 
@@ -113,7 +109,7 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 				ItemStack toInsert = item.getItem();
 				if (!filter.isEmpty() && !FilterItem.test(context.world, toInsert, filter))
 					continue;
-				long inserted = context.contraption.inventory.insert(ItemVariant.of(toInsert), toInsert.getCount(), t);
+				long inserted = context.contraption.getSharedInventory().insert(ItemVariant.of(toInsert), toInsert.getCount(), t);
 				if (inserted == 0)
 					continue;
 				if (inserted == toInsert.getCount()) {

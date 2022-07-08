@@ -4,6 +4,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
@@ -16,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -95,6 +97,12 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 		return ItemDrainTileEntity.class;
 	}
 
+	@Override
+	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
+		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
+	}
+	
 	@Override
 	public BlockEntityType<? extends ItemDrainTileEntity> getTileEntityType() {
 		return AllTileEntities.ITEM_DRAIN.get();

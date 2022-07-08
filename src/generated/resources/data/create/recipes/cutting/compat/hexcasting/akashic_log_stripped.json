@@ -1,0 +1,23 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "hexcasting:akashic_log_stripped"
+    }
+  ],
+  "results": [
+    {
+      "item": "hexcasting:akashic_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "hexcasting"
+      ]
+    }
+  ]
+}

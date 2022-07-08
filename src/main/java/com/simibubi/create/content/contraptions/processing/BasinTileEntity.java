@@ -27,6 +27,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerTileEntity;
@@ -47,7 +48,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankB
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -100,8 +101,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	protected List<FluidStack> spoutputFluidBuffer;
 
 	public static final int OUTPUT_ANIMATION_TIME = 10;
-	List<IntAttached<ItemStack>> visualizedOutputItems;
-	List<IntAttached<FluidStack>> visualizedOutputFluids;
+	List<LongAttached<ItemStack>> visualizedOutputItems;
+	List<LongAttached<FluidStack>> visualizedOutputFluids;
 
 	SnapshotParticipant<Data> snapshotParticipant = new SnapshotParticipant<>() {
 		@Override
@@ -182,10 +183,10 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return;
 
 		NBTHelper.iterateCompoundList(compound.getList("VisualizedItems", Tag.TAG_COMPOUND),
-			c -> visualizedOutputItems.add(IntAttached.with(OUTPUT_ANIMATION_TIME, ItemStack.of(c))));
+			c -> visualizedOutputItems.add(LongAttached.with(OUTPUT_ANIMATION_TIME, ItemStack.of(c))));
 		NBTHelper.iterateCompoundList(compound.getList("VisualizedFluids", Tag.TAG_COMPOUND),
 			c -> visualizedOutputFluids
-				.add(IntAttached.with(OUTPUT_ANIMATION_TIME, FluidStack.loadFluidStackFromNBT(c))));
+				.add(LongAttached.with(OUTPUT_ANIMATION_TIME, FluidStack.loadFluidStackFromNBT(c))));
 	}
 
 	@Override
@@ -295,8 +296,22 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			&& preferredSpoutput != Direction.UP)
 			newFacing = preferredSpoutput;
 
-		if (newFacing != currentFacing)
-			level.setBlockAndUpdate(worldPosition, blockState.setValue(BasinBlock.FACING, newFacing));
+		if (newFacing == currentFacing)
+			return;
+
+		level.setBlockAndUpdate(worldPosition, blockState.setValue(BasinBlock.FACING, newFacing));
+
+		if (newFacing.getAxis()
+			.isVertical())
+			return;
+
+		try (Transaction t = TransferUtil.getTransaction()) {
+			acceptOutputs(TransferUtil.getAllItems(outputInventory), TransferUtil.getAllFluids(outputTank.getCapability()), t);
+			t.commit();
+		}
+
+		notifyChangeOfContents();
+		notifyUpdate();
 	}
 
 	@Override
@@ -377,7 +392,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 					update = true;
 					iterator.remove();
-					visualizedOutputItems.add(IntAttached.withZero(itemStack));
+					visualizedOutputItems.add(LongAttached.withZero(itemStack));
 					nested.commit();
 				}
 			}
@@ -403,7 +418,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 					update = true;
 					iterator.remove();
-					visualizedOutputFluids.add(IntAttached.withZero(fluidStack));
+					visualizedOutputFluids.add(LongAttached.withZero(fluidStack));
 					nested.commit();
 				}
 			}
@@ -587,10 +602,10 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	// client things
 
 	private void tickVisualizedOutputs() {
-		visualizedOutputFluids.forEach(IntAttached::decrement);
-		visualizedOutputItems.forEach(IntAttached::decrement);
-		visualizedOutputFluids.removeIf(IntAttached::isOrBelowZero);
-		visualizedOutputItems.removeIf(IntAttached::isOrBelowZero);
+		visualizedOutputFluids.forEach(LongAttached::decrement);
+		visualizedOutputItems.forEach(LongAttached::decrement);
+		visualizedOutputFluids.removeIf(LongAttached::isOrBelowZero);
+		visualizedOutputItems.removeIf(LongAttached::isOrBelowZero);
 	}
 
 	private void createFluidParticles() {
@@ -681,8 +696,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				float angle = interval * (1 + currentSegment) + intervalOffset;
 				Vec3 vec = centerOf.add(VecHelper.rotate(pointer, angle, Axis.Y));
 				level.addAlwaysVisibleParticle(
-					new FluidParticleData(AllParticleTypes.BASIN_FLUID.get(), tankSegment.getRenderedFluid()),
-					vec.x(), surface, vec.z(), 1, 0, 0);
+					new FluidParticleData(AllParticleTypes.BASIN_FLUID.get(), tankSegment.getRenderedFluid()), vec.x(),
+					surface, vec.z(), 1, 0, 0);
 				currentSegment++;
 			}
 		}

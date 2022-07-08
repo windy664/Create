@@ -1,8 +1,20 @@
 package com.simibubi.create.api.connectivity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.PriorityQueue;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
-
 import com.simibubi.create.foundation.utility.Iterate;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -315,11 +327,13 @@ public class ConnectivityHandler {
 		for (int yOffset = 0; yOffset < height; yOffset++) {
 			for (int xOffset = 0; xOffset < width; xOffset++) {
 				for (int zOffset = 0; zOffset < width; zOffset++) {
+
 					BlockPos pos = switch (axis) {
 					case X -> origin.offset(yOffset, xOffset, zOffset);
 					case Y -> origin.offset(xOffset, yOffset, zOffset);
 					case Z -> origin.offset(xOffset, zOffset, yOffset);
 					};
+
 					T partAt = partAt(be.getType(), level, pos);
 					if (partAt == null)
 						continue;
@@ -351,15 +365,13 @@ public class ConnectivityHandler {
 						frontier.add(partAt);
 						partAt.preventConnectivityUpdate();
 					}
-					if (cache != null) {
+					if (cache != null)
 						cache.put(pos, partAt);
-					}
 				}
 			}
 		}
-		if (tryReconnect) {
+		if (tryReconnect)
 			formMulti(be.getType(), level, cache == null ? new SearchCache<>() : cache, frontier);
-		}
 	}
 
 	private static <T extends BlockEntity & IMultiTileContainer> PriorityQueue<Pair<Integer, T>> makeCreationQueue() {
@@ -370,9 +382,8 @@ public class ConnectivityHandler {
 	public static <T extends BlockEntity & IMultiTileContainer> T partAt(BlockEntityType<?> type, BlockGetter level,
 		BlockPos pos) {
 		BlockEntity be = level.getBlockEntity(pos);
-		if (be != null && be.getType() == type)
+		if (be != null && be.getType() == type && !be.isRemoved())
 			return checked(be);
-
 		return null;
 	}
 

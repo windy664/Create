@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -117,8 +118,8 @@ public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinka
 	}
 
 	@Override
-	public Pair<Frequency, Frequency> getNetworkKey() {
-		return Pair.of(frequencyFirst, frequencyLast);
+	public Couple<Frequency> getNetworkKey() {
+		return Couple.create(frequencyFirst, frequencyLast);
 	}
 
 	@Override

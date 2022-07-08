@@ -14,6 +14,7 @@ import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -132,8 +133,7 @@ public abstract class AbstractSimiScreen extends Screen {
 		return false;
 	}
 
-	protected void prepareFrame() {
-	}
+	protected void prepareFrame() {}
 
 	protected void renderWindowBackground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(ms);
@@ -145,18 +145,29 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : ((ScreenAccessor) this).port_lib$getRenderables()) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
 				List<Component> tooltip = simiWidget.getToolTip();
-				if (!tooltip.isEmpty())
-					renderComponentTooltip(ms, tooltip, mouseX, mouseY);
+				if (tooltip.isEmpty())
+					continue;
+				int ttx = simiWidget.lockedTooltipX == -1 ? mouseX : simiWidget.lockedTooltipX + simiWidget.x;
+				int tty = simiWidget.lockedTooltipY == -1 ? mouseY : simiWidget.lockedTooltipY + simiWidget.y;
+				renderComponentTooltip(ms, tooltip, ttx, tty);
 			}
 		}
 	}
 
-	protected void endFrame() {
-	}
+	protected void endFrame() {}
 
 	@Deprecated
 	protected void debugWindowArea(PoseStack matrixStack) {
 		fill(matrixStack, guiLeft + windowWidth, guiTop + windowHeight, guiLeft, guiTop, 0xD3D3D3D3);
+	}
+
+	@Override
+	public GuiEventListener getFocused() {
+		GuiEventListener focused = super.getFocused();
+		if (focused instanceof AbstractWidget && !((AbstractWidget) focused).isFocused())
+			focused = null;
+		setFocused(focused);
+		return focused;
 	}
 
 }

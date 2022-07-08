@@ -1,6 +1,5 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import io.github.fabricators_of_create.porting_lib.item.BlockUseBypassingItem;
 
 import net.minecraft.core.BlockPos;
@@ -49,10 +48,8 @@ public class FunnelItem extends BlockItem implements BlockUseBypassingItem {
 			.getBlock();
 		BlockState equivalentBeltFunnel = beltFunnelBlock.getStateForPlacement(ctx)
 			.setValue(BeltFunnelBlock.HORIZONTAL_FACING, direction);
-		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos)) {
-			AllTriggers.triggerFor(AllTriggers.BELT_FUNNEL, ctx.getPlayer());
+		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos))
 			return equivalentBeltFunnel;
-		}
 
 		return state;
 	}

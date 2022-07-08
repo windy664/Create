@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -70,6 +71,7 @@ public class HosePulleyTileEntity extends KineticTileEntity implements FluidTran
 		behaviours.add(drainer);
 		behaviours.add(filler);
 		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.HOSE_PULLEY, AllAdvancements.HOSE_PULLEY_LAVA);
 	}
 
 	protected void onTankContentsChanged(FluidStack contents) {}

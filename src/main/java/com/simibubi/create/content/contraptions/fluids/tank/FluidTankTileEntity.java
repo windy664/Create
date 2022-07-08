@@ -9,12 +9,14 @@ import javax.annotation.Nullable;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -47,6 +49,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	protected boolean forceFluidLevelUpdate;
 	protected SmartFluidTank tankInventory;
+	protected FluidTank exposedTank;
 	protected BlockPos controller;
 	protected BlockPos lastKnownPos;
 	protected boolean updateConnectivity;
@@ -55,12 +58,14 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	protected int width;
 	protected int height;
 
+	public BoilerData boiler;
+
 	private static final int SYNC_RATE = 8;
 	protected int syncCooldown;
 	protected boolean queuedSync;
 
 	// For rendering purposes only
-	private InterpolatedChasingValue fluidLevel;
+	private LerpedFloat fluidLevel;
 
 	public FluidTankTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -70,6 +75,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		window = true;
 		height = 1;
 		width = 1;
+		boiler = new BoilerData();
+		refreshCapability();
 	}
 
 	protected SmartFluidTank createInventory() {
@@ -104,7 +111,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (updateConnectivity)
 			updateConnectivity();
 		if (fluidLevel != null)
-			fluidLevel.tick();
+			fluidLevel.tickChaser();
+		if (isController())
+			boiler.tick(this);
 	}
 
 	@Override
@@ -114,8 +123,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	@Override
 	public boolean isController() {
-		return controller == null
-			|| worldPosition.getX() == controller.getX() && worldPosition.getY() == controller.getY() && worldPosition.getZ() == controller.getZ();
+		return controller == null || worldPosition.getX() == controller.getX()
+			&& worldPosition.getY() == controller.getY() && worldPosition.getZ() == controller.getZ();
 	}
 
 	@Override
@@ -167,8 +176,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 		if (isVirtual()) {
 			if (fluidLevel == null)
-				fluidLevel = new InterpolatedChasingValue().start(getFillState());
-			fluidLevel.target(getFillState());
+				fluidLevel = LerpedFloat.linear()
+					.startWithValue(getFillState());
+			fluidLevel.chase(getFillState(), .5f, Chaser.EXP);
 		}
 	}
 
@@ -221,6 +231,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		controller = null;
 		width = 1;
 		height = 1;
+		boiler.clear();
 		onFluidStackChanged(tankInventory.getFluid());
 
 		BlockState state = getBlockState();
@@ -231,6 +242,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			getLevel().setBlock(worldPosition, state, 23);
 		}
 
+		refreshCapability();
 		setChanged();
 		sendData();
 	}
@@ -239,7 +251,18 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		FluidTankTileEntity te = getControllerTE();
 		if (te == null)
 			return;
+		if (te.boiler.isActive())
+			return;
 		te.setWindows(!te.window);
+	}
+
+	public void updateBoilerTemperature() {
+		FluidTankTileEntity te = getControllerTE();
+		if (te == null)
+			return;
+		if (!te.boiler.isActive())
+			return;
+		te.boiler.needsHeatLevelUpdate = true;
 	}
 
 	public void sendDataImmediately() {
@@ -296,6 +319,31 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		}
 	}
 
+	public void updateBoilerState() {
+		if (!isController())
+			return;
+
+		boolean wasBoiler = boiler.isActive();
+		boolean changed = boiler.evaluate(this);
+
+		if (wasBoiler != boiler.isActive()) {
+			if (boiler.isActive())
+				setWindows(false);
+
+			for (int yOffset = 0; yOffset < height; yOffset++)
+				for (int xOffset = 0; xOffset < width; xOffset++)
+					for (int zOffset = 0; zOffset < width; zOffset++)
+						if (level.getBlockEntity(
+							worldPosition.offset(xOffset, yOffset, zOffset))instanceof FluidTankTileEntity fte)
+							fte.refreshCapability();
+		}
+
+		if (changed) {
+			notifyUpdate();
+			boiler.checkPipeOrganAdvancement(this);
+		}
+	}
+
 	@Override
 	public void setController(BlockPos controller) {
 		if (level.isClientSide && !isVirtual())
@@ -303,8 +351,18 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (controller.equals(this.controller))
 			return;
 		this.controller = controller;
+		refreshCapability();
 		setChanged();
 		sendData();
+	}
+
+	private void refreshCapability() {
+		exposedTank = handlerForCapability();
+	}
+
+	private FluidTank handlerForCapability() {
+		return isController() ? boiler.isActive() ? boiler.createHandler() : tankInventory
+				: getControllerTE() != null ? getControllerTE().handlerForCapability() : new FluidTank(0);
 	}
 
 	@Override
@@ -333,6 +391,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		FluidTankTileEntity controllerTE = getControllerTE();
 		if (controllerTE == null)
 			return false;
+		if (controllerTE.boiler.addToGoggleTooltip(tooltip, isPlayerSneaking, controllerTE.getTotalTankSize()))
+			return true;
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
 			TransferUtil.getFluidStorage(controllerTE));
 	}
@@ -370,9 +430,11 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			}
 		}
 
+		boiler.read(compound.getCompound("Boiler"), width * width * height);
+
 		if (compound.contains("ForceFluidLevel") || fluidLevel == null)
-			fluidLevel = new InterpolatedChasingValue().start(getFillState())
-				.withSpeed(1 / 2f);
+			fluidLevel = LerpedFloat.linear()
+				.startWithValue(getFillState());
 
 		if (!clientPacket)
 			return;
@@ -389,8 +451,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (isController()) {
 			float fillState = getFillState();
 			if (compound.contains("ForceFluidLevel") || fluidLevel == null)
-				fluidLevel = new InterpolatedChasingValue().start(fillState);
-			fluidLevel.target(fillState);
+				fluidLevel = LerpedFloat.linear()
+					.startWithValue(fillState);
+			fluidLevel.chase(fillState, 0.5f, Chaser.EXP);
 		}
 		if (luminosity != prevLum && hasLevel())
 			level.getChunkSource()
@@ -398,7 +461,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 				.checkBlock(worldPosition);
 
 		if (compound.contains("LazySync"))
-			fluidLevel.withSpeed(compound.contains("LazySync") ? 1 / 8f : 1 / 2f);
+			fluidLevel.chase(fluidLevel.getChaseTarget(), 0.125f, Chaser.EXP);
 	}
 
 	public float getFillState() {
@@ -409,6 +472,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	public void write(CompoundTag compound, boolean clientPacket) {
 		if (updateConnectivity)
 			compound.putBoolean("Uninitialized", true);
+		compound.put("Boiler", boiler.write());
 		if (lastKnownPos != null)
 			compound.put("LastKnownPos", NbtUtils.writeBlockPos(lastKnownPos));
 		if (!isController())
@@ -437,7 +501,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		registerAwardables(behaviours, AllAdvancements.STEAM_ENGINE_MAXED, AllAdvancements.PIPE_ORGAN);
+	}
 
 	public FluidTank getTankInventory() {
 		return tankInventory;
@@ -459,16 +525,18 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		return AllConfigs.SERVER.fluids.fluidTankMaxHeight.get();
 	}
 
-	public InterpolatedChasingValue getFluidLevel() {
+	public LerpedFloat getFluidLevel() {
 		return fluidLevel;
 	}
 
-	public void setFluidLevel(InterpolatedChasingValue fluidLevel) {
+	public void setFluidLevel(LerpedFloat fluidLevel) {
 		this.fluidLevel = fluidLevel;
 	}
 
 	@Override
-	public void preventConnectivityUpdate() { updateConnectivity = false; }
+	public void preventConnectivityUpdate() {
+		updateConnectivity = false;
+	}
 
 	@Override
 	public void notifyMultiUpdated() {
@@ -476,21 +544,26 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (FluidTankBlock.isTank(state)) { // safety
 			state = state.setValue(FluidTankBlock.BOTTOM, getController().getY() == getBlockPos().getY());
 			state = state.setValue(FluidTankBlock.TOP, getController().getY() + height - 1 == getBlockPos().getY());
-			level.setBlock(getBlockPos(), state, 22);
+			level.setBlock(getBlockPos(), state, 6);
 		}
-		setWindows(window);
+		if (isController())
+			setWindows(window);
 		onFluidStackChanged(tankInventory.getFluid());
+		updateBoilerState();
 		setChanged();
 	}
 
 	@Override
 	public void setExtraData(@Nullable Object data) {
-		if (data instanceof Boolean) window = (boolean)data;
+		if (data instanceof Boolean)
+			window = (boolean) data;
 	}
 
 	@Override
 	@Nullable
-	public Object getExtraData() { return window; }
+	public Object getExtraData() {
+		return window;
+	}
 
 	@Override
 	public Object modifyExtraData(Object data) {
@@ -502,34 +575,51 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public Direction.Axis getMainConnectionAxis() { return Direction.Axis.Y; }
+	public Direction.Axis getMainConnectionAxis() {
+		return Direction.Axis.Y;
+	}
 
 	@Override
 	public int getMaxLength(Direction.Axis longAxis, int width) {
-		if (longAxis == Direction.Axis.Y) return getMaxHeight();
+		if (longAxis == Direction.Axis.Y)
+			return getMaxHeight();
 		return getMaxWidth();
 	}
 
 	@Override
-	public int getMaxWidth() { return MAX_SIZE; }
+	public int getMaxWidth() {
+		return MAX_SIZE;
+	}
 
 	@Override
-	public int getHeight() { return height; }
+	public int getHeight() {
+		return height;
+	}
 
 	@Override
-	public void setHeight(int height) { this.height = height; }
+	public void setHeight(int height) {
+		this.height = height;
+	}
 
 	@Override
-	public int getWidth() { return width; }
+	public int getWidth() {
+		return width;
+	}
 
 	@Override
-	public void setWidth(int width) { this.width = width; }
+	public void setWidth(int width) {
+		this.width = width;
+	}
 
 	@Override
-	public boolean hasTank() { return true; }
+	public boolean hasTank() {
+		return true;
+	}
 
 	@Override
-	public long getTankSize(int tank) { return getCapacityMultiplier(); }
+	public long getTankSize(int tank) {
+		return getCapacityMultiplier();
+	}
 
 	@Override
 	public void setTankSize(int tank, int blocks) {
@@ -543,15 +633,13 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	@Override
 	public FluidStack getFluid(int tank) {
-		return tankInventory.getFluid().copy();
+		return tankInventory.getFluid()
+			.copy();
 	}
 
 	@Nullable
 	@Override
 	public Storage<FluidVariant> getFluidStorage(@Nullable Direction direction) {
-		FluidTankTileEntity controller = getControllerTE();
-		if (controller != null)
-			return controller.getTankInventory();
-		return getTankInventory();
+		return exposedTank;
 	}
 }

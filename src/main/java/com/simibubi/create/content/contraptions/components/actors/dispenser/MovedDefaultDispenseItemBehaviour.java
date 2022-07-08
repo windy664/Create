@@ -20,11 +20,13 @@ import net.minecraft.world.phys.Vec3;
 public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBehaviour {
 	private static final MovedDefaultDispenseItemBehaviour DEFAULT_INSTANCE = new MovedDefaultDispenseItemBehaviour();
 
-	public static void doDispense(Level p_82486_0_, ItemStack p_82486_1_, int p_82486_2_, Vec3 facing, BlockPos p_82486_4_, MovementContext context) {
+	public static void doDispense(Level p_82486_0_, ItemStack p_82486_1_, int p_82486_2_, Vec3 facing,
+		BlockPos p_82486_4_, MovementContext context) {
 		double d0 = p_82486_4_.getX() + facing.x + .5;
 		double d1 = p_82486_4_.getY() + facing.y + .5;
 		double d2 = p_82486_4_.getZ() + facing.z + .5;
-		if (Direction.getNearest(facing.x, facing.y, facing.z).getAxis() == Direction.Axis.Y) {
+		if (Direction.getNearest(facing.x, facing.y, facing.z)
+			.getAxis() == Direction.Axis.Y) {
 			d1 = d1 - 0.125D;
 		} else {
 			d1 = d1 - 0.15625D;
@@ -32,13 +34,20 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 
 		ItemEntity itementity = new ItemEntity(p_82486_0_, d0, d1, d2, p_82486_1_);
 		double d3 = p_82486_0_.random.nextDouble() * 0.1D + 0.2D;
-		itementity.setDeltaMovement(p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.x() * d3 + context.motion.x, p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.y() * d3 + context.motion.y, p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.z() * d3 + context.motion.z);
+		itementity.setDeltaMovement(
+			p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.x() * d3
+				+ context.motion.x,
+			p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.y() * d3
+				+ context.motion.y,
+			p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.z() * d3
+				+ context.motion.z);
 		p_82486_0_.addFreshEntity(itementity);
 	}
 
 	@Override
 	public ItemStack dispense(ItemStack itemStack, MovementContext context, BlockPos pos) {
-		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(DispenserBlock.FACING).getNormal());
+		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(DispenserBlock.FACING)
+			.getNormal());
 		facingVec = context.rotation.apply(facingVec);
 		facingVec.normalize();
 
@@ -49,7 +58,9 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 			this.spawnDispenseParticles(context.world, pos, closestToFacing);
 			return this.dispenseStack(itemStack, context, pos, facingVec);
 		} else {
-			if (HopperBlockEntity.addItem(null, iinventory, itemStack.copy().split(1), closestToFacing.getOpposite()).isEmpty())
+			if (HopperBlockEntity.addItem(null, iinventory, itemStack.copy()
+				.split(1), closestToFacing.getOpposite())
+				.isEmpty())
 				itemStack.shrink(1);
 			return itemStack;
 		}
@@ -72,7 +83,8 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	}
 
 	/**
-	 * Order clients to display dispense particles from the specified block and facing.
+	 * Order clients to display dispense particles from the specified block and
+	 * facing.
 	 */
 	protected void spawnDispenseParticles(LevelAccessor world, BlockPos pos, Vec3 facing) {
 		spawnDispenseParticles(world, pos, getClosestFacingDirection(facing));
@@ -86,10 +98,11 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 		return Direction.getNearest(exactFacing.x, exactFacing.y, exactFacing.z);
 	}
 
-	protected ItemStack placeItemInInventory(ItemStack consumedFrom, ItemStack output, MovementContext context, BlockPos pos, Vec3 facing) {
+	protected ItemStack placeItemInInventory(ItemStack consumedFrom, ItemStack output, MovementContext context,
+		BlockPos pos, Vec3 facing) {
 		consumedFrom.shrink(1);
 		try (Transaction t = TransferUtil.getTransaction()) {
-			long inserted = TransferUtil.insertItem(context.contraption.inventory, output.copy());
+			long inserted = TransferUtil.insertItem(context.contraption.getSharedInventory(), output.copy());
 			if (inserted != 0)
 				DEFAULT_INSTANCE.dispenseStack(output, context, pos, facing);
 			t.commit();

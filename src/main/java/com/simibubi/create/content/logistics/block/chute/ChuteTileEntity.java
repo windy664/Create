@@ -15,7 +15,7 @@ import com.simibubi.create.content.contraptions.components.fan.EncasedFanTileEnt
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
@@ -110,6 +110,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(this).onlyInsertWhen((d) -> canDirectlyInsertCached()));
+		registerAwardables(behaviours, AllAdvancements.CHUTE);
 	}
 
 	// Cached per-tick, useful when a lot of items are waiting on top of it
@@ -242,7 +243,6 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			setItem(entityItem.copy(), (float) (itemEntity.getBoundingBox()
 				.getCenter().y - worldPosition.getY()));
 			itemEntity.discard();
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.UPWARD_CHUTE, level, worldPosition, 5);
 			break;
 		}
 	}
@@ -517,8 +517,10 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		item = stack;
 		itemPosition.lastValue = itemPosition.value = insertionPos;
 		itemHandler.update();
-		if (!level.isClientSide)
+		if (!level.isClientSide) {
 			notifyUpdate();
+			award(AllAdvancements.CHUTE);
+		}
 	}
 
 	@Override

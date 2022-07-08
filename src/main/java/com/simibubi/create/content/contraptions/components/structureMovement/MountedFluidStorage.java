@@ -7,7 +7,8 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
@@ -71,7 +72,7 @@ public class MountedFluidStorage {
 			return;
 		FluidTankTileEntity tank = (FluidTankTileEntity) te;
 		tank.getFluidLevel()
-			.tick();
+			.tickChaser();
 	}
 
 	public void updateFluid(FluidStack fluid) {
@@ -81,9 +82,10 @@ public class MountedFluidStorage {
 		float fillState = tank.getFluidAmount() / (float) tank.getCapacity();
 		FluidTankTileEntity tank = (FluidTankTileEntity) te;
 		if (tank.getFluidLevel() == null)
-			tank.setFluidLevel(new InterpolatedChasingValue().start(fillState));
+			tank.setFluidLevel(LerpedFloat.linear()
+				.startWithValue(fillState));
 		tank.getFluidLevel()
-			.target(fillState);
+			.chase(fillState, 0.5, Chaser.EXP);
 		FluidTank tankInventory = tank.getTankInventory();
 		if (tankInventory instanceof SmartFluidTank)
 			((SmartFluidTank) tankInventory).setFluid(fluid);
@@ -116,7 +118,8 @@ public class MountedFluidStorage {
 			return;
 
 		SmartFluidTank inv = (SmartFluidTank) teHandler;
-		inv.setFluid(tank.getFluid().copy());
+		inv.setFluid(tank.getFluid()
+			.copy());
 	}
 
 	public SmartFluidTank getFluidHandler() {

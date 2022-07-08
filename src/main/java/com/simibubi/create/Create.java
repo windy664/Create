@@ -21,10 +21,11 @@ import com.google.gson.GsonBuilder;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineInteractions;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
+import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
 import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteractionPointTypes;
+import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.SchematicProcessor;
@@ -56,7 +57,7 @@ public class Create implements ModInitializer {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.4.1";
+	public static final String VERSION = "0.5-unstable";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -70,6 +71,7 @@ public class Create implements ModInitializer {
 	public static final ServerSchematicLoader SCHEMATIC_RECEIVER = new ServerSchematicLoader();
 	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
+	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
 	public static final Random RANDOM = new Random();
 
@@ -92,11 +94,11 @@ public class Create implements ModInitializer {
 		AllEntityTypes.register();
 		AllTileEntities.register();
 		AllMovementBehaviours.register();
+		AllDisplayBehaviours.register();
 		AllInteractionBehaviours.register();
 		AllArmInteractionPointTypes.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
-		FurnaceEngineInteractions.registerDefaults();
 		BlockSpoutingBehaviour.register();
 
 		Milk.enableMilkFluid();
@@ -121,6 +123,8 @@ public class Create implements ModInitializer {
 		CommonEvents.register();
 		AllWorldFeatures.registerOreFeatures();
 
+		AllEntityDataSerializers.register();
+
 		AllPackets.channel.initServerListener();
 
 		// causes class loading issues or something
@@ -134,6 +138,7 @@ public class Create implements ModInitializer {
 		BuiltinPotatoProjectileTypes.register();
 
 //		event.enqueueWork(() -> {
+			AllAdvancements.register();
 			AllTriggers.register();
 			SchematicProcessor.register();
 			AllWorldFeatures.registerFeatures();

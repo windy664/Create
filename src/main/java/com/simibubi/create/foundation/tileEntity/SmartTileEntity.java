@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 import com.simibubi.create.api.event.TileEntityBehaviourEvent;
 import com.simibubi.create.content.schematics.ISpecialBlockEntityItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
+import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
@@ -26,8 +28,8 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours = new HashMap<>();
 	private boolean initialized = false;
 	private boolean firstNbtRead = true;
-	private int lazyTickRate;
-	private int lazyTickCounter;
+	protected int lazyTickRate;
+	protected int lazyTickCounter;
 
 	// Used for simulating this TE in a client-only setting
 	private boolean virtualMode;
@@ -74,8 +76,7 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 		forEachBehaviour(TileEntityBehaviour::tick);
 	}
 
-	public void lazyTick() {
-	}
+	public void lazyTick() {}
 
 	/**
 	 * Hook only these in future subclasses of STE
@@ -114,9 +115,12 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 		read(tag, false);
 	}
 
-	/* TODO: Remove this hack once this issue is resolved: https://github.com/MinecraftForge/MinecraftForge/issues/8302
-		Once the PR linked in the issue is accepted, we should use the new method for determining whether setRemoved was
-		called due to a chunk unload or not, and remove this volatile workaround
+	/*
+	 * TODO: Remove this hack once this issue is resolved:
+	 * https://github.com/MinecraftForge/MinecraftForge/issues/8302 Once the PR
+	 * linked in the issue is accepted, we should use the new method for determining
+	 * whether setRemoved was called due to a chunk unload or not, and remove this
+	 * volatile workaround
 
 		here in fabric land, we actually need to reimplement this bug for parity :)
 	 */
@@ -129,12 +133,11 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	}
 
 	protected void setRemovedNotDueToChunkUnload() {
-
+		forEachBehaviour(TileEntityBehaviour::remove);
 	}
 
 	@Override
 	public void setRemoved() {
-		forEachBehaviour(TileEntityBehaviour::remove);
 		super.setRemoved();
 
 		if (!unloaded) {
@@ -164,7 +167,8 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	}
 
 	protected void forEachBehaviour(Consumer<TileEntityBehaviour> action) {
-		behaviours.values().forEach(action);
+		behaviours.values()
+			.forEach(action);
 	}
 
 	protected void attachBehaviourLate(TileEntityBehaviour behaviour) {
@@ -174,7 +178,8 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state) {
-		return behaviours.values().stream()
+		return behaviours.values()
+			.stream()
 			.reduce(ItemRequirement.NONE, (r, b) -> r.union(b.getRequiredItems()), (r, r1) -> r.union(r1));
 	}
 
@@ -223,4 +228,26 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 //	protected boolean isFluidHandlerCap(Capability<?> cap) {
 //		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 //	}
+
+	public void registerAwardables(List<TileEntityBehaviour> behaviours, CreateAdvancement... advancements) {
+		for (TileEntityBehaviour behaviour : behaviours) {
+			if (behaviour instanceof AdvancementBehaviour ab) {
+				ab.add(advancements);
+				return;
+			}
+		}
+		behaviours.add(new AdvancementBehaviour(this, advancements));
+	}
+
+	public void award(CreateAdvancement advancement) {
+		AdvancementBehaviour behaviour = getBehaviour(AdvancementBehaviour.TYPE);
+		if (behaviour != null)
+			behaviour.awardPlayer(advancement);
+	}
+
+	public void awardIfNear(CreateAdvancement advancement, int range) {
+		AdvancementBehaviour behaviour = getBehaviour(AdvancementBehaviour.TYPE);
+		if (behaviour != null)
+			behaviour.awardPlayerIfNear(advancement, range);
+	}
 }

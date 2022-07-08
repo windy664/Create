@@ -12,7 +12,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -58,8 +58,8 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 
 		float maxTime =
 				(float) (ejector.earlyTarget != null ? ejector.earlyTargetTime : ejector.launcher.getTotalFlyingTicks());
-		for (IntAttached<ItemStack> intAttached : ejector.launchedItems) {
-			float time = intAttached.getFirst() + partialTicks;
+		for (LongAttached<ItemStack> LongAttached : ejector.launchedItems) {
+			float time = LongAttached.getFirst() + partialTicks;
 			if (time > maxTime)
 				continue;
 
@@ -73,7 +73,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 			msr.translateBack(itemRotOffset);
 			Minecraft.getInstance()
 				.getItemRenderer()
-				.renderStatic(intAttached.getValue(), TransformType.GROUND, light, overlay, ms, buffer, 0);
+				.renderStatic(LongAttached.getValue(), TransformType.GROUND, light, overlay, ms, buffer, 0);
 			ms.popPose();
 		}
 

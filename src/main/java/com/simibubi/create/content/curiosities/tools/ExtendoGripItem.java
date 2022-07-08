@@ -11,7 +11,7 @@ import com.google.common.collect.Multimap;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.armor.BackTankUtil;
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -20,7 +20,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -49,13 +48,11 @@ public class ExtendoGripItem extends Item  {
 			AttributeModifier.Operation.ADDITION);
 
 	private static final Supplier<Multimap<Attribute, AttributeModifier>> rangeModifier = Suppliers.memoize(() ->
-		// Holding an ExtendoGrip
-		ImmutableMultimap.of(ReachEntityAttributes.REACH, singleRangeAttributeModifier)
-	);
+	// Holding an ExtendoGrip
+	ImmutableMultimap.of(ReachEntityAttributes.REACH, singleRangeAttributeModifier));
 	private static final Supplier<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = Suppliers.memoize(() ->
-		// Holding two ExtendoGrips o.O
-		ImmutableMultimap.of(ReachEntityAttributes.REACH, doubleRangeAttributeModifier)
-	);
+	// Holding two ExtendoGrips o.O
+	ImmutableMultimap.of(ReachEntityAttributes.REACH, doubleRangeAttributeModifier));
 
 	private static DamageSource lastActiveDamageSource;
 
@@ -87,8 +84,7 @@ public class ExtendoGripItem extends Item  {
 					.removeAttributeModifiers(rangeModifier.get());
 				persistentData.remove(EXTENDO_MARKER);
 			} else {
-				if (player instanceof ServerPlayer)
-					AllTriggers.EXTENDO.trigger((ServerPlayer) player);
+				AllAdvancements.EXTENDO_GRIP.awardTo(player);
 				player.getAttributes()
 					.addTransientAttributeModifiers(rangeModifier.get());
 				persistentData.putBoolean(EXTENDO_MARKER, true);
@@ -101,8 +97,7 @@ public class ExtendoGripItem extends Item  {
 					.removeAttributeModifiers(doubleRangeModifier.get());
 				persistentData.remove(DUAL_EXTENDO_MARKER);
 			} else {
-				if (player instanceof ServerPlayer)
-					AllTriggers.GIGA_EXTENDO.trigger((ServerPlayer) player);
+				AllAdvancements.EXTENDO_GRIP_DUAL.awardTo(player);
 				player.getAttributes()
 					.addTransientAttributeModifiers(doubleRangeModifier.get());
 				persistentData.putBoolean(DUAL_EXTENDO_MARKER, true);

@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "tag": "c:ingots/brass"
+            "items": [
+              "create:brass_casing"
+            ]
           }
         ]
       }

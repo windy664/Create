@@ -4,6 +4,7 @@ import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
 import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.container.GhostItemContainer;
 
@@ -66,9 +67,12 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 
 		if (stack.getStack().getValue() instanceof ItemStack) {
 			for (int i = 36; i < gui.getMenu().slots.size(); i++) {
-				targets.add(new GhostTarget<>(gui, i - 36, isAttributeFilter));
+				if (gui.getMenu().slots.get(i)
+						.isActive())
+					targets.add(new GhostTarget<>(gui, i - 36, isAttributeFilter));
 
-				// Only accept items in 1st slot. 2nd is used for functionality, don't wanna override that one
+				// Only accept items in 1st slot. 2nd is used for functionality, don't wanna
+				// override that one
 				if (isAttributeFilter)
 					break;
 			}
@@ -79,7 +83,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 
 	@Override
 	public <R extends Screen> boolean isHandingScreen(R screen) {
-		return screen instanceof AbstractFilterScreen || screen instanceof BlueprintScreen || screen instanceof LinkedControllerScreen;
+		return screen instanceof AbstractFilterScreen || screen instanceof BlueprintScreen || screen instanceof LinkedControllerScreen || screen instanceof ScheduleScreen;
 	}
 
 	private static class GhostTarget<I, T extends GhostItemContainer<?>> implements BoundsProvider {

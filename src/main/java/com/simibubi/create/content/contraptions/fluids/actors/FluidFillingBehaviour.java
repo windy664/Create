@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -183,7 +183,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 					world.playSound(null, i, j, k, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
 							2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 				} else if (!canPlaceSources)
-					AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getBlockPos(), 8);
+					tileEntity.award(AllAdvancements.HOSE_PULLEY);
 			});
 			return true;
 		}
@@ -271,7 +271,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		if (success)
-			TransactionCallback.onSuccess(ctx, () -> AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getBlockPos(), 8));
+			TransactionCallback.onSuccess(ctx, () -> tileEntity.award(AllAdvancements.HOSE_PULLEY));
 		return success;
 	}
 

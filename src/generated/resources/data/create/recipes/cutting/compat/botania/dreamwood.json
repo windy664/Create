@@ -1,0 +1,22 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "botania:dreamwood"
+    }
+  ],
+  "results": [
+    {
+      "item": "botania:stripped_dreamwood"
+    }
+  ],
+  "processingTime": 50,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "botania"
+      ]
+    }
+  ]
+}

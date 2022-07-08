@@ -32,7 +32,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 
 	@Override
 	public void startTransferringTo(Contraption contraption, float distance) {
-		capability.setWrapped(contraption.inventory);
+		capability.setWrapped(contraption.getSharedInventory());
 		super.startTransferringTo(contraption, distance);
 	}
 

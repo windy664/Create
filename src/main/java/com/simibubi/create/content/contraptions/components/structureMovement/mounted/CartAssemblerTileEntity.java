@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -170,6 +171,9 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 			nbt.putDouble("PushX", 0);
 			NBTSerializer.deserializeNBT(cart, nbt);
 		}
+		
+		if (contraption.containsBlockBreakers())
+			award(AllAdvancements.CONTRAPTION_ACTORS);
 	}
 
 	protected void disassemble(Level world, BlockPos pos, AbstractMinecart cart) {
@@ -231,6 +235,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 			Lang.translate("contraptions.cart_movement_mode"), this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		behaviours.add(movementMode);
+		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
 	}
 
 	@Override

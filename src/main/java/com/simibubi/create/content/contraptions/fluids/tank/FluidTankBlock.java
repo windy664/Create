@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidHelper.FluidExchange;
@@ -20,6 +21,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
@@ -31,10 +33,13 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -50,6 +55,9 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, CustomSoundTypeBlock {
 
@@ -66,6 +74,12 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	public static FluidTankBlock creative(Properties p_i48440_1_) {
 		return new FluidTankBlock(p_i48440_1_, true);
+	}
+
+	@Override
+	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
+		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
 
 	protected FluidTankBlock(Properties p_i48440_1_, boolean creative) {
@@ -115,6 +129,29 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		withTileEntityDo(context.getLevel(), context.getClickedPos(), FluidTankTileEntity::toggleWindows);
 		return InteractionResult.SUCCESS;
+	}
+
+	static final VoxelShape CAMPFIRE_SMOKE_CLIP = Block.box(0, 4, 0, 16, 16, 16);
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
+										CollisionContext pContext) {
+		if (pContext == CollisionContext.empty())
+			return CAMPFIRE_SMOKE_CLIP;
+		return pState.getShape(pLevel, pPos);
+	}
+	
+	@Override
+	public VoxelShape getBlockSupportShape(BlockState pState, BlockGetter pReader, BlockPos pPos) {
+		return Shapes.block();
+	}
+	
+	@Override
+	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
+		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+		if (pDirection == Direction.DOWN && pNeighborState.getBlock() != this)
+			withTileEntityDo(pLevel, pCurrentPos, FluidTankTileEntity::updateBoilerTemperature);
+		return pState;
 	}
 
 	@Override
@@ -168,6 +205,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 				.createLegacyBlock();
 			soundevent = FluidVariantAttributes.getEmptySound(FluidVariant.of(fluid));
 		}
+		
 		if (exchange == FluidExchange.TANK_TO_ITEM) {
 			if (creative && !onClient)
 				if (fluidTank instanceof CreativeSmartFluidTank)
@@ -193,7 +231,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 				FluidTankTileEntity controllerTE = ((FluidTankTileEntity) te).getControllerTE();
 				if (controllerTE != null) {
 					if (fluidState != null && onClient) {
-						BlockParticleOption blockParticleData = new BlockParticleOption(ParticleTypes.BLOCK, fluidState);
+						BlockParticleOption blockParticleData =
+							new BlockParticleOption(ParticleTypes.BLOCK, fluidState);
 						float level = (float) fluidInTank.getAmount() / TransferUtil.firstCapacity(fluidTank);
 
 						boolean reversed = FluidVariantAttributes.isLighterThanAir(fluidInTank.getType());
@@ -316,6 +355,19 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		return getTileEntityOptional(worldIn, pos).map(FluidTankTileEntity::getControllerTE)
 			.map(te -> ComparatorUtil.fractionToRedstoneLevel(te.getFillState()))
 			.orElse(0);
+	}
+
+	public static void updateBoilerState(BlockState pState, Level pLevel, BlockPos tankPos) {
+		BlockState tankState = pLevel.getBlockState(tankPos);
+		if (!(tankState.getBlock() instanceof FluidTankBlock tank))
+			return;
+		FluidTankTileEntity tankTE = tank.getTileEntity(pLevel, tankPos);
+		if (tankTE == null)
+			return;
+		FluidTankTileEntity controllerTE = tankTE.getControllerTE();
+		if (controllerTE == null)
+			return;
+		controllerTE.updateBoilerState();
 	}
 
 }

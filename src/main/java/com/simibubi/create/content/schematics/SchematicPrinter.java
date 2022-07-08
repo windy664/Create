@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.item.SchematicItem;
+import com.simibubi.create.foundation.tileEntity.IMergeableTE;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
@@ -191,7 +192,9 @@ public class SchematicPrinter {
 		BlockEntity tileEntity = blockReader.getBlockEntity(pos);
 
 		BlockState toReplace = world.getBlockState(pos);
+		BlockEntity toReplaceTE = world.getBlockEntity(pos);
 		BlockState toReplaceOther = null;
+		
 		if (state.hasProperty(BlockStateProperties.BED_PART) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)
 				&& state.getValue(BlockStateProperties.BED_PART) == BedPart.FOOT)
 			toReplaceOther = world.getBlockState(pos.relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
@@ -199,11 +202,14 @@ public class SchematicPrinter {
 				&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER)
 			toReplaceOther = world.getBlockState(pos.above());
 
+		boolean mergeTEs = tileEntity != null && toReplaceTE instanceof IMergeableTE mergeTE && toReplaceTE.getType()
+			.equals(tileEntity.getType());
+
 		if (!world.isLoaded(pos))
 			return false;
 		if (!world.getWorldBorder().isWithinBounds(pos))
 			return false;
-		if (toReplace == state)
+		if (toReplace == state && !mergeTEs)
 			return false;
 		if (toReplace.getDestroySpeed(world, pos) == -1
 				|| (toReplaceOther != null && toReplaceOther.getDestroySpeed(world, pos) == -1))

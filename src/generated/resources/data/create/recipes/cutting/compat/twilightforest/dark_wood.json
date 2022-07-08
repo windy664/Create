@@ -1,0 +1,22 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "twilightforest:dark_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "twilightforest:stripped_dark_wood"
+    }
+  ],
+  "processingTime": 50,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "twilightforest"
+      ]
+    }
+  ]
+}
