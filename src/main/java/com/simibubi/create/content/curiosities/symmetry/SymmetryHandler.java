@@ -41,6 +41,7 @@ import net.minecraft.world.phys.Vec3;
 public class SymmetryHandler {
 
 	private static int tickCounter = 0;
+	private static boolean handlingSymmetry = false; // fabric: prevent infinite recursion in break event listening
 
 	public static InteractionResult onBlockPlaced(BlockPlaceContext context) {
 		if (context.getLevel()
@@ -68,22 +69,28 @@ public class SymmetryHandler {
 		return InteractionResult.PASS;
 	}
 
-	public static void onBlockDestroyed(Level world, Player player, BlockPos pos, BlockState state, /* Nullable */ BlockEntity blockEntity) {
+	public static boolean onBlockDestroyed(Level world, Player player, BlockPos pos, BlockState state, /* Nullable */ BlockEntity blockEntity) {
+		if (handlingSymmetry)
+			return true;
+
 		if (world
 			.isClientSide())
-			return;
+			return true;
 
 		if (player.isSpectator())
-			return;
+			return true;
 
 //		Player player = event.getPlayer();
 		Inventory inv = player.getInventory();
+		handlingSymmetry = true;
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			if (!inv.getItem(i)
 				.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i))) {
-				SymmetryWandItem.remove(player.level, inv.getItem(i), player, pos);
+				SymmetryWandItem.remove(player.level, inv.getItem(i), player, pos, state);
 			}
 		}
+		handlingSymmetry = false;
+		return true;
 	}
 
 	@Environment(EnvType.CLIENT)

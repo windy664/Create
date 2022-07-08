@@ -15,9 +15,9 @@ import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityReadExtraDataCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.MinecartEvents;
+import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.ProjectileImpactCallback;
 
-import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -239,7 +239,6 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(EdgeInteractionHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
-		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);
 		MountEntityCallback.EVENT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
@@ -261,6 +260,7 @@ public class CommonEvents {
 		MinecartEvents.READ.register(AbstractMinecartExtensions::minecartRead);
 		MinecartEvents.WRITE.register(AbstractMinecartExtensions::minecartWrite);
 		MinecartEvents.REMOVE.register(AbstractMinecartExtensions::minecartRemove);
+		PlayerBlockBreakEvents.BEFORE.register(SymmetryHandler::onBlockDestroyed);
 	}
 
 }

@@ -22,6 +22,7 @@ import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -273,9 +274,8 @@ public class SymmetryWandItem extends Item {
 				.sameItem(itemBlock);
 	}
 
-	public static void remove(Level world, ItemStack wand, Player player, BlockPos pos) {
+	public static void remove(Level world, ItemStack wand, Player player, BlockPos pos, BlockState ogBlock) {
 		BlockState air = Blocks.AIR.defaultBlockState();
-		BlockState ogBlock = world.getBlockState(pos);
 		checkNBT(wand);
 		if (!isEnabled(wand))
 			return;
@@ -296,14 +296,17 @@ public class SymmetryWandItem extends Item {
 
 		targets.add(pos);
 		for (BlockPos position : blockSet.keySet()) {
-			if (!player.isCreative() && ogBlock.getBlock() != world.getBlockState(position)
+			BlockState blockstate = world.getBlockState(position);
+			if (!player.isCreative() && ogBlock.getBlock() != blockstate
 				.getBlock())
 				continue;
 			if (position.equals(pos))
 				continue;
 
-			BlockState blockstate = world.getBlockState(position);
 			if (blockstate.getMaterial() != Material.AIR) {
+				BlockEntity be = blockstate.hasBlockEntity() ? world.getBlockEntity(pos) : null;
+				if (handlePreEvent(world, player, position, blockstate, be))
+					continue;
 				targets.add(position);
 				world.levelEvent(2001, position, Block.getId(blockstate));
 				world.setBlock(position, air, 3);
@@ -316,10 +319,27 @@ public class SymmetryWandItem extends Item {
 					BlockEntity tileentity = blockstate.hasBlockEntity() ? world.getBlockEntity(position) : null;
 					Block.dropResources(blockstate, world, pos, tileentity, player, player.getMainHandItem()); // Add fortune, silk touch and other loot modifiers
 				}
+				handlePostEvent(world, player, position, blockstate, be);
 			}
 		}
 
 		AllPackets.channel.sendToClientsTrackingAndSelf(new SymmetryEffectPacket(to, targets), player);
+	}
+
+	/**
+	 * Handling firing events before the wand changes blocks.
+	 * @return true if canceled
+	 */
+	public static boolean handlePreEvent(Level world, Player player, BlockPos pos, BlockState state, BlockEntity be) {
+		if (PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, pos, state, be)) {
+			return false;
+		}
+		PlayerBlockBreakEvents.CANCELED.invoker().onBlockBreakCanceled(world, player, pos, state, be);
+		return true;
+	}
+
+	public static void handlePostEvent(Level world, Player player, BlockPos pos, BlockState state, BlockEntity be) {
+		PlayerBlockBreakEvents.AFTER.invoker().afterBlockBreak(world, player, pos, state, be);
 	}
 
 //	@Override
