@@ -28,17 +28,16 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class AllDisplayBehaviours {
 
 	public static final Map<ResourceLocation, DisplayBehaviour> GATHERER_BEHAVIOURS = new HashMap<>();
 
-	public static final Map<IRegistryDelegate<Block>, List<DisplaySource>> SOURCES_BY_BLOCK = new HashMap<>();
-	public static final Map<IRegistryDelegate<BlockEntityType<?>>, List<DisplaySource>> SOURCES_BY_TILE = new HashMap<>();
+	public static final Map<Block, List<DisplaySource>> SOURCES_BY_BLOCK = new HashMap<>();
+	public static final Map<BlockEntityType<?>, List<DisplaySource>> SOURCES_BY_TILE = new HashMap<>();
 
-	public static final Map<IRegistryDelegate<Block>, DisplayTarget> TARGETS_BY_BLOCK = new HashMap<>();
-	public static final Map<IRegistryDelegate<BlockEntityType<?>>, DisplayTarget> TARGETS_BY_TILE = new HashMap<>();
+	public static final Map<Block, DisplayTarget> TARGETS_BY_BLOCK = new HashMap<>();
+	public static final Map<BlockEntityType<?>, DisplayTarget> TARGETS_BY_TILE = new HashMap<>();
 
 	public static DisplayBehaviour register(ResourceLocation id, DisplayBehaviour behaviour) {
 		behaviour.id = id;
@@ -46,7 +45,7 @@ public class AllDisplayBehaviours {
 		return behaviour;
 	}
 
-	public static void assignBlock(DisplayBehaviour behaviour, IRegistryDelegate<Block> block) {
+	public static void assignBlock(DisplayBehaviour behaviour, Block block) {
 		if (behaviour instanceof DisplaySource source)
 			SOURCES_BY_BLOCK.computeIfAbsent(block, r -> new ArrayList<>())
 				.add(source);
@@ -54,7 +53,7 @@ public class AllDisplayBehaviours {
 			TARGETS_BY_BLOCK.put(block, target);
 	}
 
-	public static void assignTile(DisplayBehaviour behaviour, IRegistryDelegate<BlockEntityType<?>> teType) {
+	public static void assignTile(DisplayBehaviour behaviour, BlockEntityType<?> teType) {
 		if (behaviour instanceof DisplaySource source)
 			SOURCES_BY_TILE.computeIfAbsent(teType, r -> new ArrayList<>())
 				.add(source);
@@ -70,7 +69,7 @@ public class AllDisplayBehaviours {
 			if (suffix.length > 0)
 				idSuffix += "_" + suffix[0];
 			assignBlock(register(new ResourceLocation(registryName.getNamespace(), registryName.getPath() + idSuffix),
-				behaviour), b.delegate);
+				behaviour), b);
 		};
 	}
 
@@ -84,7 +83,7 @@ public class AllDisplayBehaviours {
 			assignTile(
 				register(new ResourceLocation(registryName.getNamespace(), registryName.getPath() + idSuffix),
 					behaviour),
-				b.delegate);
+				b);
 		};
 	}
 
@@ -126,7 +125,7 @@ public class AllDisplayBehaviours {
 
 	@Nullable
 	public static DisplayTarget targetOf(Block block) {
-		return TARGETS_BY_BLOCK.get(block.delegate);
+		return TARGETS_BY_BLOCK.get(block);
 	}
 
 	@Nullable
@@ -136,7 +135,7 @@ public class AllDisplayBehaviours {
 
 	@Nullable
 	public static DisplayTarget targetOf(BlockEntityType<?> tileEntityType) {
-		return TARGETS_BY_TILE.get(tileEntityType.delegate);
+		return TARGETS_BY_TILE.get(tileEntityType);
 	}
 
 	@Nullable
@@ -172,11 +171,11 @@ public class AllDisplayBehaviours {
 	//
 
 	public static void registerDefaults() {
-		assignTile(register(Create.asResource("sign_display_target"), new SignDisplayTarget()), BlockEntityType.SIGN.delegate);
-		assignTile(register(Create.asResource("lectern_display_target"), new LecternDisplayTarget()), BlockEntityType.LECTERN.delegate);
-		assignBlock(register(Create.asResource("death_count_display_source"), new DeathCounterDisplaySource()), Blocks.RESPAWN_ANCHOR.delegate);
-		assignTile(register(Create.asResource("scoreboard_display_source"), new ScoreboardDisplaySource()), BlockEntityType.COMMAND_BLOCK.delegate);
-		assignTile(register(Create.asResource("enchant_power_display_source"), new EnchantPowerDisplaySource()), BlockEntityType.ENCHANTING_TABLE.delegate);
-		assignBlock(register(Create.asResource("redstone_power_display_source"), new RedstonePowerDisplaySource()), Blocks.TARGET.delegate);
+		assignTile(register(Create.asResource("sign_display_target"), new SignDisplayTarget()), BlockEntityType.SIGN);
+		assignTile(register(Create.asResource("lectern_display_target"), new LecternDisplayTarget()), BlockEntityType.LECTERN);
+		assignBlock(register(Create.asResource("death_count_display_source"), new DeathCounterDisplaySource()), Blocks.RESPAWN_ANCHOR);
+		assignTile(register(Create.asResource("scoreboard_display_source"), new ScoreboardDisplaySource()), BlockEntityType.COMMAND_BLOCK);
+		assignTile(register(Create.asResource("enchant_power_display_source"), new EnchantPowerDisplaySource()), BlockEntityType.ENCHANTING_TABLE);
+		assignBlock(register(Create.asResource("redstone_power_display_source"), new RedstonePowerDisplaySource()), Blocks.TARGET);
 	}
 }

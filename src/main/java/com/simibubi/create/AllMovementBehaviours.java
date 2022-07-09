@@ -14,18 +14,15 @@ import com.simibubi.create.content.contraptions.components.actors.dispenser.Drop
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class AllMovementBehaviours {
-	private static final Map<IRegistryDelegate<Block>, MovementBehaviour> BLOCK_BEHAVIOURS = new HashMap<>();
+	private static final Map<Block, MovementBehaviour> BLOCK_BEHAVIOURS = new HashMap<>();
 	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
 
-	public static void registerBehaviour(IRegistryDelegate<Block> block, MovementBehaviour behaviour) {
+	public static void registerBehaviour(Block block, MovementBehaviour behaviour) {
 		BLOCK_BEHAVIOURS.put(block, behaviour);
 	}
 
@@ -35,7 +32,7 @@ public class AllMovementBehaviours {
 
 	@Nullable
 	public static MovementBehaviour getBehaviour(BlockState state) {
-		MovementBehaviour behaviour = BLOCK_BEHAVIOURS.get(state.getBlock().delegate);
+		MovementBehaviour behaviour = BLOCK_BEHAVIOURS.get(state.getBlock());
 		if (behaviour != null) {
 			return behaviour;
 		}
@@ -52,16 +49,16 @@ public class AllMovementBehaviours {
 
 	public static <B extends Block> NonNullConsumer<? super B> movementBehaviour(
 		MovementBehaviour behaviour) {
-		return b -> registerBehaviour(b.delegate, behaviour);
+		return b -> registerBehaviour(b, behaviour);
 	}
 
 	static void registerDefaults() {
-		registerBehaviour(Blocks.BELL.delegate, new BellMovementBehaviour());
-		registerBehaviour(Blocks.CAMPFIRE.delegate, new CampfireMovementBehaviour());
+		registerBehaviour(Blocks.BELL, new BellMovementBehaviour());
+		registerBehaviour(Blocks.CAMPFIRE, new CampfireMovementBehaviour());
 
 		DispenserMovementBehaviour.gatherMovedDispenseItemBehaviours();
-		registerBehaviour(Blocks.DISPENSER.delegate, new DispenserMovementBehaviour());
-		registerBehaviour(Blocks.DROPPER.delegate, new DropperMovementBehaviour());
+		registerBehaviour(Blocks.DISPENSER, new DispenserMovementBehaviour());
+		registerBehaviour(Blocks.DROPPER, new DropperMovementBehaviour());
 	}
 
 	public interface BehaviourProvider {

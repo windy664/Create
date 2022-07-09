@@ -13,18 +13,16 @@ import com.simibubi.create.content.contraptions.components.structureMovement.int
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
-import net.minecraft.core.Registry;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class AllInteractionBehaviours {
-	private static final Map<IRegistryDelegate<Block>, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new HashMap<>();
+	private static final Map<Block, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new HashMap<>();
 	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
 
-	public static void registerBehaviour(IRegistryDelegate<Block> block, MovingInteractionBehaviour provider) {
+	public static void registerBehaviour(Block block, MovingInteractionBehaviour provider) {
 		BLOCK_BEHAVIOURS.put(block, provider);
 	}
 
@@ -34,7 +32,7 @@ public class AllInteractionBehaviours {
 
 	@Nullable
 	public static MovingInteractionBehaviour getBehaviour(BlockState state) {
-		MovingInteractionBehaviour behaviour = BLOCK_BEHAVIOURS.get(state.getBlock().delegate);
+		MovingInteractionBehaviour behaviour = BLOCK_BEHAVIOURS.get(state.getBlock());
 		if (behaviour != null) {
 			return behaviour;
 		}
@@ -51,11 +49,11 @@ public class AllInteractionBehaviours {
 
 	public static <B extends Block> NonNullConsumer<? super B> interactionBehaviour(
 		MovingInteractionBehaviour behaviour) {
-		return b -> registerBehaviour(b.delegate, behaviour);
+		return b -> registerBehaviour(b, behaviour);
 	}
 
 	static void registerDefaults() {
-		registerBehaviour(Blocks.LEVER.delegate, new LeverMovingInteraction());
+		registerBehaviour(Blocks.LEVER, new LeverMovingInteraction());
 
 		DoorMovingInteraction doorBehaviour = new DoorMovingInteraction();
 		registerBehaviourProvider(state -> {
