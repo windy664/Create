@@ -76,7 +76,7 @@ public class ContraptionHandlerClient {
 		if (player == null)
 			return InteractionResult.PASS;
 		if (player.isSpectator())
-			return;
+			return InteractionResult.PASS;
 		if (mc.level == null)
 			return InteractionResult.PASS;
 		if (mc.gameMode == null)

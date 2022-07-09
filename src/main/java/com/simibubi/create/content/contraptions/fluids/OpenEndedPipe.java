@@ -180,7 +180,7 @@ public class OpenEndedPipe extends FlowSource {
 	private boolean provideFluidToSpace(FluidStack fluid, TransactionContext ctx) {
 		if (world == null)
 			return false;
-		if (!LevelUtil.isLoaded(world, outputPos))
+		if (!world.isLoaded(outputPos))
 			return false;
 
 		BlockState state = world.getBlockState(outputPos);

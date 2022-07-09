@@ -27,7 +27,7 @@ public class ScheduleItemRetrieval {
 		if (player == null || entity == null)
 			return InteractionResult.PASS;
 		if (player.isSpectator())
-			return;
+			return InteractionResult.PASS;
 
 		Entity rootVehicle = entity.getRootVehicle();
 		if (!(rootVehicle instanceof CarriageContraptionEntity))

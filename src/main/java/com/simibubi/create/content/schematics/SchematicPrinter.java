@@ -239,7 +239,7 @@ public class SchematicPrinter {
 			BlockState required = blockReader.getBlockState(relPos);
 			BlockEntity requiredTE = blockReader.getBlockEntity(relPos);
 
-			if (!LevelUtil.isLoaded(world, pos.offset(schematicAnchor))) {
+			if (!world.isLoaded(pos.offset(schematicAnchor))) {
 				checklist.warnBlockNotLoaded();
 				continue;
 			}

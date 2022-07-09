@@ -219,7 +219,7 @@ public class BeltConnectorItem extends BlockItem {
 	}
 
 	public static boolean canConnect(Level world, BlockPos first, BlockPos second) {
-		if (!LevelUtil.isLoaded(world, first) || !LevelUtil.isLoaded(world, second))
+		if (!world.isLoaded(first) || !world.isLoaded(second))
 			return false;
 		if (!second.closerThan(first, maxLength()))
 			return false;
@@ -278,7 +278,7 @@ public class BeltConnectorItem extends BlockItem {
 	}
 
 	public static boolean validateAxis(Level world, BlockPos pos) {
-		if (!LevelUtil.isLoaded(world, pos))
+		if (!world.isLoaded(pos))
 			return false;
 		if (!ShaftBlock.isShaft(world.getBlockState(pos)))
 			return false;

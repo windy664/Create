@@ -288,7 +288,7 @@ public class FluidNetwork {
 	}
 
 	private boolean isPresent(BlockFace location) {
-		return LevelUtil.isLoaded(world, location.getPos());
+		return world.isLoaded(location.getPos());
 	}
 
 	@Nullable

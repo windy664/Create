@@ -61,7 +61,7 @@ public class BasinEmiRecipe extends CreateEmiRecipe<BasinRecipe> {
 			} else {
 				addTexture(widgets, AllGuiTextures.JEI_HEAT_BAR, 4, 80);
 			}
-			widgets.addText(Lang.translate(requiredHeat.getTranslationKey()).getVisualOrderText(), 9, 86, requiredHeat.getColor(), true);
+			widgets.addText(Lang.translateDirect(requiredHeat.getTranslationKey()).getVisualOrderText(), 9, 86, requiredHeat.getColor(), true);
 		}
 
 		int xOff = inputSize < 3 ? (3 - inputSize) * 19 / 2 : 0;
@@ -70,7 +70,7 @@ public class BasinEmiRecipe extends CreateEmiRecipe<BasinRecipe> {
 		for (int i = 0; i < inputSize; i++) {
 			addSlot(widgets, input.get(i), xOff + 16 + (i % 3) * 19, yOff + 50 + (i / 3) * 19);
 		}
-		
+
 		for (int i = 0; i < outputSize; i++) {
 			int x = 140 - (outputSize % 2 != 0 && i == outputSize - 1 ? 0 : i % 2 == 0 ? 10 : -9);
 			int y = 50 - 20 * (i / 2) + yOff;

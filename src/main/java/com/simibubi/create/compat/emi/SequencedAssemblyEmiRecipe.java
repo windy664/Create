@@ -46,14 +46,14 @@ public class SequencedAssemblyEmiRecipe extends CreateEmiRecipe<SequencedAssembl
 
 		widgets.addDrawable(mid - 38 + xOff, 94, AllGuiTextures.JEI_LONG_ARROW.width, 20, (matrices, mx, my, delta) -> {})
 			.tooltip((mouseX, mouseY) -> List.of(ClientTooltipComponent.create(
-				Lang.translate("recipe.assembly.repeat", recipe.getLoops()).getVisualOrderText())));
-		
+				Lang.translateDirect("recipe.assembly.repeat", recipe.getLoops()).getVisualOrderText())));
+
 		if (recipe.getOutputChance() != 1) {
 			float chance = recipe.getOutputChance();
 			addTexture(widgets, AllGuiTextures.JEI_CHANCE_SLOT, mid + 60 + xOff, 90)
 				.tooltip((mouseX, mouseY) -> List.of(
-					ClientTooltipComponent.create(Lang.translate("recipe.assembly.junk").getVisualOrderText()),
-					ClientTooltipComponent.create(Lang.translate("recipe.processing.chance", chance > 0.99 ? "<1" : 100 - (int) (chance * 100))
+					ClientTooltipComponent.create(Lang.translateDirect("recipe.assembly.junk").getVisualOrderText()),
+					ClientTooltipComponent.create(Lang.translateDirect("recipe.processing.chance", chance > 0.99 ? "<1" : 100 - (int) (chance * 100))
 						.withStyle(ChatFormatting.GOLD).getVisualOrderText())
 				));
 		}
@@ -61,7 +61,7 @@ public class SequencedAssemblyEmiRecipe extends CreateEmiRecipe<SequencedAssembl
 		addSlot(widgets, EmiIngredient.of(recipe.getIngredient()), mid - 64 + xOff, 90);
 
 		addChancedSlot(widgets, EmiStack.of(recipe.getResultItem()), mid + 41 + xOff, 90, recipe.getOutputChance()).recipeContext(this);
-		
+
 		int sx = width / -2 + mid;
 		int x = sx;
 		int index = 0;

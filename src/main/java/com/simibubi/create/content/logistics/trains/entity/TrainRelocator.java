@@ -81,7 +81,7 @@ public class TrainRelocator {
 		if (player == null)
 			return InteractionResult.PASS;
 		if (player.isSpectator())
-			return;
+			return InteractionResult.PASS;
 
 		if (!player.position()
 			.closerThan(relocatingOrigin, 24) || player.isSteppingCarefully()) {

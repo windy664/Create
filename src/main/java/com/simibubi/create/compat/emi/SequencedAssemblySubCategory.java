@@ -29,7 +29,7 @@ public abstract class SequencedAssemblySubCategory {
 	// TODO tooltips reference first item in an ingredient, EMI has canonical names for tags, use that instead?
 	public static BiFunction<Integer, Integer, List<ClientTooltipComponent>> getTooltip(SequencedRecipe<?> recipe, int index) {
 		return (mouseX, mouseY) -> List.of(
-			ClientTooltipComponent.create(Lang.translate("recipe.assembly.step", index + 1).getVisualOrderText()),
+			ClientTooltipComponent.create(Lang.translateDirect("recipe.assembly.step", index + 1).getVisualOrderText()),
 			ClientTooltipComponent.create(recipe.getAsAssemblyRecipe()
 				.getDescriptionForAssembly()
 				.plainCopy()

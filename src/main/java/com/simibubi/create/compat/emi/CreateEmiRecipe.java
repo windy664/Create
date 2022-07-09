@@ -133,7 +133,7 @@ public abstract class CreateEmiRecipe<T extends Recipe<?>> implements EmiRecipe 
 	public SlotWidget addChancedSlot(WidgetHolder widgets, EmiIngredient stack, int x, int y, float chance) {
 		if (chance != 1) {
 			return addSlot(widgets, stack, x, y, AllGuiTextures.JEI_CHANCE_SLOT)
-				.appendTooltip(Lang.translate("recipe.processing.chance",
+				.appendTooltip(Lang.translateDirect("recipe.processing.chance",
 					chance < 0.01 ? "<1" : (int) (chance * 100))
 					.withStyle(ChatFormatting.GOLD));
 		}
