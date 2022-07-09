@@ -94,9 +94,9 @@ public class Create implements ModInitializer {
 		AllContainerTypes.register();
 		AllEntityTypes.register();
 		AllTileEntities.register();
-		AllMovementBehaviours.register();
-		AllDisplayBehaviours.register();
-		AllInteractionBehaviours.register();
+		AllMovementBehaviours.registerDefaults();
+		AllInteractionBehaviours.registerDefaults();
+		AllDisplayBehaviours.registerDefaults();
 		AllArmInteractionPointTypes.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();

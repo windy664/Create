@@ -399,7 +399,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors()) {
 			MovementContext context = pair.right;
 			StructureBlockInfo blockInfo = pair.left;
-			MovementBehaviour actor = AllMovementBehaviours.of(blockInfo.state);
+			MovementBehaviour actor = AllMovementBehaviours.getBehaviour(blockInfo.state);
 
 			if (actor == null)
 				continue;
@@ -463,7 +463,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors()) {
 			MovementContext context = pair.right;
 			StructureBlockInfo blockInfo = pair.left;
-			MovementBehaviour actor = AllMovementBehaviours.of(blockInfo.state);
+			MovementBehaviour actor = AllMovementBehaviours.getBehaviour(blockInfo.state);
 			if (actor instanceof PortableStorageInterfaceMovement && isActorActive(context, actor))
 				if (context.position != null)
 					actor.visitNewPosition(context, new BlockPos(context.position));
