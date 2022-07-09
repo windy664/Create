@@ -127,7 +127,7 @@ public abstract class SequencedAssemblySubCategory {
 			entryIngredient.forEach(entryStack -> {
 				IAssemblyRecipe contained = recipe.getAsAssemblyRecipe();
 				if (contained instanceof DeployerApplicationRecipe && ((DeployerApplicationRecipe) contained).shouldKeepHeldItem()) {
-					entryStack.tooltip(Lang.translate("recipe.deploying.not_consumed")
+					entryStack.tooltip(Lang.translateDirect("recipe.deploying.not_consumed")
 							.withStyle(ChatFormatting.GOLD));
 				}
 			});

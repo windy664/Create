@@ -1,28 +1,23 @@
 package com.simibubi.create.content.contraptions.goggles;
 
-import java.text.NumberFormat;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
-import io.github.fabricators_of_create.porting_lib.util.MinecraftClientUtil;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 /*
 * Implement this Interface in the TileEntity class that wants to add info to the screen
@@ -51,73 +46,61 @@ public interface IHaveGoggleInformation {
 		return false;
 	}
 
-	static String format(double d) {
-		return numberFormat.get()
-			.format(d).replace("\u00A0", " ");
-	}
-
 	default boolean containedFluidTooltip(List<Component> tooltip, boolean isPlayerSneaking, Storage<FluidVariant> handler) {
-		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.goggles.fluid_container")));
 		FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
 		boolean simplify = AllConfigs.CLIENT.simplifyFluidUnit.get();
-		TranslatableComponent mb = Lang.translate(unit.getTranslationKey());
-		if (handler == null)
-			return false;
-
-		LangBuilder mb = Lang.translate("generic.unit.millibuckets");
+		LangBuilder mb = Lang.translate(unit.getTranslationKey());
 		Lang.translate("gui.goggles.fluid_container")
-			.forGoggles(tooltip);
+				.forGoggles(tooltip);
 
 		boolean isEmpty = true;
+		int tanks = 0;
+		long firstCapacity = -1;
 		try (Transaction t = TransferUtil.getTransaction()) {
-			boolean moreThan1Tank = false;
-			StorageView<FluidVariant> first = null;
-			for (Iterator<? extends StorageView<FluidVariant>> iterator = handler.iterator(t); iterator.hasNext();) {
-				StorageView<FluidVariant> view = iterator.next();
-				if (!moreThan1Tank) first = view;
-				moreThan1Tank |= iterator.hasNext();
-				if (view.isResourceBlank()) continue;
-				long amount = view.getAmount();
-
-				if (amount == 0)
+			for (StorageView<FluidVariant> view : handler.iterable(t)) {
+				if (tanks == 0)
+					firstCapacity = view.getCapacity();
+				tanks++;
+				FluidStack fluidStack = new FluidStack(view);
+				if (fluidStack.isEmpty())
 					continue;
 
-			Lang.fluidName(fluidStack)
-				.style(ChatFormatting.GRAY)
-				.forGoggles(tooltip, 1);
+				Lang.fluidName(fluidStack)
+						.style(ChatFormatting.GRAY)
+						.forGoggles(tooltip, 1);
 
+				String amount = FluidTextUtil.getUnicodeMillibuckets(fluidStack.getAmount(), unit, simplify);
 				Lang.builder()
-				.add(Lang.number(fluidStack.getAmount())
-						.add(mb)
-				.style(ChatFormatting.GOLD))
-				.text(ChatFormatting.GRAY, " / ")
-				.add(Lang.number(tank.getTankCapacity(i))
-						.add(mb)
-						.style(ChatFormatting.DARK_GRAY))
+						.add(Lang.text(amount)
+								.add(mb)
+								.style(ChatFormatting.GOLD))
+						.text(ChatFormatting.GRAY, " / ")
+						.add(Lang.number(view.getCapacity())
+								.add(mb)
+								.style(ChatFormatting.DARK_GRAY))
 						.forGoggles(tooltip, 1);
 
 				isEmpty = false;
 			}
+		}
 
-			if (moreThan1Tank) {
-				if (isEmpty)
-					tooltip.remove(tooltip.size() - 1);
-				return true;
-			}
-
-			if (!isEmpty)
-				return true;
-
-		Lang.translate("gui.goggles.fluid_container.capacity")
-			.add(Lang.number(tank.getTankCapacity(0))
-				.add(mb)
-				.style(ChatFormatting.GOLD))
-			.style(ChatFormatting.GRAY)
-			.forGoggles(tooltip, 1);
-
-
+		if (tanks > 1) {
+			if (isEmpty)
+				tooltip.remove(tooltip.size() - 1);
 			return true;
 		}
+
+		if (!isEmpty)
+			return true;
+
+		Lang.translate("gui.goggles.fluid_container.capacity")
+				.add(Lang.number(firstCapacity)
+						.add(mb)
+						.style(ChatFormatting.GOLD))
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip, 1);
+
+		return true;
 	}
 
 }
