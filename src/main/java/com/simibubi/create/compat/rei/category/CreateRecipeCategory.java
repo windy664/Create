@@ -70,7 +70,7 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 
 	@Override
 	public Component getTitle() {
-		return Lang.translate("recipe." + name);
+		return Lang.translateDirect("recipe." + name);
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 				ProcessingOutput output = results.get(/*slotIndex - startIndex*/0);
 				float chance = output.getChance();
 				if (chance != 1)
-					tooltip.add(Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+					tooltip.add(Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
 							.withStyle(ChatFormatting.GOLD));
 				return tooltip;
 			});
@@ -140,7 +140,7 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 	public static void addStochasticTooltip(ProcessingOutput output, Tooltip tooltip) {
 		float chance = output.getChance();
 		if (chance != 1)
-			tooltip.add(Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+			tooltip.add(Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
 					.withStyle(ChatFormatting.GOLD));
 	}
 
@@ -149,7 +149,7 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 //		return (view, tooltip) -> {
 //			float chance = output.getChance();
 //			if (chance != 1)
-//				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+//				tooltip.add(1, Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
 //						.withStyle(ChatFormatting.GOLD));
 //		};
 //	}
@@ -216,7 +216,7 @@ public abstract class CreateRecipeCategory<R extends Recipe<?>> implements Displ
 //			}
 //
 //			int amount = amounts.get(index != -1 ? 0 : slotIndex);
-//			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translate("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
+//			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
 //			if (tooltip.isEmpty())
 //				tooltip.add(0, text);
 //			else {

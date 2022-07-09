@@ -35,7 +35,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 				.entries(EntryIngredients.ofIngredient(recipe.getProcessedItem()));
 		ClientEntryStacks.setTooltipProcessor(input.getCurrentEntry(), ((entryStack, tooltip) -> {
 			if (recipe.shouldKeepHeldItem())
-					tooltip.add(Lang.translate("recipe.deploying.not_consumed")
+					tooltip.add(Lang.translateDirect("recipe.deploying.not_consumed")
 							.withStyle(ChatFormatting.GOLD));
 			return tooltip;
 		}));

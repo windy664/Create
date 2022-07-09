@@ -53,7 +53,7 @@ public class MillingCategory extends CreateRecipeCategory<MillingRecipe> {
 			int yOffset = (outputIndex / 2) * -19;
 			List<Component> tooltip = new ArrayList<>();
 			if (results.get(outputIndex).getChance() != 1)
-				tooltip.add(Lang.translate("recipe.processing.chance", results.get(outputIndex).getChance() < 0.01 ? "<1" : (int) (results.get(outputIndex).getChance() * 100))
+				tooltip.add(Lang.translateDirect("recipe.processing.chance", results.get(outputIndex).getChance() < 0.01 ? "<1" : (int) (results.get(outputIndex).getChance() * 100))
 						.withStyle(ChatFormatting.GOLD));
 			widgets.add(Widgets.createSlot(new Point((origin.x + 133 + xOffset) + 1, (origin.y + 27 + yOffset) + 1)).disableBackground().markOutput().entry(EntryStack.of(VanillaEntryTypes.ITEM, results.get(outputIndex).getStack()).tooltip(tooltip)));
 			widgets.add(WidgetUtil.textured(getRenderedSlot(display.getRecipe(), outputIndex), origin.x + 133 + xOffset, origin.y + 27 + yOffset));

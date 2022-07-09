@@ -87,7 +87,7 @@ public class FluidStackEntryRenderer extends AbstractEntryRenderer<FluidStack> {
 
 		FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
 		String amount = FluidTextUtil.getUnicodeMillibuckets(fluid.getAmount(), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
-		Component text = Lang.translate(unit.getTranslationKey(), amount).withStyle(ChatFormatting.GOLD);
+		Component text = Lang.translateDirect(unit.getTranslationKey(), amount).withStyle(ChatFormatting.GOLD);
 		if (tooltip.isEmpty())
 			tooltip.add(0, text);
 		else {

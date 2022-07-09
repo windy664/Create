@@ -114,6 +114,8 @@ public class CreateEmiPlugin implements EmiPlugin {
 		new ResourceLocation("create", "mechanical_crafting"), EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get()));
 	public static final EmiRecipeCategory SEQUENCED_ASSEMBLY = new EmiRecipeCategory(
 		new ResourceLocation("create", "sequenced_assembly"), EmiStack.of(AllItems.PRECISION_MECHANISM.get()));
+	public static final EmiRecipeCategory ITEM_APPLICATION = new EmiRecipeCategory(
+			new ResourceLocation("create", "item_application"), EmiStack.of(AllItems.PRECISION_MECHANISM.get()));
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
@@ -136,7 +138,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 		});
 
 		// TODO potentially add all potion fluid variants, drag drop handler and blueprint handler are unimplemented
-		
+
 		ToolboxColoringRecipeMaker.createRecipes().forEach(r -> {
 			registry.addRecipe(new EmiCraftingRecipe(
 				r.getIngredients().stream().map(EmiIngredient::of).toList(),
@@ -275,6 +277,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 		addAll(registry, AllRecipeTypes.FILLING, SpoutEmiRecipe::new);
 		addAll(registry, AllRecipeTypes.EMPTYING, DrainEmiRecipe::new);
 		addAll(registry, AllRecipeTypes.SEQUENCED_ASSEMBLY, SequencedAssemblyEmiRecipe::new);
+		addAll(registry, AllRecipeTypes.ITEM_APPLICATION, ItemApplicationEmiRecipe::new);
 		addAll(registry, AllRecipeTypes.MECHANICAL_CRAFTING, MECHANICAL_CRAFTING, MechanicalCraftingEmiRecipe::new);
 
 		// Introspective recipes based on present stacks need to make sure

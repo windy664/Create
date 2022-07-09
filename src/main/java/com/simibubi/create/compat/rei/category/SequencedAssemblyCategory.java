@@ -66,7 +66,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		ClientEntryStacks.setTooltipProcessor(output.getCurrentEntry(), (entryStack, tooltip) -> {
 			float chance = display.getRecipe().getOutputChance();
 			if (chance != 1)
-				tooltip.add(Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+				tooltip.add(Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
 						.withStyle(ChatFormatting.GOLD));
 			return tooltip;
 		});
@@ -216,7 +216,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	public List<Component> getTooltipStrings(SequencedAssemblyRecipe recipe, double mouseX, double mouseY) {
 		List<Component> tooltip = new ArrayList<Component>();
 
-		TranslatableComponent junk = Lang.translate("recipe.assembly.junk");
+		TranslatableComponent junk = Lang.translateDirect("recipe.assembly.junk");
 
 		boolean singleOutput = recipe.getOutputChance() == 1;
 		boolean willRepeat = recipe.getLoops() > 1;
@@ -229,7 +229,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		if (!singleOutput && mouseX >= minX && mouseX < maxX && mouseY >= minY && mouseY < maxY) {
 			float chance = recipe.getOutputChance();
 			tooltip.add(junk);
-			tooltip.add(Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : 100 - (int) (chance * 100))
+			tooltip.add(Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : 100 - (int) (chance * 100))
 				.withStyle(ChatFormatting.GOLD));
 			return tooltip;
 		}
@@ -239,7 +239,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		minY = 92;
 		maxY = minY + 24;
 		if (willRepeat && mouseX >= minX && mouseX < maxX && mouseY >= minY && mouseY < maxY) {
-			tooltip.add(Lang.translate("recipe.assembly.repeat", recipe.getLoops()));
+			tooltip.add(Lang.translateDirect("recipe.assembly.repeat", recipe.getLoops()));
 			return tooltip;
 		}
 
@@ -257,7 +257,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 				SequencedRecipe<?> sequencedRecipe = sequence.get(i);
 				SequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
 				if (relativeX >= 0 && relativeX < subCategory.getWidth()) {
-					tooltip.add(Lang.translate("recipe.assembly.step", i + 1));
+					tooltip.add(Lang.translateDirect("recipe.assembly.step", i + 1));
 					tooltip.add(sequencedRecipe.getAsAssemblyRecipe()
 						.getDescriptionForAssembly()
 						.plainCopy()

@@ -44,7 +44,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 								.getItems())));
 		ClientEntryStacks.setTooltipProcessor(slot.getCurrentEntry(), (entryStack, tooltip) -> {
 			if (display.getRecipe().shouldKeepHeldItem())
-					tooltip.add(Lang.translate("recipe.deploying.not_consumed")
+					tooltip.add(Lang.translateDirect("recipe.deploying.not_consumed")
 					.withStyle(ChatFormatting.GOLD));
 			return tooltip;
 		});
