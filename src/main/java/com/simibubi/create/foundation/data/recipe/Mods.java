@@ -30,7 +30,8 @@ public enum Mods {
 	TR("techreborn"),
 	MI("modern_industrialization"),
 	MTM("mythicmetals"),
-	ALG("alloygery")
+	ALG("alloygery"),
+	BC("bitsandchisels")
 
 	;
 
@@ -69,7 +70,7 @@ public enum Mods {
 	public ResourceLocation asResource(String id) {
 		return new ResourceLocation(this.id, id);
 	}
-	
+
 	public String recipeId(String id) {
 		return "compat/" + this.id + "/" + id;
 	}

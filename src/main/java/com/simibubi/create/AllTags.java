@@ -411,6 +411,7 @@ public class AllTags {
 		AllBlockTags.NON_MOVABLE.addOptional(Mods.IE, "connector_lv", "connector_lv_relay", "connector_mv",
 			"connector_mv_relay", "connector_hv", "connector_hv_relay", "connector_bundled", "connector_structural",
 			"connector_redstone", "connector_probe", "breaker_switch");
+		AllBlockTags.NON_MOVABLE.addOptional(Mods.BC, "bits_block");
 
 		strippedWoodCompat(Mods.ARS_N, "blue_archwood", "purple_archwood", "green_archwood", "red_archwood");
 		strippedWoodCompat(Mods.BTN, "livingwood", "dreamwood");
