@@ -36,8 +36,13 @@ repositories {
     maven { url = "https://maven.terraformersmc.com/" }
     maven { url = "https://maven.cafeteria.dev" }
     maven { url = "https://jitpack.io/" }
-    maven { url = "https://maven.jamieswhiteshirt.com/libs-release" }
     maven { url = "https://maven.gegy.dev" }
+    maven {
+        url = "https://maven.jamieswhiteshirt.com/libs-release"
+        content {
+            includeGroup("com.jamieswhiteshirt")
+        }
+    }
 }
 
 dependencies {
