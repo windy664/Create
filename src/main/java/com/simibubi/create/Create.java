@@ -129,9 +129,6 @@ public class Create implements ModInitializer {
 
 		AllPackets.channel.initServerListener();
 
-		// FIXME PORT a
-		forgeEventBus.addListener(EventPriority.HIGH, SlidingDoorBlock::stopItQuark);
-
 		// causes class loading issues or something
 		// noinspection Convert2MethodRef
 		Mods.TRINKETS.executeIfInstalled(() -> () -> Trinkets.init());

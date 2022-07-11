@@ -52,24 +52,6 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
 
-	@Deprecated // Remove in 1.19 - Fixes incompatibility with Quarks double door module
-	public static void stopItQuark(PlayerInteractEvent.RightClickBlock event) {
-		Player player = event.getPlayer();
-		Level world = event.getWorld();
-
-		if (!world.isClientSide || player.isDiscrete() || event.isCanceled() || event.getResult() == Result.DENY
-			|| event.getUseBlock() == Result.DENY)
-			return;
-
-		BlockPos pos = event.getPos();
-		BlockState blockState = world.getBlockState(pos);
-
-		if (blockState.getBlock()instanceof SlidingDoorBlock sdb) {
-			event.setCanceled(true);
-			event.setCancellationResult(blockState.use(world, player, event.getHand(), event.getHitVec()));
-		}
-	}
-
 	public SlidingDoorBlock(Properties p_52737_) {
 		super(p_52737_);
 	}
