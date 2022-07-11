@@ -75,7 +75,7 @@ public interface IHaveGoggleInformation {
 								.add(mb)
 								.style(ChatFormatting.GOLD))
 						.text(ChatFormatting.GRAY, " / ")
-						.add(Lang.number(view.getCapacity())
+						.add(Lang.text(FluidTextUtil.getUnicodeMillibuckets(view.getCapacity(), unit, simplify))
 								.add(mb)
 								.style(ChatFormatting.DARK_GRAY))
 						.forGoggles(tooltip, 1);
@@ -94,7 +94,7 @@ public interface IHaveGoggleInformation {
 			return true;
 
 		Lang.translate("gui.goggles.fluid_container.capacity")
-				.add(Lang.number(firstCapacity)
+				.add(Lang.text(FluidTextUtil.getUnicodeMillibuckets(firstCapacity, unit, simplify))
 						.add(mb)
 						.style(ChatFormatting.GOLD))
 				.style(ChatFormatting.GRAY)
