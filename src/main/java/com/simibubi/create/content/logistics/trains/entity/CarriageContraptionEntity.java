@@ -495,6 +495,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		sides.setSecond(cc.blazeBurnerConductors.getSecond());
 
 		for (Entity entity : getPassengers()) {
+			if (entity instanceof Player)
+				continue;
 			BlockPos seatOf = cc.getSeatOf(entity.getUUID());
 			if (seatOf == null)
 				continue;
@@ -680,9 +682,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	boolean stationMessage = false;
 
 	private void displayApproachStationMessage(Player player, GlobalStation station) {
-		sendPrompt(player,
-			Lang.translateDirect("contraption.controls.approach_station", new KeybindComponent("key.jump"), station.name),
-			false);
+		sendPrompt(player, Lang.translateDirect("contraption.controls.approach_station",
+			new KeybindComponent("key.jump"), station.name), false);
 		stationMessage = true;
 	}
 
@@ -725,16 +726,13 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		this.carriageIndex = carriage.train.carriages.indexOf(carriage);
 		if (contraption instanceof CarriageContraption cc)
 			cc.swapStorageAfterAssembly(this);
+		if (carriage.train.graph != null)
+			entityData.set(TRACK_GRAPH, Optional.of(carriage.train.graph.id));
 
 		DimensionalCarriageEntity dimensional = carriage.getDimensional(level);
 		dimensional.pivot = null;
 		carriage.updateContraptionAnchors();
 		dimensional.updateRenderedCutoff();
-	}
-
-	@Override
-	public boolean isReadyForRender() {
-		return super.isReadyForRender() && validForRender && !firstPositionUpdate;
 	}
 
 	@Environment(EnvType.CLIENT)

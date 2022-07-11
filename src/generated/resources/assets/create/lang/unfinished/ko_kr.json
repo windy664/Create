@@ -884,7 +884,6 @@
 	"create.menu.configure": "설정...",
 	"create.menu.ponder_index": "분석 메뉴",
 	"create.menu.only_ingame": "일시 정지 메뉴에서 가능합니다",
-	"create.menu.project_page": "Curseforge 페이지",
 	"create.menu.report_bugs": "버그 제보하기",
 	"create.menu.support": "후원하기",
 
@@ -1500,8 +1499,8 @@
 	"create.schedule.instruction.name_edit_box": "UNLOCALIZED: Schedule Title",
 	"create.schedule.instruction.name_edit_box_1": "UNLOCALIZED: Affects text shown on displays",
 	"create.schedule.instruction.name_edit_box_2": "UNLOCALIZED: Defaults to next destination's name",
-	"create.schedule.instruction.throttle": "UNLOCALIZED: Change Throttle",
-	"create.schedule.instruction.throttle.summary": "UNLOCALIZED: Change Throttle to %1$s",
+	"create.schedule.instruction.throttle": "UNLOCALIZED: Limit Max Speed",
+	"create.schedule.instruction.throttle.summary": "UNLOCALIZED: Change Max Speed to %1$s",
 	"create.schedule.instruction.throttle_edit_box": "UNLOCALIZED: Throttle",
 	"create.schedule.instruction.throttle_edit_box_1": "UNLOCALIZED: Affects the top speed of the Train",
 	"create.schedule.condition_type": "UNLOCALIZED: Continue if/after:",

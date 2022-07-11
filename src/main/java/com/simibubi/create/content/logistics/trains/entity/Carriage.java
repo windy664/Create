@@ -23,6 +23,7 @@ import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import org.apache.commons.lang3.mutable.MutableDouble;
 
+import com.jozufozu.flywheel.repack.joml.Math;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.TrainCargoManager;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
@@ -128,7 +129,7 @@ public class Carriage {
 		boolean onTwoBogeys = isOnTwoBogeys();
 		double stress = train.derailed ? 0 : onTwoBogeys ? bogeySpacing - getAnchorDiff() : 0;
 		blocked = false;
-
+		
 		MutableDouble distanceMoved = new MutableDouble(distance);
 		boolean iterateFromBack = distance < 0;
 
@@ -140,7 +141,7 @@ public class Carriage {
 			CarriageBogey bogey = bogeys.get(actuallyFirstBogey);
 			double bogeyCorrection = stress * (actuallyFirstBogey ? 0.5d : -0.5d);
 			double bogeyStress = bogey.getStress();
-
+			
 			for (boolean firstWheel : Iterate.trueAndFalse) {
 				boolean actuallyFirstWheel = firstWheel ^ iterateFromBack;
 				TravellingPoint point = bogey.points.get(actuallyFirstWheel);
@@ -738,9 +739,9 @@ public class Carriage {
 				if (sp.level.dimension()
 					.equals(other.getKey()))
 					continue;
-				if (otherDce.pivot == null)
+				Vec3 loc = otherDce.pivot == null ? otherDce.positionAnchor : otherDce.pivot.getLocation();
+				if (loc == null)
 					continue;
-				Vec3 loc = otherDce.pivot.getLocation();
 				ServerLevel level = sLevel.getServer()
 					.getLevel(other.getKey());
 				sp.teleportTo(level, loc.x, loc.y, loc.z, sp.getYRot(), sp.getXRot());

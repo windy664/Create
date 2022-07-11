@@ -71,6 +71,9 @@ public class CarriageContraption extends Contraption {
 	public int portalCutoffMin;
 	public int portalCutoffMax;
 
+	static final IItemHandlerModifiable fallbackItems = new ItemStackHandler();
+	static final IFluidHandler fallbackFluids = new FluidTank(0);
+
 	public CarriageContraption() {
 		conductorSeats = new HashMap<>();
 		assembledBlazeBurners = new ArrayList<>();
@@ -327,12 +330,12 @@ public class CarriageContraption extends Contraption {
 
 	@Override
 	public ContraptionInvWrapper getSharedInventory() {
-		return storageProxy.getItems();
+		return storageProxy == null ? fallbackItems : storageProxy.getItems();
 	}
 
 	@Override
 	public CombinedTankWrapper getSharedFluidTanks() {
-		return storageProxy.getFluids();
+		return storageProxy == null ? fallbackFluids : storageProxy.getFluids();
 	}
 
 	public void handleContraptionFluidPacket(BlockPos localPos, FluidStack containedFluid) {

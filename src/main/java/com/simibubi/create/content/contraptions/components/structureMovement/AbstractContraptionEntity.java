@@ -67,6 +67,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.HangingEntity;
@@ -118,6 +119,17 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		if (level.isClientSide)
 			return;
 		contraption.onEntityCreated(this);
+	}
+	
+	@Override
+	public void move(MoverType pType, Vec3 pPos) {
+		if (pType == MoverType.SHULKER)
+			return;
+		if (pType == MoverType.SHULKER_BOX)
+			return;
+		if (pType == MoverType.PISTON)
+			return;
+		super.move(pType, pPos);
 	}
 
 	public boolean supportsTerrainCollision() {

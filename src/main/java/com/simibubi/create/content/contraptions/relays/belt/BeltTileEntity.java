@@ -26,9 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.LightListener;
-import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
-import com.jozufozu.flywheel.light.ListenerStatus;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.simibubi.create.AllBlocks;
@@ -581,12 +579,12 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 		}
 
 		@Override
-		public ListenerStatus status() {
-			return remove ? ListenerStatus.REMOVE : ListenerStatus.OKAY;
+		public boolean isListenerInvalid() {
+			return remove;
 		}
 
 		@Override
-		public void onLightUpdate(LightProvider world, LightLayer type, ImmutableBox changed) {
+		public void onLightUpdate(LightLayer type, ImmutableBox changed) {
 			if (remove)
 				return;
 			if (level == null)

@@ -78,7 +78,9 @@ public class CombinedTankWrapper extends CombinedStorage<FluidVariant, Storage<F
 				maxAmount -= filledIntoCurrent;
 				filled += filledIntoCurrent;
 
-				if (maxAmount == 0 || fittingHandlerFound || enforceVariety && filledIntoCurrent != 0)
+				if (maxAmount == 0)
+					break Outer;
+				if (fittingHandlerFound && (enforceVariety || filledIntoCurrent != 0))
 					break Outer;
 			}
 		}

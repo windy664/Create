@@ -156,6 +156,7 @@ public abstract class Contraption {
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
 	// Client
+	public Map<BlockPos, IModelData> modelData;
 	public Map<BlockPos, BlockEntity> presentTileEntities;
 	public List<BlockEntity> maybeInstancedTileEntities;
 	public List<BlockEntity> specialRenderedTileEntities;
@@ -167,6 +168,7 @@ public abstract class Contraption {
 		blocks = new HashMap<>();
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
+		modelData = new HashMap<>();
 		interactors = new HashMap<>();
 		superglue = new ArrayList<>();
 		seatMapping = new HashMap<>();
@@ -879,8 +881,9 @@ public abstract class Contraption {
 			if (te == null)
 				return;
 			te.setLevel(world);
-			if (te instanceof KineticTileEntity)
-				((KineticTileEntity) te).setSpeed(0);
+			modelData.put(info.pos, te.getModelData());
+			if (te instanceof KineticTileEntity kte)
+				kte.setSpeed(0);
 			te.getBlockState();
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(info.state);

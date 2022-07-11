@@ -84,7 +84,7 @@ public class AllTags {
 
 	public enum NameSpace {
 
-		MOD(Create.ID, false, true), FORGE("c"), TIC("tconstruct")
+		MOD(Create.ID, false, true), FORGE("c"), TIC("tconstruct"), QUARK("quark")
 
 		;
 
@@ -126,6 +126,7 @@ public class AllTags {
 		WG_STONE(FORGE),
 
 		SLIMY_LOGS(TIC),
+		NON_DOUBLE_DOOR(NameSpace.QUARK),
 
 		;
 

@@ -22,6 +22,7 @@ import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.fluids.tank.BoilerHeaters;
+import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
@@ -58,7 +59,7 @@ public class Create implements ModInitializer {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5-unstable";
+	public static final String VERSION = "0.5a";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -127,6 +128,9 @@ public class Create implements ModInitializer {
 		AllEntityDataSerializers.register();
 
 		AllPackets.channel.initServerListener();
+
+		// FIXME PORT a
+		forgeEventBus.addListener(EventPriority.HIGH, SlidingDoorBlock::stopItQuark);
 
 		// causes class loading issues or something
 		// noinspection Convert2MethodRef

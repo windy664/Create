@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.ponder.content;
 import java.util.Collection;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
@@ -164,10 +163,11 @@ public class CrafterScenes {
 			.placeNearTarget();
 		scene.idle(60);
 
-		ItemStack alloy = AllItems.ANDESITE_ALLOY.asStack();
-		ItemStack log = new ItemStack(Items.OAK_LOG);
+		ItemStack redstoneDust = new ItemStack(Items.REDSTONE);
+		ItemStack iron = new ItemStack(Items.IRON_INGOT);
+		ItemStack cobble = new ItemStack(Items.COBBLESTONE);
 
-		scene.world.setCraftingResult(util.grid.at(1, 1, 2), AllBlocks.ANDESITE_CASING.asStack(4));
+		scene.world.setCraftingResult(util.grid.at(1, 1, 2), new ItemStack(Items.PISTON));
 
 		scene.world.modifyTileEntity(util.grid.at(2, 3, 2), type, mct ->
 			TransferUtil.insertItem(mct.getInventory(), planks.copy()));
@@ -176,22 +176,22 @@ public class CrafterScenes {
 				TransferUtil.insertItem(mct.getInventory(), planks.copy()));
 		scene.idle(5);
 		scene.world.modifyTileEntity(util.grid.at(3, 2, 2), type, mct ->
-				TransferUtil.insertItem(mct.getInventory(), planks.copy()));
+				TransferUtil.insertItem(mct.getInventory(), cobble.copy()));
 		scene.idle(5);
 		scene.world.modifyTileEntity(util.grid.at(2, 2, 2), type, mct ->
-				TransferUtil.insertItem(mct.getInventory(), log.copy()));
+				TransferUtil.insertItem(mct.getInventory(), iron.copy()));
 		scene.idle(5);
 		scene.world.modifyTileEntity(util.grid.at(1, 2, 2), type, mct ->
-				TransferUtil.insertItem(mct.getInventory(), alloy.copy()));
+				TransferUtil.insertItem(mct.getInventory(), cobble.copy()));
 		scene.idle(5);
 		scene.world.modifyTileEntity(util.grid.at(1, 1, 2), type, mct ->
-				TransferUtil.insertItem(mct.getInventory(), planks.copy()));
+				TransferUtil.insertItem(mct.getInventory(), cobble.copy()));
 		scene.idle(5);
 		scene.world.modifyTileEntity(util.grid.at(2, 1, 2), type, mct ->
-				TransferUtil.insertItem(mct.getInventory(), planks.copy()));
+				TransferUtil.insertItem(mct.getInventory(), redstoneDust.copy()));
 		scene.idle(5);
 		scene.world.modifyTileEntity(util.grid.at(3, 1, 2), type, mct ->
-				TransferUtil.insertItem(mct.getInventory(), planks.copy()));
+				TransferUtil.insertItem(mct.getInventory(), cobble.copy()));
 
 		scene.overlay.showText(80)
 			.attachKeyFrame()
@@ -203,7 +203,6 @@ public class CrafterScenes {
 		scene.world.removeItemsFromBelt(depotPos);
 
 		ItemStack stick = new ItemStack(Items.STICK);
-		ItemStack iron = new ItemStack(Items.IRON_INGOT);
 
 		scene.world.setCraftingResult(util.grid.at(1, 1, 2), new ItemStack(Items.IRON_PICKAXE));
 
@@ -397,11 +396,11 @@ public class CrafterScenes {
 		scene.idle(20);
 
 		scene.overlay.showText(90)
-		.attachKeyFrame()
-		.colored(PonderPalette.GREEN)
-		.pointAt(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.NORTH))
-		.text("Using Slot Covers, Crafters can be set to act as an Empty Slot in the arrangement")
-		.placeNearTarget();
+			.attachKeyFrame()
+			.colored(PonderPalette.GREEN)
+			.pointAt(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.NORTH))
+			.text("Using Slot Covers, Crafters can be set to act as an Empty Slot in the arrangement")
+			.placeNearTarget();
 		scene.idle(100);
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.NORTH)
