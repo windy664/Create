@@ -5,6 +5,7 @@ import java.util.Random;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.collect.BiMap;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.CustomUseEffectsItem;
 import com.simibubi.create.foundation.mixin.accessor.LivingEntityAccessor;
@@ -28,6 +29,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -35,6 +37,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -186,6 +189,10 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 			level.levelEvent(player, 3005, pos, 0); // Spawn particles
 		} else {
 			newState = WeatheringCopper.getPrevious(state);
+			if (newState.isEmpty()) { // fabric: account for waxing
+				newState = Optional.ofNullable((HoneycombItem.WAX_OFF_BY_BLOCK.get()).get(state.getBlock()))
+						.map(block -> block.withPropertiesOf(state));
+			}
 			if (newState.isPresent()) {
 				AllSoundEvents.SANDING_LONG.play(level, player, pos, 1,
 					1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
