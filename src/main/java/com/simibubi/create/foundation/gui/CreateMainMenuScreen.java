@@ -10,7 +10,6 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.gui.widget.SimpleButtonWithIcon;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.ponder.ui.PonderTagIndexScreen;
 import com.simibubi.create.foundation.utility.Color;
@@ -45,10 +44,10 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 
 	private static final Component CURSEFORGE_TOOLTIP = new TextComponent("CurseForge").withStyle(s -> s.withColor(0xFC785C).withBold(true));
 	private static final Component MODRINTH_TOOLTIP = new TextComponent("Modrinth").withStyle(s -> s.withColor(0x3FD32B).withBold(true));
-// FIXME PORT a
-	public static final String CURSEFORGE_LINK = "https://www.curseforge.com/minecraft/mc-mods/create";
-	public static final String MODRINTH_LINK = "https://modrinth.com/mod/create";
-	public static final String ISSUE_TRACKER_LINK = "https://github.com/Creators-of-Create/Create/issues";
+
+	public static final String CURSEFORGE_LINK = "https://www.curseforge.com/minecraft/mc-mods/create-fabric";
+	public static final String MODRINTH_LINK = "https://modrinth.com/mod/create-fabric";
+	public static final String ISSUE_TRACKER_LINK = "https://github.com/Fabricators-of-Create/Create/issues";
 	public static final String SUPPORT_LINK = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
 
 	protected final Screen parent;
