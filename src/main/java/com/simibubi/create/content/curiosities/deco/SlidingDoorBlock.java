@@ -33,8 +33,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event.Result;
 
 public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<SlidingDoorTileEntity> {
 
