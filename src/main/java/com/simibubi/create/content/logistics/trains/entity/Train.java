@@ -1059,7 +1059,8 @@ public class Train {
 					ItemStack containerItem = new ItemStack(held.getItem().getCraftingRemainingItem());
 					if (!containerItem.isEmpty())
 						TransferUtil.insertItem(fuelItems, containerItem);
-					return; // FIXME PORT a
+					t.commit();
+					return;
 				}
 			}
 		}
