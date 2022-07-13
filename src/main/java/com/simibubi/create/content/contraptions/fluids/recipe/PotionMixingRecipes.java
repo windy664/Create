@@ -16,11 +16,12 @@ import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 
+import io.github.fabricators_of_create.porting_lib.brewing.BrewingRecipe;
+import io.github.fabricators_of_create.porting_lib.brewing.BrewingRecipeRegistry;
+import io.github.fabricators_of_create.porting_lib.brewing.IBrewingRecipe;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.PotionBrewing$MixAccessor;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.PotionBrewingAccessor;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-import io.github.tropheusj.milk.mixin.BrewingRecipeRegistryMixin;
-import me.shedaniel.rei.plugin.common.displays.brewing.BrewingRecipe;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -47,8 +48,10 @@ public class PotionMixingRecipes {
 		int recipeIndex = 0;
 
 		List<Item> allowedSupportedContainers = new ArrayList<>();
+		List<ItemStack> supportedContainerStacks = new ArrayList<>();
 		for (Item container : SUPPORTED_CONTAINERS) {
 			ItemStack stack = new ItemStack(container);
+			supportedContainerStacks.add(stack);
 			if (PotionBrewingAccessor.port_lib$ALLOWED_CONTAINER().test(stack)) {
 				allowedSupportedContainers.add(container);
 			}
@@ -91,6 +94,30 @@ public class PotionMixingRecipes {
 				mixingRecipes.add(createRecipe("potion_mixing_vanilla_" + recipeIndex++, ingredient, fromFluid, toFluid));
 			}
 		}
+
+		recipeIndex = 0;
+		for (IBrewingRecipe recipe : BrewingRecipeRegistry.getRecipes()) {
+			if (recipe instanceof BrewingRecipe recipeImpl) {
+				ItemStack output = recipeImpl.getOutput();
+				if (!SUPPORTED_CONTAINERS.contains(output.getItem())) {
+					continue;
+				}
+
+				Ingredient input = recipeImpl.getInput();
+				Ingredient ingredient = recipeImpl.getIngredient();
+				FluidStack outputFluid = null;
+				for (ItemStack stack : supportedContainerStacks) {
+					if (input.test(stack)) {
+						FluidStack inputFluid = PotionFluidHandler.getFluidFromPotionItem(stack);
+						if (outputFluid == null) {
+							outputFluid = PotionFluidHandler.getFluidFromPotionItem(output);
+						}
+						mixingRecipes.add(createRecipe("potion_mixing_modded_" + recipeIndex++, ingredient, inputFluid, outputFluid));
+					}
+				}
+			}
+		}
+
 		return mixingRecipes;
 	}
 
