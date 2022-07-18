@@ -449,9 +449,9 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				} else {
 					model = CullingBakedModel.wrap(model);
 					model = LayerFilteringBakedModel.wrap(model, layer);
-					model = shadeSeparatingWrapper.wrapModel(model);
 				}
 				if (model != null) {
+					model = shadeSeparatingWrapper.wrapModel(model);
 					dispatcher.getModelRenderer()
 						.tesselateBlock(world, model, state, pos, poseStack, shadeSeparatingWrapper, true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY);
 				}
