@@ -59,6 +59,7 @@ import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
 import com.simibubi.create.content.logistics.trains.entity.CarriageEntityHandler;
+import com.simibubi.create.foundation.ModFilePackResources;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -87,6 +88,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -233,6 +237,21 @@ public class CommonEvents {
 //		}
 
 	}
+
+		@SubscribeEvent
+		public static void addPackFinders(AddPackFindersEvent event) {
+			if (event.getPackType() == PackType.CLIENT_RESOURCES) {
+				IModFileInfo modFileInfo = ModList.get().getModFileById(Create.ID);
+				if (modFileInfo == null) {
+					Create.LOGGER.error("Could not find Create mod file info; built-in resource packs will be missing!");
+					return;
+				}
+				IModFile modFile = modFileInfo.getFile();
+				event.addRepositorySource((consumer, constructor) -> {
+					consumer.accept(Pack.create(Create.asResource("legacy_copper").toString(), false, () -> new ModFilePackResources("Create Legacy Copper", modFile, "resourcepacks/legacy_copper"), constructor, Pack.Position.TOP, PackSource.DEFAULT));
+				});
+			}
+		}
 
 	public static void register() {
 		// Fabric Events

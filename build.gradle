@@ -14,9 +14,9 @@ targetCompatibility = JavaVersion.VERSION_17
 
 ext.buildNumber = System.getenv("GITHUB_RUN_NUMBER")
 
-version = "mc${project.minecraft_version}_v${project.mod_version}" + (buildNumber != null ? "+${buildNumber}" : "")
+version = mod_version + (dev && buildNumber != null ? "-${buildNumber}" : '')
 group = project.maven_group
-archivesBaseName = project.archives_base_name
+archivesBaseName = "create-${artifact_minecraft_version}"
 
 repositories {
     mavenCentral()
@@ -113,7 +113,7 @@ dependencies {
     modImplementation(include("com.electronwill.night-config:toml:${project.night_config_toml_version}"))
     modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_id}")) { transitive = false }
     modImplementation(include("com.tterrag.registrate:Registrate:${project.registrate_version}"))
-    modImplementation(include("com.jozufozu.flywheel:flywheel-fabric-${project.minecraft_version}:${project.flywheel_version}"))
+    modImplementation(include("com.jozufozu.flywheel:flywheel-fabric-${flywheel_minecraft_version}:${project.flywheel_version}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
     modImplementation(include("dev.cafeteria:fake-player-api:${project.fake_player_api_version}"))
     modImplementation(include("io.github.tropheusj:milk-lib:${project.milk_lib_version}"))

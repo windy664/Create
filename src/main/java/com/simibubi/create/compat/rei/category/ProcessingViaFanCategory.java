@@ -25,12 +25,8 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 	protected static final int SCALE = 24;
 
-	public ProcessingViaFanCategory(Renderer icon) {
-		this(178, icon);
-	}
-
-	public ProcessingViaFanCategory(int width, Renderer icon) {
-		super(icon, emptyBackground(width, 76));
+	public ProcessingViaFanCategory(Info<T> info) {
+		super(info);
 	}
 
 	public static Supplier<ItemStack> getFan(String name) {
@@ -92,8 +88,8 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 	public static abstract class MultiOutput<T extends ProcessingRecipe<?>> extends ProcessingViaFanCategory<T> {
 
-		public MultiOutput(Renderer icon) {
-			super(icon);
+		public MultiOutput(Info<T> info) {
+			super(info);
 		}
 
 		public MultiOutput(int width, Renderer icon) {

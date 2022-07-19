@@ -23,7 +23,6 @@ import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import org.apache.commons.lang3.mutable.MutableDouble;
 
-import com.jozufozu.flywheel.repack.joml.Math;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.TrainCargoManager;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
