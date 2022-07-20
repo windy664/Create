@@ -1,13 +1,10 @@
 package com.simibubi.create.foundation.render;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.backend.IrisShaderHandler;
+import com.jozufozu.flywheel.backend.ShadersModHandler;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
 import io.github.fabricators_of_create.porting_lib.event.client.RegisterShadersCallback;
@@ -25,7 +22,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 // TODO 1.17: use custom shaders instead of vanilla ones
 public class RenderTypes extends RenderStateShard {
 
-	public static final RenderStateShard.ShaderStateShard GLOWING_SHADER = new RenderStateShard.ShaderStateShard(() -> IrisShaderHandler.isShaderPackInUse() ? GameRenderer.getNewEntityShader() : Shaders.glowingShader);
+	public static final RenderStateShard.ShaderStateShard GLOWING_SHADER = new RenderStateShard.ShaderStateShard(() -> ShadersModHandler.isShaderPackInUse() ? GameRenderer.getNewEntityShader() : Shaders.glowingShader);
 
 	private static final RenderType OUTLINE_SOLID =
 		RenderTypeAccessor.port_lib$create(createLayerName("outline_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false,

@@ -144,7 +144,6 @@ public class FlwContraption extends ContraptionRenderInfo {
 
 		for (RenderType layer : blockLayers) {
 			Model layerModel = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
-					.withModelData(contraption.modelData)
 					.withBlocks(renderedBlocks)
 					.intoMesh(layer + "_" + contraption.entity.getId());
 			renderLayers.put(layer, new ArrayModelRenderer(layerModel));

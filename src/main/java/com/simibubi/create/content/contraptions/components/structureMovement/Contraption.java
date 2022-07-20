@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 
+import io.github.fabricators_of_create.porting_lib.model.IModelData;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -156,7 +157,6 @@ public abstract class Contraption {
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
 	// Client
-	public Map<BlockPos, IModelData> modelData;
 	public Map<BlockPos, BlockEntity> presentTileEntities;
 	public List<BlockEntity> maybeInstancedTileEntities;
 	public List<BlockEntity> specialRenderedTileEntities;
@@ -168,7 +168,6 @@ public abstract class Contraption {
 		blocks = new HashMap<>();
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
-		modelData = new HashMap<>();
 		interactors = new HashMap<>();
 		superglue = new ArrayList<>();
 		seatMapping = new HashMap<>();
@@ -881,7 +880,6 @@ public abstract class Contraption {
 			if (te == null)
 				return;
 			te.setLevel(world);
-			modelData.put(info.pos, te.getModelData());
 			if (te instanceof KineticTileEntity kte)
 				kte.setSpeed(0);
 			te.getBlockState();

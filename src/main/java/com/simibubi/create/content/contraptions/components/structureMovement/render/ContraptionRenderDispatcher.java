@@ -167,7 +167,6 @@ public class ContraptionRenderDispatcher {
 		Collection<StructureTemplate.StructureBlockInfo> values = c.getRenderedBlocks();
 		BufferBuilder builder = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
 				.withBlocks(values)
-				.withModelData(c.modelData)
 				.build();
 		return new SuperByteBuffer(builder);
 	}
