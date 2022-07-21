@@ -73,8 +73,8 @@ public class CarriageContraption extends Contraption {
 	public int portalCutoffMin;
 	public int portalCutoffMax;
 
-	static final IItemHandlerModifiable fallbackItems = new ItemStackHandler();
-	static final IFluidHandler fallbackFluids = new FluidTank(0);
+	static final ContraptionInvWrapper fallbackItems = new ContraptionInvWrapper();
+	static final CombinedTankWrapper fallbackFluids = new CombinedTankWrapper();
 
 	public CarriageContraption() {
 		conductorSeats = new HashMap<>();
