@@ -341,22 +341,22 @@ public class ClientEvents {
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f/32f);
-			event.setCanceled(true);
+//			event.scaleFarPlaneDistance(1f/32f);
+//			event.setCanceled(true);
 			return 5f;
 		}
 
 		if (AllFluids.HONEY.get()
 			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f/8f);
-			event.setCanceled(true);
+//			event.scaleFarPlaneDistance(1f/8f);
+//			event.setCanceled(true);
 			return 1.5f;
 		}
 
 		if (FluidHelper.isWater(fluid) && AllItems.DIVING_HELMET.get()
 			.isWornBy(Minecraft.getInstance().cameraEntity)) {
-			event.scaleFarPlaneDistance(6.25f);
-			event.setCanceled(true);
+//			event.scaleFarPlaneDistance(6.25f);
+//			event.setCanceled(true);
 			return 300f;
 		}
 		return currentDensity;

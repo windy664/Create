@@ -17,7 +17,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 
-import mezz.jei.api.forge.ForgeTypes;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
 import mezz.jei.api.recipe.RecipeType;
@@ -31,7 +31,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.fluids.FluidStack;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -140,7 +139,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 
 	public static IRecipeSlotTooltipCallback addFluidTooltip(int mbAmount) {
 		return (view, tooltip) -> {
-			Optional<FluidStack> displayed = view.getDisplayedIngredient(ForgeTypes.FLUID_STACK);
+			Optional<FluidStack> displayed = Optional.empty();//view.getDisplayedIngredient(FabricTypes.FLUID_STACK); TODO: JEI Fluids are broken
 			if (displayed.isEmpty())
 				return;
 
@@ -158,7 +157,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 				tooltip.addAll(1, potionTooltip.stream().toList());
 			}
 
-			int amount = mbAmount == -1 ? fluidStack.getAmount() : mbAmount;
+			long amount = mbAmount == -1 ? fluidStack.getAmount() : mbAmount;
 			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);
