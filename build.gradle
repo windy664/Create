@@ -18,7 +18,7 @@ boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equal
 
 version = mod_version + (dev && buildNumber != null ? "-${buildNumber}" : '')
 group = project.maven_group
-archivesBaseName = "create-${artifact_minecraft_version}"
+archivesBaseName = "create-${project.minecraft_version}"
 
 repositories {
     mavenCentral()
