@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.TagValueAccessor;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -34,7 +35,7 @@ public final class ToolboxColoringRecipeMaker {
 				ItemStack dyeStack = new ItemStack(dye);
 				TagKey<Item> colorTag = color.getTag();
 				Ingredient.Value dyeList = new Ingredient.ItemValue(dyeStack);
-				Ingredient.Value colorList = new Ingredient.TagValue(colorTag);
+				Ingredient.Value colorList = TagValueAccessor.createTagValue(colorTag);
 				Stream<Ingredient.Value> colorIngredientStream = Stream.of(dyeList, colorList);
 				Ingredient colorIngredient = Ingredient.fromValues(colorIngredientStream);
 				NonNullList<Ingredient> inputs =

@@ -108,7 +108,7 @@ public class AllDisplayBehaviours {
 	//
 
 	public static List<DisplaySource> sourcesOf(Block block) {
-		return SOURCES_BY_BLOCK.getOrDefault(block.delegate, Collections.emptyList());
+		return SOURCES_BY_BLOCK.getOrDefault(block, Collections.emptyList());
 	}
 
 	public static List<DisplaySource> sourcesOf(BlockState state) {
@@ -116,7 +116,7 @@ public class AllDisplayBehaviours {
 	}
 
 	public static List<DisplaySource> sourcesOf(BlockEntityType<?> tileEntityType) {
-		return SOURCES_BY_TILE.getOrDefault(tileEntityType.delegate, Collections.emptyList());
+		return SOURCES_BY_TILE.getOrDefault(tileEntityType, Collections.emptyList());
 	}
 
 	public static List<DisplaySource> sourcesOf(BlockEntity tileEntity) {
