@@ -8,7 +8,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.int
 import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
 
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerHandler;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItemRetrieval;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
@@ -30,6 +29,10 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.packs.PackType;
 
@@ -59,7 +62,6 @@ import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
 import com.simibubi.create.content.logistics.trains.entity.CarriageEntityHandler;
-import com.simibubi.create.foundation.ModFilePackResources;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -71,7 +73,6 @@ import io.github.fabricators_of_create.porting_lib.event.common.BlockPlaceCallba
 import io.github.fabricators_of_create.porting_lib.event.common.FluidPlaceBlockCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.MobEntitySetTargetCallback;
-import io.github.fabricators_of_create.porting_lib.event.common.ServerPlayerCreationCallback;
 
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
@@ -88,9 +89,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -238,20 +236,12 @@ public class CommonEvents {
 
 	}
 
-		@SubscribeEvent
-		public static void addPackFinders(AddPackFindersEvent event) {
-			if (event.getPackType() == PackType.CLIENT_RESOURCES) {
-				IModFileInfo modFileInfo = ModList.get().getModFileById(Create.ID);
-				if (modFileInfo == null) {
-					Create.LOGGER.error("Could not find Create mod file info; built-in resource packs will be missing!");
-					return;
-				}
-				IModFile modFile = modFileInfo.getFile();
-				event.addRepositorySource((consumer, constructor) -> {
-					consumer.accept(Pack.create(Create.asResource("legacy_copper").toString(), false, () -> new ModFilePackResources("Create Legacy Copper", modFile, "resourcepacks/legacy_copper"), constructor, Pack.Position.TOP, PackSource.DEFAULT));
-				});
-			}
-		}
+	public static void addPackFinders() {
+		ModContainer create = FabricLoader.getInstance().getModContainer(Create.ID)
+				.orElseThrow(() -> new IllegalStateException("Create's ModContainer couldn't be found!"));
+		ResourceLocation packId = Create.asResource("legacy_copper");
+		ResourceManagerHelper.registerBuiltinResourcePack(packId, create, "Create Legacy Copper", ResourcePackActivationType.NORMAL);
+	}
 
 	public static void register() {
 		// Fabric Events
@@ -271,8 +261,11 @@ public class CommonEvents {
 		ServerPlayConnectionEvents.JOIN.register(CommonEvents::playerLoggedIn);
 		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(CommonEvents::onDatapackSync);
+		// fabric: some features using events on forge don't use events here.
+		// they've been left in this class for upstream compatibility.
 		CommonEvents.addReloadListeners();
-		CommonEvents.onBiomeLoad(); // Fabric Biome API requires biomes to only be registered once
+		CommonEvents.onBiomeLoad();
+		CommonEvents.addPackFinders();
 
 		// External Events
 
