@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -47,7 +48,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	@Override
 	protected boolean test(Level level, Train train, CompoundTag context) {
 		Ops operator = getOperator();
-		int target = getThreshold();
+		long target = getThreshold();
 
 		if (compareStack.isEmpty())
 			return true;
@@ -67,8 +68,8 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 			}
 		}
 
-		requestStatusToUpdate(foundFluid / 1000, context);
-		return operator.test(foundFluid, target * 1000);
+		requestStatusToUpdate(foundFluid / FluidConstants.BUCKET, context);
+		return operator.test(foundFluid, target * FluidConstants.BUCKET);
 	}
 
 	@Override
@@ -142,7 +143,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 
 	@Override
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
-		int lastDisplaySnapshot = getLastDisplaySnapshot(tag);
+		long lastDisplaySnapshot = getLastDisplaySnapshot(tag);
 		if (lastDisplaySnapshot == -1)
 			return TextComponent.EMPTY.copy();
 		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;

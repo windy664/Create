@@ -29,7 +29,7 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 			this.formatted = formatted;
 		}
 
-		public boolean test(int current, int target) {
+		public boolean test(long current, long target) {
 			return switch (this) {
 			case GREATER -> current > target;
 			case EQUAL -> current == target;
@@ -62,15 +62,15 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 		return test(level, train, context);
 	}
 
-	protected void requestStatusToUpdate(int amount, CompoundTag context) {
-		context.putInt("CurrentDisplay", amount);
+	protected void requestStatusToUpdate(long amount, CompoundTag context) {
+		context.putLong("CurrentDisplay", amount);
 		super.requestStatusToUpdate(context);
 	};
 
-	protected int getLastDisplaySnapshot(CompoundTag context) {
+	protected long getLastDisplaySnapshot(CompoundTag context) {
 		if (!context.contains("CurrentDisplay"))
 			return -1;
-		return context.getInt("CurrentDisplay");
+		return context.getLong("CurrentDisplay");
 	}
 
 	protected abstract boolean test(Level level, Train train, CompoundTag context);
@@ -93,9 +93,9 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 		return enumData("Operator", Ops.class);
 	}
 
-	public int getThreshold() {
+	public long getThreshold() {
 		try {
-			return Integer.valueOf(textData("Threshold"));
+			return Long.parseLong(textData("Threshold"));
 		} catch (NumberFormatException e) {
 			data.putString("Threshold", "0");
 		}

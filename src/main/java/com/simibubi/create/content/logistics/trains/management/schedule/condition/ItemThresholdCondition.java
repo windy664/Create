@@ -43,7 +43,7 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 	@Override
 	protected boolean test(Level level, Train train, CompoundTag context) {
 		Ops operator = getOperator();
-		int target = getThreshold();
+		long target = getThreshold();
 		boolean stacks = inStacks();
 
 		if (stack.isEmpty())
@@ -133,7 +133,7 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 
 	@Override
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
-		int lastDisplaySnapshot = getLastDisplaySnapshot(tag);
+		long lastDisplaySnapshot = getLastDisplaySnapshot(tag);
 		if (lastDisplaySnapshot == -1)
 			return TextComponent.EMPTY.copy();
 		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;
