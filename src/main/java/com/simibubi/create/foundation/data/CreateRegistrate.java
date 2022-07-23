@@ -166,7 +166,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Fluids */
 
 	public <T extends SimpleFlowableFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name,
-//		BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
+		BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
 		NonNullFunction<SimpleFlowableFluid.Properties, T> factory) {
 		return entry(name,
 			c -> new VirtualFluidBuilder<>(self(), self(), name, c, Create.asResource("fluid/" + name + "_still"),

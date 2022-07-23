@@ -125,7 +125,7 @@ dependencies {
     modImplementation(include("com.electronwill.night-config:core:${project.night_config_core_version}"))
     modImplementation(include("com.electronwill.night-config:toml:${project.night_config_toml_version}"))
     modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_id}")) { transitive = false }
-    modImplementation(include("com.tterrag.registrate:Registrate:${project.registrate_version}"))
+    modImplementation(include("com.tterrag.registrate_fabric:Registrate:${project.registrate_version}"))
     modImplementation(include("com.jozufozu.flywheel:flywheel-fabric-${flywheel_minecraft_version}:${project.flywheel_version}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
     modImplementation(include("dev.cafeteria:fake-player-api:${project.fake_player_api_version}"))
