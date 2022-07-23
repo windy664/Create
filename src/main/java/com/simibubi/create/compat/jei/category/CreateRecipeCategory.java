@@ -8,6 +8,13 @@ import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import mezz.jei.api.fabric.constants.FabricTypes;
+
+import mezz.jei.api.fabric.ingredients.fluids.IJeiFluidIngredient;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.material.Fluid;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -133,17 +140,48 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		return display;
 	}
 
+	public static FluidStack fromJei(IJeiFluidIngredient jei) {
+		return new FluidStack(jei.getFluid(), jei.getAmount(), jei.getTag().get());
+	}
+
+	public static IJeiFluidIngredient toJei(FluidStack stack) {
+		return new IJeiFluidIngredient() {
+			@Override
+			public Fluid getFluid() {
+				return stack.getFluid();
+			}
+
+			@Override
+			public long getAmount() {
+				return stack.getAmount();
+			}
+
+			@Override
+			public Optional<CompoundTag> getTag() {
+				return Optional.ofNullable(stack.getTag());
+			}
+		};
+	}
+
+	public static List<FluidStack> fromJei(List<IJeiFluidIngredient> stacks) {
+		return stacks.stream().map(CreateRecipeCategory::fromJei).toList();
+	}
+
+	public static List<IJeiFluidIngredient> toJei(List<FluidStack> stacks) {
+		return stacks.stream().map(CreateRecipeCategory::toJei).toList();
+	}
+
 	public static IRecipeSlotTooltipCallback addFluidTooltip() {
 		return addFluidTooltip(-1);
 	}
 
-	public static IRecipeSlotTooltipCallback addFluidTooltip(int mbAmount) {
+	public static IRecipeSlotTooltipCallback addFluidTooltip(long mbAmount) {
 		return (view, tooltip) -> {
-			Optional<FluidStack> displayed = Optional.empty();//view.getDisplayedIngredient(FabricTypes.FLUID_STACK); TODO: JEI Fluids are broken
+			Optional<IJeiFluidIngredient> displayed = view.getDisplayedIngredient(FabricTypes.FLUID_STACK);
 			if (displayed.isEmpty())
 				return;
 
-			FluidStack fluidStack = displayed.get();
+			FluidStack fluidStack = fromJei(displayed.get());
 
 			if (fluidStack.getFluid().isSame(AllFluids.POTION.get())) {
 				Component name = fluidStack.getDisplayName();

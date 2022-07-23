@@ -70,6 +70,7 @@ import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.RecipeManagerAccessor;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -83,6 +84,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -228,8 +230,8 @@ public class CreateJEI implements IModPlugin {
 						.build("block_cutting", BlockCuttingCategory::new),
 
 				woodCutting = builder(CondensedBlockCuttingRecipe.class)
-						.enableIf(c -> c.allowWoodcuttingOnSaw.get() && ModList.get()
-								.isLoaded("druidcraft"))
+						.enableIf(c -> c.allowWoodcuttingOnSaw.get() && FabricLoader.getInstance()
+								.isModLoaded("druidcraft"))
 						.addRecipes(() -> CondensedBlockCuttingRecipe.condenseRecipes(getTypedRecipesExcluding(SawTileEntity.woodcuttingRecipeType.get(), AllRecipeTypes::shouldIgnoreInAutomation)))
 						.catalyst(AllBlocks.MECHANICAL_SAW::get)
 						.doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_STAIRS)
@@ -530,9 +532,9 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	public static <T extends Recipe<?>> void consumeTypedRecipes(Consumer<T> consumer, RecipeType<?> type) {
-		Map<ResourceLocation, Recipe<?>> map = Minecraft.getInstance()
+		Map<ResourceLocation, Recipe<?>> map = ((RecipeManagerAccessor) Minecraft.getInstance()
 				.getConnection()
-				.getRecipeManager().recipes.get(type);
+				.getRecipeManager()).port_lib$getRecipes().get(type);
 		if (map != null) {
 			map.values().forEach(recipe -> consumer.accept((T) recipe));
 		}

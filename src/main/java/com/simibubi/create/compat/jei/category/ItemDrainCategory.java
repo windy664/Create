@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.fabric.constants.FabricTypes;
@@ -20,6 +21,12 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.runtime.IIngredientManager;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -48,19 +55,19 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				continue;
 			}
 
-			LazyOptional<IFluidHandlerItem> capability =
-				stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-			if (!capability.isPresent())
+			ContainerItemContext testCtx = ContainerItemContext.withInitial(stack);
+			Storage<FluidVariant> testStorage = testCtx.find(FluidStorage.ITEM);
+			if (testStorage == null)
 				continue;
 
 			ItemStack copy = stack.copy();
-			capability = copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-			IFluidHandlerItem handler = capability.orElse(null);
-			FluidStack extracted = handler.drain(1000, FluidAction.EXECUTE);
-			ItemStack result = handler.getContainer();
+			ContainerItemContext ctx = ContainerItemContext.withInitial(copy);
+			Storage<FluidVariant> storage = ctx.find(FluidStorage.ITEM);
+			FluidStack extracted = TransferUtil.extractAnyFluid(storage, FluidConstants.BUCKET);
+			ItemVariant result = ctx.getItemVariant();
 			if (extracted.isEmpty())
 				continue;
-			if (result.isEmpty())
+			if (result.isBlank())
 				continue;
 
 			Ingredient ingredient = Ingredient.of(stack);
@@ -73,7 +80,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				Create.asResource("empty_" + itemName.getNamespace() + "_" + itemName.getPath() + "_of_"
 					+ fluidName.getNamespace() + "_" + fluidName.getPath())).withItemIngredients(ingredient)
 						.withFluidOutputs(extracted)
-						.withSingleItemOutput(result)
+						.withSingleItemOutput(result.toStack((int) ctx.getAmount()))
 						.build());
 		}
 	}
@@ -87,7 +94,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 8)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addIngredient(FabricTypes.FLUID_STACK, withImprovedVisibility(recipe.getResultingFluid()))
+				.addIngredient(FabricTypes.FLUID_STACK, toJei(withImprovedVisibility(recipe.getResultingFluid())))
 				.addTooltipCallback(addFluidTooltip(recipe.getResultingFluid().getAmount()));
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 27)

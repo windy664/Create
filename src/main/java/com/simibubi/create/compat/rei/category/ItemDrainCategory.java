@@ -42,11 +42,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 
-	AnimatedItemDrain drain;
+	private final AnimatedItemDrain drain = new AnimatedItemDrain();
 
-	public ItemDrainCategory() {
-		super(doubleItemIcon(AllBlocks.ITEM_DRAIN, () -> Items.WATER_BUCKET), emptyBackground(177, 57));
-		drain = new AnimatedItemDrain();
+	public ItemDrainCategory(Info<EmptyingRecipe> info) {
+		super(info);
 	}
 
 		public static void consumeRecipes(Consumer<EmptyingRecipe> consumer) {

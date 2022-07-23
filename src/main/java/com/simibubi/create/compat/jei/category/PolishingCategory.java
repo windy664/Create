@@ -9,6 +9,7 @@ import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -23,14 +24,9 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 
 	private final ItemStack renderedSandpaper;
 
-	public PolishingCategory() {
-		super(itemIcon(AllItems.SAND_PAPER.get()), emptyBackground(177, 55));
+	public PolishingCategory(Info<SandPaperPolishingRecipe> info) {
+		super(info);
 		renderedSandpaper = AllItems.SAND_PAPER.asStack();
-	}
-
-	@Override
-	public Class<? extends SandPaperPolishingRecipe> getRecipeClass() {
-		return SandPaperPolishingRecipe.class;
 	}
 
 	@Override
@@ -61,7 +57,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 
 
 		CompoundTag tag = renderedSandpaper.getOrCreateTag();
-		tag.put("Polishing", matchingStacks[0].serializeNBT());
+		tag.put("Polishing", NBTSerializer.serializeNBTCompound(matchingStacks[0]));
 		tag.putBoolean("JEI", true);
 		GuiGameElement.of(renderedSandpaper)
 				.<GuiGameElement.GuiRenderBuilder>at(getBackground().getWidth() / 2 - 16, 0, 0)

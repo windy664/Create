@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Info;
 import com.simibubi.create.compat.rei.category.animations.AnimatedSpout;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
@@ -43,9 +44,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 
-	public SpoutCategory() {
-		super(doubleItemIcon(AllBlocks.SPOUT, () -> Items.WATER_BUCKET), emptyBackground(177, 80));
-		setCategoryId("spout_filling");
+	public SpoutCategory(CreateRecipeCategory.Info<FillingRecipe> info) {
+		super(info);
 	}
 
 	@SuppressWarnings("UnstableApiUsage")

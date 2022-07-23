@@ -23,8 +23,8 @@ import net.minecraft.network.chat.Component;
 
 public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 
-	public PressingCategory() {
-		super(doubleItemIcon(AllBlocks.MECHANICAL_PRESS, AllItems.IRON_SHEET), emptyBackground(177, 90));
+	public PressingCategory(Info<PressingRecipe> info) {
+		super(info);
 	}
 
 	@Override

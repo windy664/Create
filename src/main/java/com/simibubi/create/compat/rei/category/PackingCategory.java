@@ -1,8 +1,6 @@
 package com.simibubi.create.compat.rei.category;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.rei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.rei.category.animations.AnimatedPress;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
@@ -18,8 +16,6 @@ import java.util.List;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
 
 public class PackingCategory extends BasinCategory {
 

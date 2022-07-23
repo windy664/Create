@@ -20,11 +20,10 @@ import java.util.List;
 
 public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationRecipe> {
 
-	AnimatedDeployer deployer;
+	private final AnimatedDeployer deployer = new AnimatedDeployer();
 
-	public DeployingCategory() {
-		super(itemIcon(AllBlocks.DEPLOYER), emptyBackground(177, 80));
-		deployer = new AnimatedDeployer();
+	public DeployingCategory(Info<DeployerApplicationRecipe> info) {
+		super(info);
 	}
 
 	@Override

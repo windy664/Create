@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.Bottle
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import mezz.jei.api.fabric.ingredients.fluids.IJeiFluidIngredient;
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.nbt.CompoundTag;
@@ -14,14 +15,14 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 
 /* From JEI's Potion item subtype interpreter */
-public class PotionFluidSubtypeInterpreter implements IIngredientSubtypeInterpreter<FluidStack> {
+public class PotionFluidSubtypeInterpreter implements IIngredientSubtypeInterpreter<IJeiFluidIngredient> {
 
 	@Override
-	public String apply(FluidStack ingredient, UidContext context) {
-		if (!ingredient.hasTag())
+	public String apply(IJeiFluidIngredient ingredient, UidContext context) {
+		if (ingredient.getTag().isEmpty())
 			return IIngredientSubtypeInterpreter.NONE;
 
-		CompoundTag tag = ingredient.getOrCreateTag();
+		CompoundTag tag = ingredient.getTag().get();
 		Potion potionType = PotionUtils.getPotion(tag);
 		String potionTypeString = potionType.getName("");
 		String bottleType = NBTHelper.readEnum(tag, "Bottle", BottleType.class)

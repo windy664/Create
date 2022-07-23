@@ -67,7 +67,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			builder
 					.addSlot(RecipeIngredientRole.INPUT, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19)
 					.setBackground(getRenderedSlot(), -1, -1)
-					.addIngredients(FabricTypes.FLUID_STACK, withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()))
+					.addIngredients(FabricTypes.FLUID_STACK, toJei(withImprovedVisibility(fluidIngredient.getMatchingFluidStacks())))
 					.addTooltipCallback(addFluidTooltip(fluidIngredient.getRequiredAmount()));
 			i++;
 		}
@@ -94,7 +94,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			builder
 					.addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
 					.setBackground(getRenderedSlot(), -1, -1)
-					.addIngredient(FabricTypes.FLUID_STACK, withImprovedVisibility(fluidResult))
+					.addIngredient(FabricTypes.FLUID_STACK, toJei(withImprovedVisibility(fluidResult)))
 					.addTooltipCallback(addFluidTooltip(fluidResult.getAmount()));
 			i++;
 		}

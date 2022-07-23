@@ -6,13 +6,10 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllFluids;
-import com.simibubi.create.Create;
 import com.simibubi.create.compat.rei.DoubleItemIcon;
 import com.simibubi.create.compat.rei.EmptyBackground;
 import com.simibubi.create.compat.rei.FluidStackEntryRenderer;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
@@ -27,51 +24,65 @@ import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
+import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
+import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.util.ClientEntryStacks;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 
+import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 
 import net.minecraft.ChatFormatting;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 
 public abstract class CreateRecipeCategory<T extends Recipe<?>> implements DisplayCategory<CreateDisplay<T>> {
 
-	public final List<Supplier<List<Recipe<?>>>> recipes = new ArrayList<>();
-	public final List<Supplier<ItemStack>> recipeCatalysts = new ArrayList<>();
+	protected final CategoryIdentifier<CreateDisplay<T>> type;
+	protected final Component title;
+	protected final Renderer background;
+	protected final Renderer icon;
 
-	protected CategoryIdentifier<CreateDisplay<T>> uid;
-	protected String name;
-	private Renderer icon;
-	private int width, height;
+	private final Supplier<List<T>> recipes;
+	private final List<Supplier<? extends ItemStack>> catalysts;
+
+	private final int width;
+	private final int height;
 
 	public CreateRecipeCategory(Info<T> info) {
+		this.type = info.recipeType();
+		this.title = info.title();
+		this.background = info.background();
 		this.icon = info.icon();
-		this.width = background.getWidth();
-		this.height = background.getHeight();
-	}
-
-	public void setCategoryId(String name) {
-		this.uid = CategoryIdentifier.of(Create.asResource(name));
-		this.name = name;
+		this.recipes = info.recipes();
+		this.catalysts = info.catalysts();
+		this.width = info.width();
+		this.height = info.height();
 	}
 
 	@Override
 	public CategoryIdentifier<CreateDisplay<T>> getCategoryIdentifier() {
-		return uid;
+		return type;
+	}
+
+	public void registerRecipes(DisplayRegistry registry) {
+		for (T recipe : recipes.get()) {
+			registry.add(new CreateDisplay<>(recipe, getCategoryIdentifier()), recipe);
+		}
+	}
+
+	public void registerCatalysts(CategoryRegistry registry) {
+		catalysts.forEach(s -> registry.addWorkstations(type, EntryStack.of(VanillaEntryTypes.ITEM, s.get())));
 	}
 
 	@Override
 	public Component getTitle() {
-		return Lang.translateDirect("recipe." + name);
+		return title;
 	}
 
 	@Override
@@ -261,7 +272,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 	public void draw(T recipe, CreateDisplay<T> display, PoseStack matrixStack, double mouseX, double mouseY) {}
 
-	public record Info<T extends Recipe<?>>(RecipeType<T> recipeType, Component title, Renderer icon, Supplier<List<T>> recipes, List<Supplier<? extends ItemStack>> catalysts) {
+	public record Info<T extends Recipe<?>>(CategoryIdentifier<CreateDisplay<T>> recipeType, Component title, Renderer background, Renderer icon, Supplier<List<T>> recipes, List<Supplier<? extends ItemStack>> catalysts, int width, int height) {
 	}
 
 	public interface Factory<T extends Recipe<?>> {

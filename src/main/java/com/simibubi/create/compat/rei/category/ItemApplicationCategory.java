@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.rei.category.animations.AnimatedKinetics;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
@@ -27,8 +26,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicationRecipe> {
 
-	public ItemApplicationCategory() {
-		super(itemIcon(AllItems.BRASS_HAND), emptyBackground(177, 60));
+	public ItemApplicationCategory(Info<ItemApplicationRecipe> info) {
+		super(info);
 	}
 
 	@Override

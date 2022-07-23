@@ -1,6 +1,11 @@
 package com.simibubi.create.compat.rei;
 
-public class EmptyBackground {
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.client.gui.Renderer;
+
+public class EmptyBackground implements Renderer {
 
 	private int width;
 	private int height;
@@ -19,4 +24,17 @@ public class EmptyBackground {
 		return height;
 	}
 
+	@Override
+	public void render(PoseStack matrices, Rectangle bounds, int mouseX, int mouseY, float delta) {
+	}
+
+	@Override
+	public int getZ() {
+		return 0;
+	}
+
+	@Override
+	public void setZ(int z) {
+
+	}
 }

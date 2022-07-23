@@ -22,40 +22,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRecipe> {
 
-	private ItemStack renderedSandpaper;
+	private final ItemStack renderedSandpaper;
 
-	public PolishingCategory() {
-		super(itemIcon(AllItems.SAND_PAPER), emptyBackground(177, 55));
+	public PolishingCategory(Info<SandPaperPolishingRecipe> info) {
+		super(info);
 		renderedSandpaper = AllItems.SAND_PAPER.asStack();
 	}
-
-//	@Override
-//	public Class<? extends SandPaperPolishingRecipe> getRecipeClass() {
-//		return SandPaperPolishingRecipe.class;
-//	}
-//
-//	@Override
-//	public void setIngredients(SandPaperPolishingRecipe recipe, IIngredients ingredients) {
-//		ingredients.setInputIngredients(recipe.getIngredients());
-//		ingredients.setOutputs(VanillaTypes.ITEM, recipe.getRollableResultsAsItemStacks());
-//	}
-//
-//	@Override
-//	public void setRecipe(IRecipeLayout recipeLayout, SandPaperPolishingRecipe recipe, IIngredients ingredients) {
-//		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-//		List<ProcessingOutput> results = recipe.getRollableResults();
-//
-//		itemStacks.init(0, true, 26, 28);
-//		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
-//			.get(0)
-//			.getItems()));
-//		itemStacks.init(1, false, 131, 28);
-//		itemStacks.set(1, results.get(0)
-//			.getStack());
-//
-//		addStochasticTooltip(itemStacks, results);
-//	}
-
 
 	@Override
 	public void addWidgets(CreateDisplay<SandPaperPolishingRecipe> display, List<Widget> ingredients, Point origin) {

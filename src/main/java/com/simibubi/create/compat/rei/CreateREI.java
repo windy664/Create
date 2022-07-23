@@ -60,9 +60,7 @@ import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRe
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
-import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
-import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
@@ -74,6 +72,7 @@ import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import dev.architectury.fluid.FluidStack;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.RecipeManagerAccessor;
+import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
@@ -81,14 +80,14 @@ import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRegistry;
+import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import mezz.jei.api.fabric.constants.FabricTypes;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.registration.ISubtypeRegistration;
-import mezz.jei.api.runtime.IIngredientManager;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -110,7 +109,6 @@ public class CreateREI implements REIClientPlugin {
 	private static final ResourceLocation ID = Create.asResource("rei_plugin");
 
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
-	private IIngredientManager ingredientManager;
 
 	private void loadCategories() {
 		allCategories.clear();
@@ -232,8 +230,8 @@ public class CreateREI implements REIClientPlugin {
 				.build("block_cutting", BlockCuttingCategory::new),
 
 		woodCutting = builder(CondensedBlockCuttingRecipe.class)
-				.enableIf(c -> c.allowWoodcuttingOnSaw.get() && ModList.get()
-						.isLoaded("druidcraft"))
+				.enableIf(c -> c.allowWoodcuttingOnSaw.get() && FabricLoader.getInstance()
+						.isModLoaded("druidcraft"))
 				.addRecipes(() -> CondensedBlockCuttingRecipe.condenseRecipes(getTypedRecipesExcluding(SawTileEntity.woodcuttingRecipeType.get(), AllRecipeTypes::shouldIgnoreInAutomation)))
 				.catalyst(AllBlocks.MECHANICAL_SAW::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_STAIRS)
@@ -327,21 +325,20 @@ public class CreateREI implements REIClientPlugin {
 	@Override
 	public void registerCategories(CategoryRegistry registry) {
 		loadCategories();
-		allCategories.forEach(registry::add);
-		allCategories.forEach(createRecipeCategory -> registry.removePlusButton(createRecipeCategory.getCategoryIdentifier()));
-		allCategories.forEach(c -> c.recipeCatalysts.forEach(s -> registry.addWorkstations(c.getCategoryIdentifier(), EntryStack.of(VanillaEntryTypes.ITEM, s.get()))));
+		allCategories.forEach(category -> {
+			registry.add(category);
+			registry.removePlusButton(category.getCategoryIdentifier()); // FIXME RECIPE VIEWERS
+			category.registerCatalysts(registry);
+		});
 	}
 
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
-		allCategories.forEach(c -> c.recipes.forEach(s -> {
-			for (Recipe<?> recipe : s.get()) {
-				registry.add(new CreateDisplay<>(recipe, c.getCategoryIdentifier()), recipe);
-			}
-		}));
+		allCategories.forEach(c -> c.registerRecipes(registry));
 
 		List<CraftingRecipe> recipes = ToolboxColoringRecipeMaker.createRecipes().toList();
-		for (Object recipe : recipes) {
+
+		for (CraftingRecipe recipe : recipes) { // FIXME RECIPE VIEWERS this is so jank
 			Collection<Display> displays = registry.tryFillDisplay(recipe);
 			for (Display display : displays) {
 				if (Objects.equals(display.getCategoryIdentifier(), BuiltinPlugin.CRAFTING)) {
@@ -366,13 +363,13 @@ public class CreateREI implements REIClientPlugin {
 		registry.register(new BlueprintTransferHandler());
 	}
 
-	@Override
-	public void registerFluidSubtypes(ISubtypeRegistration registration) {
-		PotionFluidSubtypeInterpreter interpreter = new PotionFluidSubtypeInterpreter();
-		PotionFluid potionFluid = AllFluids.POTION.get();
-		registration.registerSubtypeInterpreter(FabricTypes.FLUID_STACK, potionFluid.getSource(), interpreter);
-		registration.registerSubtypeInterpreter(FabricTypes.FLUID_STACK, potionFluid.getFlowing(), interpreter);
-	}
+//	@Override // FIXME RECIPE VIEWERS
+//	public void registerFluidSubtypes(ISubtypeRegistration registration) {
+//		PotionFluidSubtypeInterpreter interpreter = new PotionFluidSubtypeInterpreter();
+//		PotionFluid potionFluid = AllFluids.POTION.get();
+//		registration.registerSubtypeInterpreter(FabricTypes.FLUID_STACK, potionFluid.getSource(), interpreter);
+//		registration.registerSubtypeInterpreter(FabricTypes.FLUID_STACK, potionFluid.getFlowing(), interpreter);
+//	}
 
 	@Override
 	public void registerEntries(EntryRegistry registry) {
@@ -394,8 +391,11 @@ public class CreateREI implements REIClientPlugin {
 		private final Class<? extends T> recipeClass;
 		private Predicate<CRecipes> predicate = cRecipes -> true;
 
-		private IDrawable background;
-		private IDrawable icon;
+		private Renderer background;
+		private Renderer icon;
+
+		private int width;
+		private int height;
 
 		private final List<Consumer<List<T>>> recipeListConsumers = new ArrayList<>();
 		private final List<Supplier<? extends ItemStack>> catalysts = new ArrayList<>();
@@ -498,7 +498,7 @@ public class CreateREI implements REIClientPlugin {
 				.asItem()));
 		}
 
-		public CategoryBuilder<T> icon(IDrawable icon) {
+		public CategoryBuilder<T> icon(Renderer icon) {
 			this.icon = icon;
 			return this;
 		}
@@ -513,13 +513,30 @@ public class CreateREI implements REIClientPlugin {
 			return this;
 		}
 
-		public CategoryBuilder<T> background(IDrawable background) {
+		public CategoryBuilder<T> background(Renderer background) {
 			this.background = background;
 			return this;
 		}
 
 		public CategoryBuilder<T> emptyBackground(int width, int height) {
 			background(new EmptyBackground(width, height));
+			dimensions(width, height);
+			return this;
+		}
+
+		public CategoryBuilder<T> width(int width) {
+			this.width = width;
+			return this;
+		}
+
+		public CategoryBuilder<T> height(int height) {
+			this.height = height;
+			return this;
+		}
+
+		public CategoryBuilder<T> dimensions(int width, int height) {
+			width(width);
+			height(height);
 			return this;
 		}
 
@@ -532,15 +549,19 @@ public class CreateREI implements REIClientPlugin {
 						for (Consumer<List<T>> consumer : recipeListConsumers)
 							consumer.accept(recipes);
 					}
-					return (List<Recipe<?>>) recipes;
+					return recipes;
 				};
 			} else {
 				recipesSupplier = () -> Collections.emptyList();
 			}
 
+			if (width <= 0 || height <= 0) {
+				Create.LOGGER.warn("Create REI category [{}] has weird dimensions: {}x{}", name, width, height);
+			}
+
 			CreateRecipeCategory.Info<T> info = new CreateRecipeCategory.Info<>(
-					new mezz.jei.api.recipe.RecipeType<>(Create.asResource(name), recipeClass),
-					Lang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts);
+					CategoryIdentifier.of(Create.asResource(name)),
+					Lang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts, width, height);
 			CreateRecipeCategory<T> category = factory.create(info);
 			allCategories.add(category);
 			return category;
