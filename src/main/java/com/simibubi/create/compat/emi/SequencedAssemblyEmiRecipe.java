@@ -4,8 +4,6 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.world.item.crafting.RecipeType;
-import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -66,7 +64,7 @@ public class SequencedAssemblyEmiRecipe extends CreateEmiRecipe<SequencedAssembl
 		int x = sx;
 		int index = 0;
 		for (SequencedRecipe<?> recipe : recipe.getSequence()) {
-			SequencedAssemblySubCategory category = getSubCategory(recipe);
+			EmiSequencedAssemblySubCategory category = getSubCategory(recipe);
 			category.addWidgets(widgets, x, 0, recipe, index++);
 			x += category.getWidth() + margin;
 		}
@@ -99,17 +97,11 @@ public class SequencedAssemblyEmiRecipe extends CreateEmiRecipe<SequencedAssembl
 		});
 	}
 
-	public SequencedAssemblySubCategory getSubCategory(SequencedRecipe<?> recipe) {
-		RecipeType<?> type = recipe.getRecipe().getType();
-		if (type == AllRecipeTypes.PRESSING.getType()) {
-			return new SequencedAssemblySubCategory.AssemblyPressing();
-		} else if (type == AllRecipeTypes.FILLING.getType()) {
-			return new SequencedAssemblySubCategory.AssemblySpouting();
-		} else if (type == AllRecipeTypes.DEPLOYING.getType()) {
-			return new SequencedAssemblySubCategory.AssemblyDeploying();
-		} else if (type == AllRecipeTypes.CUTTING.getType()) {
-			return new SequencedAssemblySubCategory.AssemblyCutting();
-		}
-		return null;
+	public EmiSequencedAssemblySubCategory getSubCategory(SequencedRecipe<?> recipe) {
+		return recipe.getAsAssemblyRecipe()
+				.getJEISubCategory()
+				.emi()
+				.get()
+				.get();
 	}
 }

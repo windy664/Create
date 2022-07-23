@@ -13,10 +13,10 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
-public abstract class SequencedAssemblySubCategory {
+public abstract class EmiSequencedAssemblySubCategory {
 	private final int width;
 
-	public SequencedAssemblySubCategory(int width) {
+	public EmiSequencedAssemblySubCategory(int width) {
 		this.width = width;
 	}
 
@@ -37,7 +37,7 @@ public abstract class SequencedAssemblySubCategory {
 		);
 	}
 
-	public static class AssemblyPressing extends SequencedAssemblySubCategory {
+	public static class AssemblyPressing extends EmiSequencedAssemblySubCategory {
 
 		public AssemblyPressing() {
 			super(25);
@@ -54,7 +54,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 	}
 
-	public static class AssemblySpouting extends SequencedAssemblySubCategory {
+	public static class AssemblySpouting extends EmiSequencedAssemblySubCategory {
 
 		public AssemblySpouting() {
 			super(25);
@@ -74,7 +74,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 	}
 
-	public static class AssemblyDeploying extends SequencedAssemblySubCategory {
+	public static class AssemblyDeploying extends EmiSequencedAssemblySubCategory {
 
 		public AssemblyDeploying() {
 			super(25);
@@ -98,7 +98,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 	}
 
-	public static class AssemblyCutting extends SequencedAssemblySubCategory {
+	public static class AssemblyCutting extends EmiSequencedAssemblySubCategory {
 
 		public AssemblyCutting() {
 			super(25);

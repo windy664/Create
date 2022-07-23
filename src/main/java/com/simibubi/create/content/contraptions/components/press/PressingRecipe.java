@@ -2,13 +2,12 @@ package com.simibubi.create.content.contraptions.components.press;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.compat.rei.category.sequencedAssembly.SequencedAssemblySubCategory;
+import com.simibubi.create.compat.recipeViewerCommon.SequencedAssemblySubCategoryType;
 import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
@@ -62,8 +61,8 @@ public class PressingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
 	}
 
 	@Override
-	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
-		return () -> SequencedAssemblySubCategory.AssemblyPressing::new;
+	public SequencedAssemblySubCategoryType getJEISubCategory() {
+		return SequencedAssemblySubCategoryType.PRESSING;
 	}
 
 }

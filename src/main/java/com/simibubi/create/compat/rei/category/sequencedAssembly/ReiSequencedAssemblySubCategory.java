@@ -1,7 +1,6 @@
 package com.simibubi.create.compat.rei.category.sequencedAssembly;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.Create;
 import com.simibubi.create.compat.rei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.rei.category.animations.AnimatedDeployer;
 import com.simibubi.create.compat.rei.category.animations.AnimatedPress;
@@ -17,25 +16,21 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
-import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 
 import static com.simibubi.create.compat.rei.category.CreateRecipeCategory.basicSlot;
-import static com.simibubi.create.compat.rei.category.CreateRecipeCategory.point;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 
-public abstract class SequencedAssemblySubCategory {
+public abstract class ReiSequencedAssemblySubCategory {
 
 	private int width;
 
-	public SequencedAssemblySubCategory(int width) {
+	public ReiSequencedAssemblySubCategory(int width) {
 		this.width = width;
 	}
 
@@ -53,7 +48,7 @@ public abstract class SequencedAssemblySubCategory {
 
 	public abstract void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index);
 
-	public static class AssemblyPressing extends SequencedAssemblySubCategory {
+	public static class AssemblyPressing extends ReiSequencedAssemblySubCategory {
 
 		AnimatedPress press;
 
@@ -74,7 +69,7 @@ public abstract class SequencedAssemblySubCategory {
 
 	}
 
-	public static class AssemblySpouting extends SequencedAssemblySubCategory {
+	public static class AssemblySpouting extends ReiSequencedAssemblySubCategory {
 
 		AnimatedSpout spout;
 
@@ -109,7 +104,7 @@ public abstract class SequencedAssemblySubCategory {
 
 	}
 
-	public static class AssemblyDeploying extends SequencedAssemblySubCategory {
+	public static class AssemblyDeploying extends ReiSequencedAssemblySubCategory {
 
 		AnimatedDeployer deployer;
 
@@ -151,7 +146,7 @@ public abstract class SequencedAssemblySubCategory {
 
 	}
 
-	public static class AssemblyCutting extends SequencedAssemblySubCategory {
+	public static class AssemblyCutting extends ReiSequencedAssemblySubCategory {
 
 		AnimatedSaw saw;
 

@@ -12,7 +12,7 @@ import net.minecraft.core.Registry;
 import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
+import com.simibubi.create.compat.jei.category.sequencedAssembly.JeiSequencedAssemblySubCategory;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -34,7 +34,7 @@ import net.minecraft.resources.ResourceLocation;
 @ParametersAreNonnullByDefault
 public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAssemblyRecipe> {
 
-	Map<ResourceLocation, SequencedAssemblySubCategory> subCategories = new HashMap<>();
+	Map<ResourceLocation, JeiSequencedAssemblySubCategory> subCategories = new HashMap<>();
 
 	public SequencedAssemblyCategory(Info<SequencedAssemblyRecipe> info) {
 		super(info);
@@ -70,17 +70,18 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		int x = width / -2 + getBackground().getWidth() / 2;
 
 		for (SequencedRecipe<?> sequencedRecipe : recipe.getSequence()) {
-			SequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
+			JeiSequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
 			subCategory.setRecipe(builder, sequencedRecipe, focuses, x);
 			x += subCategory.getWidth() + margin;
 		}
 	}
 
-	private SequencedAssemblySubCategory getSubCategory(SequencedRecipe<?> sequencedRecipe) {
+	private JeiSequencedAssemblySubCategory getSubCategory(SequencedRecipe<?> sequencedRecipe) {
 		return subCategories.computeIfAbsent(Registry.RECIPE_SERIALIZER
 			.getKey(sequencedRecipe.getRecipe().getSerializer()),
 			rl -> sequencedRecipe.getAsAssemblyRecipe()
 				.getJEISubCategory()
+				.jei()
 				.get()
 				.get());
 
@@ -128,7 +129,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		List<SequencedRecipe<?>> sequence = recipe.getSequence();
 		for (int i = 0; i < sequence.size(); i++) {
 			SequencedRecipe<?> sequencedRecipe = sequence.get(i);
-			SequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
+			JeiSequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
 			int subWidth = subCategory.getWidth();
 			TextComponent component = new TextComponent("" + romans[Math.min(i, 6)]);
 			font.draw(matrixStack, component, font.width(component) / -2 + subWidth / 2, 2, 0x888888);
@@ -184,7 +185,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			List<SequencedRecipe<?>> sequence = recipe.getSequence();
 			for (int i = 0; i < sequence.size(); i++) {
 				SequencedRecipe<?> sequencedRecipe = sequence.get(i);
-				SequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
+				JeiSequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
 				if (relativeX >= 0 && relativeX < subCategory.getWidth()) {
 					tooltip.add(Lang.translateDirect("recipe.assembly.step", i + 1));
 					tooltip.add(sequencedRecipe.getAsAssemblyRecipe()

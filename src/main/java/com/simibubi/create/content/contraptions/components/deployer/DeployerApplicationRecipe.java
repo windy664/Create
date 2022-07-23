@@ -2,22 +2,19 @@ package com.simibubi.create.content.contraptions.components.deployer;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllItemTags;
-import com.simibubi.create.compat.rei.category.sequencedAssembly.SequencedAssemblySubCategory;
+import com.simibubi.create.compat.recipeViewerCommon.SequencedAssemblySubCategoryType;
 import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.utility.Lang;
-import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -26,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.Level;
 
 public class DeployerApplicationRecipe extends ItemApplicationRecipe implements IAssemblyRecipe {
 
@@ -73,8 +69,8 @@ public class DeployerApplicationRecipe extends ItemApplicationRecipe implements 
 	}
 
 	@Override
-	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
-		return () -> SequencedAssemblySubCategory.AssemblyDeploying::new;
+	public SequencedAssemblySubCategoryType getJEISubCategory() {
+		return SequencedAssemblySubCategoryType.DEPLOYING;
 	}
 
 }
