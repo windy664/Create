@@ -3,7 +3,7 @@
   "priority": 1100,
   "package": "com.simibubi.create.foundation.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "create-refmap.json",
+  "refmap": "${archivesBaseName}-refmap.json",
   "mixins": [
     "CustomItemUseEffectsMixin",
     "MapItemSavedDataMixin",

@@ -201,6 +201,10 @@ processResources {
         expand properties
     }
 
+    filesMatching("create.mixins.json") {
+        expand "archivesBaseName": archivesBaseName
+    }
+
     duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
