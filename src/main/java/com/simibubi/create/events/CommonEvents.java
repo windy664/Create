@@ -278,7 +278,6 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
 		UseBlockCallback.EVENT.register(SuperGlueItem::glueItemAlwaysPlacesWhenUsed);
 		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
-		UseBlockCallback.EVENT.register(DisplayLinkBlockItem::gathererItemAlwaysPlacesWhenUsed);
 		UseEntityCallback.EVENT.register(ScheduleItemRetrieval::removeScheduleFromConductor);
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);

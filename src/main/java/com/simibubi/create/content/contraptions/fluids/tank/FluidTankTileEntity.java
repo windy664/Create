@@ -76,7 +76,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		height = 1;
 		width = 1;
 		boiler = new BoilerData();
-		refreshCapability();
+//		refreshCapability(); // fabric: lazy init to prevent access too early
 	}
 
 	protected SmartFluidTank createInventory() {
@@ -642,6 +642,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	@Nullable
 	@Override
 	public Storage<FluidVariant> getFluidStorage(@Nullable Direction direction) {
+		if (exposedTank == null)
+			refreshCapability();
 		return exposedTank;
 	}
 }

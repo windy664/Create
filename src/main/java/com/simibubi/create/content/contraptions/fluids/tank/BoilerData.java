@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
@@ -23,7 +25,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import joptsimple.internal.Strings;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -47,8 +48,8 @@ public class BoilerData {
 	private static final float passiveEngineEfficiency = 1 / 8f;
 
 	// pooled water supply
-	int gatheredSupply;
-	float[] supplyOverTime = new float[10];
+	long gatheredSupply;
+	double[] supplyOverTime = new double[10];
 	int ticksUntilNextSample;
 	int currentIndex;
 
@@ -57,7 +58,7 @@ public class BoilerData {
 	public boolean passiveHeat;
 	public int activeHeat;
 
-	public float waterSupply;
+	public double waterSupply;
 	public int attachedEngines;
 	public int attachedWhistles;
 
@@ -96,10 +97,10 @@ public class BoilerData {
 
 		if (currentIndex == 0) {
 			waterSupply = 0;
-			for (float i : supplyOverTime)
+			for (double i : supplyOverTime)
 				waterSupply = Math.max(i, waterSupply);
 		}
-		
+
 		if (controller instanceof CreativeFluidTankTileEntity)
 			waterSupply = waterSupplyPerLevel * 20;
 
@@ -366,7 +367,7 @@ int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize)
 
 	public CompoundTag write() {
 		CompoundTag nbt = new CompoundTag();
-		nbt.putFloat("Supply", waterSupply);
+		nbt.putDouble("Supply", waterSupply);
 		nbt.putInt("ActiveHeat", activeHeat);
 		nbt.putBoolean("PassiveHeat", passiveHeat);
 		nbt.putInt("Engines", attachedEngines);
@@ -398,7 +399,7 @@ int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize)
 	public class BoilerFluidHandler extends SmartFluidTank {
 
 		public BoilerFluidHandler() {
-			super(10000, (f) -> {});
+			super(10 * FluidConstants.BUCKET, (f) -> {});
 			setFluid(FluidStack.EMPTY);
 		}
 

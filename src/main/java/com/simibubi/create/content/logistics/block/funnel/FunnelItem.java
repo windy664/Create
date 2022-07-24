@@ -22,6 +22,7 @@ public class FunnelItem extends BlockItem implements BlockUseBypassingItem {
 		super(p_i48527_1_, p_i48527_2_);
 	}
 
+	// fabric: handled by BlockUseBypassingItem
 //	public static void funnelItemAlwaysPlacesWhenUsed(PlayerInteractEvent.RightClickBlock event) {
 //		if (event.getItemStack()
 //				.getItem() instanceof FunnelItem)

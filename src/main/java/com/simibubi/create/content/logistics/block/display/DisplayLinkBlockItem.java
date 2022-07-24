@@ -6,6 +6,7 @@ import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 
+import io.github.fabricators_of_create.porting_lib.item.BlockUseBypassingItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -21,26 +22,36 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public class DisplayLinkBlockItem extends BlockItem {
+public class DisplayLinkBlockItem extends BlockItem implements BlockUseBypassingItem {
 
 	public DisplayLinkBlockItem(Block pBlock, Properties pProperties) {
 		super(pBlock, pProperties);
 	}
 
-	public static InteractionResult gathererItemAlwaysPlacesWhenUsed(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+	// fabric: handled by BlockUseBypassingItem
+//	public static InteractionResult gathererItemAlwaysPlacesWhenUsed(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+//		ItemStack usedItem = player.getItemInHand(hand);
+//		if (usedItem.getItem() instanceof DisplayLinkBlockItem) {
+//			if (AllBlocks.DISPLAY_LINK.has(level
+//				.getBlockState(hitResult.getBlockPos())))
+//				return InteractionResult.PASS;
+//			return InteractionResult.FAIL;
+//		}
+//		return InteractionResult.PASS;
+//	}
+
+	@Override
+	public boolean shouldBypass(BlockState state, BlockPos pos, Level level, Player player, InteractionHand hand) {
 		ItemStack usedItem = player.getItemInHand(hand);
 		if (usedItem.getItem() instanceof DisplayLinkBlockItem) {
-			if (AllBlocks.DISPLAY_LINK.has(level
-				.getBlockState(hitResult.getBlockPos())))
-				return InteractionResult.PASS;
-			return InteractionResult.FAIL;
+			if (!AllBlocks.DISPLAY_LINK.has(state))
+				return true;
 		}
-		return InteractionResult.PASS;
+		return false;
 	}
 
 	@Override
