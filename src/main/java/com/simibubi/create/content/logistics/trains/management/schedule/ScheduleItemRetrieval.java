@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ScheduleItemRetrieval {
 
-	public static InteractionResult removeScheduleFromConductor(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
+	public static InteractionResult removeScheduleFromConductor(Player player, InteractionHand hand, Entity entity) {
 		if (player == null || entity == null)
 			return InteractionResult.PASS;
 		if (player.isSpectator())

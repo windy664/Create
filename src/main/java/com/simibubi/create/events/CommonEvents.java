@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkHandler;
 import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 
 import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
+import io.github.fabricators_of_create.porting_lib.event.common.EntityInteractCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityReadExtraDataCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.MinecartEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
@@ -278,7 +279,7 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
 		UseBlockCallback.EVENT.register(SuperGlueItem::glueItemAlwaysPlacesWhenUsed);
 		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
-		UseEntityCallback.EVENT.register(ScheduleItemRetrieval::removeScheduleFromConductor);
+		EntityInteractCallback.EVENT.register(ScheduleItemRetrieval::removeScheduleFromConductor); // note: fabric event fires too late, use porting lib one
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);
