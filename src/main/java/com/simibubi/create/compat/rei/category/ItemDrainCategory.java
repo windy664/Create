@@ -103,13 +103,13 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				.get(0)
 				.getItems());
 
-		ingredients.add(basicSlot(point(origin.x + 132, origin.y + 8))
+		ingredients.add(basicSlot(origin.x + 132, origin.y + 8)
 				.markOutput()
 				.entries(EntryIngredient.of(createFluidEntryStack(fluidOutput))));
-		ingredients.add(basicSlot(point(origin.x + 27, origin.y + 8))
+		ingredients.add(basicSlot(origin.x + 27, origin.y + 8)
 				.markOutput()
 				.entries(EntryIngredients.ofItemStacks(matchingIngredients)));
-		ingredients.add(basicSlot(point(origin.x + 132, origin.y + 27))
+		ingredients.add(basicSlot(origin.x + 132, origin.y + 27)
 				.markInput()
 				.entries(display.getOutputEntries().get(0)));
 

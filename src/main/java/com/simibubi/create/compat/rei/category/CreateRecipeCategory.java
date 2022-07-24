@@ -115,18 +115,6 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 		return AllGuiTextures.JEI_CHANCE_SLOT;
 	}
 
-	public static EmptyBackground emptyBackground(int width, int height) {
-		return new EmptyBackground(width, height);
-	}
-
-	public static Renderer doubleItemIcon(Supplier<? extends ItemLike> item1, Supplier<? extends ItemLike> item2) {
-		return new DoubleItemIcon(() -> new ItemStack(item1.get()), () -> new ItemStack(item2.get()));
-	}
-
-	public static Renderer itemIcon(Supplier<? extends ItemLike> item) {
-		return new DoubleItemIcon(() -> new ItemStack(item.get()), () -> ItemStack.EMPTY);
-	}
-
 	public static void addStochasticTooltip(List<Widget> itemStacks, List<ProcessingOutput> results) {
 		addStochasticTooltip(itemStacks, results, 1);
 	}
@@ -166,13 +154,12 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 //		};
 //	}
 
-	@Deprecated // in favor of basicSlot(int, int)
-	public static Slot basicSlot(Point point) {
-		return Widgets.createSlot(point).disableBackground();
-	}
-
 	public static Slot basicSlot(int x, int y) {
 		return Widgets.createSlot(point(x, y)).disableBackground();
+	}
+
+	public static Slot basicSlot(int x, int y, Point origin) {
+		return Widgets.createSlot(point(origin.getX() + x, origin.getY() + y)).disableBackground();
 	}
 
 	@SuppressWarnings("all")
@@ -196,6 +183,12 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 	public static dev.architectury.fluid.FluidStack convertToREIFluid(FluidStack stack) {
 		return dev.architectury.fluid.FluidStack.create(stack.getFluid(), stack.getAmount(), stack.getTag());
+	}
+
+	public static List<dev.architectury.fluid.FluidStack> convertToREIFluids(List<FluidStack> stacks) {
+		List<dev.architectury.fluid.FluidStack> newFluids = new ArrayList<>();
+		stacks.forEach(fluidStack -> newFluids.add(convertToREIFluid(fluidStack)));
+		return newFluids;
 	}
 
 	public static void addFluidTooltip(List<Widget> fluidStacks, List<FluidIngredient> inputs,

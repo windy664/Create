@@ -19,12 +19,12 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 
-import static com.simibubi.create.compat.rei.category.CreateRecipeCategory.basicSlot;
-
 import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.ChatFormatting;
+
+import static com.simibubi.create.compat.rei.category.CreateRecipeCategory.basicSlot;
 
 public abstract class ReiSequencedAssemblySubCategory {
 

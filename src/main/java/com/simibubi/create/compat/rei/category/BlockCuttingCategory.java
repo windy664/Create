@@ -30,7 +30,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 
 	@Override
 	public void addWidgets(CreateDisplay<CondensedBlockCuttingRecipe> display, List<Widget> ingredients, Point origin) {
-		ingredients.add(basicSlot(point(origin.x + 5, origin.y + 5))
+		ingredients.add(basicSlot(origin.x + 5, origin.y + 5)
 				.markInput()
 				.entries(display.getInputEntries().get(0)));
 
@@ -39,7 +39,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 			int xOffset = (outputIndex % 5) * 19;
 			int yOffset = (outputIndex / 5) * -19;
 
-			ingredients.add(basicSlot(point(origin.x + 78 + xOffset, origin.y + 48 + yOffset))
+			ingredients.add(basicSlot(origin.x + 78 + xOffset, origin.y + 48 + yOffset)
 					.markOutput()
 					.entries(EntryIngredients.ofItemStacks(results.get(outputIndex))));
 		}

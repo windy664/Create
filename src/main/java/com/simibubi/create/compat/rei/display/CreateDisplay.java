@@ -5,9 +5,13 @@ import java.util.List;
 
 import com.simibubi.create.Create;
 
+import com.simibubi.create.compat.rei.category.CreateRecipeCategory;
+import com.simibubi.create.content.contraptions.processing.BasinRecipe;
+
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -21,7 +25,10 @@ public class CreateDisplay<R extends Recipe<?>> implements Display {
 		this.recipe = recipe;
 		this.uid = id;
 		this.input = EntryIngredients.ofIngredients(recipe.getIngredients());
-		this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
+		if (recipe instanceof BasinRecipe basinRecipe)
+			this.output = Collections.singletonList(EntryIngredients.of(VanillaEntryTypes.FLUID, CreateRecipeCategory.convertToREIFluids(basinRecipe.getFluidResults())));
+		else
+			this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
 	}
 
 	public R getRecipe() {

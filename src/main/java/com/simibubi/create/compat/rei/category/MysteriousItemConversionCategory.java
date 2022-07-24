@@ -33,10 +33,10 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 	@Override
 	public void addWidgets(CreateDisplay<ConversionRecipe> display, List<Widget> ingredients, Point origin) {
 		List<ProcessingOutput> results = display.getRecipe().getRollableResults();
-		ingredients.add(basicSlot(point(origin.x + 27, origin.y + 17))
+		ingredients.add(basicSlot(origin.x + 27, origin.y + 17)
 				.markInput()
 				.entries(display.getInputEntries().get(0)));
-		ingredients.add(basicSlot(point(origin.x + 132, origin.y + 17))
+		ingredients.add(basicSlot(origin.x + 132, origin.y + 17)
 				.markOutput()
 				.entries(EntryIngredients.of(results.get(0).getStack())));
 	}
