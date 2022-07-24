@@ -52,7 +52,7 @@ public class MechanicalCraftingEmiRecipe extends CreateEmiRecipe<CraftingRecipe>
 	private int getHeight() {
 		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getHeight() : 1;
 	}
-	
+
 	@Override
 	public void addWidgets(WidgetHolder widgets) {
 		float scale = getScale();
@@ -63,11 +63,13 @@ public class MechanicalCraftingEmiRecipe extends CreateEmiRecipe<CraftingRecipe>
 		addTexture(widgets, AllGuiTextures.JEI_SHADOW, 113, 38);
 
 		for (int i = 0; i < recipe.getIngredients().size(); i++) {
-			int row = i / getWidth();
-			int col = i % getWidth();
-			widgets.add(new CrafterSlotWidget(input.get(row * getWidth() + col),
-				(int) ((col * 19 + xOff) * scale), (int) ((row * 19 + yOff) * scale)))
-				.backgroundTexture(AllGuiTextures.JEI_SLOT.location, AllGuiTextures.JEI_SLOT.startX, AllGuiTextures.JEI_SLOT.startY);
+			if (!recipe.getIngredients().get(i).isEmpty()) {
+				int row = i / getWidth();
+				int col = i % getWidth();
+				widgets.add(new CrafterSlotWidget(input.get(row * getWidth() + col),
+								(int) ((col * 19 + xOff) * scale), (int) ((row * 19 + yOff) * scale)))
+						.backgroundTexture(AllGuiTextures.JEI_SLOT.location, AllGuiTextures.JEI_SLOT.startX, AllGuiTextures.JEI_SLOT.startY);
+			}
 		}
 
 		addSlot(widgets, output.get(0), 134, 81).recipeContext(this);

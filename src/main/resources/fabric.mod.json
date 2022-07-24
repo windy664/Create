@@ -31,7 +31,7 @@
     "emi": [
       "com.simibubi.create.compat.emi.CreateEmiPlugin"
     ],
-    "rei": [
+    "rei_client": [
       "com.simibubi.create.compat.rei.CreateREI"
     ],
     "jei_mod_plugin": [

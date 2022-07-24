@@ -55,13 +55,13 @@ public class PackingCategory extends BasinCategory {
 		int rows = size == 4 ? 2 : 3;
 		while (i < size) {
 			Ingredient ingredient = ingredients2.get(i);
-			ingredients.add(basicSlot(new Point(origin.x + (rows == 2 ? 26 : 17) + (i % rows) * 19 + 1, origin.y + 50 - (i / rows) * 19 + 1))
+			ingredients.add(basicSlot(origin.x + (rows == 2 ? 26 : 17) + (i % rows) * 19 + 1, origin.y + 50 - (i / rows) * 19 + 1)
 					.markInput()
 					.entries(EntryIngredients.ofIngredient(ingredient)));
 			i++;
 		}
 
-		ingredients.add(basicSlot(point(origin.x + 142, origin.y + 51))
+		ingredients.add(basicSlot(origin.x + 142, origin.y + 51)
 				.markOutput()
 				.entries(EntryIngredients.of(recipe.getResultItem())));
 	}

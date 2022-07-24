@@ -68,7 +68,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 				stacks.add(stack);
 			}
 
-			widgets.add(basicSlot(point(origin.x + 17 + xOffset + (i % 3) * 19, origin.y + 51 - (i / 3) * 19 + yOffset)).markInput().entries(EntryIngredients.ofItemStacks(stacks)));
+			widgets.add(basicSlot(origin.x + 17 + xOffset + (i % 3) * 19, origin.y + 51 - (i / 3) * 19 + yOffset).markInput().entries(EntryIngredients.ofItemStacks(stacks)));
 		}
 
 		int j;
@@ -76,7 +76,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			int i2 = i + j;
 			List<FluidStack> stacks = fluidIngredients.get(j)
 					.getMatchingFluidStacks();
-			widgets.add(basicSlot(point(origin.x + 17 + xOffset + (i2 % 3) * 19, origin.y + 51 - (i2 / 3) * 19 + yOffset))
+			widgets.add(basicSlot(origin.x + 17 + xOffset + (i2 % 3) * 19, origin.y + 51 - (i2 / 3) * 19 + yOffset)
 					.markInput()
 					.entries(EntryIngredient.of(createFluidEntryStack(stacks.get(0)))));
 		}
@@ -93,12 +93,12 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			int yPosition = -19 * (outputIndex / 2) + 50 + yOffset;
 
 			if (itemOutputs.size() > outputIndex) {
-				widgets.add(basicSlot(point(origin.x + xPosition + 1, origin.y + yPosition + yOffset + 1))
+				widgets.add(basicSlot(origin.x + xPosition + 1, origin.y + yPosition + yOffset + 1)
 						.markOutput()
 						.entries(EntryIngredients.of(itemOutputs.get(outputIndex))));
 				i++;
 			} else {
-				widgets.add(basicSlot(point(origin.x + xPosition + 1, origin.y + yPosition + 1 + yOffset))
+				widgets.add(basicSlot(origin.x + xPosition + 1, origin.y + yPosition + 1 + yOffset)
 						.markOutput()
 						.entries(EntryIngredient.of(createFluidEntryStack(fluidOutputs.get(outputIndex - itemOutputs.size())))));
 				j++;
@@ -110,11 +110,11 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE)) {
-			widgets.add(basicSlot(point(origin.x + 134, origin.y + 81)).markInput().entries(EntryIngredients.of(AllBlocks.BLAZE_BURNER.asStack())));
+			widgets.add(basicSlot(origin.x + 134, origin.y + 81).markInput().entries(EntryIngredients.of(AllBlocks.BLAZE_BURNER.asStack())));
 			i++;
 		}
 		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED)) {
-			widgets.add(basicSlot(point(origin.x + 153, origin.y + 81)).markOutput().entries(EntryIngredients.of(AllItems.BLAZE_CAKE.asStack())));
+			widgets.add(basicSlot(origin.x + 153, origin.y + 81).markOutput().entries(EntryIngredients.of(AllItems.BLAZE_CAKE.asStack())));
 			i++;
 		}
 	}

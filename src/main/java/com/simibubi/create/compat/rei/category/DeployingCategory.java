@@ -39,7 +39,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 			return tooltip;
 		}));
 		ingredients.add(input);
-		ingredients.add(basicSlot(new Point(origin.getX() + 51, origin.getY() + 5))
+		ingredients.add(basicSlot(origin.getX() + 51, origin.getY() + 5)
 				.markInput()
 				.entries(EntryIngredients.ofIngredient(recipe.getRequiredHeldItem())));
 		Slot output = basicSlot(origin.getX() + 132, origin.getY() + 51)

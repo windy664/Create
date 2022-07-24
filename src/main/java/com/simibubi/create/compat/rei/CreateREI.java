@@ -117,7 +117,7 @@ public class CreateREI implements REIClientPlugin {
 
 		milling = builder(AbstractCrushingRecipe.class).addTypedRecipes(AllRecipeTypes.MILLING)
 		.catalyst(AllBlocks.MILLSTONE::get).doubleItemIcon(AllBlocks.MILLSTONE.get(), AllItems.WHEAT_FLOUR.get())
-				.emptyBackground(177, 53)
+				.emptyBackground(177, 59)
 		.build("milling", MillingCategory::new),
 
 		crushing = builder(AbstractCrushingRecipe.class)
@@ -125,28 +125,28 @@ public class CreateREI implements REIClientPlugin {
 				.addTypedRecipesExcluding(AllRecipeTypes.MILLING::getType, AllRecipeTypes.CRUSHING::getType)
 				.catalyst(AllBlocks.CRUSHING_WHEEL::get)
 				.doubleItemIcon(AllBlocks.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get())
-				.emptyBackground(177, 100)
+				.emptyBackground(177, 106)
 				.build("crushing", CrushingCategory::new),
 
 		pressing = builder(PressingRecipe.class)
 				.addTypedRecipes(AllRecipeTypes.PRESSING)
 				.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllItems.IRON_SHEET.get())
-				.emptyBackground(177, 70)
+				.emptyBackground(177, 88)
 				.build("pressing", PressingCategory::new),
 
 		washing = builder(SplashingRecipe.class)
 				.addTypedRecipes(AllRecipeTypes.SPLASHING)
 				.catalystStack(ProcessingViaFanCategory.getFan("fan_washing"))
 				.doubleItemIcon(AllItems.PROPELLER.get(), Items.WATER_BUCKET)
-				.emptyBackground(178, 72)
+				.emptyBackground(178, 75)
 				.build("fan_washing", FanWashingCategory::new),
 
 		smoking = builder(SmokingRecipe.class)
 				.addTypedRecipes(() -> RecipeType.SMOKING)
 				.catalystStack(ProcessingViaFanCategory.getFan("fan_smoking"))
 				.doubleItemIcon(AllItems.PROPELLER.get(), Items.CAMPFIRE)
-				.emptyBackground(178, 72)
+				.emptyBackground(178, 75)
 				.build("fan_smoking", FanSmokingCategory::new),
 
 		blasting = builder(AbstractCookingRecipe.class)
@@ -155,14 +155,14 @@ public class CreateREI implements REIClientPlugin {
 				.removeRecipes(() -> RecipeType.SMOKING)
 				.catalystStack(ProcessingViaFanCategory.getFan("fan_blasting"))
 				.doubleItemIcon(AllItems.PROPELLER.get(), Items.LAVA_BUCKET)
-				.emptyBackground(178, 72)
+				.emptyBackground(178, 75)
 				.build("fan_blasting", FanBlastingCategory::new),
 
 		haunting = builder(HauntingRecipe.class)
 				.addTypedRecipes(AllRecipeTypes.HAUNTING)
 				.catalystStack(ProcessingViaFanCategory.getFan("fan_haunting"))
 				.doubleItemIcon(AllItems.PROPELLER.get(), Items.SOUL_CAMPFIRE)
-				.emptyBackground(178, 72)
+				.emptyBackground(178, 75)
 				.build("fan_haunting", FanHauntingCategory::new),
 
 		mixing = builder(BasinRecipe.class)
@@ -170,7 +170,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 				.catalyst(AllBlocks.BASIN::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get())
-				.emptyBackground(177, 103)
+				.emptyBackground(177, 110)
 				.build("mixing", MixingCategory::standard),
 
 		autoShapeless = builder(BasinRecipe.class)
@@ -183,7 +183,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 				.catalyst(AllBlocks.BASIN::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), Items.CRAFTING_TABLE)
-				.emptyBackground(177, 85)
+				.emptyBackground(177, 94)
 				.build("automatic_shapeless", MixingCategory::autoShapeless),
 
 		brewing = builder(BasinRecipe.class)
@@ -191,7 +191,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 				.catalyst(AllBlocks.BASIN::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), Blocks.BREWING_STAND)
-				.emptyBackground(177, 103)
+				.emptyBackground(177, 110)
 				.build("automatic_brewing", MixingCategory::autoBrewing),
 
 		packing = builder(BasinRecipe.class)
@@ -199,7 +199,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 				.catalyst(AllBlocks.BASIN::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllBlocks.BASIN.get())
-				.emptyBackground(177, 103)
+				.emptyBackground(177, 110)
 				.build("packing", PackingCategory::standard),
 
 		autoSquare = builder(BasinRecipe.class)
@@ -211,14 +211,14 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 				.catalyst(AllBlocks.BASIN::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), Blocks.CRAFTING_TABLE)
-				.emptyBackground(177, 85)
+				.emptyBackground(177, 94)
 				.build("automatic_packing", PackingCategory::autoSquare),
 
 		sawing = builder(CuttingRecipe.class)
 				.addTypedRecipes(AllRecipeTypes.CUTTING)
 				.catalyst(AllBlocks.MECHANICAL_SAW::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_LOG)
-				.emptyBackground(177, 70)
+				.emptyBackground(177, 76)
 				.build("sawing", SawingCategory::new),
 
 		blockCutting = builder(CondensedBlockCuttingRecipe.class)
@@ -226,7 +226,7 @@ public class CreateREI implements REIClientPlugin {
 				.addRecipes(() -> CondensedBlockCuttingRecipe.condenseRecipes(getTypedRecipesExcluding(RecipeType.STONECUTTING, AllRecipeTypes::shouldIgnoreInAutomation)))
 				.catalyst(AllBlocks.MECHANICAL_SAW::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.STONE_BRICK_STAIRS)
-				.emptyBackground(177, 70)
+				.emptyBackground(177, 76)
 				.build("block_cutting", BlockCuttingCategory::new),
 
 		woodCutting = builder(CondensedBlockCuttingRecipe.class)
@@ -235,7 +235,7 @@ public class CreateREI implements REIClientPlugin {
 				.addRecipes(() -> CondensedBlockCuttingRecipe.condenseRecipes(getTypedRecipesExcluding(SawTileEntity.woodcuttingRecipeType.get(), AllRecipeTypes::shouldIgnoreInAutomation)))
 				.catalyst(AllBlocks.MECHANICAL_SAW::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_STAIRS)
-				.emptyBackground(177, 70)
+				.emptyBackground(177, 76)
 				.build("wood_cutting", BlockCuttingCategory::new),
 
 		polishing = builder(SandPaperPolishingRecipe.class)
@@ -250,7 +250,7 @@ public class CreateREI implements REIClientPlugin {
 				.addTypedRecipes(AllRecipeTypes.ITEM_APPLICATION)
 				.addRecipes(LogStrippingFakeRecipes::createRecipes)
 				.itemIcon(AllItems.BRASS_HAND.get())
-				.emptyBackground(177, 60)
+				.emptyBackground(177, 66)
 				.build("item_application", ItemApplicationCategory::new),
 
 		deploying = builder(DeployerApplicationRecipe.class)
@@ -261,7 +261,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.DEPOT::get)
 				.catalyst(AllItems.BELT_CONNECTOR::get)
 				.itemIcon(AllBlocks.DEPLOYER.get())
-				.emptyBackground(177, 70)
+				.emptyBackground(177, 76)
 				.build("deploying", DeployingCategory::new),
 
 		spoutFilling = builder(FillingRecipe.class)
@@ -269,7 +269,7 @@ public class CreateREI implements REIClientPlugin {
 				.addRecipeListConsumer(recipes -> SpoutCategory.consumeRecipes(recipes::add))
 				.catalyst(AllBlocks.SPOUT::get)
 				.doubleItemIcon(AllBlocks.SPOUT.get(), Items.WATER_BUCKET)
-				.emptyBackground(177, 70)
+				.emptyBackground(177, 76)
 				.build("spout_filling", SpoutCategory::new),
 
 		draining = builder(EmptyingRecipe.class)
@@ -277,7 +277,7 @@ public class CreateREI implements REIClientPlugin {
 				.addTypedRecipes(AllRecipeTypes.EMPTYING)
 				.catalyst(AllBlocks.ITEM_DRAIN::get)
 				.doubleItemIcon(AllBlocks.ITEM_DRAIN.get(), Items.WATER_BUCKET)
-				.emptyBackground(177, 50)
+				.emptyBackground(177, 56)
 				.build("draining", ItemDrainCategory::new),
 
 		autoShaped = builder(CraftingRecipe.class)
@@ -302,7 +302,7 @@ public class CreateREI implements REIClientPlugin {
 		seqAssembly = builder(SequencedAssemblyRecipe.class)
 				.addTypedRecipes(AllRecipeTypes.SEQUENCED_ASSEMBLY)
 				.itemIcon(AllItems.PRECISION_MECHANISM.get())
-				.emptyBackground(180, 115)
+				.emptyBackground(180, 120)
 				.build("sequenced_assembly", SequencedAssemblyCategory::new),
 
 		mysteryConversion = builder(ConversionRecipe.class)
@@ -338,7 +338,7 @@ public class CreateREI implements REIClientPlugin {
 
 		List<CraftingRecipe> recipes = ToolboxColoringRecipeMaker.createRecipes().toList();
 
-		for (CraftingRecipe recipe : recipes) { // FIXME RECIPE VIEWERS this is so jank
+		for (CraftingRecipe recipe : recipes) {
 			Collection<Display> displays = registry.tryFillDisplay(recipe);
 			for (Display display : displays) {
 				if (Objects.equals(display.getCategoryIdentifier(), BuiltinPlugin.CRAFTING)) {

@@ -32,15 +32,13 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 
 	@Override
 	public void addWidgets(CreateDisplay<ItemApplicationRecipe> display, List<Widget> ingredients, Point origin) {
-		ingredients.add(basicSlot( 27, 38)
+		ingredients.add(basicSlot( 27, 38, origin)
 				.markInput()
-				.entries(EntryIngredients.ofItemStacks(Arrays.asList(display.getRecipe().getProcessedItem()
-						.getItems()))));
+				.entries(EntryIngredients.ofIngredient(display.getRecipe().getProcessedItem())));
 
-		Slot slot = basicSlot(51, 5)
+		Slot slot = basicSlot(51, 5, origin)
 				.markInput()
-				.entries(EntryIngredients.ofItemStacks(Arrays.asList(display.getRecipe().getRequiredHeldItem()
-								.getItems())));
+				.entries(EntryIngredients.ofIngredient(display.getRecipe().getRequiredHeldItem()));
 		ClientEntryStacks.setTooltipProcessor(slot.getCurrentEntry(), (entryStack, tooltip) -> {
 			if (display.getRecipe().shouldKeepHeldItem())
 					tooltip.add(Lang.translateDirect("recipe.deploying.not_consumed")
@@ -48,7 +46,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 			return tooltip;
 		});
 
-		Slot outputSlot = basicSlot(132, 38)
+		Slot outputSlot = basicSlot(132, 38, origin)
 				.markOutput()
 				.entries(display.getOutputEntries().get(0));
 		ClientEntryStacks.setTooltipProcessor(outputSlot.getCurrentEntry(), (entryStack, tooltip) -> {
