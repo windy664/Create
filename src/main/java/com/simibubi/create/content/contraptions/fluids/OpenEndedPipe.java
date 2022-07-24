@@ -196,7 +196,8 @@ public class OpenEndedPipe extends FlowSource {
 		if (!FluidHelper.hasBlockState(fluid.getFluid()) || fluid.getFluid().is(Milk.MILK_FLUID_TAG)) // fabric: milk logic is different
 			return true;
 
-		((LevelExtensions) world).updateSnapshots(ctx);
+		// fabric: note - this is possibly prone to issues but follows what forge does.
+		// collisions completely ignore simulation / transactions.
 		if (!fluidState.isEmpty() && fluidState.getType() != fluid.getFluid()) {
 			FluidReactions.handlePipeSpillCollision(world, outputPos, fluid.getFluid(), fluidState);
 			return false;
