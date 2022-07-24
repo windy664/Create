@@ -421,7 +421,7 @@ public class AllBlocks {
 	public static final BlockEntry<ClutchBlock> CLUTCH = REGISTRATE.block("clutch", ClutchBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.properties(BlockBehaviour.Properties::noOcclusion)
-		.properties(p -> p.color(MaterialColor.PODZOL))
+		.properties(p -> p.color(MaterialColor.PODZOL).isRedstoneConductor((state, world, pos) -> false)) // fabric: the vanilla check takes precedence if true, proper behavior depends on WeakPowerCheckingBlock
 		.transform(BlockStressDefaults.setNoImpact())
 		.transform(axeOrPickaxe())
 		.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, AssetLookup.forPowered(c, p)))
@@ -432,7 +432,7 @@ public class AllBlocks {
 	public static final BlockEntry<GearshiftBlock> GEARSHIFT = REGISTRATE.block("gearshift", GearshiftBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.properties(BlockBehaviour.Properties::noOcclusion)
-		.properties(p -> p.color(MaterialColor.PODZOL))
+		.properties(p -> p.color(MaterialColor.PODZOL).isRedstoneConductor((state, world, pos) -> false)) // fabric: see clutch above
 		.transform(BlockStressDefaults.setNoImpact())
 		.transform(axeOrPickaxe())
 		.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, AssetLookup.forPowered(c, p)))
