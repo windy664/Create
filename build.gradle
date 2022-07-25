@@ -1,6 +1,5 @@
-//file:noinspection GroovyAssignabilityCheck
-//file:noinspection GroovyAccessibility
 //file:noinspection GradlePackageVersionRange
+//file:noinspection GrMethodMayBeStatic
 plugins {
     id "fabric-loom" version "0.12-SNAPSHOT"
     id "maven-publish"
@@ -12,11 +11,10 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
-ext.buildNumber = System.getenv("GITHUB_RUN_NUMBER")
+String buildNumber = System.getenv("GITHUB_RUN_NUMBER")
+boolean dev = System.getenv("RELEASE") == null || System.getenv("RELEASE") == "false"
 
-boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
-
-version = mod_version + (dev && buildNumber != null ? "-${buildNumber}" : '')
+version = mod_version + (dev && buildNumber != null ? "-${buildNumber}" : "")
 group = project.maven_group
 archivesBaseName = "create-${project.minecraft_version}"
 
@@ -50,90 +48,112 @@ repositories {
 }
 
 dependencies {
-    // dev env
-    minecraft("com.mojang:minecraft:${project.minecraft_version}")
-    mappings loom.layered {
-//        it.addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.18.2+build.24:v2")) // https://lambdaurora.dev/tools/import_quilt.html
-//        it.parchment("org.parchmentmc.data:parchment-1.18.2:2022.07.10@zip") // https://ldtteam.jfrog.io/ui/native/parchmentmc-public/org/parchmentmc/data/parchment-1.18.1/BLEEDING-SNAPSHOT
-        it.officialMojangMappings {
-            setNameSyntheticMembers(false)
-        }
-    }
-    modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") { exclude(group: "net.fabricmc.fabric-api") }
-    modApi("me.shedaniel.cloth:basic-math:0.6.0")
-    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
-    modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
-    modLocalRuntime("maven.modrinth:lazydfu:0.1.2")
-    modLocalRuntime("maven.modrinth:lithium:mc1.18.2-0.7.9")
-    modCompileOnly("maven.modrinth:sandwichable:1.2+1.18.2")
-    modImplementation("dev.emi:trinkets:${project.trinkets_version}") { exclude(group: "com.terraformersmc") }
+    setup(dependencies)
+    devEnv(dependencies)
+    compat(dependencies)
+    testMods(dependencies)
+    dependencies(dependencies)
+}
 
-    // Recipe Viewers
-    // REI
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") { transitive = false }
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
+// actual dependencies for Create
+def dependencies(DependencyHandler deps) {
+    deps.modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+
+    deps.modImplementation(deps.include("io.github.fabricators_of_create:Porting-Lib:${project.port_lib_version}+${project.minecraft_version}-dev.${project.port_lib_hash}"))
+    deps.modImplementation(deps.include("me.alphamode:ForgeTags:${project.forge_tags_version}"))
+    deps.modImplementation(deps.include("com.electronwill.night-config:core:${project.night_config_core_version}"))
+    deps.modImplementation(deps.include("com.electronwill.night-config:toml:${project.night_config_toml_version}"))
+    deps.modImplementation(deps.include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_id}"))
+    deps.modImplementation(deps.include("com.tterrag.registrate_fabric:Registrate:${project.registrate_version}"))
+    deps.modImplementation(deps.include("com.jozufozu.flywheel:flywheel-fabric-${flywheel_minecraft_version}:${project.flywheel_version}"))
+    deps.modImplementation(deps.include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
+    deps.modImplementation(deps.include("dev.cafeteria:fake-player-api:${project.fake_player_api_version}"))
+    deps.modImplementation(deps.include("io.github.tropheusj:milk-lib:${project.milk_lib_version}"))
+    deps.modImplementation(deps.include("me.luligabi:NoIndium:${project.no_indium_version}"))
+    deps.implementation(deps.include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
+}
+
+// initial project setup
+def setup(DependencyHandler deps) {
+    deps.minecraft("com.mojang:minecraft:${project.minecraft_version}")
+    deps.mappings(loom.layered {
+        it.addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${project.minecraft_version}+build.${project.qm_version}:v2"))
+        it.parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip")
+        it.officialMojangMappings { nameSyntheticMembers = false }
+    })
+    deps.modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
+}
+
+// setup mods that enhance development
+def devEnv(DependencyHandler deps) {
+    deps.modLocalRuntime("maven.modrinth:lazydfu:0.1.2")
+    deps.modLocalRuntime("maven.modrinth:lithium:mc1.18.2-0.7.9")
+}
+
+// setup mods that are available for compatibility reasons
+def compat(DependencyHandler deps) {
+    recipeViewers(deps)
+    deps.modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+    deps.modCompileOnly("maven.modrinth:sandwichable:1.2+1.18.2")
+    deps.modImplementation("dev.emi:trinkets:${project.trinkets_version}") { exclude(group: "com.terraformersmc") }
+}
+
+// setup the three recipe viewer mods
+def recipeViewers(DependencyHandler deps) {
+    // EMI
+    deps.modCompileOnly("dev.emi:emi:${project.emi_version}") { transitive = false }
     // JEI
     // FIXME remapping issues with API jar
-//    modCompileOnly("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}") { transitive = false }
-//    modCompileOnly("mezz.jei:jei-${project.minecraft_version}-fabric-api:${project.jei_version}") { transitive = false }
-    modCompileOnly("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}") { transitive = false }
-    // EMI
-    modCompileOnly("dev.emi:emi:${project.emi_version}") { transitive = false }
+//    deps.modCompileOnly("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}") { transitive = false }
+//    deps.modCompileOnly("mezz.jei:jei-${project.minecraft_version}-fabric-api:${project.jei_version}") { transitive = false }
+    deps.modCompileOnly("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}") { transitive = false }
+    // REI
+    deps.modCompileOnly("me.shedaniel.cloth:basic-math:0.6.0") { transitive = false }
+    deps.modCompileOnly("dev.architectury:architectury-fabric:${project.architectury_version}") { transitive = false }
+    deps.modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") { transitive = false }
+    deps.modCompileOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
 
-    def recipeViewer = project.recipe_viewer
+    String recipeViewer = project.recipe_viewer
     if (recipeViewer == "emi") {
-        modRuntimeOnly("dev.emi:emi:${project.emi_version}")  { transitive = false }
-    } else if (recipeViewer == "rei") {
-        modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
+        deps.modLocalRuntime("dev.emi:emi:${project.emi_version}") { transitive = false }
     } else if (recipeViewer == "jei") {
-        modRuntimeOnly("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}") { transitive = false }
+        deps.modLocalRuntime("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}") { transitive = false }
+    } else if (recipeViewer == "rei") {
+        deps.modLocalRuntime("me.shedaniel.cloth:basic-math:0.6.0") { transitive = false }
+        deps.modLocalRuntime("dev.architectury:architectury-fabric:${project.architectury_version}") { transitive = false }
+        deps.modLocalRuntime("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") { exclude(group: "net.fabricmc.fabric-api"); transitive = false }
+        deps.modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
     } else {
         println("unknown recipe viewer: $recipeViewer")
     }
+}
 
-    // uncomment these to test
+// mods that can be uncommented to test in development
+def testMods(DependencyHandler deps) {
+//    deps.modLocalRuntime("maven.modrinth:kibe:1.9.7-BETA+1.18") { transitive = false }
+//    deps.modLocalRuntime("io.github.ladysnake:PlayerAbilityLib:1.5.0") { transitive = false }
+//    deps.modLocalRuntime("net.fabricmc:fabric-language-kotlin:1.8.0+kotlin.1.7.0")
 
-//    modLocalRuntime("maven.modrinth:kibe:1.9.7-BETA+1.18") { transitive = false }
-//    modLocalRuntime("io.github.ladysnake:PlayerAbilityLib:1.5.0") { transitive = false }
-//    modLocalRuntime("net.fabricmc:fabric-language-kotlin:1.8.0+kotlin.1.7.0")
+//    deps.modLocalRuntime("maven.modrinth:better-biome-blend:1.18.2-1.3.5-fabric")
 
-//    modLocalRuntime("maven.modrinth:better-biome-blend:1.18.2-1.3.5-fabric")
+//    deps.modLocalRuntime("maven.modrinth:sandwichable:1.2+1.18.2")
+//    deps.modLocalRuntime("maven.modrinth:mealapi:0.3+1.18")
+//    deps.modLocalRuntime("dev.lambdaurora:spruceui:3.3.1+1.17")
 
-//    modLocalRuntime("maven.modrinth:sandwichable:1.2+1.18.2")
-//    modLocalRuntime("maven.modrinth:mealapi:0.3+1.18")
-//    modLocalRuntime("dev.lambdaurora:spruceui:3.3.1+1.17")
+//    deps.modLocalRuntime("maven.modrinth:sodium:mc1.18.2-0.4.1")
+//    deps.modLocalRuntime("org.joml:joml:1.10.4")
 
-//    modLocalRuntime("maven.modrinth:sodium:mc1.18.2-0.4.1")
-//    localRuntime("org.joml:joml:1.10.4")
+//    deps.modLocalRuntime("maven.modrinth:phosphor:mc1.18.x-0.8.1")
 
-//    modLocalRuntime("maven.modrinth:phosphor:mc1.18.x-0.8.1")
+//    deps.modLocalRuntime("maven.modrinth:starlight:1.0.2+1.18.2")
 
-//    modLocalRuntime("maven.modrinth:starlight:1.0.2+1.18.2")
+//    deps.modLocalRuntime("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT"
 
-//    modLocalRuntime("vazkii.botania:Botania:1.18.1-428-FABRIC-SNAPSHOT"
+//    deps.modLocalRuntime("curse.maven:nbt-crafting-314633:3707208") { transitive = false }
 
-//    modLocalRuntime("curse.maven:nbt-crafting-314633:3707208") { transitive = false }
+//    deps.modLocalRuntime("curse.maven:alloygery-573592:3762142") { transitive = false }
 
-//    modLocalRuntime("curse.maven:alloygery-573592:3762142") { transitive = false }
-
-//    modLocalRuntime("curse.maven:xl-packets-fabric-390168:3527187") { transitive = false }
-
-    // dependencies
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-
-    modImplementation(include("io.github.fabricators_of_create:Porting-Lib:${project.port_lib_version}+${project.minecraft_version}-dev.${project.port_lib_hash}"))
-    modImplementation(include("me.alphamode:ForgeTags:${project.forge_tags_version}"))
-    modImplementation(include("com.electronwill.night-config:core:${project.night_config_core_version}"))
-    modImplementation(include("com.electronwill.night-config:toml:${project.night_config_toml_version}"))
-    modImplementation(include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_id}")) { transitive = false }
-    modImplementation(include("com.tterrag.registrate_fabric:Registrate:${project.registrate_version}"))
-    modImplementation(include("com.jozufozu.flywheel:flywheel-fabric-${flywheel_minecraft_version}:${project.flywheel_version}"))
-    modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
-    modImplementation(include("dev.cafeteria:fake-player-api:${project.fake_player_api_version}"))
-    modImplementation(include("io.github.tropheusj:milk-lib:${project.milk_lib_version}"))
-    modImplementation(include("me.luligabi:NoIndium:${project.no_indium_version}"))
-    implementation(include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
+//    deps.modLocalRuntime("curse.maven:xl-packets-fabric-390168:3527187") { transitive = false }
 }
 
 task buildOrPublish {
