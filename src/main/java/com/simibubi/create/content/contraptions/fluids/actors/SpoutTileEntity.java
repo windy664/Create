@@ -135,7 +135,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		}
 
 		tank.getPrimaryHandler()
-			.setFluid(fluid);
+			.setFluid(fluid.isEmpty() ? FluidStack.EMPTY : fluid); // fabric: if the FluidStack is empty it should actually be empty
 		sendSplash = true;
 		notifyUpdate();
 		return HOLD;
@@ -217,9 +217,13 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				long fillBlock = customProcess.fillBlock(level, worldPosition.below(2), this, currentFluidInTank, false);
 				customProcess = null;
 				if (fillBlock > 0) {
+					// fabric: if the FluidStack is empty it should actually be empty
+					FluidStack newStack = FluidHelper.copyStackWithAmount(currentFluidInTank,
+							currentFluidInTank.getAmount() - fillBlock);
+					if (newStack.isEmpty())
+						newStack = FluidStack.EMPTY;
 					tank.getPrimaryHandler()
-						.setFluid(FluidHelper.copyStackWithAmount(currentFluidInTank,
-							currentFluidInTank.getAmount() - fillBlock));
+						.setFluid(newStack);
 					sendSplash = true;
 					notifyUpdate();
 				}
