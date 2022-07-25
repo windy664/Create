@@ -5,16 +5,15 @@ plugins {
     id "maven-publish"
     id "io.github.juuxel.loom-quiltflower" version "1.+" // Quiltflower, a better decompiler
     id "org.quiltmc.quilt-mappings-on-loom" version "4.2.0" // Quilt Mappings, for parameters and javadoc. Also hashed mojmap.
-    id "io.github.p03w.machete" version "1.+" // automatic jar compressing on build
+    id "io.github.p03w.machete" version "1.1.4" // automatic jar compressing on build
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 String buildNumber = System.getenv("GITHUB_RUN_NUMBER")
-boolean dev = System.getenv("RELEASE") == null || System.getenv("RELEASE") == "false"
+version = mod_version + (buildNumber != null ? "-${buildNumber}" : "")
 
-version = mod_version + (dev && buildNumber != null ? "-${buildNumber}" : "")
 group = project.maven_group
 archivesBaseName = "create-${project.minecraft_version}"
 
@@ -154,6 +153,12 @@ def testMods(DependencyHandler deps) {
 //    deps.modLocalRuntime("curse.maven:alloygery-573592:3762142") { transitive = false }
 
 //    deps.modLocalRuntime("curse.maven:xl-packets-fabric-390168:3527187") { transitive = false }
+}
+
+machete {
+    if (buildNumber == null) {
+        enabled = false // don't optimize local builds
+    }
 }
 
 task buildOrPublish {
