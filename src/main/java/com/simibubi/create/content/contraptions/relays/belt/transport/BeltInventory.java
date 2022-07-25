@@ -187,6 +187,12 @@ public class BeltInventory {
 // Belt Funnels
 			if (BeltFunnelInteractionHandler.checkForFunnels(this, currentItem, nextOffset))
 				continue;
+			if (currentItem.stack.isEmpty()) {
+				// fabric: don't hold on to empty stacks, they cause crashes
+				// there's already a check for this above, but checkForFunnels modifies the stack
+				iterator.remove();
+				continue;
+			}
 			if (noMovement)
 				continue;
 
