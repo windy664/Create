@@ -2,9 +2,6 @@ package com.simibubi.create.content.contraptions.components.deployer;
 
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
-import com.simibubi.create.foundation.utility.fabric.ListEntryConsumer;
-import com.simibubi.create.foundation.utility.fabric.ListEntrySupplier;
-
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -163,8 +160,9 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 
 		@Override
 		public StorageView<ItemVariant> next() {
-			Supplier<ItemStack> heldGetter = new ListEntrySupplier<>(index, te.overflowItems);
-			Consumer<ItemStack> heldSetter = new ListEntryConsumer<>(index, te.overflowItems);
+			final int indexFinal = this.index;
+			Supplier<ItemStack> heldGetter = () -> te.overflowItems.get(indexFinal);
+			Consumer<ItemStack> heldSetter = (stack) -> te.overflowItems.set(indexFinal, stack);
 			Predicate<ItemStack> mayExtract = stack -> true;
 			if (index == -1) {
 				heldGetter = player::getMainHandItem;
