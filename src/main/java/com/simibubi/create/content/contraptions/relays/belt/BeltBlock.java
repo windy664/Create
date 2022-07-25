@@ -218,6 +218,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				ItemStack inEntity = itemEntity.getItem();
 				try (Transaction t = TransferUtil.getTransaction()) {
 					long inserted = handler.insert(ItemVariant.of(inEntity), inEntity.getCount(), t);
+					if (inserted == 0)
+						return;
 					if (inEntity.getCount() == inserted) {
 						itemEntity.discard();
 					} else {

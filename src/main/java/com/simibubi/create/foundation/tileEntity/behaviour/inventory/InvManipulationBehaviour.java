@@ -97,6 +97,8 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<ItemV
 			long inserted = inventory.insert(ItemVariant.of(stack), stack.getCount(), t);
 			if (!shouldSimulate) t.commit();
 			long remainder = stack.getCount() - inserted;
+			if (remainder == 0)
+				return ItemStack.EMPTY;
 			stack = stack.copy();
 			stack.setCount((int) remainder);
 			return stack;

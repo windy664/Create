@@ -208,6 +208,9 @@ public class DepotBehaviour extends TileEntityBehaviour {
 		}
 
 		ItemStack previousItem = heldItem.stack;
+		if (previousItem.isEmpty()) { // fabric: this is not allowed
+			return false;
+		}
 		ItemStack afterInsert = tileEntity.getBehaviour(DirectBeltInputBehaviour.TYPE)
 			.tryExportingToBeltFunnel(previousItem, null, false);
 		if (afterInsert == null)
