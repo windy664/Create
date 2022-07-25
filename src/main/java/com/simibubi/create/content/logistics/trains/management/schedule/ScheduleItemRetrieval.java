@@ -25,46 +25,46 @@ public class ScheduleItemRetrieval {
 
 	public static InteractionResult removeScheduleFromConductor(Player player, InteractionHand hand, Entity entity) {
 		if (player == null || entity == null)
-			return InteractionResult.PASS;
+			return null;
 		if (player.isSpectator())
-			return InteractionResult.PASS;
+			return null;
 
 		Entity rootVehicle = entity.getRootVehicle();
 		if (!(rootVehicle instanceof CarriageContraptionEntity))
-			return InteractionResult.PASS;
+			return null;
 
 		ItemStack itemStack = player.getItemInHand(hand);
 		if (AllItems.SCHEDULE.isIn(itemStack) && entity instanceof Wolf wolf) {
 			itemStack.getItem()
 				.interactLivingEntity(itemStack, player, wolf, hand);
-			return InteractionResult.PASS;
+			return null;
 		}
 
 		if (player.level.isClientSide)
-			return InteractionResult.PASS;
+			return null;
 		if (hand == InteractionHand.OFF_HAND)
-			return InteractionResult.PASS;
+			return null;
 
 		CarriageContraptionEntity cce = (CarriageContraptionEntity) rootVehicle;
 		Contraption contraption = cce.getContraption();
 		if (!(contraption instanceof CarriageContraption cc))
-			return InteractionResult.PASS;
+			return null;
 
 		Train train = cce.getCarriage().train;
 		if (train == null)
-			return InteractionResult.PASS;
+			return null;
 		if (train.runtime.getSchedule() == null)
-			return InteractionResult.PASS;
+			return null;
 
 		Integer seatIndex = contraption.getSeatMapping()
 			.get(entity.getUUID());
 		if (seatIndex == null)
-			return InteractionResult.PASS;
+			return null;
 		BlockPos seatPos = contraption.getSeats()
 			.get(seatIndex);
 		Couple<Boolean> directions = cc.conductorSeats.get(seatPos);
 		if (directions == null)
-			return InteractionResult.PASS;
+			return null;
 
 		if (train.runtime.paused && !train.runtime.completed) {
 			train.runtime.paused = false;
