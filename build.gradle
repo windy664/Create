@@ -62,6 +62,12 @@ def dependencies(DependencyHandler deps) {
     deps.modImplementation(deps.include("me.alphamode:ForgeTags:${project.forge_tags_version}"))
     deps.modImplementation(deps.include("com.electronwill.night-config:core:${project.night_config_core_version}"))
     deps.modImplementation(deps.include("com.electronwill.night-config:toml:${project.night_config_toml_version}"))
+    deps.modImplementation("com.github.AlphaMode:fakeconfig:master-SNAPSHOT") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    deps.modImplementation("com.github.AlphaMode:fakeconfigtoml:master-SNAPSHOT") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
     deps.modImplementation(deps.include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_id}"))
     deps.modImplementation(deps.include("com.tterrag.registrate_fabric:Registrate:${project.registrate_version}"))
     deps.modImplementation(deps.include("com.jozufozu.flywheel:flywheel-fabric-${flywheel_minecraft_version}:${project.flywheel_version}"))

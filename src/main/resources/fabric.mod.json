@@ -66,10 +66,6 @@
   },
 
   "custom": {
-    "/* you need to enable this (and move it out of 'custom') if you want to run datagen because yes */ provides": [
-      "com_electronwill_night-config_core",
-      "com_electronwill_night-config_toml"
-    ],
     "loom:injected_interfaces": {
       "net/minecraft/class_1688": [ "com/simibubi/create/foundation/utility/fabric/AbstractMinecartExtensions" ]
     }
