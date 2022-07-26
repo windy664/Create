@@ -95,6 +95,12 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 			return super.iterator(transaction);
 		}
 
+		@Override
+		public Iterable<? extends StorageView<FluidVariant>> iterable(TransactionContext transaction) {
+			TransactionCallback.onSuccess(transaction, this::keepAlive);
+			return super.iterable(transaction);
+		}
+
 		public void keepAlive() {
 			onContentTransferred();
 		}

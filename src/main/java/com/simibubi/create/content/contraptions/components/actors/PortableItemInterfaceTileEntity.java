@@ -97,6 +97,12 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 			return super.iterator(transaction);
 		}
 
+		@Override
+		public Iterable<? extends StorageView<ItemVariant>> iterable(TransactionContext transaction) {
+			TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
+			return super.iterable(transaction);
+		}
+
 		private void setWrapped(Storage<ItemVariant> wrapped) {
 			this.wrapped = wrapped;
 		}
