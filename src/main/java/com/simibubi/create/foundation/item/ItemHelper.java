@@ -172,23 +172,38 @@ public class ItemHelper {
 
 	public static ItemStack extract(Storage<ItemVariant> inv, Predicate<ItemStack> test, ExtractionCountMode mode, int amount,
 		boolean simulate) {
-		long extracted = 0;
+		int extracted = 0;
 		ItemVariant extracting = null;
+		List<ItemVariant> otherTargets = null;
+
 		if (inv.supportsExtraction()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
 				for (StorageView<ItemVariant> view : inv.iterable(t)) {
 					if (view.isResourceBlank()) continue;
-					ItemVariant variant = extracting == null ? view.getResource() : extracting;
-					if (!test.test(variant.toStack())) continue;
-					if (extracting == null) extracting = variant;
-					long toExtract = Math.min(amount - extracted, view.getAmount());
-					long actualExtracted = view.extract(variant, toExtract, t);
+					ItemVariant contained = view.getResource();
+					// amount stored, amount needed, or max size, whichever is lowest.
+					int amountToExtractFromThisSlot = Math.min((int) view.getAmount(), Math.min(amount - extracted, contained.getItem().getMaxStackSize()));
+					if (!test.test(contained.toStack(amountToExtractFromThisSlot)))
+						continue;
+					if (extracting == null) {
+						extracting = contained; // we found a target
+					}
+					if (contained != extracting) {
+						// multiple types passed the test
+						if (otherTargets == null) {
+							otherTargets = new ArrayList<>();
+						}
+						otherTargets.add(contained);
+						continue;
+					}
+					ItemVariant toExtract = extracting;
+					long actualExtracted = view.extract(toExtract, amountToExtractFromThisSlot, t);
 					if (actualExtracted == 0) continue;
 					extracted += actualExtracted;
 					if (extracted == amount) {
 						if (!simulate)
 							t.commit();
-						return variant.toStack((int) extracted);
+						return toExtract.toStack(extracted);
 					}
 				}
 
@@ -196,7 +211,22 @@ public class ItemHelper {
 				if (mode == ExtractionCountMode.UPTO) { // we don't need to get exactly the amount requested
 					if (extracting != null && extracted != 0) {
 						if (!simulate) t.commit();
-						return extracting.toStack((int) extracted);
+						return extracting.toStack(extracted);
+					}
+				} else {
+					// let's try a different target
+					if (otherTargets != null) {
+						t.abort();
+						try (Transaction nested = TransferUtil.getTransaction()) {
+							for (ItemVariant target : otherTargets) {
+								// try again, but now only match the existing matches we've found
+								ItemStack successfulExtraction = extract(inv, target::matches, mode, amount, simulate);
+								if (!successfulExtraction.isEmpty()) {
+									if (!simulate) nested.commit();
+									return successfulExtraction;
+								}
+							}
+						}
 					}
 				}
 			}
