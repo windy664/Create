@@ -301,11 +301,11 @@ public class DepotBehaviour extends TileEntityBehaviour {
 				return inserted;
 
 			ItemStack returned = ItemStack.EMPTY;
+			snapshotParticipant.updateSnapshots(ctx);
 			if (remainingSpace < inserted.getCount()) {
 				returned = ItemHandlerHelper.copyStackWithSize(heldItem.stack, inserted.getCount() - remainingSpace);
 				TransportedItemStack copy = heldItem.copy();
 				copy.stack.setCount(remainingSpace);
-				snapshotParticipant.updateSnapshots(ctx);
 				if (this.heldItem != null)
 					incoming.add(copy);
 				else
@@ -328,8 +328,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 		}
 		snapshotParticipant.updateSnapshots(ctx);
 		this.heldItem = heldItem;
-		// TODO TRAIN PORT
-//		onHeldInserted.accept(heldItem.stack);
+		TransactionCallback.onSuccess(ctx, () -> onHeldInserted.accept(heldItem.stack));
 		return ItemStack.EMPTY;
 	}
 
