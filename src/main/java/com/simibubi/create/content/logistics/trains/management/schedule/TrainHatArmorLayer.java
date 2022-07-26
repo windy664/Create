@@ -70,7 +70,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			}
 
 			ModelPart head = getHeadPart(model);
-			if (head != null && (Object) head instanceof ModelPartAccessor partAccess) {
+			if (head != null) {
 				head.translateAndRotate(ms);
 
 				if (model instanceof WolfModel)
@@ -81,7 +81,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 				ms.translate(offset.x / 16f, offset.y / 16f, offset.z / 16f);
 
 				if (!head.isEmpty()) {
-					Cube cube = partAccess.porting_lib$cubes().get(0);
+					Cube cube = ((ModelPartAccessor) (Object) head).porting_lib$cubes().get(0);
 					ms.translate(offset.x / 16f, (cube.minY - cube.maxY + offset.y) / 16f, offset.z / 16f);
 					float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / 8f;
 					ms.scale(max, max, max);
