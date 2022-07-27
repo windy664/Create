@@ -1,6 +1,9 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes;
 
 import java.util.List;
+
+import com.simibubi.create.compat.emi.CreateEmiAnimations;
+
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;

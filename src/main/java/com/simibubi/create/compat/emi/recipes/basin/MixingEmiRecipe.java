@@ -1,14 +1,17 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes.basin;
 
+import com.simibubi.create.compat.emi.CreateEmiAnimations;
+import com.simibubi.create.compat.emi.recipes.basin.BasinEmiRecipe;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 
+import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.widget.WidgetHolder;
 
-public class PackingEmiRecipe extends BasinEmiRecipe {
+public class MixingEmiRecipe extends BasinEmiRecipe {
 
-	public PackingEmiRecipe(BasinRecipe recipe) {
-		super(CreateEmiPlugin.PACKING, recipe, false);
+	public MixingEmiRecipe(EmiRecipeCategory category, BasinRecipe recipe) {
+		super(category, recipe, false);
 	}
 
 	@Override
@@ -19,6 +22,6 @@ public class PackingEmiRecipe extends BasinEmiRecipe {
 		if (requiredHeat != HeatCondition.NONE) {
 			CreateEmiAnimations.addBlazeBurner(widgets, widgets.getWidth() / 2 + 3, 55, requiredHeat.visualizeAsBlazeBurner());
 		}
-		CreateEmiAnimations.addPress(widgets, widgets.getWidth() / 2 + 3, 40, true);
+		CreateEmiAnimations.addMixer(widgets, widgets.getWidth() / 2 + 3, 40);
 	}
 }

@@ -1,5 +1,7 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes;
 
+import com.simibubi.create.compat.emi.CreateEmiAnimations;
+import com.simibubi.create.compat.emi.CreateEmiPlugin;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -20,7 +22,7 @@ public class AutomaticPackingEmiRecipe extends CreateEmiRecipe<BasinRecipe> {
 		ResourceLocation id = recipe.getId();
 		this.id = new ResourceLocation("emi", "create/automatic_packing/" + id.getNamespace() + "/" + id.getPath());
 	}
-	
+
 	@Override
 	public void addWidgets(WidgetHolder widgets) {
 		addTexture(widgets, AllGuiTextures.JEI_DOWN_ARROW, 136, 32);

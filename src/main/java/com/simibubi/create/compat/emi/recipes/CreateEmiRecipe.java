@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes;
 
 import java.util.List;
 import java.util.function.Consumer;

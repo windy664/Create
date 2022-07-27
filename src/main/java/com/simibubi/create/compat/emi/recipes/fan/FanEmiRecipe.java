@@ -1,6 +1,8 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes.fan;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.compat.emi.CreateEmiAnimations;
+import com.simibubi.create.compat.emi.recipes.CreateEmiRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
@@ -23,7 +25,7 @@ public abstract class FanEmiRecipe<T extends Recipe<?>> extends CreateEmiRecipe<
 		addTexture(widgets, AllGuiTextures.JEI_SHADOW, 43, 39);
 
 		addSlot(widgets, input.get(0), 2, 48);
-		
+
 		addSlot(widgets, output.get(0), 114, 48).recipeContext(this);
 
 		CreateEmiAnimations.addFan(widgets, 34, 33, this::renderAttachedBlock);
@@ -46,10 +48,10 @@ public abstract class FanEmiRecipe<T extends Recipe<?>> extends CreateEmiRecipe<
 			}
 			int size = output.size();
 			int xOff = 1 - Math.min(3, size);
-			
+
 			addSlot(widgets, input.get(0), 21 + 5 * xOff, 48);
 			addTexture(widgets, AllGuiTextures.JEI_LONG_ARROW, 54 + 7 * xOff, 51);
-			
+
 			xOff = 9 * xOff;
 			int yOff = 0;
 			if (output.size() > 3) {

@@ -1,11 +1,13 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.compat.emi.CreateEmiAnimations;
+
 import org.apache.commons.compress.utils.Lists;
 
-import com.simibubi.create.compat.emi.BlockCuttingEmiRecipe.CondensedBlockCuttingRecipe;
+import com.simibubi.create.compat.emi.recipes.BlockCuttingEmiRecipe.CondensedBlockCuttingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 
@@ -19,7 +21,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 
 public class BlockCuttingEmiRecipe extends CreateEmiRecipe<CondensedBlockCuttingRecipe> {
-	
+
 	public BlockCuttingEmiRecipe(EmiRecipeCategory category, CondensedBlockCuttingRecipe recipe) {
 		super(category, recipe, 177, 75);
 		id = null;
@@ -34,9 +36,9 @@ public class BlockCuttingEmiRecipe extends CreateEmiRecipe<CondensedBlockCutting
 	public void addWidgets(WidgetHolder widgets) {
 		addTexture(widgets, AllGuiTextures.JEI_DOWN_ARROW, 31, 6);
 		addTexture(widgets, AllGuiTextures.JEI_SHADOW, 16, 50);
-		
+
 		addSlot(widgets, input.get(0), 4, 8);
-		
+
 		List<List<ItemStack>> results = recipe.getCondensedOutputs();
 		for (int i = 0; i < results.size(); i++) {
 			int x = (i % 5) * 19;

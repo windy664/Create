@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes.basin;
 
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 

@@ -2,6 +2,8 @@ package com.simibubi.create.compat.emi;
 
 import java.util.List;
 import java.util.function.BiFunction;
+
+import com.simibubi.create.compat.emi.recipes.CreateEmiRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;

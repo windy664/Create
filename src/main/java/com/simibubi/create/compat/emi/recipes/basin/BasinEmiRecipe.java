@@ -1,10 +1,11 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes.basin;
 
 import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.compat.emi.recipes.CreateEmiRecipe;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;

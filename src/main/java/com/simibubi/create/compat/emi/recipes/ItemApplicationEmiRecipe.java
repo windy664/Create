@@ -1,5 +1,6 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes;
 
+import com.simibubi.create.compat.emi.CreateEmiPlugin;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
 
 import com.simibubi.create.foundation.gui.AllGuiTextures;

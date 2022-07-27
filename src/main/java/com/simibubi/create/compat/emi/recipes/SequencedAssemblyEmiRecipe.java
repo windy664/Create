@@ -1,6 +1,10 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes;
 
 import java.util.List;
+
+import com.simibubi.create.compat.emi.CreateEmiPlugin;
+import com.simibubi.create.compat.emi.EmiSequencedAssemblySubCategory;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;

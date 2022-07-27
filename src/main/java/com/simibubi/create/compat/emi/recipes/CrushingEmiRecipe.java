@@ -1,5 +1,7 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes;
 
+import com.simibubi.create.compat.emi.CreateEmiAnimations;
+import com.simibubi.create.compat.emi.CreateEmiPlugin;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
@@ -19,12 +21,12 @@ public class CrushingEmiRecipe extends CreateEmiRecipe<AbstractCrushingRecipe> {
 		addTexture(widgets, AllGuiTextures.JEI_DOWN_ARROW, 51, 11);
 
 		addSlot(widgets, input.get(0), 29, 6);
-		
+
 		int xOff = -output.size() * 19 / 2;
 		for (int i = 0; i < output.size(); i++) {
 			addChancedSlot(widgets, output.get(i), 67 + xOff + 19 * i, 82, i).recipeContext(this);
 		}
-		
+
 		CreateEmiAnimations.addCrushingWheels(widgets, 41, 63);
 	}
 }

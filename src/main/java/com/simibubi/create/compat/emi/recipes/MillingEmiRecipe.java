@@ -1,5 +1,7 @@
-package com.simibubi.create.compat.emi;
+package com.simibubi.create.compat.emi.recipes;
 
+import com.simibubi.create.compat.emi.CreateEmiAnimations;
+import com.simibubi.create.compat.emi.CreateEmiPlugin;
 import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
@@ -24,7 +26,7 @@ public class MillingEmiRecipe extends CreateEmiRecipe<MillingRecipe> {
 			int yOff = (i / 2) * -19;
 			addChancedSlot(widgets, output.get(i), 133 + xOff, 27 + yOff, i).recipeContext(this);
 		}
-		
+
 		CreateEmiAnimations.addMillstone(widgets, 46, 45);
 	}
 }
