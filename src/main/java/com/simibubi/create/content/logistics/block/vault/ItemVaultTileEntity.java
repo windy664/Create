@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -286,6 +285,7 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		if (ItemVaultBlock.isVault(state)) { // safety
 			level.setBlock(getBlockPos(), state.setValue(ItemVaultBlock.LARGE, radius > 2), 6);
 		}
+		itemCapability = null;
 		setChanged();
 	}
 
