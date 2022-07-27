@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 645",
+	"_": "Missing Localizations: 648",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -939,8 +939,8 @@
 	"emi.category.create.fan_blasting": "批量熔炼",
 	"emi.category.create.fan_haunting": "批量缠魂",
 	"emi.category.create.mixing": "混合搅拌",
-	"emi.category.create.shapeless": "自动搅拌",
-	"emi.category.create.brewing": "自动酿造",
+	"emi.category.create.automatic_shapeless": "UNLOCALIZED: Automated Shapeless Crafting",
+	"emi.category.create.automatic_brewing": "UNLOCALIZED: Automated Brewing",
 	"emi.category.create.sawing": "切割",
 	"emi.category.create.block_cutting": "方块切割",
 	"emi.category.create.packing": "压块塑形",
@@ -953,6 +953,7 @@
 	"emi.category.create.automatic_shaped": "自动合成",
 	"emi.category.create.mechanical_crafting": "动力合成",
 	"emi.category.create.sandpaper_polishing": "砂纸打磨",
+	"emi.category.create.item_application": "UNLOCALIZED: Manual Item Application",
 
 	"tag.c.ores.zinc": "锌矿石",
 	"tag.c.raw_materials.zinc": "粗锌",

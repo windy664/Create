@@ -938,8 +938,8 @@
 	"emi.category.create.fan_blasting": "Bulk Blasting",
 	"emi.category.create.fan_haunting": "Bulk Haunting",
 	"emi.category.create.mixing": "Mixing",
-	"emi.category.create.shapeless": "Automated Shapeless Crafting",
-	"emi.category.create.brewing": "Automated Brewing",
+	"emi.category.create.automatic_shapeless": "Automated Shapeless Crafting",
+	"emi.category.create.automatic_brewing": "Automated Brewing",
 	"emi.category.create.sawing": "Sawing",
 	"emi.category.create.block_cutting": "Block Cutting",
 	"emi.category.create.packing": "Compacting",
@@ -952,6 +952,7 @@
 	"emi.category.create.automatic_shaped": "Automated Shaped Crafting",
 	"emi.category.create.mechanical_crafting": "Mechanical Crafting",
 	"emi.category.create.sandpaper_polishing": "Sandpaper Polishing",
+	"emi.category.create.item_application": "Manual Item Application",
 
 	"tag.c.ores.zinc": "Zinc Ores",
 	"tag.c.raw_materials.zinc": "Raw Zinc",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 57",
+	"_": "Missing Localizations: 58",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -939,8 +939,8 @@
 	"emi.category.create.fan_blasting": "UNLOCALIZED: Bulk Blasting",
 	"emi.category.create.fan_haunting": "UNLOCALIZED: Bulk Haunting",
 	"emi.category.create.mixing": "UNLOCALIZED: Mixing",
-	"emi.category.create.shapeless": "UNLOCALIZED: Automated Shapeless Crafting",
-	"emi.category.create.brewing": "UNLOCALIZED: Automated Brewing",
+	"emi.category.create.automatic_shapeless": "UNLOCALIZED: Automated Shapeless Crafting",
+	"emi.category.create.automatic_brewing": "UNLOCALIZED: Automated Brewing",
 	"emi.category.create.sawing": "UNLOCALIZED: Sawing",
 	"emi.category.create.block_cutting": "UNLOCALIZED: Block Cutting",
 	"emi.category.create.packing": "UNLOCALIZED: Compacting",
@@ -953,6 +953,7 @@
 	"emi.category.create.automatic_shaped": "UNLOCALIZED: Automated Shaped Crafting",
 	"emi.category.create.mechanical_crafting": "UNLOCALIZED: Mechanical Crafting",
 	"emi.category.create.sandpaper_polishing": "UNLOCALIZED: Sandpaper Polishing",
+	"emi.category.create.item_application": "UNLOCALIZED: Manual Item Application",
 
 	"tag.c.ores.zinc": "UNLOCALIZED: Zinc Ores",
 	"tag.c.raw_materials.zinc": "UNLOCALIZED: Raw Zinc",

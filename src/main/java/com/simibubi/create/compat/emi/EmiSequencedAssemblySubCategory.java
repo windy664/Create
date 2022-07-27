@@ -29,6 +29,7 @@ public abstract class EmiSequencedAssemblySubCategory {
 	public abstract void addWidgets(WidgetHolder widgets, int x, int y, SequencedRecipe<?> recipe, int index);
 
 	// TODO tooltips reference first item in an ingredient, EMI has canonical names for tags, use that instead?
+	// I tried to implement this and Ingredients not exposing tags is painful
 	public static BiFunction<Integer, Integer, List<ClientTooltipComponent>> getTooltip(SequencedRecipe<?> recipe, int index) {
 		return (mouseX, mouseY) -> List.of(
 			ClientTooltipComponent.create(Lang.translateDirect("recipe.assembly.step", index + 1).getVisualOrderText()),

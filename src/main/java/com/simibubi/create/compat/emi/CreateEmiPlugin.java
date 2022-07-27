@@ -1,6 +1,8 @@
 package com.simibubi.create.compat.emi;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -57,6 +59,7 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
@@ -91,54 +94,33 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 
 public class CreateEmiPlugin implements EmiPlugin {
-	public static final EmiRecipeCategory MILLING = new EmiRecipeCategory(
-			Create.asResource("milling"), DoubleItemIcon.of(AllBlocks.MILLSTONE.get(), AllItems.WHEAT_FLOUR.get()));
-	public static final EmiRecipeCategory CRUSHING = new EmiRecipeCategory(
-			Create.asResource("crushing"), DoubleItemIcon.of(AllBlocks.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get()));
-	public static final EmiRecipeCategory PRESSING = new EmiRecipeCategory(
-			Create.asResource("pressing"), DoubleItemIcon.of(AllBlocks.MECHANICAL_PRESS.get(), AllItems.IRON_SHEET.get()));
-	public static final EmiRecipeCategory FAN_WASHING = new EmiRecipeCategory(
-			Create.asResource("fan_washing"), DoubleItemIcon.of(AllItems.PROPELLER.get(), Items.WATER_BUCKET));
-	public static final EmiRecipeCategory FAN_SMOKING = new EmiRecipeCategory(
-			Create.asResource("fan_smoking"), DoubleItemIcon.of(AllItems.PROPELLER.get(), Items.CAMPFIRE));
-	public static final EmiRecipeCategory FAN_BLASTING = new EmiRecipeCategory(
-			Create.asResource("fan_blasting"), DoubleItemIcon.of(AllItems.PROPELLER.get(), Items.LAVA_BUCKET));
-	public static final EmiRecipeCategory FAN_HAUNTING = new EmiRecipeCategory(
-			Create.asResource("fan_haunting"), DoubleItemIcon.of(AllItems.PROPELLER.get(), Items.SOUL_CAMPFIRE));
-	public static final EmiRecipeCategory MIXING = new EmiRecipeCategory(
-			Create.asResource("mixing"), DoubleItemIcon.of(AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get()));
-	public static final EmiRecipeCategory AUTOMATIC_SHAPELESS = new EmiRecipeCategory(
-			Create.asResource("automatic_shapeless"), DoubleItemIcon.of(AllBlocks.MECHANICAL_MIXER.get(), Items.CRAFTING_TABLE));
-	public static final EmiRecipeCategory AUTOMATIC_BREWING = new EmiRecipeCategory(
-			Create.asResource("automatic_brewing"), DoubleItemIcon.of(AllBlocks.MECHANICAL_MIXER.get(), Blocks.BREWING_STAND));
-	public static final EmiRecipeCategory PACKING = new EmiRecipeCategory(
-			Create.asResource("packing"), DoubleItemIcon.of(AllBlocks.MECHANICAL_PRESS.get(), AllBlocks.BASIN.get()));
-	public static final EmiRecipeCategory AUTOMATIC_PACKING = new EmiRecipeCategory(
-			Create.asResource("automatic_packing"), DoubleItemIcon.of(AllBlocks.MECHANICAL_PRESS.get(), Blocks.CRAFTING_TABLE));
-	public static final EmiRecipeCategory SAWING = new EmiRecipeCategory(
-			Create.asResource("sawing"), DoubleItemIcon.of(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_LOG));
-	public static final EmiRecipeCategory BLOCK_CUTTING = new EmiRecipeCategory(
-			Create.asResource("block_cutting"), DoubleItemIcon.of(AllBlocks.MECHANICAL_SAW.get(), Items.STONE_BRICK_STAIRS));
-	public static final EmiRecipeCategory WOOD_CUTTING = new EmiRecipeCategory(
-			Create.asResource("wood_cutting"), DoubleItemIcon.of(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_STAIRS));
-	public static final EmiRecipeCategory SANDPAPER_POLISHING = new EmiRecipeCategory(
-			Create.asResource("sandpaper_polishing"), EmiStack.of(AllItems.SAND_PAPER.get()));
-	public static final EmiRecipeCategory ITEM_APPLICATION = new EmiRecipeCategory(
-			Create.asResource("item_application"), EmiStack.of(AllItems.PRECISION_MECHANISM.get()));
-	public static final EmiRecipeCategory DEPLOYING = new EmiRecipeCategory(
-			Create.asResource("deploying"), EmiStack.of(AllBlocks.DEPLOYER.get()));
-	public static final EmiRecipeCategory SPOUT_FILLING = new EmiRecipeCategory(
-			Create.asResource("spout_filling"), DoubleItemIcon.of(AllBlocks.SPOUT.get(), Items.WATER_BUCKET));
-	public static final EmiRecipeCategory DRAINING = new EmiRecipeCategory(
-			Create.asResource("draining"), DoubleItemIcon.of(AllBlocks.ITEM_DRAIN.get(), Items.WATER_BUCKET));
-	public static final EmiRecipeCategory AUTOMATIC_SHAPED = new EmiRecipeCategory(
-			Create.asResource("automatic_shaped"), EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get()));
-	public static final EmiRecipeCategory MECHANICAL_CRAFTING = new EmiRecipeCategory(
-			Create.asResource("mechanical_crafting"), EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get()));
-	public static final EmiRecipeCategory SEQUENCED_ASSEMBLY = new EmiRecipeCategory(
-			Create.asResource("sequenced_assembly"), EmiStack.of(AllItems.PRECISION_MECHANISM.get()));
-	public static final EmiRecipeCategory MYSTERY_CONVERSION = new EmiRecipeCategory(
-			Create.asResource("mystery_conversion"), EmiStack.of(AllItems.CHROMATIC_COMPOUND.get()));
+	public static final Map<ResourceLocation, EmiRecipeCategory> ALL = new LinkedHashMap<>();
+
+	public static final EmiRecipeCategory
+			MILLING = register("milling", DoubleItemIcon.of(AllBlocks.MILLSTONE.get(), AllItems.WHEAT_FLOUR.get())),
+			CRUSHING = register("crushing", DoubleItemIcon.of(AllBlocks.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get())),
+			PRESSING = register("pressing", DoubleItemIcon.of(AllBlocks.MECHANICAL_PRESS.get(), AllItems.IRON_SHEET.get())),
+			FAN_WASHING = register("fan_washing", DoubleItemIcon.of(AllItems.PROPELLER.get(), Items.WATER_BUCKET)),
+			FAN_SMOKING = register("fan_smoking", DoubleItemIcon.of(AllItems.PROPELLER.get(), Items.CAMPFIRE)),
+			FAN_BLASTING = register("fan_blasting", DoubleItemIcon.of(AllItems.PROPELLER.get(), Items.LAVA_BUCKET)),
+			FAN_HAUNTING = register("fan_haunting", DoubleItemIcon.of(AllItems.PROPELLER.get(), Items.SOUL_CAMPFIRE)),
+			MIXING = register("mixing", DoubleItemIcon.of(AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get())),
+			AUTOMATIC_SHAPELESS = register("automatic_shapeless", DoubleItemIcon.of(AllBlocks.MECHANICAL_MIXER.get(), Items.CRAFTING_TABLE)),
+			AUTOMATIC_BREWING = register("automatic_brewing", DoubleItemIcon.of(AllBlocks.MECHANICAL_MIXER.get(), Blocks.BREWING_STAND)),
+			PACKING = register("packing", DoubleItemIcon.of(AllBlocks.MECHANICAL_PRESS.get(), AllBlocks.BASIN.get())),
+			AUTOMATIC_PACKING = register("automatic_packing", DoubleItemIcon.of(AllBlocks.MECHANICAL_PRESS.get(), Blocks.CRAFTING_TABLE)),
+			SAWING = register("sawing", DoubleItemIcon.of(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_LOG)),
+			BLOCK_CUTTING = register("block_cutting", DoubleItemIcon.of(AllBlocks.MECHANICAL_SAW.get(), Items.STONE_BRICK_STAIRS)),
+			WOOD_CUTTING = register("wood_cutting", DoubleItemIcon.of(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_STAIRS)),
+			SANDPAPER_POLISHING = register("sandpaper_polishing", EmiStack.of(AllItems.SAND_PAPER.get())),
+			ITEM_APPLICATION = register("item_application", EmiStack.of(AllItems.PRECISION_MECHANISM.get())),
+			DEPLOYING = register("deploying", EmiStack.of(AllBlocks.DEPLOYER.get())),
+			SPOUT_FILLING = register("spout_filling", DoubleItemIcon.of(AllBlocks.SPOUT.get(), Items.WATER_BUCKET)),
+			DRAINING = register("draining", DoubleItemIcon.of(AllBlocks.ITEM_DRAIN.get(), Items.WATER_BUCKET)),
+			AUTOMATIC_SHAPED = register("automatic_shaped", EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get())),
+			MECHANICAL_CRAFTING = register("mechanical_crafting", EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get())),
+			SEQUENCED_ASSEMBLY = register("sequenced_assembly", EmiStack.of(AllItems.PRECISION_MECHANISM.get())),
+			MYSTERY_CONVERSION = register("mystery_conversion", EmiStack.of(AllItems.CHROMATIC_COMPOUND.get()));
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
@@ -168,29 +150,9 @@ public class CreateEmiPlugin implements EmiPlugin {
 				EmiStack.of(r.getResultItem()), null));
 		});
 
-		registry.addCategory(MILLING);
-		registry.addCategory(CRUSHING);
-		registry.addCategory(SANDPAPER_POLISHING);
-		registry.addCategory(PRESSING);
-		registry.addCategory(FAN_WASHING);
-		registry.addCategory(FAN_SMOKING);
-		registry.addCategory(FAN_BLASTING);
-		registry.addCategory(FAN_HAUNTING);
-		registry.addCategory(MIXING);
-		registry.addCategory(AUTOMATIC_SHAPELESS);
-		registry.addCategory(AUTOMATIC_BREWING);
-		registry.addCategory(SAWING);
-		registry.addCategory(BLOCK_CUTTING);
-		registry.addCategory(WOOD_CUTTING);
-		registry.addCategory(PACKING);
-		registry.addCategory(AUTOMATIC_PACKING);
-		registry.addCategory(DEPLOYING);
-		registry.addCategory(MYSTERY_CONVERSION);
-		registry.addCategory(SPOUT_FILLING);
-		registry.addCategory(DRAINING);
-		registry.addCategory(AUTOMATIC_SHAPED);
-		registry.addCategory(MECHANICAL_CRAFTING);
-		registry.addCategory(SEQUENCED_ASSEMBLY);
+		ALL.forEach((id, category) -> {
+			registry.addCategory(category);
+		});
 
 		registry.addWorkstation(MILLING, EmiStack.of(AllBlocks.MILLSTONE.get()));
 		registry.addWorkstation(CRUSHING, EmiStack.of(AllBlocks.CRUSHING_WHEEL.get()));
@@ -417,5 +379,12 @@ public class CreateEmiPlugin implements EmiPlugin {
 			}
 		}
 		return false;
+	}
+
+	private static EmiRecipeCategory register(String name, EmiRenderable icon) {
+		ResourceLocation id = Create.asResource(name);
+		EmiRecipeCategory category = new EmiRecipeCategory(id, icon);
+		ALL.put(id, category);
+		return category;
 	}
 }
