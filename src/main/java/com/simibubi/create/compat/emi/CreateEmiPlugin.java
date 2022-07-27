@@ -21,7 +21,7 @@ import com.simibubi.create.compat.emi.recipes.fan.FanBlastingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanHauntingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanSmokingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanWashingEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.ItemApplicationEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.ManualItemApplicationEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.MechanicalCraftingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.MillingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.basin.MixingEmiRecipe;
@@ -113,7 +113,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 			BLOCK_CUTTING = register("block_cutting", DoubleItemIcon.of(AllBlocks.MECHANICAL_SAW.get(), Items.STONE_BRICK_STAIRS)),
 			WOOD_CUTTING = register("wood_cutting", DoubleItemIcon.of(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_STAIRS)),
 			SANDPAPER_POLISHING = register("sandpaper_polishing", EmiStack.of(AllItems.SAND_PAPER.get())),
-			ITEM_APPLICATION = register("item_application", EmiStack.of(AllItems.PRECISION_MECHANISM.get())),
+			ITEM_APPLICATION = register("item_application", EmiStack.of(AllItems.BRASS_HAND.get())),
 			DEPLOYING = register("deploying", EmiStack.of(AllBlocks.DEPLOYER.get())),
 			SPOUT_FILLING = register("spout_filling", DoubleItemIcon.of(AllBlocks.SPOUT.get(), Items.WATER_BUCKET)),
 			DRAINING = register("draining", DoubleItemIcon.of(AllBlocks.ITEM_DRAIN.get(), Items.WATER_BUCKET)),
@@ -149,6 +149,10 @@ public class CreateEmiPlugin implements EmiPlugin {
 				r.getIngredients().stream().map(EmiIngredient::of).toList(),
 				EmiStack.of(r.getResultItem()), null));
 		});
+		// for EMI we don't do this since it already has a category, World Interaction
+//		LogStrippingFakeRecipes.createRecipes().forEach(r -> {
+//			registry.addRecipe(new ItemApplicationEmiRecipe(r));
+//		});
 
 		ALL.forEach((id, category) -> {
 			registry.addCategory(category);
@@ -262,7 +266,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 		addAll(registry, AllRecipeTypes.FILLING, SpoutEmiRecipe::new);
 		addAll(registry, AllRecipeTypes.EMPTYING, DrainEmiRecipe::new);
 		addAll(registry, AllRecipeTypes.SEQUENCED_ASSEMBLY, SequencedAssemblyEmiRecipe::new);
-		addAll(registry, AllRecipeTypes.ITEM_APPLICATION, ItemApplicationEmiRecipe::new);
+		addAll(registry, AllRecipeTypes.ITEM_APPLICATION, ManualItemApplicationEmiRecipe::new);
 		addAll(registry, AllRecipeTypes.MECHANICAL_CRAFTING, MECHANICAL_CRAFTING, MechanicalCraftingEmiRecipe::new);
 
 		// Introspective recipes based on present stacks need to make sure
