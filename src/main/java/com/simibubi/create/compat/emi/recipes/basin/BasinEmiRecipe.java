@@ -23,7 +23,7 @@ public class BasinEmiRecipe extends CreateEmiRecipe<BasinRecipe> {
 
 	public BasinEmiRecipe(EmiRecipeCategory category, BasinRecipe recipe, boolean needsHeating) {
 		super(category, recipe, 177, 108);
-		if (recipe.getRequiredHeat() == HeatCondition.NONE) {
+		if (!needsHeating) {
 			height = 90;
 		}
 		this.needsHeating = needsHeating;
@@ -51,17 +51,14 @@ public class BasinEmiRecipe extends CreateEmiRecipe<BasinRecipe> {
 		if (vRows <= 2) {
 			addTexture(widgets, AllGuiTextures.JEI_DOWN_ARROW, 136, 32 - 19 * (vRows - 1));
 		}
-		if (requiredHeat == HeatCondition.NONE) {
-			addTexture(widgets, AllGuiTextures.JEI_SHADOW, 81, 74);
-		} else {
-			addTexture(widgets, AllGuiTextures.JEI_LIGHT, 81, 94);
-		}
+
+		boolean noHeat = requiredHeat == HeatCondition.NONE;
+		AllGuiTextures shadow = noHeat ? AllGuiTextures.JEI_SHADOW : AllGuiTextures.JEI_LIGHT;
+		addTexture(widgets, shadow, 81, 58 + (noHeat ? 10 : 30));
+
 		if (needsHeating) {
-			if (requiredHeat == HeatCondition.NONE) {
-				addTexture(widgets, AllGuiTextures.JEI_NO_HEAT_BAR, 4, 80);
-			} else {
-				addTexture(widgets, AllGuiTextures.JEI_HEAT_BAR, 4, 80);
-			}
+			AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
+			addTexture(widgets, heatBar, 4, 80);
 			widgets.addText(Lang.translateDirect(requiredHeat.getTranslationKey()).getVisualOrderText(), 9, 86, requiredHeat.getColor(), true);
 		}
 
@@ -80,10 +77,10 @@ public class BasinEmiRecipe extends CreateEmiRecipe<BasinRecipe> {
 		}
 
 		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE)) {
-			addSlot(widgets, EmiStack.of(AllBlocks.BLAZE_BURNER.get()), 133, 81).catalyst(true);
+			widgets.addSlot(EmiStack.of(AllBlocks.BLAZE_BURNER.get()), 133, 81).drawBack(false).catalyst(true);
 		}
 		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED)) {
-			addSlot(widgets, EmiStack.of(AllItems.BLAZE_CAKE.get()), 152, 81);
+			widgets.addSlot(EmiStack.of(AllItems.BLAZE_CAKE.get()), 152, 81).drawBack(false);
 		}
 	}
 }
