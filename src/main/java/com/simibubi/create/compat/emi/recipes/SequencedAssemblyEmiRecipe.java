@@ -101,7 +101,7 @@ public class SequencedAssemblyEmiRecipe extends CreateEmiRecipe<SequencedAssembl
 		});
 	}
 
-	public EmiSequencedAssemblySubCategory getSubCategory(SequencedRecipe<?> recipe) {
+	public static EmiSequencedAssemblySubCategory getSubCategory(SequencedRecipe<?> recipe) {
 		return recipe.getAsAssemblyRecipe()
 				.getJEISubCategory()
 				.emi()

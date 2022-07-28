@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2245",
+	"_": "Missing Localizations: 2258",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -964,6 +964,13 @@
 	"tag.c.ingots.brass": "UNLOCALIZED: Brass Ingots",
 	"tag.c.nuggets.brass": "UNLOCALIZED: Brass Nuggets",
 	"tag.c.plates.brass": "UNLOCALIZED: Brass Plates",
+	"tag.c.plates.obsidian": "UNLOCALIZED: Obsidian Plates",
+	"tag.c.stripped_wood": "UNLOCALIZED: Stripped Wood",
+	"tag.c.stripped_logs": "UNLOCALIZED: Stripped Logs",
+	"tag.c.dough": "UNLOCALIZED: Doughs",
+	"tag.c.dough.wheat": "UNLOCALIZED: Wheat Doughs",
+	"tag.c.flour": "UNLOCALIZED: Flours",
+	"tag.c.flour.wheat": "UNLOCALIZED: Wheat Flours",
 	"tag.c.storage_blocks.brass": "UNLOCALIZED: Brass Storage Blocks",
 
 	"tag.create.stone_types.diorite": "UNLOCALIZED: Diorite",
@@ -988,6 +995,12 @@
 	"tag.create.sandpaper": "UNLOCALIZED: Sandpaper",
 	"tag.create.blaze_burner_fuel.regular": "UNLOCALIZED: Regular Blaze Burner Fuel",
 	"tag.create.blaze_burner_fuel.special": "UNLOCALIZED: Special Blaze Burner Fuel",
+	"tag.create.vanilla_stripped_wood": "UNLOCALIZED: Vanilla Stripped Wood",
+	"tag.create.vanilla_stripped_logs": "UNLOCALIZED: Vanilla Stripped Logs",
+	"tag.create.modded_stripped_wood": "UNLOCALIZED: Modded Stripped Wood",
+	"tag.create.modded_stripped_logs": "UNLOCALIZED: Modded Stripped Logs",
+	"tag.create.casing": "UNLOCALIZED: Casings",
+	"tag.create.sleepers": "UNLOCALIZED: Sleepers",
 
 	"create.generic.range": "Área",
 	"create.generic.radius": "Raio",

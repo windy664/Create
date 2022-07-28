@@ -16,6 +16,7 @@ public abstract class FanEmiRecipe<T extends Recipe<?>> extends CreateEmiRecipe<
 	public FanEmiRecipe(EmiRecipeCategory type, T recipe) {
 		super(type, recipe, 134, 76);
 	}
+
 	protected abstract void renderAttachedBlock(PoseStack matrices);
 
 	@Override
