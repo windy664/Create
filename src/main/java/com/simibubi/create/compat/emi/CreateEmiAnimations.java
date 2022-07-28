@@ -125,7 +125,7 @@ public class CreateEmiAnimations {
 
 	public static void addBlazeBurner(WidgetHolder widgets, int x, int y, HeatLevel heatLevel) {
 		widgets.addDrawable(x, y, 0, 0, (matrixStack, mouseX, mouseY, delta) -> {
-			matrixStack.translate(x, y, 200);
+			matrixStack.translate(0, 0, 200);
 			matrixStack.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
 			matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 			int scale = 23;
