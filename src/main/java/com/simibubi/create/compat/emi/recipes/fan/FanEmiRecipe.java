@@ -1,12 +1,16 @@
 package com.simibubi.create.compat.emi.recipes.fan;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.emi.CreateEmiAnimations;
 import com.simibubi.create.compat.emi.recipes.CreateEmiRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import com.simibubi.create.foundation.utility.Lang;
+
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -30,6 +34,11 @@ public abstract class FanEmiRecipe<T extends Recipe<?>> extends CreateEmiRecipe<
 		addSlot(widgets, output.get(0), 114, 48).recipeContext(this);
 
 		CreateEmiAnimations.addFan(widgets, 34, 33, this::renderAttachedBlock);
+	}
+
+	public static EmiStack getFan(String name) {
+		return EmiStack.of(AllBlocks.ENCASED_FAN.asStack()
+				.setHoverName(Lang.translateDirect("recipe." + name + ".fan").withStyle(style -> style.withItalic(false))));
 	}
 
 	public static abstract class MultiOutput<T extends ProcessingRecipe<?>> extends FanEmiRecipe<T> {
