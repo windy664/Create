@@ -50,6 +50,7 @@ import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipe
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxBlock;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
@@ -77,6 +78,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -145,15 +148,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 
 		// TODO potentially add all potion fluid variants, drag drop handler and blueprint handler are unimplemented
 
-		ToolboxColoringRecipeMaker.createRecipes().forEach(r -> {
-			registry.addRecipe(new EmiCraftingRecipe(
-				r.getIngredients().stream().map(EmiIngredient::of).toList(),
-				EmiStack.of(r.getResultItem()), null));
-		});
-		// for EMI we don't do this since it already has a category, World Interaction
-//		LogStrippingFakeRecipes.createRecipes().forEach(r -> {
-//			registry.addRecipe(new ItemApplicationEmiRecipe(r));
-//		});
+		registerGeneratedRecipes(registry);
 
 		ALL.forEach((id, category) -> {
 			registry.addCategory(category);
@@ -372,6 +367,35 @@ public class CreateEmiPlugin implements EmiPlugin {
 				}
 			}
 		}
+	}
+
+	public void registerGeneratedRecipes(EmiRegistry registry) {
+		ToolboxColoringRecipeMaker.createRecipes().forEach(r -> {
+			ItemStack toolbox = null;
+			ItemStack dye = null;
+			for (Ingredient ingredient : r.getIngredients()) {
+				for (ItemStack stack : ingredient.getItems()) {
+					if (toolbox == null && stack.getItem() instanceof BlockItem block && block.getBlock() instanceof ToolboxBlock) {
+						toolbox = stack;
+					} else if (dye == null && stack.getItem() instanceof DyeItem) {
+						dye = stack;
+					}
+					if (toolbox != null && dye != null) break;
+				}
+			}
+			if (toolbox == null || dye == null) return;
+			ResourceLocation toolboxId = Registry.ITEM.getKey(toolbox.getItem());
+			ResourceLocation dyeId = Registry.ITEM.getKey(dye.getItem());
+			String recipeName = "create/toolboxes/%s/%s/%s/%s"
+					.formatted(toolboxId.getNamespace(), toolboxId.getPath(), dyeId.getNamespace(), dyeId.getPath());
+			registry.addRecipe(new EmiCraftingRecipe(
+					r.getIngredients().stream().map(EmiIngredient::of).toList(),
+					EmiStack.of(r.getResultItem()), new ResourceLocation("emi", recipeName)));
+		});
+		// for EMI we don't do this since it already has a category, World Interaction
+//		LogStrippingFakeRecipes.createRecipes().forEach(r -> {
+//			registry.addRecipe(new ItemApplicationEmiRecipe(r));
+//		});
 	}
 
 	public static boolean doInputsMatch(Recipe<?> a, Recipe<?> b) {
