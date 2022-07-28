@@ -21,6 +21,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -40,6 +41,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	protected SequencedAssemblyRecipeSerializer serializer;
 
 	protected Ingredient ingredient;
+	protected NonNullList<Ingredient> ingredientList;
 	protected List<SequencedRecipe<?>> sequence;
 	protected int loops;
 	protected ProcessingOutput transitionalItem;
@@ -269,6 +271,15 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 
 	public Ingredient getIngredient() {
 		return ingredient;
+	}
+
+	@Override
+	public NonNullList<Ingredient> getIngredients() {
+		if (ingredientList == null) {
+			ingredientList = NonNullList.create();
+			ingredientList.add(ingredient);
+		}
+		return ingredientList;
 	}
 
 	public List<SequencedRecipe<?>> getSequence() {

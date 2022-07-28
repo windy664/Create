@@ -141,8 +141,7 @@ public abstract class CreateEmiRecipe<T extends Recipe<?>> implements EmiRecipe 
 	}
 
 	public SlotWidget addChancedSlot(WidgetHolder widgets, EmiIngredient stack, int x, int y, int index) {
-		if (recipe instanceof ProcessingRecipe) {
-			ProcessingRecipe<?> processing = (ProcessingRecipe<?>) recipe;
+		if (recipe instanceof ProcessingRecipe<?> processing) {
 			List<ProcessingOutput> results = processing.getRollableResults();
 			if (index < results.size()) {
 				return addChancedSlot(widgets, stack, x, y, results.get(index).getChance());

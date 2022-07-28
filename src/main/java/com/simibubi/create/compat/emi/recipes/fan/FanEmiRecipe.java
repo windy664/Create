@@ -31,7 +31,7 @@ public abstract class FanEmiRecipe<T extends Recipe<?>> extends CreateEmiRecipe<
 
 		addSlot(widgets, input.get(0), 2, 48);
 
-		addSlot(widgets, output.get(0), 114, 48).recipeContext(this);
+		addChancedSlot(widgets, output.get(0), 114, 48, 0).recipeContext(this);
 
 		CreateEmiAnimations.addFan(widgets, 34, 33, this::renderAttachedBlock);
 	}

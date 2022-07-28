@@ -32,6 +32,7 @@ public class SequencedAssemblyEmiRecipe extends CreateEmiRecipe<SequencedAssembl
 			width += getSubCategory(r).getWidth() + margin;
 		}
 		width -= margin;
+		chanced = recipe.getOutputChance() != 1;
 	}
 
 	@Override
