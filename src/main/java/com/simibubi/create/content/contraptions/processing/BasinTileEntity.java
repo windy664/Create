@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
@@ -17,6 +19,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -307,7 +310,22 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return;
 
 		try (Transaction t = TransferUtil.getTransaction()) {
-			acceptOutputs(TransferUtil.getAllItems(outputInventory), TransferUtil.getAllFluids(outputTank.getCapability()), t);
+			for (StorageView<ItemVariant> view : outputInventory.iterable(t)) {
+				if (view.isResourceBlank()) continue;
+				ItemVariant variant = view.getResource();
+				ItemStack stack = variant.toStack(ItemHelper.truncateLong(view.getAmount()));
+				if (acceptOutputs(ImmutableList.of(stack), ImmutableList.of(), t)) {
+					view.extract(variant, stack.getCount(), t);
+				}
+			}
+			for (StorageView<FluidVariant> view : outputTank.getCapability().iterable(t)) {
+				if (view.isResourceBlank()) continue;
+				FluidVariant variant = view.getResource();
+				FluidStack stack = new FluidStack(view);
+				if (acceptOutputs(ImmutableList.of(), ImmutableList.of(stack), t)) {
+					view.extract(variant, stack.getAmount(), t);
+				}
+			}
 			t.commit();
 		}
 

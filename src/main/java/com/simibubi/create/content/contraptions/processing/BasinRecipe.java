@@ -143,7 +143,8 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			if (!basin.acceptOutputs(recipeOutputItems, recipeOutputFluids, t))
 				return false;
 
-			if (!test) t.commit();
+			if (!test)
+				t.commit();
 			return true;
 		}
 	}
