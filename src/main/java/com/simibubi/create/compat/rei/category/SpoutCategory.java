@@ -19,6 +19,8 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
@@ -87,7 +89,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 						fhi.insert(fluidCopy.getType(), fluidCopy.getAmount(), t);
 						t.commit();
 					}
-						ItemStack container = ctx.getItemVariant().toStack((int) ctx.getAmount());
+						ItemStack container = ctx.getItemVariant().toStack(ItemHelper.truncateLong(ctx.getAmount()));
 						if (container.sameItem(copy))
 							return;
 						if (container.isEmpty())

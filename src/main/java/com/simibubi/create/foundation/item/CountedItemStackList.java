@@ -28,7 +28,7 @@ public class CountedItemStackList {
 		try (Transaction t = TransferUtil.getTransaction()){
 			for (StorageView<ItemVariant> view : inventory.iterable(t)) {
 				if (filteringBehaviour.test(view.getResource().toStack()))
-					add(view.getResource().toStack((int) view.getAmount()));
+					add(view.getResource().toStack(ItemHelper.truncateLong(view.getAmount())));
 			}
 		}
 	}

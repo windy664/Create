@@ -407,7 +407,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 				long inserted = processingOutputBuffer.insert(ItemVariant.of(added.stack), added.stack.getCount(), t);
 				t.commit();
 				ItemStack remainder = added.stack.copy();
-				remainder.setCount((int) (added.stack.getCount() - inserted));
+				remainder.setCount(ItemHelper.truncateLong(added.stack.getCount() - inserted));
 				Vec3 vec = VecHelper.getCenterOf(tileEntity.getBlockPos());
 				Containers.dropItemStack(tileEntity.getLevel(), vec.x, vec.y + .5f, vec.z, remainder);
 			}

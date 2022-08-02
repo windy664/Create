@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.Transporte
 import com.simibubi.create.content.logistics.block.funnel.AbstractFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -266,7 +267,7 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 				ItemVariant var = view.getResource();
 				long extracted = view.extract(view.getResource(), 64, t);
 				if (extracted != 0)
-					addToLaunchedItems(var.toStack((int) extracted));
+					addToLaunchedItems(var.toStack(ItemHelper.truncateLong(extracted)));
 			}
 		}
 	}

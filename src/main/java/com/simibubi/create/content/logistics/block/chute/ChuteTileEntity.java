@@ -360,7 +360,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		if (level == null || direction == null || !this.canOutputItems())
 			return false;
-			Storage<ItemVariant> below = grabCapability(Direction.DOWN);
+		Storage<ItemVariant> below = grabCapability(Direction.DOWN);
 		if (below != null) {
 			if (level.isClientSide && !isVirtual())
 				return false;
@@ -370,7 +370,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				ItemStack held = getItem();
 				if (!simulate) {
 					ItemStack newStack = held.copy();
-					newStack.shrink((int) inserted);
+					newStack.shrink(ItemHelper.truncateLong(inserted));
 					setItem(newStack, itemPosition.getValue(0));
 				}
 				if (inserted != 0)
@@ -427,7 +427,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 					long inserted = above.insert(ItemVariant.of(item), item.getCount(), t);
 					if (!simulate) {
 						item = item.copy();
-						item.shrink((int) inserted);
+						item.shrink(ItemHelper.truncateLong(inserted));
 						itemHandler.update();
 						sendData();
 						t.commit();

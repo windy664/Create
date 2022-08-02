@@ -68,7 +68,7 @@ public class SharedDepotBlockMethods {
 				if (view.isResourceBlank()) continue;
 				ItemVariant var = view.getResource();
 				long extracted = view.extract(var, 64, t);
-				ItemStack stack = var.toStack((int) extracted);
+				ItemStack stack = var.toStack(ItemHelper.truncateLong(extracted));
 				player.getInventory().placeItemBackInInventory(stack);
 			}
 			t.commit();

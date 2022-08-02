@@ -11,6 +11,8 @@ import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
@@ -78,7 +80,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 			if (handler == null)
 				return;
 			FluidStack extracted = TransferUtil.extractAnyFluid(handler, FluidConstants.BUCKET);
-			ItemStack result = ctx.getItemVariant().toStack((int) ctx.getAmount());
+			ItemStack result = ctx.getItemVariant().toStack(ItemHelper.truncateLong(ctx.getAmount()));
 			if (extracted.isEmpty())
 				return;
 			if (result.isEmpty())

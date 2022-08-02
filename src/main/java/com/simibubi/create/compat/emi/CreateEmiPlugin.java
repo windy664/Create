@@ -53,6 +53,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.content.curiosities.toolbox.ToolboxBlock;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 
 import dev.emi.emi.api.EmiApi;
@@ -332,7 +333,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 							t.commit();
 						}
 						fs.setAmount(inserted);
-						ItemStack container = ctx.getItemVariant().toStack((int) ctx.getAmount());
+						ItemStack container = ctx.getItemVariant().toStack(ItemHelper.truncateLong(ctx.getAmount()));
 						if (inserted != 0 && !container.sameItemStackIgnoreDurability(copy) && !container.isEmpty()) {
 							Ingredient bucket = Ingredient.of(is);
 							ResourceLocation itemId = Registry.ITEM.getKey(is.getItem());
@@ -352,7 +353,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 				Storage<FluidVariant> storage = ctx.find(FluidStorage.ITEM);
 				if (storage != null) {
 					FluidStack extracted = TransferUtil.extractAnyFluid(storage, FluidConstants.BUCKET);
-					ItemStack result = ctx.getItemVariant().toStack((int) ctx.getAmount());
+					ItemStack result = ctx.getItemVariant().toStack(ItemHelper.truncateLong(ctx.getAmount()));
 					if (!extracted.isEmpty() && !result.isEmpty()) {
 						ResourceLocation itemId = Registry.ITEM.getKey(is.getItem());
 						ResourceLocation fluidId = Registry.FLUID.getKey(extracted.getFluid());

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
@@ -25,7 +27,7 @@ public class BrassTunnelItemHandler implements SingleSlotStorage<ItemVariant> {
 
 		if (!te.canTakeItems())
 			return 0;
-		int toInsert = Math.min((int) maxAmount, resource.getItem().getMaxStackSize());
+		int toInsert = Math.min(ItemHelper.truncateLong(maxAmount), resource.getItem().getMaxStackSize());
 
 		te.setStackToDistribute(resource.toStack(toInsert), transaction);
 		return toInsert;

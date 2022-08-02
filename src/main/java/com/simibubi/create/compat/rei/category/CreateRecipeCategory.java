@@ -163,7 +163,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 	public static FluidStack withImprovedVisibility(FluidStack stack) {
 		FluidStack display = stack.copy();
-		int displayedAmount = (int) (stack.getAmount() * .75f) + 250;
+		long displayedAmount = (long) (stack.getAmount() * .75f) + 250;
 		display.setAmount(displayedAmount);
 		return display;
 	}

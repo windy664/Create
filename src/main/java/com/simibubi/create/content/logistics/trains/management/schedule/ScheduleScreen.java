@@ -341,7 +341,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				.stream())
 			.filter(station -> station.tilePos != null)
 			.filter(station -> visited.add(station.name))
-			.map(station -> LongAttached.with((int) Vec3.atBottomCenterOf(station.tilePos)
+			.map(station -> LongAttached.with((long) Vec3.atBottomCenterOf(station.tilePos)
 				.distanceTo(position), station.name))
 			.toList();
 	}

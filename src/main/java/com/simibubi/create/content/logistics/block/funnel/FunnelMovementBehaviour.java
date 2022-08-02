@@ -118,7 +118,7 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 					continue;
 				}
 				ItemStack remainder = item.getItem().copy();
-				remainder.shrink((int) inserted);
+				remainder.shrink(ItemHelper.truncateLong(inserted));
 				item.setItem(remainder);
 			}
 		}

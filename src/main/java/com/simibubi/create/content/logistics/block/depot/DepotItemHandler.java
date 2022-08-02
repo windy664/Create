@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.block.depot;
 import com.google.common.collect.Iterators;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
@@ -28,7 +30,7 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 			return 0;
 		if (!te.isOutputEmpty() && !te.canMergeItems())
 			return 0;
-		int toInsert = Math.min((int) maxAmount, resource.getItem().getMaxStackSize());
+		int toInsert = Math.min(ItemHelper.truncateLong(maxAmount), resource.getItem().getMaxStackSize());
 		ItemStack stack = resource.toStack(toInsert);
 		if (!te.isItemValid(stack))
 			return 0;
@@ -52,7 +54,7 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 		ItemStack stack = held.stack;
 		if (!resource.matches(stack))
 			return 0;
-		int toExtract = Math.min((int) maxAmount, Math.min(stack.getCount(), te.maxStackSize.get()));
+		int toExtract = Math.min(ItemHelper.truncateLong(maxAmount), Math.min(stack.getCount(), te.maxStackSize.get()));
 		stack = stack.copy();
 		stack.shrink(toExtract);
 		if (stack.isEmpty())

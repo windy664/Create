@@ -182,7 +182,7 @@ public class ItemHelper {
 					if (view.isResourceBlank()) continue;
 					ItemVariant contained = view.getResource();
 					// amount stored, amount needed, or max size, whichever is lowest.
-					int amountToExtractFromThisSlot = Math.min((int) view.getAmount(), Math.min(amount - extracted, contained.getItem().getMaxStackSize()));
+					int amountToExtractFromThisSlot = Math.min(truncateLong(view.getAmount()), Math.min(amount - extracted, contained.getItem().getMaxStackSize()));
 					if (!test.test(contained.toStack(amountToExtractFromThisSlot)))
 						continue;
 					if (extracting == null) {
@@ -278,6 +278,16 @@ public class ItemHelper {
 
 	public static boolean canItemStackAmountsStack(ItemStack a, ItemStack b) {
 		return ItemHandlerHelper.canItemStacksStack(a, b) && a.getCount() + b.getCount() <= a.getMaxStackSize();
+	}
+
+	public static int truncateLong(long l) {
+		if (l > Integer.MAX_VALUE) {
+			return Integer.MAX_VALUE;
+		} else if (l < Integer.MIN_VALUE) {
+			return Integer.MIN_VALUE;
+		} else {
+			return (int) l;
+		}
 	}
 
 //	public static ItemStack findFirstMatch(Storage<ItemVariant> inv, Predicate<ItemStack> test) {

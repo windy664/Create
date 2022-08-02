@@ -2,14 +2,14 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-
-import net.minecraft.ChatFormatting;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -109,7 +109,7 @@ public class ArmInteractionPoint {
 		if (handler == null)
 			return stack;
 		long inserted = handler.insert(ItemVariant.of(stack), stack.getCount(), ctx);
-		return ItemHandlerHelper.copyStackWithSize(stack, (int) (stack.getCount() - inserted));
+		return ItemHandlerHelper.copyStackWithSize(stack, ItemHelper.truncateLong(stack.getCount() - inserted));
 	}
 
 	public ItemStack extract(int amount, TransactionContext ctx) {

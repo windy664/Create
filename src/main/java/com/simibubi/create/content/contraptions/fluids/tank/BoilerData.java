@@ -377,13 +377,13 @@ int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize)
 	}
 
 	public void read(CompoundTag nbt, int boilerSize) {
-		waterSupply = nbt.getFloat("Supply");
+		waterSupply = nbt.getDouble("Supply");
 		activeHeat = nbt.getInt("ActiveHeat");
 		passiveHeat = nbt.getBoolean("PassiveHeat");
 		attachedEngines = nbt.getInt("Engines");
 		attachedWhistles = nbt.getInt("Whistles");
 		needsHeatLevelUpdate = nbt.getBoolean("Update");
-		Arrays.fill(supplyOverTime, (int) waterSupply);
+		Arrays.fill(supplyOverTime, waterSupply);
 
 		int forBoilerSize = getMaxHeatLevelForBoilerSize(boilerSize);
 		int forWaterSupply = getMaxHeatLevelForWaterSupply();

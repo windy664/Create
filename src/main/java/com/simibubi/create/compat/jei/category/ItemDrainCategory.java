@@ -12,6 +12,8 @@ import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import mezz.jei.api.constants.VanillaTypes;
@@ -80,7 +82,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				Create.asResource("empty_" + itemName.getNamespace() + "_" + itemName.getPath() + "_of_"
 					+ fluidName.getNamespace() + "_" + fluidName.getPath())).withItemIngredients(ingredient)
 						.withFluidOutputs(extracted)
-						.withSingleItemOutput(result.toStack((int) ctx.getAmount()))
+						.withSingleItemOutput(result.toStack(ItemHelper.truncateLong(ctx.getAmount())))
 						.build());
 		}
 	}

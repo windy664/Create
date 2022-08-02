@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.chute;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -27,7 +29,7 @@ public class ChuteItemHandler extends SingleVariantStorage<ItemVariant> {
 
 	@Override
 	protected void onFinalCommit() {
-		te.setItem(variant.toStack((int) amount));
+		te.setItem(variant.toStack(ItemHelper.truncateLong(amount)));
 	}
 
 	@Override
