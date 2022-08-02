@@ -44,7 +44,7 @@ public class BoilerData {
 
 	static final int SAMPLE_RATE = 5;
 
-	private static final int waterSupplyPerLevel = 10;
+	private static final int waterSupplyPerLevel = 10 * 81; // fabric: values are 81 times greater
 	private static final float passiveEngineEfficiency = 1 / 8f;
 
 	// pooled water supply
