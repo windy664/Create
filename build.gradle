@@ -20,6 +20,7 @@ archivesBaseName = "create-${project.minecraft_version}"
 repositories {
     mavenCentral()
     mavenLocal()
+    maven { url = "https://hephaestus.dev/release" }
     maven { url = "https://api.modrinth.com/maven" }
     maven { url = "https://cursemaven.com" }
     maven { url = "https://maven.parchmentmc.org" }
@@ -135,6 +136,8 @@ def recipeViewers(DependencyHandler deps) {
 
 // mods that can be uncommented to test in development
 def testMods(DependencyHandler deps) {
+    modLocalRuntime("dev.monarkhes:myron:1.6.3+1.18.1") { transitive = false }
+
     deps.modLocalRuntime("maven.modrinth:kibe:1.9.7-BETA+1.18") { transitive = false }
     deps.modLocalRuntime("io.github.ladysnake:PlayerAbilityLib:1.5.0") { transitive = false }
     deps.modLocalRuntime("net.fabricmc:fabric-language-kotlin:1.8.0+kotlin.1.7.0")
