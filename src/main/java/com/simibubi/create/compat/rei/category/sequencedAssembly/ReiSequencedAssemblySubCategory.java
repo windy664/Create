@@ -1,5 +1,11 @@
 package com.simibubi.create.compat.rei.category.sequencedAssembly;
 
+import static com.simibubi.create.compat.rei.category.CreateRecipeCategory.basicSlot;
+import static com.simibubi.create.compat.rei.category.CreateRecipeCategory.setFluidTooltip;
+
+import java.util.Arrays;
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.rei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.rei.category.animations.AnimatedDeployer;
@@ -11,20 +17,14 @@ import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import com.simibubi.create.foundation.utility.Lang;
 
 import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.ChatFormatting;
-
-import static com.simibubi.create.compat.rei.category.CreateRecipeCategory.basicSlot;
 
 public abstract class ReiSequencedAssemblySubCategory {
 
@@ -83,7 +83,10 @@ public abstract class ReiSequencedAssemblySubCategory {
 			FluidIngredient fluidIngredient = recipe.getRecipe()
 				.getFluidIngredients()
 				.get(0);
-			widgets.add(basicSlot(origin.x + x + 5, origin.y + 16).markInput().entries(EntryIngredient.of(CreateRecipeCategory.createFluidEntryStack(fluidIngredient.getMatchingFluidStacks().get(index)))));
+			Slot fluidSlot = basicSlot(x + 4, 15, origin).markInput().entries(EntryIngredients.of(CreateRecipeCategory.convertToREIFluid(fluidIngredient.getMatchingFluidStacks().get(index))));
+			CreateRecipeCategory.setFluidRenderRatio(fluidSlot);
+			setFluidTooltip(fluidSlot);
+			widgets.add(fluidSlot);
 			return 1;
 		}
 

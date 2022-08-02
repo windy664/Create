@@ -16,6 +16,7 @@ import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.entry.renderer.EntryRenderer;
 import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
+import me.shedaniel.rei.api.client.gui.widgets.TooltipContext;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.util.ClientEntryStacks;
@@ -193,7 +194,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		}
 
 		@Override
-		public @Nullable Tooltip getTooltip(EntryStack<ItemStack> entry, Point mouse) {
+		public @Nullable Tooltip getTooltip(EntryStack<ItemStack> entry, TooltipContext mouse) {
 			ItemStack ingredient = entry.getValue();
 			Minecraft minecraft = Minecraft.getInstance();
 			Player player = minecraft.player;

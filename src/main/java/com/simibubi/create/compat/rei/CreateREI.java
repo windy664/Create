@@ -41,6 +41,7 @@ import com.simibubi.create.compat.rei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.rei.category.SawingCategory;
 import com.simibubi.create.compat.rei.category.SequencedAssemblyCategory;
 import com.simibubi.create.compat.rei.category.SpoutCategory;
+import com.simibubi.create.compat.rei.display.BasinDisplay;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
@@ -171,6 +172,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.BASIN::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get())
 				.emptyBackground(177, 110)
+				.displayFactory(BasinDisplay::mixing)
 				.build("mixing", MixingCategory::standard),
 
 		autoShapeless = builder(BasinRecipe.class)
@@ -184,6 +186,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.BASIN::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), Items.CRAFTING_TABLE)
 				.emptyBackground(177, 94)
+				.displayFactory(BasinDisplay::autoShapeless)
 				.build("automatic_shapeless", MixingCategory::autoShapeless),
 
 		brewing = builder(BasinRecipe.class)
@@ -192,6 +195,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.BASIN::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), Blocks.BREWING_STAND)
 				.emptyBackground(177, 110)
+				.displayFactory(BasinDisplay::brewing)
 				.build("automatic_brewing", MixingCategory::autoBrewing),
 
 		packing = builder(BasinRecipe.class)
@@ -200,6 +204,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.BASIN::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllBlocks.BASIN.get())
 				.emptyBackground(177, 110)
+				.displayFactory(BasinDisplay::packing)
 				.build("packing", PackingCategory::standard),
 
 		autoSquare = builder(BasinRecipe.class)
@@ -212,6 +217,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.BASIN::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), Blocks.CRAFTING_TABLE)
 				.emptyBackground(177, 94)
+				.displayFactory(BasinDisplay::autoSquare)
 				.build("automatic_packing", PackingCategory::autoSquare),
 
 		sawing = builder(CuttingRecipe.class)
@@ -327,7 +333,6 @@ public class CreateREI implements REIClientPlugin {
 		loadCategories();
 		allCategories.forEach(category -> {
 			registry.add(category);
-			registry.removePlusButton(category.getCategoryIdentifier()); // FIXME RECIPE VIEWERS
 			category.registerCatalysts(registry);
 		});
 	}
@@ -396,6 +401,8 @@ public class CreateREI implements REIClientPlugin {
 
 		private int width;
 		private int height;
+
+		private Function<T, ? extends CreateDisplay<T>> displayFactory;
 
 		private final List<Consumer<List<T>>> recipeListConsumers = new ArrayList<>();
 		private final List<Supplier<? extends ItemStack>> catalysts = new ArrayList<>();
@@ -540,6 +547,11 @@ public class CreateREI implements REIClientPlugin {
 			return this;
 		}
 
+		public CategoryBuilder<T> displayFactory(Function<T, ? extends CreateDisplay<T>> factory) {
+			this.displayFactory = factory;
+			return this;
+		}
+
 		public CreateRecipeCategory<T> build(String name, CreateRecipeCategory.Factory<T> factory) {
 			Supplier<List<T>> recipesSupplier;
 			if (predicate.test(AllConfigs.SERVER.recipes)) {
@@ -561,7 +573,7 @@ public class CreateREI implements REIClientPlugin {
 
 			CreateRecipeCategory.Info<T> info = new CreateRecipeCategory.Info<>(
 					CategoryIdentifier.of(Create.asResource(name)),
-					Lang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts, width, height);
+					Lang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts, width, height, displayFactory == null ? (recipe) -> new CreateDisplay<>(recipe, CategoryIdentifier.of(Create.asResource(name))) : displayFactory);
 			CreateRecipeCategory<T> category = factory.create(info);
 			allCategories.add(category);
 			return category;

@@ -1,17 +1,6 @@
 package com.simibubi.create;
 
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
-
-import com.simibubi.create.compat.Mods;
-import com.simibubi.create.compat.trinkets.Trinkets;
-import com.tterrag.registrate.fabric.GatherDataEvent;
-
-import io.github.tropheusj.milk.Milk;
-
-import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,10 +8,11 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.trinkets.Trinkets;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.fluids.tank.BoilerHeaters;
-import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
@@ -49,6 +39,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import io.github.tropheusj.milk.Milk;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.resources.ResourceLocation;

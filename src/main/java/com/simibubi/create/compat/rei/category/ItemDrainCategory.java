@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.rei.category;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
@@ -14,6 +15,7 @@ import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -23,6 +25,7 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -103,9 +106,11 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				.get(0)
 				.getItems());
 
-		ingredients.add(basicSlot(origin.x + 132, origin.y + 8)
+		Slot fluidSlot = basicSlot(origin.x + 132, origin.y + 8)
 				.markOutput()
-				.entries(EntryIngredient.of(createFluidEntryStack(fluidOutput))));
+				.entries(EntryIngredients.of(CreateRecipeCategory.convertToREIFluid(fluidOutput)));
+		CreateRecipeCategory.setFluidRenderRatio(fluidSlot);
+		ingredients.add(fluidSlot);
 		ingredients.add(basicSlot(origin.x + 27, origin.y + 8)
 				.markOutput()
 				.entries(EntryIngredients.ofItemStacks(matchingIngredients)));
@@ -113,7 +118,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				.markInput()
 				.entries(display.getOutputEntries().get(0)));
 
-//		addFluidTooltip(fluidStacks, Collections.emptyList(), ImmutableList.of(fluidOutput));
+		addFluidTooltip(ingredients, Collections.emptyList(), ImmutableList.of(fluidOutput));
 	}
 
 	@Override

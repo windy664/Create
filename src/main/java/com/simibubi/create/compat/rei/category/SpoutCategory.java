@@ -2,6 +2,7 @@ package com.simibubi.create.compat.rei.category;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -23,12 +24,14 @@ import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -116,7 +119,10 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 
 		FluidStack fluidStack = display.getRecipe().getRequiredFluid().getMatchingFluidStacks().get(0);
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, origin.getX() + 26, origin.getY() + 31));
-		widgets.add(Widgets.createSlot(point(origin.getX() + 27, origin.getY() + 32)).disableBackground().markInput().entries(EntryIngredient.of(createFluidEntryStack(fluidStack))));
+		Slot fluidSlot = basicSlot(27, 31, origin).disableBackground().markInput().entries(EntryIngredients.of(CreateRecipeCategory.convertToREIFluid(fluidStack)));
+		CreateRecipeCategory.setFluidRenderRatio(fluidSlot);
+		widgets.add(fluidSlot);
+		addFluidTooltip(widgets, List.of(display.getRecipe().getRequiredFluid()), Collections.emptyList());
 
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, origin.getX() + 26, origin.getY() + 50));
 		widgets.add(Widgets.createSlot(point(origin.getX() + 27, origin.getY() + 51)).disableBackground().markInput().entries(display.getInputEntries().get(0)));

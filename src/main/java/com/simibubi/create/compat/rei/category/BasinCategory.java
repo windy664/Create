@@ -11,11 +11,15 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 
+import me.shedaniel.rei.api.client.util.ClientEntryStacks;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
@@ -76,9 +80,11 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			int i2 = i + j;
 			List<FluidStack> stacks = fluidIngredients.get(j)
 					.getMatchingFluidStacks();
-			widgets.add(basicSlot(origin.x + 17 + xOffset + (i2 % 3) * 19, origin.y + 51 - (i2 / 3) * 19 + yOffset)
+			Slot fluidSlot = basicSlot(origin.x + 17 + xOffset + (i2 % 3) * 19, origin.y + 51 - (i2 / 3) * 19 + yOffset)
 					.markInput()
-					.entries(EntryIngredient.of(createFluidEntryStack(stacks.get(0)))));
+					.entries(EntryIngredients.of(CreateRecipeCategory.convertToREIFluid(stacks.get(0))));
+			CreateRecipeCategory.setFluidRenderRatio(fluidSlot);
+			widgets.add(fluidSlot);
 		}
 
 		int outSize = fluidOutputs.size() + recipe.getRollableResults()
@@ -98,9 +104,11 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 						.entries(EntryIngredients.of(itemOutputs.get(outputIndex))));
 				i++;
 			} else {
-				widgets.add(basicSlot(origin.x + xPosition + 1, origin.y + yPosition + 1 + yOffset)
+				Slot fluidSlot = basicSlot(origin.x + xPosition + 1, origin.y + yPosition + 1 + yOffset)
 						.markOutput()
-						.entries(EntryIngredient.of(createFluidEntryStack(fluidOutputs.get(outputIndex - itemOutputs.size())))));
+						.entries(EntryIngredients.of(CreateRecipeCategory.convertToREIFluid(fluidOutputs.get(outputIndex - itemOutputs.size()))));
+				CreateRecipeCategory.setFluidRenderRatio(fluidSlot);
+				widgets.add(fluidSlot);
 				j++;
 			}
 

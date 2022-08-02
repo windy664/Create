@@ -1,6 +1,5 @@
 package com.simibubi.create.compat.rei.category;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -45,6 +44,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 					.withStyle(ChatFormatting.GOLD));
 			return tooltip;
 		});
+		ingredients.add(slot);
 
 		Slot outputSlot = basicSlot(132, 38, origin)
 				.markOutput()

@@ -21,14 +21,15 @@ public class CreateDisplay<R extends Recipe<?>> implements Display {
 	private final List<EntryIngredient> input;
 	private final List<EntryIngredient> output;
 
-	public CreateDisplay(R recipe, CategoryIdentifier<CreateDisplay<R>> id) {
+	public CreateDisplay(R recipe, CategoryIdentifier<CreateDisplay<R>> id, List<EntryIngredient> input, List<EntryIngredient> output) {
 		this.recipe = recipe;
 		this.uid = id;
-		this.input = EntryIngredients.ofIngredients(recipe.getIngredients());
-		if (recipe instanceof BasinRecipe basinRecipe)
-			this.output = Collections.singletonList(EntryIngredients.of(VanillaEntryTypes.FLUID, CreateRecipeCategory.convertToREIFluids(basinRecipe.getFluidResults())));
-		else
-			this.output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
+		this.input = input;
+		this.output = output;
+	}
+
+	public CreateDisplay(R recipe, CategoryIdentifier<CreateDisplay<R>> id) {
+		this(recipe, id, EntryIngredients.ofIngredients(recipe.getIngredients()), Collections.singletonList(EntryIngredients.of(recipe.getResultItem())));
 	}
 
 	public R getRecipe() {

@@ -2,21 +2,24 @@ package com.simibubi.create.compat.rei.category;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.compat.rei.DoubleItemIcon;
-import com.simibubi.create.compat.rei.EmptyBackground;
-import com.simibubi.create.compat.rei.FluidStackEntryRenderer;
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
-import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
+import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -30,16 +33,13 @@ import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.util.ClientEntryStacks;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
-
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
-import me.shedaniel.rei.api.common.util.EntryStacks;
-
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.ChatFormatting;
-
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.level.ItemLike;
 
 public abstract class CreateRecipeCategory<T extends Recipe<?>> implements DisplayCategory<CreateDisplay<T>> {
 
@@ -54,6 +54,8 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 	private final int width;
 	private final int height;
 
+	private final Function<T, ? extends CreateDisplay<T>> displayFactory;
+
 	public CreateRecipeCategory(Info<T> info) {
 		this.type = info.recipeType();
 		this.title = info.title();
@@ -63,6 +65,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 		this.catalysts = info.catalysts();
 		this.width = info.width();
 		this.height = info.height();
+		this.displayFactory = info.displayFactory();
 	}
 
 	@Override
@@ -72,7 +75,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 	public void registerRecipes(DisplayRegistry registry) {
 		for (T recipe : recipes.get()) {
-			registry.add(new CreateDisplay<>(recipe, getCategoryIdentifier()), recipe);
+			registry.add(displayFactory.apply(recipe), recipe);
 		}
 	}
 
@@ -144,28 +147,12 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 					.withStyle(ChatFormatting.GOLD));
 	}
 
-	// TODO TRAIN PORT
-//	public static IRecipeSlotTooltipCallback addStochasticTooltip(ProcessingOutput output) {
-//		return (view, tooltip) -> {
-//			float chance = output.getChance();
-//			if (chance != 1)
-//				tooltip.add(1, Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
-//						.withStyle(ChatFormatting.GOLD));
-//		};
-//	}
-
 	public static Slot basicSlot(int x, int y) {
 		return Widgets.createSlot(point(x, y)).disableBackground();
 	}
 
 	public static Slot basicSlot(int x, int y, Point origin) {
 		return Widgets.createSlot(point(origin.getX() + x, origin.getY() + y)).disableBackground();
-	}
-
-	@SuppressWarnings("all")
-	public static EntryStack<dev.architectury.fluid.FluidStack> createFluidEntryStack(FluidStack fluidStack) {
-		return ClientEntryStacks.setRenderer(EntryStacks.of(dev.architectury.fluid.FluidStack
-				.create(fluidStack.getFluid(), fluidStack.getAmount(), fluidStack.getOrCreateTag())), new FluidStackEntryRenderer());
 	}
 
 	public static List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
@@ -191,6 +178,13 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 		return newFluids;
 	}
 
+	public static void setFluidRenderRatio(Slot slot) {
+		slot.getEntries().forEach(entryStack -> {
+			dev.architectury.fluid.FluidStack stack = entryStack.castValue();
+			ClientEntryStacks.setFluidRenderRatio(entryStack.cast(), stack.getAmount() / (float) FluidConstants.BUCKET);
+		});
+	}
+
 	public static void addFluidTooltip(List<Widget> fluidStacks, List<FluidIngredient> inputs,
 		List<FluidStack> outputs) {
 		addFluidTooltip(fluidStacks, inputs, outputs, -1);
@@ -202,35 +196,74 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 		inputs.forEach(f -> amounts.add(f.getRequiredAmount()));
 		outputs.forEach(f -> amounts.add(f.getAmount()));
 
-//		fluidStacks.addTooltipCallback((slotIndex, input, fluid, tooltip) -> {
-//			if (index != -1 && slotIndex != index)
-//				return;
-//
-//			if (fluid.getFluid()
-//				.isSame(AllFluids.POTION.get())) {
-//				Component name = fluid.getDisplayName();
-//				if (tooltip.isEmpty())
-//					tooltip.add(0, name);
-//				else
-//					tooltip.set(0, name);
-//
-//				ArrayList<Component> potionTooltip = new ArrayList<>();
-//				PotionFluidHandler.addPotionTooltip(fluid, potionTooltip, 1);
-//				tooltip.addAll(1, potionTooltip.stream()
-//					.collect(Collectors.toList()));
-//			}
-//
-//			int amount = amounts.get(index != -1 ? 0 : slotIndex);
-//			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
-//			if (tooltip.isEmpty())
-//				tooltip.add(0, text);
-//			else {
-//				List<Component> siblings = tooltip.get(0)
-//					.getSiblings();
-//				siblings.add(new TextComponent(" "));
-//				siblings.add(text);
-//			}
-//		});
+		fluidStacks.stream().filter(widget -> widget instanceof Slot slot && slot.getCurrentEntry().getType() == VanillaEntryTypes.FLUID).forEach(widget -> {
+			Slot slot = (Slot) widget;
+			ClientEntryStacks.setTooltipProcessor(slot.getCurrentEntry(), (entryStack, tooltip) -> {
+				dev.architectury.fluid.FluidStack fluidStack = entryStack.castValue();
+				FluidStack fluid = new FluidStack(fluidStack.getFluid(), fluidStack.getAmount(), fluidStack.getTag());
+				if (fluid.getFluid()
+						.isSame(AllFluids.POTION.get())) {
+					Component name = fluid.getDisplayName();
+					if (tooltip.entries().isEmpty())
+						tooltip.entries().add(0, Tooltip.entry(name));
+					else
+						tooltip.entries().set(0, Tooltip.entry(name));
+
+					ArrayList<Component> potionTooltip = new ArrayList<>();
+					PotionFluidHandler.addPotionTooltip(fluid, potionTooltip, 1);
+					ArrayList<Tooltip.Entry> potionEntries = new ArrayList<>();
+					potionTooltip.forEach(component -> potionEntries.add(Tooltip.entry(component)));
+					tooltip.entries().addAll(1, potionEntries.stream().toList());
+				}
+
+				FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
+				String amount = FluidTextUtil.getUnicodeMillibuckets(amounts.get(0), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
+				Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
+				if (tooltip.entries().isEmpty())
+					tooltip.entries().add(0, Tooltip.entry(text));
+				else {
+					List<Component> siblings = tooltip.entries().get(0).getAsText().getSiblings();
+					siblings.add(new TextComponent(" "));
+					siblings.add(text);
+				}
+				tooltip.entries().remove(1); // Remove REI added amount
+				return tooltip;
+			});
+		});
+	}
+
+	public static void setFluidTooltip(Slot slot) {
+		ClientEntryStacks.setTooltipProcessor(slot.getCurrentEntry(), (entryStack, tooltip) -> {
+			dev.architectury.fluid.FluidStack fluidStack = entryStack.castValue();
+			FluidStack fluid = new FluidStack(fluidStack.getFluid(), fluidStack.getAmount(), fluidStack.getTag());
+			if (fluid.getFluid()
+					.isSame(AllFluids.POTION.get())) {
+				Component name = fluid.getDisplayName();
+				if (tooltip.entries().isEmpty())
+					tooltip.entries().add(0, Tooltip.entry(name));
+				else
+					tooltip.entries().set(0, Tooltip.entry(name));
+
+				ArrayList<Component> potionTooltip = new ArrayList<>();
+				PotionFluidHandler.addPotionTooltip(fluid, potionTooltip, 1);
+				ArrayList<Tooltip.Entry> potionEntries = new ArrayList<>();
+				potionTooltip.forEach(component -> potionEntries.add(Tooltip.entry(component)));
+				tooltip.entries().addAll(1, potionEntries.stream().toList());
+			}
+
+			FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
+			String amount = FluidTextUtil.getUnicodeMillibuckets(fluid.getAmount(), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
+			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
+			if (tooltip.entries().isEmpty())
+				tooltip.entries().add(0, Tooltip.entry(text));
+			else {
+				List<Component> siblings = tooltip.entries().get(0).getAsText().getSiblings();
+				siblings.add(new TextComponent(" "));
+				siblings.add(text);
+			}
+			tooltip.entries().remove(1); // Remove REI added amount
+			return tooltip;
+		});
 	}
 
 	public static Point point(int x, int y) {
@@ -265,7 +298,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 	public void draw(T recipe, CreateDisplay<T> display, PoseStack matrixStack, double mouseX, double mouseY) {}
 
-	public record Info<T extends Recipe<?>>(CategoryIdentifier<CreateDisplay<T>> recipeType, Component title, Renderer background, Renderer icon, Supplier<List<T>> recipes, List<Supplier<? extends ItemStack>> catalysts, int width, int height) {
+	public record Info<T extends Recipe<?>>(CategoryIdentifier<CreateDisplay<T>> recipeType, Component title, Renderer background, Renderer icon, Supplier<List<T>> recipes, List<Supplier<? extends ItemStack>> catalysts, int width, int height, Function<T, ? extends CreateDisplay<T>> displayFactory) {
 	}
 
 	public interface Factory<T extends Recipe<?>> {
