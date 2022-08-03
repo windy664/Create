@@ -5,7 +5,11 @@ body:
     -   type: textarea
         attributes:
             label: Describe the Suggestion
-            description: What should we add or change to make Create better?
+            description: >
+                What should we add or change to make Create better?
+                If your suggestion is not specific to the Fabric/Quilt
+                version of Create, please submit it to the Forge repo:
+                https://github.com/Creators-of-Create/Create
         validations:
             required: true
     -   type: textarea
