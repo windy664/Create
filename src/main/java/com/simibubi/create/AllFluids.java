@@ -117,6 +117,10 @@ public class AllFluids {
 								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
 						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
 								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
+
+						FluidVariantAttributeHandler handler = new FluidNameAttributeHandler("block.create.honey");
+						FluidVariantAttributes.register(honey, handler);
+						FluidVariantAttributes.register(source, handler);
 					})
 					.register();
 
@@ -138,6 +142,10 @@ public class AllFluids {
 								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
 						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
 								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
+
+						FluidVariantAttributeHandler handler = new FluidNameAttributeHandler("block.create.chocolate");
+						FluidVariantAttributes.register(chocolate, handler);
+						FluidVariantAttributes.register(source, handler);
 					})
 					.register();
 
@@ -220,6 +228,13 @@ public class AllFluids {
 		@Override
 		public Component getName(FluidVariant fluidVariant) {
 			return new TranslatableComponent("fluid.create.tea");
+		}
+	}
+
+	private record FluidNameAttributeHandler(String key) implements FluidVariantAttributeHandler {
+		@Override
+		public Component getName(FluidVariant fluidVariant) {
+			return new TranslatableComponent(this.key);
 		}
 	}
 }
