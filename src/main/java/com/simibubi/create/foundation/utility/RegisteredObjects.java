@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
+import net.minecraft.core.Registry;
+
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.core.particles.ParticleType;
@@ -11,15 +13,12 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public final class RegisteredObjects {
 	// registry argument for easier porting to 1.19
 	@NotNull
-	public static <V extends IForgeRegistryEntry<V>> ResourceLocation getKeyOrThrow(IForgeRegistry<V> registry, V value) {
-		ResourceLocation key = value.getRegistryName();
+	public static <V> ResourceLocation getKeyOrThrow(Registry<V> registry, V value) {
+		ResourceLocation key = registry.getKey(value);
 		if (key == null) {
 			throw new IllegalArgumentException("Could not get key for value " + value + "!");
 		}
@@ -28,41 +27,41 @@ public final class RegisteredObjects {
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(Block value) {
-		return getKeyOrThrow(ForgeRegistries.BLOCKS, value);
+		return getKeyOrThrow(Registry.BLOCK, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(Item value) {
-		return getKeyOrThrow(ForgeRegistries.ITEMS, value);
+		return getKeyOrThrow(Registry.ITEM, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(Fluid value) {
-		return getKeyOrThrow(ForgeRegistries.FLUIDS, value);
+		return getKeyOrThrow(Registry.FLUID, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(EntityType<?> value) {
-		return getKeyOrThrow(ForgeRegistries.ENTITIES, value);
+		return getKeyOrThrow(Registry.ENTITY_TYPE, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(BlockEntityType<?> value) {
-		return getKeyOrThrow(ForgeRegistries.BLOCK_ENTITIES, value);
+		return getKeyOrThrow(Registry.BLOCK_ENTITY_TYPE, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(Potion value) {
-		return getKeyOrThrow(ForgeRegistries.POTIONS, value);
+		return getKeyOrThrow(Registry.POTION, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(ParticleType<?> value) {
-		return getKeyOrThrow(ForgeRegistries.PARTICLE_TYPES, value);
+		return getKeyOrThrow(Registry.PARTICLE_TYPE, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(RecipeSerializer<?> value) {
-		return getKeyOrThrow(ForgeRegistries.RECIPE_SERIALIZERS, value);
+		return getKeyOrThrow(Registry.RECIPE_SERIALIZER, value);
 	}
 }

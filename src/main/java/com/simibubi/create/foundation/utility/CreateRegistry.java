@@ -6,23 +6,23 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.core.Registry;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class CreateRegistry<K extends IForgeRegistryEntry<K>, V> {
+public class CreateRegistry<K, V> {
 	private static final List<CreateRegistry<?, ?>> ALL = new ArrayList<>();
 
-	protected final IForgeRegistry<K> objectRegistry;
+	protected final Registry<K> objectRegistry;
 	protected final Map<ResourceLocation, V> locationMap = new HashMap<>();
 	protected final Map<K, V> objectMap = new IdentityHashMap<>();
 	protected boolean unwrapped = false;
 
-	public CreateRegistry(IForgeRegistry<K> objectRegistry) {
+	public CreateRegistry(Registry<K> objectRegistry) {
 		this.objectRegistry = objectRegistry;
 		ALL.add(this);
 	}
@@ -31,7 +31,7 @@ public class CreateRegistry<K extends IForgeRegistryEntry<K>, V> {
 		if (!unwrapped) {
 			locationMap.put(location, value);
 		} else {
-			K object = objectRegistry.getValue(location);
+			K object = objectRegistry.get(location);
 			if (object != null) {
 				objectMap.put(object, value);
 			} else {
@@ -58,7 +58,7 @@ public class CreateRegistry<K extends IForgeRegistryEntry<K>, V> {
 		if (!unwrapped) {
 			return locationMap.get(location);
 		} else {
-			K object = objectRegistry.getValue(location);
+			K object = objectRegistry.get(location);
 			if (object != null) {
 				return objectMap.get(object);
 			} else {
@@ -90,7 +90,7 @@ public class CreateRegistry<K extends IForgeRegistryEntry<K>, V> {
 	protected void unwrap() {
 		for (Map.Entry<ResourceLocation, V> entry : locationMap.entrySet()) {
 			ResourceLocation location = entry.getKey();
-			K object = objectRegistry.getValue(location);
+			K object = objectRegistry.get(location);
 			if (object != null) {
 				objectMap.put(object, entry.getValue());
 			} else {

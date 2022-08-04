@@ -9,13 +9,13 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.DynamicItemRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.RenderProperties;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class CustomRenderedItemModelRenderer<M extends CustomRenderedItemModel> implements DynamicItemRenderer {
 
@@ -55,7 +55,7 @@ public abstract class CustomRenderedItemModelRenderer<M extends CustomRenderedIt
 
 	public static void acceptModelFuncs(NonNullBiConsumer<Item, NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> consumer) {
 		for (Item item : ITEMS) {
-			if (ForgeRegistries.ITEMS.containsValue(item)) {
+			if (Registry.ITEM.containsKey(Registry.ITEM.getKey(item))) {
 				BlockEntityWithoutLevelRenderer renderer = RenderProperties.get(item).getItemStackRenderer();
 				if (renderer instanceof CustomRenderedItemModelRenderer<?> customRenderer) {
 					consumer.accept(item, customRenderer::createModel);

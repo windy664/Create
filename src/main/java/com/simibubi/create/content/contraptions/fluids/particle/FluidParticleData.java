@@ -6,6 +6,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.particle.ICustomParticleData;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
+
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
 import net.fabricmc.api.EnvType;

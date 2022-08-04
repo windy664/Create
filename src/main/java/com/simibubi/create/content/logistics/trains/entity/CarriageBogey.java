@@ -148,7 +148,7 @@ public class CarriageBogey {
 
 	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
-		tag.putString("Type", RegisteredObjects.getKeyOrThrow((RegistryNameProvider) type)
+		tag.putString("Type", RegisteredObjects.getKeyOrThrow((Block) type)
 			.toString());
 		tag.put("Points", points.serializeEach(tp -> tp.write(dimensions)));
 		return tag;

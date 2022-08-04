@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.goggles;
 import java.util.List;
 
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 

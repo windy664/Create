@@ -227,7 +227,7 @@ package com.simibubi.create.foundation.utility;
 //			String path = key.getPath();
 //			ResourceLocation remappedId = reMap.get(path);
 //			if (remappedId != null) {
-//				Block remapped = ForgeRegistries.BLOCKS.getValue(remappedId);
+//				Block remapped = Registry.BLOCK.getValue(remappedId);
 //				if (remapped != null) {
 //					Create.LOGGER.warn("Remapping block '{}' to '{}'", key, remappedId);
 //					try {
@@ -247,7 +247,7 @@ package com.simibubi.create.foundation.utility;
 //			String path = key.getPath();
 //			ResourceLocation remappedId = reMap.get(path);
 //			if (remappedId != null) {
-//				Item remapped = ForgeRegistries.ITEMS.getValue(remappedId);
+//				Item remapped = Registry.ITEM.getValue(remappedId);
 //				if (remapped != null) {
 //					Create.LOGGER.warn("Remapping item '{}' to '{}'", key, remappedId);
 //					try {

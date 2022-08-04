@@ -17,6 +17,7 @@ import io.github.fabricators_of_create.porting_lib.extensions.RegistryNameProvid
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.Block;
 
 public class TrainPacket extends SimplePacketBase {
 
@@ -84,7 +85,7 @@ public class TrainPacket extends SimplePacketBase {
 						continue;
 				}
 				CarriageBogey bogey = carriage.bogeys.get(first);
-				buffer.writeResourceLocation(RegisteredObjects.getKeyOrThrow((RegistryNameProvider) bogey.type));
+				buffer.writeResourceLocation(RegisteredObjects.getKeyOrThrow((Block) bogey.type));
 			}
 			buffer.writeVarInt(carriage.bogeySpacing);
 		}

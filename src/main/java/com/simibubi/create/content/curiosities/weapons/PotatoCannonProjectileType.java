@@ -112,7 +112,7 @@ public class PotatoCannonProjectileType {
 							try {
 								Item item = Registry.ITEM.get(new ResourceLocation(primitive.getAsString()));
 								if (item != null) {
-									type.items.add(item);
+									type.items.add(() -> item);
 								}
 							} catch (ResourceLocationException e) {
 								//
@@ -169,7 +169,7 @@ public class PotatoCannonProjectileType {
 		for (int i = 0; i < size; i++) {
 			Item item = Registry.ITEM.get(buffer.readResourceLocation());
 			if (item != null) {
-				type.items.add(item);
+				type.items.add(() -> item);
 			}
 		}
 		type.reloadTicks = buffer.readInt();
@@ -276,7 +276,7 @@ public class PotatoCannonProjectileType {
 
 		public Builder addItems(ItemLike... items) {
 			for (ItemLike provider : items)
-				result.items.add(provider.asItem());
+				result.items.add(provider::asItem);
 			return this;
 		}
 

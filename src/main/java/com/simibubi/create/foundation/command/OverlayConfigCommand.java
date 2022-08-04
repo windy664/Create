@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Components;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;

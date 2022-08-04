@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.fluids.tank;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.core.Registry;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -18,7 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BoilerHeaters {
-	private static final CreateRegistry<Block, Heater> BLOCK_HEATERS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
+	private static final CreateRegistry<Block, Heater> BLOCK_HEATERS = new CreateRegistry<>(Registry.BLOCK);
 	private static final List<HeaterProvider> GLOBAL_HEATERS = new ArrayList<>();
 
 	public static void registerHeater(ResourceLocation block, Heater heater) {
@@ -27,11 +29,6 @@ public class BoilerHeaters {
 
 	public static void registerHeater(Block block, Heater heater) {
 		BLOCK_HEATERS.register(block, heater);
-	}
-
-	@Deprecated(forRemoval = true)
-	public static void registerHeater(Block block, Heater heater) {
-		registerHeater(block.name(), heater);
 	}
 
 	public static void registerHeaterProvider(HeaterProvider provider) {

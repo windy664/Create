@@ -8,9 +8,9 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class CustomRenderedItems {
 
@@ -37,7 +37,7 @@ public class CustomRenderedItems {
 		finalModelFuncs.clear();
 		CustomRenderedItemModelRenderer.acceptModelFuncs(finalModelFuncs::put);
 		modelFuncs.forEach((location, func) -> {
-			Item item = ForgeRegistries.ITEMS.getValue(location);
+			Item item = Registry.ITEM.get(location);
 			if (item == null) {
 				return;
 			}

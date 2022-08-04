@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;

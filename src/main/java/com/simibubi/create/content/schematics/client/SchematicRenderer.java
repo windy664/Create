@@ -18,8 +18,10 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 
+import io.github.fabricators_of_create.porting_lib.model.EmptyModelData;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
@@ -27,6 +29,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
@@ -116,9 +119,7 @@ public class SchematicRenderer {
 				poseStack.pushPose();
 				poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
 
-				BlockEntity tileEntity = renderWorld.getBlockEntity(localPos);
-				dispatcher.renderBatched(state, pos, renderWorld, poseStack, shadeSeparatingWrapper, true, random,
-					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
+				dispatcher.renderBatched(state, pos, renderWorld, poseStack, shadeSeparatingWrapper, true, random);
 
 				poseStack.popPose();
 			}

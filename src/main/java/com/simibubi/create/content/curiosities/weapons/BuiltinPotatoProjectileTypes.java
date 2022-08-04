@@ -330,18 +330,18 @@ public class BuiltinPotatoProjectileTypes {
 				.getMaterial()
 				.isReplaceable())
 				return false;
-			if (!(PlantUtil.isPlant(cropBlock)))
+			if (!(PlantUtil.isPlant(cropBlock.get())))
 				return false;
 			BlockState blockState = world.getBlockState(hitPos);
 			if (!(blockState.getBlock() instanceof FarmBlock))
 				return false;
-			world.setBlock(placePos, cropBlock.defaultBlockState(), 3);
+			world.setBlock(placePos, cropBlock.get().defaultBlockState(), 3);
 			return true;
 		};
 	}
 
 	private static BiPredicate<LevelAccessor, BlockHitResult> plantCrop(Block cropBlock) {
-		return plantCrop(cropBlock.delegate);
+		return plantCrop(() -> cropBlock);
 	}
 
 	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(
@@ -361,7 +361,7 @@ public class BuiltinPotatoProjectileTypes {
 				return false;
 
 			if (face == Direction.UP) {
-				world.setBlock(placePos, block.defaultBlockState(), 3);
+				world.setBlock(placePos, block.get().defaultBlockState(), 3);
 			} else if (world instanceof Level level) {
 				double y = ray.getLocation().y - 0.5;
 				if (!world.isEmptyBlock(placePos.above()))
@@ -370,7 +370,7 @@ public class BuiltinPotatoProjectileTypes {
 					y = Math.max(y, placePos.getY());
 
 				FallingBlockEntity falling = FallingBlockEntityAccessor.create$callInit(level, placePos.getX() + 0.5, y,
-					placePos.getZ() + 0.5, block.defaultBlockState());
+					placePos.getZ() + 0.5, block.get().defaultBlockState());
 				falling.time = 1;
 				world.addFreshEntity(falling);
 			}
@@ -380,7 +380,7 @@ public class BuiltinPotatoProjectileTypes {
 	}
 
 	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(Block block) {
-		return placeBlockOnGround(block.delegate);
+		return placeBlockOnGround(() -> block);
 	}
 
 	private static Predicate<EntityHitResult> chorusTeleport(double teleportDiameter) {

@@ -431,7 +431,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	// ClientLevel#hasChunk (and consequently #isAreaLoaded) always returns true,
 	// so manually check the ChunkSource to avoid weird behavior on the client side
 	protected boolean isAreaActuallyLoaded(BlockPos center, int range) {
-		if (!level.isAreaLoaded(center, range)) {
+		if (!level.hasChunksAt(center.offset(-range, -range, -range), center.offset(range, range, range))) {
 			return false;
 		}
 		if (level.isClientSide) {

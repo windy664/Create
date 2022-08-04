@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.simibubi.create.foundation.utility.Components;
+
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 
 import org.jetbrains.annotations.NotNull;

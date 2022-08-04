@@ -4,6 +4,8 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.simibubi.create.foundation.utility.Components;
+
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.ClientboundPlayerAbilitiesPacketAccessor;
 
 import net.minecraft.commands.CommandSourceStack;

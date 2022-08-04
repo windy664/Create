@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.utility.RegisteredObjects;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.simibubi.create.AllTags;

@@ -9,9 +9,9 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class CustomBlockModels {
 
@@ -35,7 +35,7 @@ public class CustomBlockModels {
 	private void loadEntries() {
 		finalModelFunc.clear();
 		modelFuncs.asMap().forEach((location, funcList) -> {
-			Block block = ForgeRegistries.BLOCKS.getValue(location);
+			Block block = Registry.BLOCK.get(location);
 			if (block == null) {
 				return;
 			}

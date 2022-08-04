@@ -70,9 +70,8 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 				.limit(maxRows)
 				.map(entry -> LongAttached.with(
 						entry.getValue(),
-						// FIXME PORT
-						Components.translatable(fluidNames.get(entry.getKey()).getTranslationKey()))
-				);
+						FluidVariantAttributes.getName(fluidNames.get(entry.getKey()).getType()).copy()
+				));
 	}
 
 	@Override

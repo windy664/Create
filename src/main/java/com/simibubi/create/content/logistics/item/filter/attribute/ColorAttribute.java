@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
+
 import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
 import net.minecraft.client.resources.language.I18n;

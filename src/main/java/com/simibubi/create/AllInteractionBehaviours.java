@@ -3,6 +3,8 @@ package com.simibubi.create;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.core.Registry;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
@@ -19,7 +21,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class AllInteractionBehaviours {
-	private static final CreateRegistry<Block, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
+	private static final CreateRegistry<Block, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new CreateRegistry<>(Registry.BLOCK);
 	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
 
 	public static void registerBehaviour(ResourceLocation block, MovingInteractionBehaviour provider) {
@@ -28,11 +30,6 @@ public class AllInteractionBehaviours {
 
 	public static void registerBehaviour(Block block, MovingInteractionBehaviour provider) {
 		BLOCK_BEHAVIOURS.register(block, provider);
-	}
-
-	@Deprecated(forRemoval = true)
-	public static void registerBehaviour(Block block, MovingInteractionBehaviour provider) {
-		registerBehaviour(block.name(), provider);
 	}
 
 	public static void registerBehaviourProvider(BehaviourProvider provider) {

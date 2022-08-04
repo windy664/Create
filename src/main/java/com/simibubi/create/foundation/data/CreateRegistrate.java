@@ -19,6 +19,7 @@ import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivit
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
@@ -38,7 +39,6 @@ import io.github.fabricators_of_create.porting_lib.util.FluidAttributes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -207,30 +207,30 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	public static <T extends Block> NonNullConsumer<? super T> casingConnectivity(
 		BiConsumer<T, CasingConnectivity> consumer) {
-		return entry -> onClient(() -> () -> ClientMethods.registerCasingConnectivity(entry, consumer));
+		return entry -> onClient(() -> () -> registerCasingConnectivity(entry, consumer));
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> blockModel(
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
-		return entry -> onClient(() -> () -> ClientMethods.registerBlockModel(entry, func));
+		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
 	}
 
 	public static <T extends Item> NonNullConsumer<? super T> itemModel(
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
-		return entry -> onClient(() -> () -> ClientMethods.registerItemModel(entry, func));
+		return entry -> onClient(() -> () -> registerItemModel(entry, func));
+	}
+
+	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(
+			Supplier<ConnectedTextureBehaviour> behavior) {
+		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
 
 	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
 			Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
 		return b -> {
-			onClient(() -> () -> ClientMethods.customRenderedItem(b, supplier));
+			onClient(() -> () -> customRenderedItem(b, supplier));
 			return b;
 		};
-	}
-
-	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(
-		Supplier<ConnectedTextureBehaviour> behavior) {
-		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
 
 	protected static void onClient(Supplier<Runnable> toRun) {
@@ -262,6 +262,22 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		ConnectedTextureBehaviour behavior = behaviorSupplier.get();
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
 			.register(RegisteredObjects.getKeyOrThrow(entry), model -> new CTModel(model, behavior));
+	}
+
+	@Environment(EnvType.CLIENT)
+	private static <T extends Item, P> void customRenderedItem(ItemBuilder<T, P> b,
+															   Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
+		b.onRegister(entry -> {
+			CustomRenderedItemModelRenderer<?> renderer = supplier.get().get();
+			BuiltinItemRendererRegistry.INSTANCE.register(entry, renderer);
+			registerCustomRenderedItem(entry, renderer);
+		});
+	}
+
+	@Environment(EnvType.CLIENT)
+	private static void registerCustomRenderedItem(Item entry, CustomRenderedItemModelRenderer<?> renderer) {
+		CreateClient.MODEL_SWAPPER.getCustomRenderedItems()
+				.register(() -> entry, renderer::createModel);
 	}
 
 }
