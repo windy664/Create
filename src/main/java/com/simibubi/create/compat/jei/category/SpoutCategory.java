@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import com.simibubi.create.foundation.item.ItemHelper;
 
@@ -84,10 +85,10 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 					continue;
 
 				Ingredient bucket = Ingredient.of(stack);
-				ResourceLocation itemName = stack.getItem()
-						.getRegistryName();
-				ResourceLocation fluidName = fluidCopy.getFluid()
-						.getRegistryName();
+				ResourceLocation itemName = RegisteredObjects.getKeyOrThrow(stack.getItem()
+						);
+				ResourceLocation fluidName = RegisteredObjects.getKeyOrThrow(fluidCopy.getFluid()
+						);
 				consumer.accept(new ProcessingRecipeBuilder<>(FillingRecipe::new,
 						Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()
 								+ "_with_" + fluidName.getNamespace() + "_" + fluidName.getPath()))

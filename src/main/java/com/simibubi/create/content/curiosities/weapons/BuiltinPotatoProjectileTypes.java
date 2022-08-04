@@ -3,6 +3,7 @@ package com.simibubi.create.content.curiosities.weapons;
 import java.util.UUID;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
@@ -315,7 +316,7 @@ public class BuiltinPotatoProjectileTypes {
 			entity.addEffect(effect);
 	}
 
-	private static BiPredicate<LevelAccessor, BlockHitResult> plantCrop(Block cropBlock) {
+	private static BiPredicate<LevelAccessor, BlockHitResult> plantCrop(Supplier<? extends Block> cropBlock) {
 		return (world, ray) -> {
 			if (world.isClientSide())
 				return true;
@@ -339,8 +340,12 @@ public class BuiltinPotatoProjectileTypes {
 		};
 	}
 
+	private static BiPredicate<LevelAccessor, BlockHitResult> plantCrop(Block cropBlock) {
+		return plantCrop(cropBlock.delegate);
+	}
+
 	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(
-		Block block) {
+		Supplier<? extends Block> block) {
 		return (world, ray) -> {
 			if (world.isClientSide())
 				return true;
@@ -372,6 +377,10 @@ public class BuiltinPotatoProjectileTypes {
 
 			return true;
 		};
+	}
+
+	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(Block block) {
+		return placeBlockOnGround(block.delegate);
 	}
 
 	private static Predicate<EntityHitResult> chorusTeleport(double teleportDiameter) {

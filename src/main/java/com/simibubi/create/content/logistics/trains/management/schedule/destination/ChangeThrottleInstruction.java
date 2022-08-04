@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -13,7 +14,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -29,8 +30,8 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 		return Pair.of(icon(), formatted());
 	}
 
-	private TextComponent formatted() {
-		return new TextComponent(intData("Value") + "%");
+	private MutableComponent formatted() {
+		return Components.literal(intData("Value") + "%");
 	}
 
 	@Override

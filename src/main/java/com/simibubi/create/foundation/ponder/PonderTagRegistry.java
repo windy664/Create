@@ -10,6 +10,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import net.minecraft.core.Registry;
@@ -110,7 +111,7 @@ public class PonderTagRegistry {
 		}
 
 		public TagBuilder add(ItemLike item) {
-			return add(Registry.ITEM.getKey(item.asItem()));
+			return add(RegisteredObjects.getKeyOrThrow(item.asItem()));
 		}
 
 		public TagBuilder add(ItemProviderEntry<?> entry) {

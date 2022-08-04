@@ -33,7 +33,7 @@ public interface IHaveGoggleInformation {
 	 * Use Lang.[...].forGoggles(list)
 	 */
 	@Deprecated
-	Component componentSpacing = new TextComponent(spacing);
+	Component componentSpacing = Components.literal(spacing);
 
 	/**
 	 * this method will be called when looking at a TileEntity that implemented this

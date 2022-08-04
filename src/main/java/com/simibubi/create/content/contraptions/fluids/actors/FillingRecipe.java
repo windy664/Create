@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
@@ -72,7 +73,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 		List<FluidStack> matchingFluidStacks = fluidIngredients.get(0).getMatchingFluidStacks();
 
 		if (matchingFluidStacks.size() == 0)
-			return new TextComponent("Invalid");
+			return Components.literal("Invalid");
 
 		Fluid fluid = matchingFluidStacks.get(0).getFluid();
 		String translationKey = FluidUtil.getTranslationKey(fluid);

@@ -11,6 +11,7 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
@@ -19,7 +20,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -63,7 +63,7 @@ public class SuperGlueSelectionHandler {
 
 		if (clusterCooldown > 0) {
 			if (clusterCooldown == 25)
-				player.displayClientMessage(TextComponent.EMPTY, true);
+				player.displayClientMessage(Components.immutableEmpty(), true);
 			CreateClient.OUTLINER.keep(clusterOutlineSlot);
 			clusterCooldown--;
 		}

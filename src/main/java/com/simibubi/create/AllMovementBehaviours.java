@@ -1,9 +1,7 @@
 package com.simibubi.create;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -12,18 +10,29 @@ import com.simibubi.create.content.contraptions.components.actors.CampfireMoveme
 import com.simibubi.create.content.contraptions.components.actors.dispenser.DispenserMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.dispenser.DropperMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.foundation.utility.CreateRegistry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class AllMovementBehaviours {
-	private static final Map<Block, MovementBehaviour> BLOCK_BEHAVIOURS = new HashMap<>();
+	private static final CreateRegistry<Block, MovementBehaviour> BLOCK_BEHAVIOURS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
 	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
 
+	public static void registerBehaviour(ResourceLocation block, MovementBehaviour behaviour) {
+		BLOCK_BEHAVIOURS.register(block, behaviour);
+	}
+
 	public static void registerBehaviour(Block block, MovementBehaviour behaviour) {
-		BLOCK_BEHAVIOURS.put(block, behaviour);
+		BLOCK_BEHAVIOURS.register(block, behaviour);
+	}
+
+	@Deprecated(forRemoval = true)
+	public static void registerBehaviour(Block block, MovementBehaviour behaviour) {
+		registerBehaviour(block.name(), behaviour);
 	}
 
 	public static void registerBehaviourProvider(BehaviourProvider provider) {

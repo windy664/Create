@@ -23,7 +23,7 @@ public class ItemUseOverrides {
 	private static final Set<ResourceLocation> OVERRIDES = new HashSet<>();
 
 	public static void addBlock(Block block) {
-		OVERRIDES.add(Registry.BLOCK.getKey(block));
+		OVERRIDES.add(RegisteredObjects.getKeyOrThrow(block));
 	}
 
 	public static InteractionResult onBlockActivated(Player player, Level world, InteractionHand hand, BlockHitResult traceResult) {
@@ -37,7 +37,7 @@ public class ItemUseOverrides {
 
 		BlockState state = world
 				.getBlockState(pos);
-		ResourceLocation id = Registry.BLOCK.getKey(state.getBlock());
+		ResourceLocation id = RegisteredObjects.getKeyOrThrow(state.getBlock());
 
 		if (!OVERRIDES.contains(id))
 			return InteractionResult.PASS;

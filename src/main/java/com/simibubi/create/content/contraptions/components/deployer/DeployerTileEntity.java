@@ -12,6 +12,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
@@ -22,6 +23,8 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.Components;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -419,6 +422,12 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 		}
 	}
 
+	@Override
+	public void writeSafe(CompoundTag tag) {
+		NBTHelper.writeEnum(tag, "Mode", mode);
+		super.writeSafe(tag);
+	}
+
 	private DeployerItemHandler createHandler() {
 		return new DeployerItemHandler(this);
 	}
@@ -472,6 +481,30 @@ public class DeployerTileEntity extends KineticTileEntity implements ItemTransfe
 		if (overflowItems.isEmpty())
 			return false;
 		TooltipHelper.addHint(tooltip, "hint.full_deployer");
+		return true;
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		Lang.translate("tooltip.deployer.header")
+			.forGoggles(tooltip);
+
+		Lang.translate("tooltip.deployer." + (mode == Mode.USE ? "using" : "punching"))
+			.style(ChatFormatting.YELLOW)
+			.forGoggles(tooltip);
+
+		if (!heldItem.isEmpty())
+			Lang.translate("tooltip.deployer.contains",
+				Components.translatable(heldItem.getDescriptionId()).getString(), heldItem.getCount())
+				.style(ChatFormatting.GREEN)
+				.forGoggles(tooltip);
+
+		float stressAtBase = calculateStressApplied();
+		if (StressImpact.isEnabled() && !Mth.equal(stressAtBase, 0)) {
+			tooltip.add(Components.immutableEmpty());
+			addStressImpactStats(tooltip, stressAtBase);
+		}
+
 		return true;
 	}
 

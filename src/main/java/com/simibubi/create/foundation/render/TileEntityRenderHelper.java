@@ -15,6 +15,7 @@ import com.mojang.math.Vector4f;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -79,8 +80,7 @@ public class TileEntityRenderHelper {
 			} catch (Exception e) {
 				iterator.remove();
 
-				String message = "BlockEntity " + Registry.BLOCK_ENTITY_TYPE
-					.getKey(tileEntity.getType())
+				String message = "BlockEntity " + RegisteredObjects.getKeyOrThrow(tileEntity.getType())
 					.toString() + " could not be rendered virtually.";
 				if (AllConfigs.CLIENT.explainRenderErrors.get())
 					Create.LOGGER.error(message, e);

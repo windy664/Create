@@ -7,7 +7,6 @@ import com.tterrag.registrate.fabric.EnvExecutor;
 import net.fabricmc.api.EnvType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 public class OverlayConfigCommand {
@@ -24,7 +23,7 @@ public class OverlayConfigCommand {
 										(ServerPlayer) ctx.getSource().getEntity()));
 
 					ctx.getSource()
-						.sendSuccess(new TextComponent("reset overlay offset"), true);
+						.sendSuccess(Components.literal("reset overlay offset"), true);
 
 						return 1;
 					})
@@ -37,7 +36,7 @@ public class OverlayConfigCommand {
 									(ServerPlayer) ctx.getSource().getEntity()));
 
 					ctx.getSource()
-							.sendSuccess(new TextComponent("window opened"), true);
+							.sendSuccess(Components.literal("window opened"), true);
 
 				return 1;
 			});

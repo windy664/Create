@@ -11,6 +11,7 @@ import com.simibubi.create.content.curiosities.armor.BackTankUtil;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.item.EntitySwingListenerItem;
@@ -25,8 +26,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -220,21 +219,21 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements EntitySwin
 			String _reload = "potato_cannon.ammo.reload_ticks";
 			String _knockback = "potato_cannon.ammo.knockback";
 
-			tooltip.add(new TextComponent(""));
-			tooltip.add(new TranslatableComponent(ammo.getDescriptionId()).append(new TextComponent(":"))
+			tooltip.add(Components.immutableEmpty());
+			tooltip.add(Components.translatable(ammo.getDescriptionId()).append(Components.literal(":"))
 				.withStyle(ChatFormatting.GRAY));
 			PotatoCannonProjectileType type = PotatoProjectileTypeManager.getTypeForStack(ammo)
 				.get();
-			TextComponent spacing = new TextComponent(" ");
+			MutableComponent spacing = Components.literal(" ");
 			ChatFormatting green = ChatFormatting.GREEN;
 			ChatFormatting darkGreen = ChatFormatting.DARK_GREEN;
 
 			float damageF = type.getDamage() * additionalDamageMult;
-			MutableComponent damage = new TextComponent(
+			MutableComponent damage = Components.literal(
 				damageF == Mth.floor(damageF) ? "" + Mth.floor(damageF) : "" + damageF);
-			MutableComponent reloadTicks = new TextComponent("" + type.getReloadTicks());
+			MutableComponent reloadTicks = Components.literal("" + type.getReloadTicks());
 			MutableComponent knockback =
-				new TextComponent("" + (type.getKnockback() + additionalKnockback));
+				Components.literal("" + (type.getKnockback() + additionalKnockback));
 
 			damage = damage.withStyle(additionalDamageMult > 1 ? green : darkGreen);
 			knockback = knockback.withStyle(additionalKnockback > 0 ? green : darkGreen);

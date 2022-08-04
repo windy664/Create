@@ -34,7 +34,7 @@ public abstract class AbstractSimiScreen extends Screen {
 	}
 
 	protected AbstractSimiScreen() {
-		this(TextComponent.EMPTY);
+		this(Components.immutableEmpty());
 	}
 
 	/**

@@ -205,11 +205,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 */
 	/* Util */
 
-	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(
-		Supplier<ConnectedTextureBehaviour> behavior) {
-		return entry -> onClient(() -> () -> ClientMethods.registerCTBehviour(entry, behavior));
-	}
-
 	public static <T extends Block> NonNullConsumer<? super T> casingConnectivity(
 		BiConsumer<T, CasingConnectivity> consumer) {
 		return entry -> onClient(() -> () -> ClientMethods.registerCasingConnectivity(entry, consumer));
@@ -233,17 +228,13 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		};
 	}
 
-	protected static void onClient(Supplier<Runnable> toRun) {
-		EnvExecutor.runWhenOn(EnvType.CLIENT, toRun);
+	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(
+		Supplier<ConnectedTextureBehaviour> behavior) {
+		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
 
-	@Environment(EnvType.CLIENT)
-	private static class ClientMethods {
-
-	private static void registerCTBehviour(Block entry, Supplier<ConnectedTextureBehaviour> behaviorSupplier) {
-		ConnectedTextureBehaviour behavior = behaviorSupplier.get();
-		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(() -> entry/*.delegate*/, model -> new CTModel(model, behavior));
+	protected static void onClient(Supplier<Runnable> toRun) {
+		EnvExecutor.runWhenOn(EnvType.CLIENT, toRun);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -252,36 +243,25 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		consumer.accept(entry, CreateClient.CASING_CONNECTIVITY);
 	}
 
-		@Environment(EnvType.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private static void registerBlockModel(Block entry,
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(() -> entry/*.delegate*/, func.get());
+			.register(RegisteredObjects.getKeyOrThrow(entry), func.get());
 	}
 
 	@Environment(EnvType.CLIENT)
 	private static void registerItemModel(Item entry,
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomItemModels()
-			.register(() -> entry/*.delegate*/, func.get());
+			.register(RegisteredObjects.getKeyOrThrow(entry), func.get());
 	}
 
 	@Environment(EnvType.CLIENT)
-	private static <T extends Item, P> void customRenderedItem(ItemBuilder<T, P> b,
-		Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
-		b.onRegister(entry -> {
-			CustomRenderedItemModelRenderer<?> renderer = supplier.get().get();
-			BuiltinItemRendererRegistry.INSTANCE.register(entry, renderer);
-			registerCustomRenderedItem(entry, renderer);
-		});
-	}
-
-	@Environment(EnvType.CLIENT)
-	private static void registerCustomRenderedItem(Item entry, CustomRenderedItemModelRenderer<?> renderer) {
-		CreateClient.MODEL_SWAPPER.getCustomRenderedItems()
-				.register(() -> entry, renderer::createModel);
-	}
-
+	private static void registerCTBehviour(Block entry, Supplier<ConnectedTextureBehaviour> behaviorSupplier) {
+		ConnectedTextureBehaviour behavior = behaviorSupplier.get();
+		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
+			.register(RegisteredObjects.getKeyOrThrow(entry), model -> new CTModel(model, behavior));
 	}
 
 }

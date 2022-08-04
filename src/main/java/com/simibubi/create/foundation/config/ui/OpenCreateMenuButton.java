@@ -27,7 +27,7 @@ public class OpenCreateMenuButton extends Button {
 	public static final ItemStack ICON = AllItems.GOGGLES.asStack();
 
 	public OpenCreateMenuButton(int x, int y) {
-		super(x, y, 20, 20, TextComponent.EMPTY, OpenCreateMenuButton::click);
+		super(x, y, 20, 20, Components.immutableEmpty(), OpenCreateMenuButton::click);
 	}
 
 	@Override

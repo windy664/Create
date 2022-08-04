@@ -15,6 +15,7 @@ import com.simibubi.create.content.logistics.trains.management.display.FlapDispl
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FluidFormatter;
 import com.simibubi.create.foundation.utility.LongAttached;
@@ -69,7 +70,8 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 				.limit(maxRows)
 				.map(entry -> LongAttached.with(
 						entry.getValue(),
-						FluidVariantAttributes.getName(fluidNames.get(entry.getKey()).getType()).copy())
+						// FIXME PORT
+						Components.translatable(fluidNames.get(entry.getKey()).getTranslationKey()))
 				);
 	}
 

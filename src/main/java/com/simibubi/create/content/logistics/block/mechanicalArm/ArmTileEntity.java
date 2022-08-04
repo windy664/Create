@@ -33,6 +33,7 @@ import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -45,6 +46,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -426,10 +428,45 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		notifyUpdate();
 	}
 
+	// ClientLevel#hasChunk (and consequently #isAreaLoaded) always returns true,
+	// so manually check the ChunkSource to avoid weird behavior on the client side
+	protected boolean isAreaActuallyLoaded(BlockPos center, int range) {
+		if (!level.isAreaLoaded(center, range)) {
+			return false;
+		}
+		if (level.isClientSide) {
+			int minY = center.getY() - range;
+			int maxY = center.getY() + range;
+			if (maxY < level.getMinBuildHeight() || minY >= level.getMaxBuildHeight()) {
+				return false;
+			}
+
+			int minX = center.getX() - range;
+			int minZ = center.getZ() - range;
+			int maxX = center.getX() + range;
+			int maxZ = center.getZ() + range;
+
+			int minChunkX = SectionPos.blockToSectionCoord(minX);
+			int maxChunkX = SectionPos.blockToSectionCoord(maxX);
+			int minChunkZ = SectionPos.blockToSectionCoord(minZ);
+			int maxChunkZ = SectionPos.blockToSectionCoord(maxZ);
+
+			ChunkSource chunkSource = level.getChunkSource();
+			for (int chunkX = minChunkX; chunkX <= maxChunkX; ++chunkX) {
+				for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; ++chunkZ) {
+					if (!chunkSource.hasChunk(chunkX, chunkZ)) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 	protected void initInteractionPoints() {
 		if (!updateInteractionPoints || interactionPointTag == null)
 			return;
-		if (!LevelUtil.isAreaLoaded(level, worldPosition, getRange() + 1))
+		if (!isAreaActuallyLoaded(worldPosition, getRange() + 1))
 			return;
 		inputs.clear();
 		outputs.clear();
@@ -487,8 +524,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	@Override
-	public void writeSafe(CompoundTag compound, boolean clientPacket) {
-		super.writeSafe(compound, clientPacket);
+	public void writeSafe(CompoundTag compound) {
+		super.writeSafe(compound);
 
 		writeInteractionPoints(compound);
 	}
@@ -522,7 +559,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			previousTarget = previousPoint == null ? ArmAngleTarget.NO_TARGET
 				: previousPoint.getTargetAngles(worldPosition, ceiling);
 			if (previousPoint != null)
-				previousBaseAngle = previousPoint.getTargetAngles(worldPosition, ceiling).baseAngle;
+				previousBaseAngle = previousTarget.baseAngle;
 
 			ArmInteractionPoint targetedPoint = getTargetedInteractionPoint();
 			if (targetedPoint != null)

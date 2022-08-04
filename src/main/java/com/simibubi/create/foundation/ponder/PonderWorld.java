@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
@@ -233,7 +234,7 @@ public class PonderWorld extends SchematicWorld {
 	@SuppressWarnings("unchecked")
 	private <T extends ParticleOptions> Particle makeParticle(T data, double x, double y, double z, double mx, double my,
 		double mz) {
-		int key = Registry.PARTICLE_TYPE.getId(data.getType());
+		ResourceLocation key = RegisteredObjects.getKeyOrThrow(data.getType());
 		ParticleProvider<T> particleProvider = (ParticleProvider<T>) particleProviders.get(key);
 		return particleProvider == null ? null
 			: particleProvider.createParticle(data, asClientWorld.get(), x, y, z, mx, my, mz);

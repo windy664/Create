@@ -5,6 +5,7 @@ import com.simibubi.create.content.logistics.block.display.target.DisplayTargetS
 import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.FluidFormatter;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -14,7 +15,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class FluidAmountDisplaySource extends SingleLineDisplaySource {
@@ -44,7 +44,7 @@ public class FluidAmountDisplaySource extends SingleLineDisplaySource {
 			}
 		}
 
-		return new TextComponent(FluidFormatter.asString(collected, false));
+		return Components.literal(FluidFormatter.asString(collected, false));
 	}
 
 	@Override

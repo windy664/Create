@@ -18,7 +18,7 @@ public class ClearBufferCacheCommand {
 			.executes(ctx -> {
 				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> ClearBufferCacheCommand::execute);
 				ctx.getSource()
-					.sendSuccess(new TextComponent("Cleared rendering buffers."), true);
+					.sendSuccess(Components.literal("Cleared rendering buffers."), true);
 				return 1;
 			});
 	}

@@ -5,6 +5,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.mojang.brigadier.StringReader;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.content.contraptions.particle.ICustomParticleDataWithSprite;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -61,7 +62,7 @@ public abstract class BasicParticleData<T extends Particle> implements ParticleO
 
 	@Override
 	public String writeToString() {
-		return Registry.PARTICLE_TYPE.getKey(getType()).toString();
+		return RegisteredObjects.getKeyOrThrow(getType()).toString();
 	}
 
 	@Override

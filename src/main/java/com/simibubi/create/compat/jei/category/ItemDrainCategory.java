@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import com.simibubi.create.foundation.item.ItemHelper;
 
@@ -73,10 +74,8 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				continue;
 
 			Ingredient ingredient = Ingredient.of(stack);
-			ResourceLocation itemName = stack.getItem()
-				.getRegistryName();
-			ResourceLocation fluidName = extracted.getFluid()
-				.getRegistryName();
+			ResourceLocation itemName = RegisteredObjects.getKeyOrThrow(stack.getItem());
+			ResourceLocation fluidName = RegisteredObjects.getKeyOrThrow(extracted.getFluid());
 
 			consumer.accept(new ProcessingRecipeBuilder<>(EmptyingRecipe::new,
 				Create.asResource("empty_" + itemName.getNamespace() + "_" + itemName.getPath() + "_of_"

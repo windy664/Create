@@ -9,7 +9,6 @@ import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.Clientb
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -39,7 +38,7 @@ public class FlySpeedCommand {
 		player.connection.send(packet);
 
 		ctx.getSource()
-			.sendSuccess(new TextComponent("Temporarily set " + player.getName()
+			.sendSuccess(Components.literal("Temporarily set " + player.getName()
 				.getString() + "'s Flying Speed to: " + speed), true);
 
 		return Command.SINGLE_SUCCESS;

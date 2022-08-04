@@ -56,7 +56,7 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 
 	@Override
 	public String writeToString() {
-		return Registry.PARTICLE_TYPE.getKey(type) + " " + Registry.FLUID.getKey(fluid.getFluid());
+		return RegisteredObjects.getKeyOrThrow(type) + " " + RegisteredObjects.getKeyOrThrow(fluid.getFluid());
 	}
 
 	public static final Codec<FluidParticleData> CODEC = RecordCodecBuilder.create(i -> i

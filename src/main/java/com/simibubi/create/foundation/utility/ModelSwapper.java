@@ -79,7 +79,7 @@ public class ModelSwapper {
 
 	public static List<ModelResourceLocation> getAllBlockStateModelLocations(Block block) {
 		List<ModelResourceLocation> models = new ArrayList<>();
-		ResourceLocation blockRl = Registry.BLOCK.getKey(block);
+		ResourceLocation blockRl = RegisteredObjects.getKeyOrThrow(block);
 		block.getStateDefinition()
 			.getPossibleStates()
 			.forEach(state -> {
@@ -89,7 +89,7 @@ public class ModelSwapper {
 	}
 
 	public static ModelResourceLocation getItemModelLocation(Item item) {
-		return new ModelResourceLocation(Registry.ITEM.getKey(item), "inventory");
+		return new ModelResourceLocation(RegisteredObjects.getKeyOrThrow(item), "inventory");
 	}
 
 }

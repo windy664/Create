@@ -149,8 +149,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 	}
 
 	@Override
-	public void writeSafe(CompoundTag compound, boolean clientPacket) {
-		super.writeSafe(compound, clientPacket);
+	public void writeSafe(CompoundTag compound) {
+		super.writeSafe(compound);
 		if (input == null)
 			return;
 

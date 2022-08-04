@@ -137,8 +137,8 @@ public class SymmetryHandler {
 				.tesselateBlock(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
 					random, Mth.getSeed(pos), OverlayTexture.NO_OVERLAY);
 
-			buffer.endBatch();
 			ms.popPose();
+			buffer.endBatch();
 		}
 	}
 

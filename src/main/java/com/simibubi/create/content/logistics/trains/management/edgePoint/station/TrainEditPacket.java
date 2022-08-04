@@ -8,9 +8,9 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainIconType;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -50,7 +50,7 @@ public class TrainEditPacket extends SimplePacketBase {
 			if (train == null)
 				return;
 			if (!name.isBlank())
-				train.name = new TextComponent(name);
+				train.name = Components.literal(name);
 			train.icon = TrainIconType.byId(iconType);
 			if (sender != null)
 				AllPackets.channel.sendToClientsInServer(new TrainEditReturnPacket(id, name, iconType),

@@ -227,7 +227,7 @@ public class CopperBlockSet {
 		public void generateBlockState(DataGenContext<Block, Block> ctx, RegistrateBlockstateProvider prov,
 			CopperBlockSet blocks, WeatherState state, boolean waxed) {
 			Block block = ctx.get();
-			String path = Registry.BLOCK.getKey(block)
+			String path = RegisteredObjects.getKeyOrThrow(block)
 				.getPath();
 			String baseLoc = ModelProvider.BLOCK_FOLDER + "/" + blocks.generalDirectory + getWeatherStatePrefix(state);
 

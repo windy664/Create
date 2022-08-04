@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.BaseSpawnerAccessor;
@@ -75,7 +76,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 	@Override
 	public String getDescriptionId() {
-		return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + Registry.ITEM.getKey(this).getPath();
+		return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + RegisteredObjects.getKeyOrThrow(this).getPath();
 	}
 
 	@Override
@@ -103,7 +104,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			possibleSpawns.add(((BaseSpawnerAccessor) spawner).port_lib$getNextSpawnData());
 		}
 
-		ResourceLocation blazeId = Registry.ENTITY_TYPE.getKey(EntityType.BLAZE);
+		ResourceLocation blazeId = RegisteredObjects.getKeyOrThrow(EntityType.BLAZE);
 		for (SpawnData e : possibleSpawns) {
 			ResourceLocation spawnerEntityId = new ResourceLocation(e.entityToSpawn()
 				.getString("id"));

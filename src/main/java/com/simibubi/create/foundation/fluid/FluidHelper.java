@@ -100,7 +100,7 @@ public class FluidHelper {
 
 	public static JsonElement serializeFluidStack(FluidStack stack) {
 		JsonObject json = new JsonObject();
-		json.addProperty("fluid", Registry.FLUID.getKey(stack.getFluid())
+		json.addProperty("fluid", RegisteredObjects.getKeyOrThrow(stack.getFluid())
 			.toString());
 		json.addProperty("amount", stack.getAmount());
 		if (stack.hasTag())

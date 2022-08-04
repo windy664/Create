@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -56,7 +56,7 @@ public class AstralSorceryAmuletAttribute implements ItemAttribute {
 
         Enchantment enchant = Registry.ENCHANTMENT.get(ResourceLocation.tryParse(enchName));
         if(enchant != null) {
-            something = new TranslatableComponent(enchant.getDescriptionId()).getString();
+            something = Components.translatable(enchant.getDescriptionId()).getString();
         }
 
         if(enchType == 1) something = "existing " + something;

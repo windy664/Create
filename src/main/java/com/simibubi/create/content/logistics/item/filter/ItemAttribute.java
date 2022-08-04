@@ -41,7 +41,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -127,7 +127,7 @@ public interface ItemAttribute {
 	}
 
 	@Environment(value = EnvType.CLIENT)
-	default TranslatableComponent format(boolean inverted) {
+	default MutableComponent format(boolean inverted) {
 		return Lang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
 			getTranslationParameters());
 	}
@@ -304,7 +304,7 @@ public interface ItemAttribute {
 
 		@Override
 		@Environment(value = EnvType.CLIENT)
-		public TranslatableComponent format(boolean inverted) {
+		public MutableComponent format(boolean inverted) {
 			return Lang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
 				group.getDisplayName());
 		}

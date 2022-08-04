@@ -8,6 +8,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -39,7 +41,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implements ITE<SequencedGearshiftTileEntity>, WeakPowerCheckingBlock {
+public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implements ITE<SequencedGearshiftTileEntity>, ITransformableBlock, WeakPowerCheckingBlock {
 
 	public static final BooleanProperty VERTICAL = BooleanProperty.create("vertical");
 	public static final IntegerProperty STATE = IntegerProperty.create("state", 0, 5);
@@ -170,6 +172,26 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
 		return state.getValue(STATE)
 			.intValue();
+	}
+
+	@Override
+	public BlockState transform(BlockState state, StructureTransform transform) {
+		if (transform.mirror != null) {
+			state = mirror(state, transform.mirror);
+		}
+
+		if (transform.rotationAxis == Direction.Axis.Y) {
+			return rotate(state, transform.rotation);
+		}
+
+		if (transform.rotation.ordinal() % 2 == 1) {
+			if (transform.rotationAxis != state.getValue(HORIZONTAL_AXIS)) {
+				return state.cycle(VERTICAL);
+			} else if (state.getValue(VERTICAL)) {
+				return state.cycle(VERTICAL).cycle(HORIZONTAL_AXIS);
+			}
+		}
+		return state;
 	}
 
 }

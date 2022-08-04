@@ -6,6 +6,7 @@ import com.google.common.base.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -99,7 +100,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 			return register(consumer -> {
 				MechanicalCraftingRecipeBuilder b =
 					builder.apply(MechanicalCraftingRecipeBuilder.shapedRecipe(result.get(), amount));
-				ResourceLocation location = Create.asResource("mechanical_crafting/" + Registry.ITEM.getKey(result.get()
+				ResourceLocation location = Create.asResource("mechanical_crafting/" + RegisteredObjects.getKeyOrThrow(result.get()
 					.asItem())
 					.getPath() + suffix);
 				b.build(consumer, location);

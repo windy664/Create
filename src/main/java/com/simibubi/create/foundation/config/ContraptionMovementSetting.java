@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.config;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
@@ -15,38 +14,39 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 public enum ContraptionMovementSetting {
 	MOVABLE, NO_PICKUP, UNMOVABLE;
 
-	private static HashMap<ResourceLocation, Supplier<ContraptionMovementSetting>> registry = new HashMap<>();
+	private static final CreateRegistry<Block, Supplier<ContraptionMovementSetting>> SETTING_SUPPLIERS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
 
-	public static void register(ResourceLocation id, Supplier<ContraptionMovementSetting> setting) {
-		registry.put(id, setting);
+	public static void register(ResourceLocation block, Supplier<ContraptionMovementSetting> settingSupplier) {
+		SETTING_SUPPLIERS.register(block, settingSupplier);
 	}
 
-	static {
-		register(Registry.BLOCK.getKey(Blocks.BUDDING_AMETHYST), () -> AllConfigs.SERVER.kinetics.amethystMovement.get());
-		register(Registry.BLOCK.getKey(Blocks.SPAWNER), () -> AllConfigs.SERVER.kinetics.spawnerMovement.get());
-		register(Registry.BLOCK.getKey(Blocks.OBSIDIAN), () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());
-		register(Registry.BLOCK.getKey(Blocks.CRYING_OBSIDIAN), () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());
+	public static void register(Block block, Supplier<ContraptionMovementSetting> settingSupplier) {
+		SETTING_SUPPLIERS.register(block, settingSupplier);
 	}
 
 	@Nullable
 	public static ContraptionMovementSetting get(Block block) {
-		if (block instanceof IMovementSettingProvider)
-			return ((IMovementSettingProvider) block).getContraptionMovementSetting();
-		return get(Registry.BLOCK.getKey(block));
+		if (block instanceof IMovementSettingProvider provider)
+			return provider.getContraptionMovementSetting();
+		Supplier<ContraptionMovementSetting> supplier = SETTING_SUPPLIERS.get(block);
+		if (supplier == null)
+			return null;
+		return supplier.get();
 	}
 
-	@Nullable
-	public static ContraptionMovementSetting get(ResourceLocation id) {
-		Supplier<ContraptionMovementSetting> supplier = registry.get(id);
-		return supplier == null ? null : supplier.get();
-	}
-
-	protected static boolean allAre(Collection<StructureTemplate.StructureBlockInfo> blocks, ContraptionMovementSetting are) {
+	public static boolean allAre(Collection<StructureTemplate.StructureBlockInfo> blocks, ContraptionMovementSetting are) {
 		return blocks.stream().anyMatch(b -> get(b.state.getBlock()) == are);
 	}
 
 	public static boolean isNoPickup(Collection<StructureTemplate.StructureBlockInfo> blocks) {
 		return allAre(blocks, ContraptionMovementSetting.NO_PICKUP);
+	}
+
+	public static void registerDefaults() {
+		register(Blocks.BUDDING_AMETHYST, () -> AllConfigs.SERVER.kinetics.amethystMovement.get());
+		register(Blocks.SPAWNER, () -> AllConfigs.SERVER.kinetics.spawnerMovement.get());
+		register(Blocks.OBSIDIAN, () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());
+		register(Blocks.CRYING_OBSIDIAN, () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());
 	}
 
 	public interface IMovementSettingProvider /* extends Block */ {

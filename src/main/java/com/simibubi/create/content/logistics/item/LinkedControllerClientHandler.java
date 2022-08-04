@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.Lang;
 import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
@@ -30,7 +31,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -216,7 +216,7 @@ public class LinkedControllerClientHandler {
 			return;
 
 		poseStack.pushPose();
-		Screen tooltipScreen = new Screen(TextComponent.EMPTY) {
+		Screen tooltipScreen = new Screen(Components.immutableEmpty()) {
 		};
 		tooltipScreen.init(mc, window.getGuiScaledWidth(), window.getGuiScaledHeight());
 

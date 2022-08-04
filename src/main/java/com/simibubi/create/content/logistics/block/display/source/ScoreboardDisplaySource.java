@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -12,7 +13,6 @@ import com.simibubi.create.foundation.utility.LongAttached;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Objective;
@@ -43,7 +43,7 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 			.getPlayerScores(objective)
 			.stream()
 			.limit(maxRows)
-			.map(score -> LongAttached.with(score.getScore(), new TextComponent(score.getOwner()).copy()))
+			.map(score -> LongAttached.with(score.getScore(), Components.literal(score.getOwner()).copy()))
 			.sorted(LongAttached.comparator());
 	}
 

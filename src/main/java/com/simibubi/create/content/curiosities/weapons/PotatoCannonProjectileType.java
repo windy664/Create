@@ -1,14 +1,16 @@
 package com.simibubi.create.content.curiosities.weapons;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.Registry;
@@ -22,7 +24,7 @@ import net.minecraft.world.phys.EntityHitResult;
 
 public class PotatoCannonProjectileType {
 
-	private Set<Item> items = new HashSet<>();
+	private List<Supplier<Item>> items = new ArrayList<>();
 
 	private int reloadTicks = 10;
 	private int damage = 1;
@@ -42,7 +44,7 @@ public class PotatoCannonProjectileType {
 	protected PotatoCannonProjectileType() {
 	}
 
-	public Set<Item> getItems() {
+	public List<Supplier<Item>> getItems() {
 		return items;
 	}
 
@@ -147,8 +149,8 @@ public class PotatoCannonProjectileType {
 
 	public static void toBuffer(PotatoCannonProjectileType type, FriendlyByteBuf buffer) {
 		buffer.writeVarInt(type.items.size());
-		for (Item delegate : type.items) {
-			buffer.writeResourceLocation(Registry.ITEM.getKey(delegate));
+		for (Supplier<Item> delegate : type.items) {
+			buffer.writeResourceLocation(RegisteredObjects.getKeyOrThrow(delegate.get()));
 		}
 		buffer.writeInt(type.reloadTicks);
 		buffer.writeInt(type.damage);

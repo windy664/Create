@@ -29,6 +29,7 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
@@ -36,6 +37,7 @@ import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.CreateRegistry;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
@@ -66,6 +68,8 @@ public class Create implements ModInitializer {
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
 	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
+	/** Use the {@link Random} of a local {@link Level} or {@link Entity} or create one */
+	@Deprecated
 	public static final Random RANDOM = new Random();
 
 	private static final NonNullSupplier<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
@@ -89,6 +93,7 @@ public class Create implements ModInitializer {
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
 		AllDisplayBehaviours.registerDefaults();
+		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
@@ -126,6 +131,7 @@ public class Create implements ModInitializer {
 	}
 
 	public static void init() {
+		CreateRegistry.unwrapAll();
 		AllPackets.registerPackets();
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();

@@ -58,7 +58,7 @@ public class ColorAttribute implements ItemAttribute {
 			colors.addAll(getFireworkStarColors(nbt.getCompound("Explosion")));
 		}
 
-		Arrays.stream(DyeColor.values()).filter(c -> Registry.ITEM.getKey(stack.getItem()).getPath().startsWith(c.getName() + "_")).forEach(colors::add);
+		Arrays.stream(DyeColor.values()).filter(c -> RegisteredObjects.getKeyOrThrow(stack.getItem()).getPath().startsWith(c.getName() + "_")).forEach(colors::add);
 
 		return colors;
 	}

@@ -40,7 +40,7 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 		if (handler == null)
 			return 0;
 
-		ResourceLocation registryName = Registry.BLOCK_ENTITY_TYPE.getKey(te.getType());
+		ResourceLocation registryName = RegisteredObjects.getKeyOrThrow(te.getType());
 		if (!registryName.equals(TABLE) && !registryName.equals(BASIN))
 			return 0;
 

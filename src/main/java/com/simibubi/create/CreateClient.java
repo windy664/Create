@@ -36,6 +36,7 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
@@ -47,7 +48,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
@@ -154,16 +154,16 @@ public class CreateClient implements ClientModInitializer {
 		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
 			return;
 
-		MutableComponent text = ComponentUtils.wrapInSquareBrackets(new TextComponent("WARN"))
+		MutableComponent text = ComponentUtils.wrapInSquareBrackets(Components.literal("WARN"))
 			.withStyle(ChatFormatting.GOLD)
-			.append(new TextComponent(
+			.append(Components.literal(
 				" Some of Create's visual features will not be available while Fabulous graphics are enabled!"))
 			.withStyle(style -> style
 				.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/create dismissFabulousWarning"))
 				.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-					new TextComponent("Click here to disable this warning"))));
+					Components.literal("Click here to disable this warning"))));
 
-		mc.gui.handleChat(ChatType.CHAT, text, mc.player.getUUID());
+		mc.player.displayClientMessage(text, false);
 	}
 
 }
