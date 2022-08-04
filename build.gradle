@@ -15,7 +15,7 @@ String buildNumber = System.getenv("GITHUB_RUN_NUMBER")
 version = mod_version + (buildNumber != null ? "-${buildNumber}" : "")
 
 group = project.maven_group
-archivesBaseName = "create-${project.minecraft_version}"
+archivesBaseName = "create-fabric-${project.minecraft_version}"
 
 repositories {
     mavenCentral()
