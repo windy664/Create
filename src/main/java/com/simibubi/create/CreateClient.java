@@ -27,7 +27,6 @@ import com.simibubi.create.events.ClientEvents;
 import com.simibubi.create.events.InputEvents;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
@@ -42,7 +41,6 @@ import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
-
 import io.github.fabricators_of_create.porting_lib.util.ArmorTextureRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.ChatFormatting;
@@ -52,7 +50,6 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class CreateClient implements ClientModInitializer {
 
@@ -77,7 +74,7 @@ public class CreateClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() { // onCtorClient and clientInit merged
 //		modEventBus.addListener(CreateClient::clientInit); // merged together
-//		modEventBus.addListener(AllParticleTypes::registerFactories); // ParticleManagerRegistrationCallback in ClientEvents // TODO why an event?
+//		modEventBus.addListener(AllParticleTypes::registerFactories); // ParticleManagerRegistrationCallback in ClientEvents
 		FlywheelEvents.GATHER_CONTEXT.register(CreateContexts::flwInit);
 		FlywheelEvents.GATHER_CONTEXT.register(ContraptionRenderDispatcher::gatherContext);
 

@@ -7,14 +7,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import com.simibubi.create.foundation.utility.RegisteredObjects;
-
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.StairBlockAccessor;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -26,7 +24,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
-import net.minecraft.core.Registry;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.StairBlockAccessor;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -329,7 +327,7 @@ public class CopperBlockSet {
 						new WeatheringCopperStairBlock(state, Blocks.AIR.defaultBlockState(), p);
 					// WeatheringCopperStairBlock does not have a constructor that takes a Supplier,
 					// so setting the field directly is the easiest solution
-					// todo: port
+					// fabric: unnecessary
 //					ObfuscationReflectionHelper.setPrivateValue(StairBlock.class, block, defaultStateSupplier,
 //						"stateSupplier");
 					return block;

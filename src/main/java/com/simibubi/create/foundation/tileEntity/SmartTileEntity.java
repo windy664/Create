@@ -122,7 +122,7 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	 * whether setRemoved was called due to a chunk unload or not, and remove this
 	 * volatile workaround
 
-		here in fabric land, we actually need to reimplement this bug for parity :)
+		fabric: here we actually need to reimplement this bug for parity :)
 	 */
 	private boolean unloaded;
 
