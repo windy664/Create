@@ -20,7 +20,6 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteracti
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
-import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.events.CommonEvents;
@@ -38,7 +37,10 @@ import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.CreateRegistry;
-import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
+import com.simibubi.create.foundation.worldgen.AllFeatures;
+import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
+import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
+import com.simibubi.create.foundation.worldgen.BuiltinRegistration;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import io.github.tropheusj.milk.Milk;
@@ -52,7 +54,7 @@ public class Create implements ModInitializer {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5c";
+	public static final String VERSION = "0.5d";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -90,14 +92,27 @@ public class Create implements ModInitializer {
 		AllContainerTypes.register();
 		AllEntityTypes.register();
 		AllTileEntities.register();
+		AllEnchantments.register();
+		AllRecipeTypes.register(modEventBus);
+		AllParticleTypes.register(modEventBus);
+		AllStructureProcessorTypes.register(modEventBus);
+		AllEntityDataSerializers.register(modEventBus);
+		AllOreFeatureConfigEntries.init();
+		AllFeatures.register(modEventBus);
+		AllPlacementModifiers.register(modEventBus);
+		BuiltinRegistration.register(modEventBus);
+
+		AllConfigs.register(modLoadingContext);
+
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
 		AllDisplayBehaviours.registerDefaults();
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
+		BlockSpoutingBehaviour.registerDefaults();
+
 		AllWorldFeatures.register();
 		AllEnchantments.register();
-		BlockSpoutingBehaviour.register();
 
 		Milk.enableMilkFluid();
 
@@ -139,21 +154,23 @@ public class Create implements ModInitializer {
 //		event.enqueueWork(() -> {
 			AllAdvancements.register();
 			AllTriggers.register();
-			SchematicProcessor.register();
-			AllWorldFeatures.registerFeatures();
-			AllWorldFeatures.registerPlacementTypes();
 			BoilerHeaters.registerDefaults();
 //		});
 	}
 
 	public static void gatherData(FabricDataGenerator gen, ExistingFileHelper helper) {
-		gen.addProvider(new AllAdvancements(gen));
-		gen.addProvider(new LangMerger(gen));
-		gen.addProvider(AllSoundEvents.provider(gen));
-		gen.addProvider(new StandardRecipeGen(gen));
-		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
-		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
-		ProcessingRecipeGen.registerAll(gen);
+		if (event.includeClient()) {
+			gen.addProvider(new LangMerger(gen));
+			gen.addProvider(AllSoundEvents.provider(gen));
+		}
+		if (event.includeServer()) {
+			gen.addProvider(new AllAdvancements(gen));
+			gen.addProvider(new StandardRecipeGen(gen));
+			gen.addProvider(new MechanicalCraftingRecipeGen(gen));
+			gen.addProvider(new SequencedAssemblyRecipeGen(gen));
+			ProcessingRecipeGen.registerAll(gen);
+//			AllOreFeatureConfigEntries.gatherData(event);
+		}
 	}
 
 	public static CreateRegistrate registrate() {

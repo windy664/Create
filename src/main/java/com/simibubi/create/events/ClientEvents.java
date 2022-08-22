@@ -201,8 +201,6 @@ public class ClientEvents {
 		TrainHUD.tick();
 	}
 
-	public static boolean onRenderSelection(LevelRenderer context, Camera info, HitResult target, float partialTicks, PoseStack matrix, MultiBufferSource buffers) { return false; }
-
 	public static void onJoin(ClientPacketListener handler, PacketSender sender, Minecraft client) {
 		CreateClient.checkGraphicsFanciness();
 	}

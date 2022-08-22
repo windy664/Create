@@ -209,6 +209,8 @@ public class MinecartContraptionItem extends Item {
 			return InteractionResult.PASS;
 		if (!entity.isAlive())
 			return InteractionResult.PASS;
+		if (player instanceof DeployerFakePlayer dfp && dfp.onMinecartContraption)
+			return;
 		AbstractMinecart cart = (AbstractMinecart) entity;
 		Type type = cart.getMinecartType();
 		if (type != Type.RIDEABLE && type != Type.FURNACE && type != Type.CHEST)
@@ -249,7 +251,7 @@ public class MinecartContraptionItem extends Item {
 			.getBlocks()
 			.size() > 200)
 			AllAdvancements.CART_PICKUP.awardTo(player);
-		
+
 		player.getInventory().placeItemBackInInventory(generatedStack);
 		contraption.discard();
 		entity.discard();

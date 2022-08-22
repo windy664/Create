@@ -96,7 +96,6 @@ public class CreateClient implements ClientModInitializer {
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllKeys.register();
-		// AllFluids.assignRenderLayers();
 		AllBlockPartials.init();
 		AllStitchedTextures.init();
 

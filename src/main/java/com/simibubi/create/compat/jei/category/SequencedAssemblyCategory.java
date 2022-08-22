@@ -59,8 +59,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 						return;
 
 					float chance = recipe.getOutputChance();
-					tooltip.add(1, Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
-							.withStyle(ChatFormatting.GOLD));
+					tooltip.add(1, chanceComponent(chance));
 				});
 
 		int width = 0;
@@ -160,8 +159,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		if (!singleOutput && mouseX >= minX && mouseX < maxX && mouseY >= minY && mouseY < maxY) {
 			float chance = recipe.getOutputChance();
 			tooltip.add(junk);
-			tooltip.add(Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : 100 - (int) (chance * 100))
-				.withStyle(ChatFormatting.GOLD));
+			tooltip.add(chanceComponent(1 - chance));
 			return tooltip;
 		}
 
@@ -200,5 +198,11 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		}
 
 		return tooltip;
+	}
+
+	protected MutableComponent chanceComponent(float chance) {
+		String number = chance < 0.01 ? "<1" : chance > 0.99 ? ">99" : String.valueOf(Math.round(chance * 100));
+		return Lang.translateDirect("recipe.processing.chance", number)
+			.withStyle(ChatFormatting.GOLD);
 	}
 }

@@ -1025,7 +1025,7 @@ public abstract class Contraption {
 					.isEmpty()
 					&& !blockState.getCollisionShape(world, targetPos)
 						.isEmpty())) {
-					if (targetPos.getY() == 0)
+					if (targetPos.getY() == world.getMinBuildHeight())
 						targetPos = targetPos.above();
 					world.levelEvent(2001, targetPos, Block.getId(state));
 					Block.dropResources(state, world, targetPos, null);
@@ -1050,7 +1050,7 @@ public abstract class Contraption {
 				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();
 				verticalRotation = verticalRotation && transform.rotation != Rotation.NONE;
 				if (verticalRotation) {
-					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock)
+					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock || state.getBlock() instanceof DoorBlock)
 						world.destroyBlock(targetPos, true);
 				}
 

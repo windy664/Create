@@ -165,7 +165,7 @@ public class ToolboxHandlerClient {
 
 	public static void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.options.hideGui)
+		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
 
 		int x = window.getGuiScaledWidth() / 2 - 90;

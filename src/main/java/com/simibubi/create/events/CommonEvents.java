@@ -69,7 +69,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
-import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
+import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
 import io.github.fabricators_of_create.porting_lib.event.common.BlockPlaceCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.FluidPlaceBlockCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
@@ -218,7 +218,7 @@ public class CommonEvents {
 	}
 
 	public static void onBiomeLoad() {
-		AllWorldFeatures.reload();
+		AllOreFeatureConfigEntries.modifyBiomes();
 	}
 
 	public static void leftClickEmpty(ServerPlayer player) {

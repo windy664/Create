@@ -56,7 +56,7 @@ public class AllFluids {
 
 	public static final FluidEntry<PotionFluid> POTION =
 			REGISTRATE.virtualFluid("potion", PotionFluidAttributes::new, PotionFluid::new)
-					.lang(f -> "fluid.create.potion", "Potion")
+					.lang("Potion")
 					.onRegister(potion -> {
 						Fluid still = potion.getSource();
 						Fluid flowing = potion.getFlowing();
@@ -77,7 +77,7 @@ public class AllFluids {
 					.register();
 
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
-			.lang(f -> "fluid.create.tea", "Builder's Tea")
+			.lang("Builder's Tea")
 			.tag(AllTags.forgeFluidTag("tea"))
 			.onRegisterAfter(Item.class, tea -> {
 				Fluid still = tea.getSource();
@@ -94,7 +94,7 @@ public class AllFluids {
 
 	public static final FluidEntry<SimpleFlowableFluid.Flowing> HONEY =
 			REGISTRATE.standardFluid("honey"/*, NoColorFluidAttributes::new*/)
-					.lang(f -> "fluid.create.honey", "Honey")
+					.lang("Honey")
 //					.attributes(b -> b.viscosity(2000)
 //							.density(1400))
 					.properties(p -> p.levelDecreasePerBlock(2)
@@ -126,7 +126,7 @@ public class AllFluids {
 
 	public static final FluidEntry<SimpleFlowableFluid.Flowing> CHOCOLATE =
 			REGISTRATE.standardFluid("chocolate"/*, NoColorFluidAttributes::new*/)
-					.lang(f -> "fluid.create.chocolate", "Chocolate")
+					.lang("Chocolate")
 					.tag(AllTags.forgeFluidTag("chocolate"))
 //					.attributes(b -> b.viscosity(1500)
 //							.density(1400))
@@ -152,20 +152,6 @@ public class AllFluids {
 	// Load this class
 
 	public static void register() {}
-
-	@Environment(EnvType.CLIENT)
-	public static void assignRenderLayers() {}
-
-	@Environment(EnvType.CLIENT)
-	private static void makeTranslucent(FluidEntry<?> entry) {
-//		SimpleFlowableFluid fluid = entry.get();
-//		ItemBlockRenderTypes.setRenderLayer(fluid, RenderType.translucent());
-//		ItemBlockRenderTypes.setRenderLayer(fluid.getSource(), RenderType.translucent());
-
-		// fabric
-		BlockRenderLayerMap.INSTANCE.putFluid(entry.get(), RenderType.translucent());
-		BlockRenderLayerMap.INSTANCE.putFluid(entry.get().getSource(), RenderType.translucent());
-	}
 
 	@Nullable
 	public static BlockState getLavaInteraction(FluidState fluidState) {

@@ -52,6 +52,7 @@ public class DeployerFakePlayer extends FakeServerPlayer {
 	Pair<BlockPos, Float> blockBreakingProgress;
 	ItemStack spawnedItemEffects;
 	public boolean placedTracks;
+	public boolean onMinecartContraption;
 
 	public DeployerFakePlayer(ServerLevel world) {
 		super(BUILDER, world.getServer(), world, DEPLOYER_PROFILE);

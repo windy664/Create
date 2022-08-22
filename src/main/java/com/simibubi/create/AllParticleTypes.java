@@ -37,19 +37,22 @@ public enum AllParticleTypes {
 	SOUL(SoulParticle.Data::new),
 	SOUL_BASE(SoulBaseParticle.Data::new),
 	SOUL_PERIMETER(SoulParticle.PerimeterData::new),
-	SOUL_EXPANDING_PERIMETER(SoulParticle.ExpandingPerimeterData::new)
-	;
+	SOUL_EXPANDING_PERIMETER(SoulParticle.ExpandingPerimeterData::new);
 
-	private ParticleEntry<?> entry;
+	private final ParticleEntry<?> entry;
 
 	<D extends ParticleOptions> AllParticleTypes(Supplier<? extends ICustomParticleData<D>> typeFactory) {
-		String asId = Lang.asId(this.name());
-		entry = new ParticleEntry<>(new ResourceLocation(Create.ID, asId), typeFactory);
+		String name = Lang.asId(name());
+		entry = new ParticleEntry<>(name, typeFactory);
 	}
 
 	public static void register() {
 		for (AllParticleTypes particle : values())
 			particle.entry.register();
+	}
+
+	public static void register(IEventBus modEventBus) {
+		ParticleEntry.REGISTER.register(modEventBus);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -60,39 +63,31 @@ public enum AllParticleTypes {
 	}
 
 	public ParticleType<?> get() {
-		return entry.getOrCreateType();
+		return entry.object.get();
 	}
 
 	public String parameter() {
-		return Lang.asId(name());
+		return entry.name;
 	}
 
-	private class ParticleEntry<D extends ParticleOptions> {
-		Supplier<? extends ICustomParticleData<D>> typeFactory;
-		ParticleType<D> type;
-		ResourceLocation id;
+	private static class ParticleEntry<D extends ParticleOptions> {
+		private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Create.ID);
 
-		public ParticleEntry(ResourceLocation id, Supplier<? extends ICustomParticleData<D>> typeFactory) {
-			this.id = id;
+		private final String name;
+		private final Supplier<? extends ICustomParticleData<D>> typeFactory;
+		private final RegistryObject<ParticleType<D>> object;
+
+		public ParticleEntry(String name, Supplier<? extends ICustomParticleData<D>> typeFactory) {
+			this.name = name;
 			this.typeFactory = typeFactory;
-		}
 
-		void register() {
-			Registry.register(Registry.PARTICLE_TYPE, id, getOrCreateType());
-		}
-
-		ParticleType<D> getOrCreateType() {
-			if (type != null)
-				return type;
-			type = typeFactory.get()
-				.createType();
-			return type;
+			object = REGISTER.register(name, () -> this.typeFactory.get().createType());
 		}
 
 		@Environment(EnvType.CLIENT)
-		void registerFactory(ParticleEngine particles) {
+		public void registerFactory(ParticleEngine particles) {
 			typeFactory.get()
-				.register(getOrCreateType(), particles);
+				.register(object.get(), particles);
 		}
 
 	}

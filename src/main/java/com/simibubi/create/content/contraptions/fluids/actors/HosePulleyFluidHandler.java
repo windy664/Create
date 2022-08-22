@@ -28,15 +28,29 @@ public class HosePulleyFluidHandler implements SingleSlotStorage<FluidVariant> {
 			return 0;
 		if (resource.isBlank() || !FluidHelper.hasBlockState(resource.getFluid()))
 			return 0;
+// FIXME PORT
+		int diff = resource.getAmount();
+		int totalAmountAfterFill = diff + internalTank.getFluidAmount();
+		FluidStack remaining = resource.copy();
+		boolean deposited = false;
 
-		long inserted = internalTank.insert(resource, maxAmount, transaction);
-		if (internalTank.amount >= FluidConstants.BUCKET && predicate.get()) {
-			if (filler.tryDeposit(resource.getFluid(), rootPosGetter.get(), transaction)) {
-				drainer.counterpartActed(transaction);
-				internalTank.extract(resource, FluidConstants.BUCKET, transaction);
+		if (predicate.get() && totalAmountAfterFill >= 1000) {
+			if (filler.tryDeposit(resource.getFluid(), rootPosGetter.get(), action.simulate())) {
+				drainer.counterpartActed();
+				remaining.shrink(1000);
+				diff -= 1000;
+				deposited = true;
 			}
 		}
-		return inserted;
+
+		if (action.simulate())
+			return diff <= 0 ? resource.getAmount() : internalTank.fill(remaining, action);
+		if (diff <= 0) {
+			internalTank.drain(-diff, FluidAction.EXECUTE);
+			return resource.getAmount();
+		}
+
+		return internalTank.fill(remaining, action) + (deposited ? 1000 : 0);
 	}
 
 	@Override
