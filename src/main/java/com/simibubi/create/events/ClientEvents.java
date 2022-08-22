@@ -458,9 +458,7 @@ public class ClientEvents {
 		PlayerTickEvents.END.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
 		ClientPlayConnectionEvents.DISCONNECT.register(ClientEvents::onLeave);
-		DrawSelectionEvents.BLOCK.register(ClientEvents::onRenderSelection);
 		DrawSelectionEvents.BLOCK.register(TrackBlockOutline::drawCustomBlockSelection);
-		DrawSelectionEvents.ENTITY.register(ClientEvents::onRenderSelection);
 		// we need to add our config button after mod menu, so we register our event with a phase that comes later
 		ResourceLocation latePhase = Create.asResource("late");
 		ScreenEvents.AFTER_INIT.addPhaseOrdering(Event.DEFAULT_PHASE, latePhase);

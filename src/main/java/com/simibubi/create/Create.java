@@ -150,7 +150,7 @@ public class Create implements ModInitializer {
 		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
 		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
 		ProcessingRecipeGen.registerAll(gen);
-//		AllOreFeatureConfigEntries.gatherData(event);
+//		AllOreFeatureConfigEntries.gatherData(gen);
 	}
 
 	public static CreateRegistrate registrate() {

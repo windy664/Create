@@ -28,29 +28,27 @@ public class HosePulleyFluidHandler implements SingleSlotStorage<FluidVariant> {
 			return 0;
 		if (resource.isBlank() || !FluidHelper.hasBlockState(resource.getFluid()))
 			return 0;
-// FIXME PORT
-		int diff = resource.getAmount();
-		int totalAmountAfterFill = diff + internalTank.getFluidAmount();
-		FluidStack remaining = resource.copy();
+
+		long diff = maxAmount;
+		long totalAmountAfterFill = diff + internalTank.getFluidAmount();
+		long remaining = maxAmount;
 		boolean deposited = false;
 
-		if (predicate.get() && totalAmountAfterFill >= 1000) {
-			if (filler.tryDeposit(resource.getFluid(), rootPosGetter.get(), action.simulate())) {
-				drainer.counterpartActed();
-				remaining.shrink(1000);
-				diff -= 1000;
+		if (predicate.get() && totalAmountAfterFill >= FluidConstants.BUCKET) {
+			if (filler.tryDeposit(resource.getFluid(), rootPosGetter.get(), transaction)) {
+				drainer.counterpartActed(transaction);
+				remaining -= FluidConstants.BUCKET;
+				diff -= FluidConstants.BUCKET;
 				deposited = true;
 			}
 		}
 
-		if (action.simulate())
-			return diff <= 0 ? resource.getAmount() : internalTank.fill(remaining, action);
 		if (diff <= 0) {
-			internalTank.drain(-diff, FluidAction.EXECUTE);
-			return resource.getAmount();
+			internalTank.extract(resource, -diff, transaction);
+			return maxAmount;
 		}
 
-		return internalTank.fill(remaining, action) + (deposited ? 1000 : 0);
+		return internalTank.insert(resource, remaining, transaction) + (deposited ? FluidConstants.BUCKET : 0);
 	}
 
 	@Override

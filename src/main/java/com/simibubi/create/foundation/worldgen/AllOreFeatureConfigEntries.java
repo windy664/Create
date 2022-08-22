@@ -14,6 +14,7 @@ import com.tterrag.registrate.fabric.GatherDataEvent;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.BuiltinRegistries;
@@ -91,8 +92,7 @@ public class AllOreFeatureConfigEntries {
 		}
 	}
 
-	public static void gatherData(GatherDataEvent event) {
-		DataGenerator generator = event.getGenerator();
+	public static void gatherData(FabricDataGenerator generator) {
 		RegistryAccess registryAccess = RegistryAccess.BUILTIN.get();
 
 		//
