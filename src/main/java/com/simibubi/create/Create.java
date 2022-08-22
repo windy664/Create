@@ -47,7 +47,9 @@ import io.github.tropheusj.milk.Milk;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class Create implements ModInitializer {
@@ -77,12 +79,7 @@ public class Create implements ModInitializer {
 	private static final NonNullSupplier<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
 
 	@Override
-	public void onInitialize() {
-		onCtor();
-	}
-
-	public static void onCtor() {
-		AllConfigs.register();
+	public void onInitialize() { // onCtor
 		AllSoundEvents.prepare();
 		AllBlocks.register();
 		AllItems.register();
@@ -93,16 +90,19 @@ public class Create implements ModInitializer {
 		AllEntityTypes.register();
 		AllTileEntities.register();
 		AllEnchantments.register();
-		AllRecipeTypes.register(modEventBus);
-		AllParticleTypes.register(modEventBus);
-		AllStructureProcessorTypes.register(modEventBus);
-		AllEntityDataSerializers.register(modEventBus);
+		AllRecipeTypes.register();
+		AllParticleTypes.register();
+		AllStructureProcessorTypes.register();
+		AllEntityDataSerializers.register();
 		AllOreFeatureConfigEntries.init();
-		AllFeatures.register(modEventBus);
-		AllPlacementModifiers.register(modEventBus);
-		BuiltinRegistration.register(modEventBus);
+		AllFeatures.register();
+		AllPlacementModifiers.register();
+		BuiltinRegistration.register();
 
-		AllConfigs.register(modLoadingContext);
+		// fabric exclusive, squeeze this in here to register before stuff is ued
+		REGISTRATE.get().register();
+
+		AllConfigs.register();
 
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
@@ -111,38 +111,22 @@ public class Create implements ModInitializer {
 		AllArmInteractionPointTypes.register();
 		BlockSpoutingBehaviour.registerDefaults();
 
-		AllWorldFeatures.register();
-		AllEnchantments.register();
-
 		Milk.enableMilkFluid();
+		CopperRegistries.inject();
 
-//		GatherDataEvent.EVENT.register(Create::gatherData);
-
-		AllRecipeTypes.register();
-		AllParticleTypes.register();
+		Create.init();
+//		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData); // CreateData entrypoint
 		AllSoundEvents.register();
 
-//		forgeEventBus.register(CHUNK_UTIL);
-//		CHUNK_UTIL.fabricInitEvents();
-
-		// handled as ClientModInitializer
-//		EnvExecutor.runWhenOn(EnvType.CLIENT,
-//			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
-
-
-		REGISTRATE.get().register();
-		CopperRegistries.inject();
-		init();
-		CommonEvents.register();
-		AllWorldFeatures.registerOreFeatures();
-
-		AllEntityDataSerializers.register();
-
-		AllPackets.channel.initServerListener();
+//		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus)); // CreateClient entrypoint
 
 		// causes class loading issues or something
 		// noinspection Convert2MethodRef
 		Mods.TRINKETS.executeIfInstalled(() -> () -> Trinkets.init());
+
+		// fabric exclusive
+		CommonEvents.register();
+		AllPackets.channel.initServerListener();
 	}
 
 	public static void init() {
@@ -159,18 +143,14 @@ public class Create implements ModInitializer {
 	}
 
 	public static void gatherData(FabricDataGenerator gen, ExistingFileHelper helper) {
-		if (event.includeClient()) {
-			gen.addProvider(new LangMerger(gen));
-			gen.addProvider(AllSoundEvents.provider(gen));
-		}
-		if (event.includeServer()) {
-			gen.addProvider(new AllAdvancements(gen));
-			gen.addProvider(new StandardRecipeGen(gen));
-			gen.addProvider(new MechanicalCraftingRecipeGen(gen));
-			gen.addProvider(new SequencedAssemblyRecipeGen(gen));
-			ProcessingRecipeGen.registerAll(gen);
-//			AllOreFeatureConfigEntries.gatherData(event);
-		}
+		gen.addProvider(new LangMerger(gen));
+		gen.addProvider(AllSoundEvents.provider(gen));
+		gen.addProvider(new AllAdvancements(gen));
+		gen.addProvider(new StandardRecipeGen(gen));
+		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
+		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
+		ProcessingRecipeGen.registerAll(gen);
+//		AllOreFeatureConfigEntries.gatherData(event);
 	}
 
 	public static CreateRegistrate registrate() {

@@ -10,7 +10,6 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.worldgen.LayerPattern.Layer.LayerBuilder;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
@@ -52,8 +51,8 @@ public class LayerPattern {
 		return new Builder();
 	}
 
-	public staticclass Builder {
-private final List<Layer> layers = new ArrayList<>();
+	public static class Builder {
+		private final List<Layer> layers = new ArrayList<>();
 		private boolean netherMode;
 
 		public Builder inNether() {

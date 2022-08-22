@@ -5,17 +5,15 @@ import java.util.Map;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.worldgen.OreFeatureConfigEntry.DatagenExtension;
 
-import net.minecraft.core.Registry;
+import io.github.fabricators_of_create.porting_lib.util.LazyRegistrar;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
 
 public class BuiltinRegistration {
-	private static final DeferredRegister<ConfiguredFeature<?, ?>> CONFIGURED_FEATURE_REGISTER = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, Create.ID);
-	private static final DeferredRegister<PlacedFeature> PLACED_FEATURE_REGISTER = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, Create.ID);
+	private static final LazyRegistrar<ConfiguredFeature<?, ?>> CONFIGURED_FEATURE_REGISTER = LazyRegistrar.create(BuiltinRegistries.CONFIGURED_FEATURE, Create.ID);
+	private static final LazyRegistrar<PlacedFeature> PLACED_FEATURE_REGISTER = LazyRegistrar.create(BuiltinRegistries.PLACED_FEATURE, Create.ID);
 
 	static {
 		for (Map.Entry<ResourceLocation, OreFeatureConfigEntry> entry : OreFeatureConfigEntry.ALL.entrySet()) {
@@ -30,8 +28,8 @@ public class BuiltinRegistration {
 		}
 	}
 
-	public static void register(IEventBus modEventBus) {
-		CONFIGURED_FEATURE_REGISTER.register(modEventBus);
-		PLACED_FEATURE_REGISTER.register(modEventBus);
+	public static void register() {
+		CONFIGURED_FEATURE_REGISTER.register();
+		PLACED_FEATURE_REGISTER.register();
 	}
 }

@@ -74,9 +74,10 @@ public class CreateClient implements ClientModInitializer {
 
 	public static final ClientResourceReloadListener RESOURCE_RELOAD_LISTENER = new ClientResourceReloadListener();
 
-	public static void onCtorClient() {
-//		modEventBus.addListener(CreateClient::clientInit);
-//		modEventBus.addListener(AllParticleTypes::registerFactories);
+	@Override
+	public void onInitializeClient() { // onCtorClient and clientInit merged
+//		modEventBus.addListener(CreateClient::clientInit); // merged together
+//		modEventBus.addListener(AllParticleTypes::registerFactories); // ParticleManagerRegistrationCallback in ClientEvents // TODO why an event?
 		FlywheelEvents.GATHER_CONTEXT.register(CreateContexts::flwInit);
 		FlywheelEvents.GATHER_CONTEXT.register(ContraptionRenderDispatcher::gatherContext);
 
@@ -84,10 +85,9 @@ public class CreateClient implements ClientModInitializer {
 
 		ZAPPER_RENDER_HANDLER.registerListeners();
 		POTATO_CANNON_RENDER_HANDLER.registerListeners();
-	}
 
-	@Override
-	public void onInitializeClient() {
+		// clientInit start
+
 		BUFFER_CACHE.registerCompartment(CachedBufferer.GENERIC_TILE);
 		BUFFER_CACHE.registerCompartment(CachedBufferer.PARTIAL);
 		BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
@@ -106,8 +106,7 @@ public class CreateClient implements ClientModInitializer {
 
 		UIRenderHelper.init();
 
-		onCtorClient();
-
+		// fabric exclusive
 		ClientEvents.register();
 		InputEvents.register();
 		AllPackets.channel.initClientListener();

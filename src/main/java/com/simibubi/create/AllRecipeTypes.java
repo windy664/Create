@@ -4,6 +4,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import io.github.fabricators_of_create.porting_lib.util.LazyRegistrar;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableSet;
@@ -65,18 +68,20 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	TOOLBOX_DYEING(() -> new SimpleRecipeSerializer<>(ToolboxDyeingRecipe::new), () -> RecipeType.CRAFTING, false);
 
 	private final ResourceLocation id;
-	private final RegistryObject<RecipeSerializer<?>> serializerObject;
+	private final RecipeSerializer<?> serializerObject;
 	@Nullable
-	private final RegistryObject<RecipeType<?>> typeObject;
+	private final RecipeType<?> typeObject;
 	private final Supplier<RecipeType<?>> type;
 
 	AllRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier, Supplier<RecipeType<?>> typeSupplier, boolean registerType) {
 		String name = Lang.asId(name());
 		id = Create.asResource(name);
-		serializerObject = Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
+		serializerObject = serializerSupplier.get();
+		Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
 		if (registerType) {
-			typeObject = Registers.TYPE_REGISTER.register(name, typeSupplier);
-			type = typeObject;
+			typeObject = typeSupplier.get();
+			Registers.TYPE_REGISTER.register(name, typeSupplier);
+			type = typeSupplier;
 		} else {
 			typeObject = null;
 			type = typeSupplier;
@@ -86,9 +91,11 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	AllRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier) {
 		String name = Lang.asId(name());
 		id = Create.asResource(name);
-		serializerObject = Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
-		typeObject = Registers.TYPE_REGISTER.register(name, () -> simpleType(id));
-		type = typeObject;
+		serializerObject = serializerSupplier.get();
+		Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
+		typeObject = simpleType(id);
+		Registers.TYPE_REGISTER.register(name, () -> typeObject);
+		type = () -> typeObject;
 	}
 
 	AllRecipeTypes(ProcessingRecipeFactory<?> processingFactory) {
@@ -105,10 +112,10 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		};
 	}
 
-	public static void register(IEventBus modEventBus) {
-		ShapedRecipe.setCraftingSize(9, 9);
-		Registers.SERIALIZER_REGISTER.register(modEventBus);
-		Registers.TYPE_REGISTER.register(modEventBus);
+	public static void register() {
+		ShapedRecipeUtil.setCraftingSize(9, 9);
+		Registers.SERIALIZER_REGISTER.register();
+		Registers.TYPE_REGISTER.register();
 	}
 
 	@Override
@@ -119,7 +126,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends RecipeSerializer<?>> T getSerializer() {
-		return (T) serializerObject.get();
+		return (T) serializerObject;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -146,8 +153,8 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	}
 
 	private static class Registers {
-		private static final DeferredRegister<RecipeSerializer<?>> SERIALIZER_REGISTER = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Create.ID);
-		private static final DeferredRegister<RecipeType<?>> TYPE_REGISTER = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, Create.ID);
+		private static final LazyRegistrar<RecipeSerializer<?>> SERIALIZER_REGISTER = LazyRegistrar.create(Registry.RECIPE_SERIALIZER, Create.ID);
+		private static final LazyRegistrar<RecipeType<?>> TYPE_REGISTER = LazyRegistrar.create(Registry.RECIPE_TYPE, Create.ID);
 	}
 
 }

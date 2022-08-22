@@ -14,6 +14,7 @@ import com.simibubi.create.content.curiosities.bell.SoulBaseParticle;
 import com.simibubi.create.content.curiosities.bell.SoulParticle;
 import com.simibubi.create.foundation.utility.Lang;
 
+import io.github.fabricators_of_create.porting_lib.util.LazyRegistrar;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -47,12 +48,7 @@ public enum AllParticleTypes {
 	}
 
 	public static void register() {
-		for (AllParticleTypes particle : values())
-			particle.entry.register();
-	}
-
-	public static void register(IEventBus modEventBus) {
-		ParticleEntry.REGISTER.register(modEventBus);
+		ParticleEntry.REGISTER.register();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -63,7 +59,7 @@ public enum AllParticleTypes {
 	}
 
 	public ParticleType<?> get() {
-		return entry.object.get();
+		return entry.object;
 	}
 
 	public String parameter() {
@@ -71,23 +67,24 @@ public enum AllParticleTypes {
 	}
 
 	private static class ParticleEntry<D extends ParticleOptions> {
-		private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Create.ID);
+		private static final LazyRegistrar<ParticleType<?>> REGISTER = LazyRegistrar.create(Registry.PARTICLE_TYPE, Create.ID);
 
 		private final String name;
 		private final Supplier<? extends ICustomParticleData<D>> typeFactory;
-		private final RegistryObject<ParticleType<D>> object;
+		private final ParticleType<D> object;
 
 		public ParticleEntry(String name, Supplier<? extends ICustomParticleData<D>> typeFactory) {
 			this.name = name;
 			this.typeFactory = typeFactory;
 
-			object = REGISTER.register(name, () -> this.typeFactory.get().createType());
+			object = this.typeFactory.get().createType();
+			REGISTER.register(name, () -> object);
 		}
 
 		@Environment(EnvType.CLIENT)
 		public void registerFactory(ParticleEngine particles) {
 			typeFactory.get()
-				.register(object.get(), particles);
+				.register(object, particles);
 		}
 
 	}

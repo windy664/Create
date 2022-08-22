@@ -65,26 +65,26 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 			}
 			return true;
 		});
-		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		super.emitBlockQuads(world, state, pos, randomSupplier, context);
 		context.popTransform();
 
 		BakedModel bracketModel = data.getBracket();
 		if (bracketModel != null)
-			((FabricBakedModel) bracketModel).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+			((FabricBakedModel) bracketModel).emitBlockQuads(world, state, pos, randomSupplier, context);
 		if (hideAttachmentConnector)
 			context.pushTransform(quad -> quad.cullFace() != Direction.UP);
 		for (Direction d : Iterate.directions) {
-			AttachmentTypes type = pipeData.getAttachment(d);
+			AttachmentTypes type = data.getAttachment(d);
 			for (ComponentPartials partial : type.partials) {
 				((FabricBakedModel) AllBlockPartials.PIPE_ATTACHMENTS.get(partial)
 						.get(d)
-						.get()
+						.get())
 						.emitBlockQuads(world, state, pos, randomSupplier, context);
 			}
 		}
 		if (data.isEncased())
 			((FabricBakedModel) AllBlockPartials.FLUID_PIPE_CASING.get())
-				.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+				.emitBlockQuads(world, state, pos, randomSupplier, context);
 		if (hideAttachmentConnector)
 			context.popTransform();
 	}

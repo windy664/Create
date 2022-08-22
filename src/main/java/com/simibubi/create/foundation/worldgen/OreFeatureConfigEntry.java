@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
@@ -28,7 +31,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 
 public class OreFeatureConfigEntry extends ConfigBase {
 	public static final Map<ResourceLocation, OreFeatureConfigEntry> ALL = new HashMap<>();
@@ -114,24 +116,27 @@ public class OreFeatureConfigEntry extends ConfigBase {
 
 	public class BiomeExtension {
 		public ResourceLocation placedFeatureLocation = id;
-		public Predicate<BiomeLoadingEvent> biomePredicate = e -> false;
+		public Predicate<BiomeSelectionContext> biomePredicate = e -> false;
 
 		public BiomeExtension feature(ResourceLocation placedFeature) {
 			this.placedFeatureLocation = placedFeature;
 			return this;
 		}
 
-		public BiomeExtension predicate(Predicate<BiomeLoadingEvent> predicate) {
+		public BiomeExtension predicate(Predicate<BiomeSelectionContext> predicate) {
 			this.biomePredicate = predicate;
 			return this;
 		}
 
-		public void modifyBiomes(BiomeLoadingEvent event, Registry<PlacedFeature> registry) {
-			if (biomePredicate.test(event)) {
-				Optional<Holder<PlacedFeature>> optionalFeature = registry.getHolder(ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, placedFeatureLocation));
-				if (optionalFeature.isPresent()) {
-					event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, optionalFeature.get());
-				}
+		public void modifyBiomes(Registry<PlacedFeature> registry) {
+			ResourceKey<PlacedFeature> key = ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, placedFeatureLocation);
+			Optional<Holder<PlacedFeature>> optionalFeature = registry.getHolder(key);
+			if (optionalFeature.isPresent()) {
+				BiomeModifications.addFeature(
+						biomePredicate,
+						GenerationStep.Decoration.UNDERGROUND_ORES,
+						key
+				);
 			}
 		}
 

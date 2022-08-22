@@ -13,6 +13,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import com.simibubi.create.foundation.utility.Couple;
+
+import io.github.fabricators_of_create.porting_lib.util.RegistryObject;
 import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.data.DataGenerator;
@@ -551,30 +554,22 @@ public class AllSoundEvents {
 			for (int i = 0; i < wrappedEvents.size(); i++) {
 				ConfiguredSoundEvent wrapped = wrappedEvents.get(i);
 				ResourceLocation location = getIdOf(i);
-				RegistryObject<SoundEvent> event = RegistryObject.create(location, ForgeRegistries.SOUND_EVENTS);
+				SoundEvent event = new SoundEvent(location);
 				compiledEvents.add(new CompiledSoundEvent(event, wrapped.volume(), wrapped.pitch()));
 			}
 		}
 
 		@Override
 		public void register() {
-			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents) {
-				Registry.register(Registry.SOUND_EVENT, pair.getFirst().getLocation(), pair.getFirst());
-			} // fabric
-		}
-
-		@Override
-		public void register(IForgeRegistry<SoundEvent> registry) {
-			for (CompiledSoundEvent compiledEvent : compiledEvents) {
-				ResourceLocation location = compiledEvent.event().getId();
-				registry.register(new SoundEvent(location).setRegistryName(location));
+			for (CompiledSoundEvent event : compiledEvents) {
+				Registry.register(Registry.SOUND_EVENT, event.event.getLocation(), event.event);
 			}
 		}
 
 		@Override
 		public SoundEvent getMainEvent() {
 			return compiledEvents.get(0)
-				.event().get();
+				.event();
 		}
 
 		protected ResourceLocation getIdOf(int i) {
@@ -606,7 +601,7 @@ public class AllSoundEvents {
 		@Override
 		public void play(Level world, Player entity, double x, double y, double z, float volume, float pitch) {
 			for (CompiledSoundEvent event : compiledEvents) {
-				world.playSound(entity, x, y, z, event.event().get(), category, event.volume() * volume,
+				world.playSound(entity, x, y, z, event.event(), category, event.volume() * volume,
 					event.pitch() * pitch);
 			}
 		}
@@ -614,12 +609,12 @@ public class AllSoundEvents {
 		@Override
 		public void playAt(Level world, double x, double y, double z, float volume, float pitch, boolean fade) {
 			for (CompiledSoundEvent event : compiledEvents) {
-				world.playLocalSound(x, y, z, event.event().get(), category, event.volume() * volume,
+				world.playLocalSound(x, y, z, event.event(), category, event.volume() * volume,
 					event.pitch() * pitch, fade);
 			}
 		}
 
-		private record CompiledSoundEvent(RegistryObject<SoundEvent> event, float volume, float pitch) {
+		private record CompiledSoundEvent(SoundEvent event, float volume, float pitch) {
 		}
 
 	}
@@ -627,7 +622,7 @@ public class AllSoundEvents {
 	private static class CustomSoundEntry extends SoundEntry {
 
 		protected List<ResourceLocation> variants;
-		protected RegistryObject<SoundEvent> event;
+		protected SoundEvent event;
 
 		public CustomSoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle,
 			SoundSource category, int attenuationDistance) {
@@ -637,8 +632,7 @@ public class AllSoundEvents {
 
 		@Override
 		public void prepare() {
-			// event = new SoundEvent(id);
-			event = RegistryObject.create(id, ForgeRegistries.SOUND_EVENTS);
+			 event = new SoundEvent(id);
 		}
 
 		@Override
@@ -647,14 +641,8 @@ public class AllSoundEvents {
 		}
 
 		@Override
-		public void register(IForgeRegistry<SoundEvent> registry) {
-			ResourceLocation location = event.getId();
-			registry.register(new SoundEvent(location).setRegistryName(location));
-		}
-
-		@Override
 		public SoundEvent getMainEvent() {
-			return event.get();
+			return event;
 		}
 
 		@Override
@@ -686,12 +674,12 @@ public class AllSoundEvents {
 
 		@Override
 		public void play(Level world, Player entity, double x, double y, double z, float volume, float pitch) {
-			world.playSound(entity, x, y, z, event.get(), category, volume, pitch);
+			world.playSound(entity, x, y, z, event, category, volume, pitch);
 		}
 
 		@Override
 		public void playAt(Level world, double x, double y, double z, float volume, float pitch, boolean fade) {
-			world.playLocalSound(x, y, z, event.get(), category, volume, pitch, fade);
+			world.playLocalSound(x, y, z, event, category, volume, pitch, fade);
 		}
 
 	}
