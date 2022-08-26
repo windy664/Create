@@ -13,13 +13,11 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
-
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.ShulkerBoxBlock;
 
 public class ToolboxInventory extends ItemStackHandler {
 
@@ -183,14 +181,14 @@ public class ToolboxInventory extends ItemStackHandler {
 		for (int i = STACKS_PER_COMPARTMENT - 1; i >= 0; i--) {
 			int slot = compartment * STACKS_PER_COMPARTMENT + i;
 			ItemStack held = getStackInSlot(slot);
-			if (ItemHandlerHelper.canItemStacksStack(stack, held)) {
-				int room = held.getItem().getMaxStackSize() - held.getCount();
+			boolean holdingEmpty = held.isEmpty();
+			if (holdingEmpty || ItemHandlerHelper.canItemStacksStack(stack, held)) {
+				int room = holdingEmpty ? stack.getMaxStackSize() : held.getItem().getMaxStackSize() - held.getCount();
 				if (room > 0) {
 					int insert = Math.min(toInsert, room);
 					toInsert -= insert;
 					inserted += insert;
-					held = held.copy();
-					held.grow(insert);
+					held = holdingEmpty ? stack.copy() : ItemHandlerHelper.copyStackWithSize(held, held.getCount() + insert);
 					contentsChangedInternal(slot, held, ctx);
 				}
 				if (toInsert == 0)
@@ -210,6 +208,7 @@ public class ToolboxInventory extends ItemStackHandler {
 		int remaining = amount;
 		ItemStack lastValid = ItemStack.EMPTY;
 
+		updateSnapshots(ctx);
 		for (int i = STACKS_PER_COMPARTMENT - 1; i >= 0; i--) {
 			int slot = compartment * STACKS_PER_COMPARTMENT + i;
 			ItemStack held = getStackInSlot(slot);
