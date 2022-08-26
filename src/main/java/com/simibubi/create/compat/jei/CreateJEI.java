@@ -175,7 +175,7 @@ public class CreateJEI implements IModPlugin {
 
 		autoShapeless = builder(BasinRecipe.class)
 				.enableWhen(c -> c.allowShapelessInMixer)
-				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>)
+				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof ShapedRecipe)
 								&& r.getIngredients()
 								.size() > 1
 								&& !MechanicalPressTileEntity.canCompress(r) && !AllRecipeTypes.shouldIgnoreInAutomation(r),
@@ -282,12 +282,12 @@ public class CreateJEI implements IModPlugin {
 
 		autoShaped = builder(CraftingRecipe.class)
 				.enableWhen(c -> c.allowRegularCraftingInCrafter)
-				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>)
+				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof ShapedRecipe)
 						&& r.getIngredients()
 						.size() == 1
 						&& !AllRecipeTypes.shouldIgnoreInAutomation(r))
 				.addTypedRecipesIf(() -> RecipeType.CRAFTING,
-						recipe -> recipe instanceof IShapedRecipe<?> && !AllRecipeTypes.shouldIgnoreInAutomation(recipe))
+						recipe -> recipe instanceof ShapedRecipe && !AllRecipeTypes.shouldIgnoreInAutomation(recipe))
 				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 				.itemIcon(AllBlocks.MECHANICAL_CRAFTER.get())
 				.emptyBackground(177, 107)
