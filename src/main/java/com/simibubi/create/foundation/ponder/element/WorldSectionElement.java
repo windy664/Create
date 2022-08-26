@@ -7,11 +7,9 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
 import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
 import com.jozufozu.flywheel.fabric.model.CullingBakedModel;
-import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.jozufozu.flywheel.fabric.model.FabricModelUtil;
 import com.jozufozu.flywheel.fabric.model.LayerFilteringBakedModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
@@ -34,7 +32,6 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
-import io.github.fabricators_of_create.porting_lib.model.EmptyModelData;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -329,6 +326,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		Map<BlockPos, Integer> blockBreakingProgressions = world.getBlockBreakingProgressions();
 		PoseStack overlayMS = null;
 
+		BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
 		for (Entry<BlockPos, Integer> entry : blockBreakingProgressions.entrySet()) {
 			BlockPos pos = entry.getKey();
 			if (!section.test(pos))
@@ -352,8 +350,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-			ModelUtil.VANILLA_RENDERER
-				.renderBreakingTexture(world.getBlockState(pos), pos, world, ms, builder, EmptyModelData.INSTANCE);
+			renderer
+				.renderBreakingTexture(world.getBlockState(pos), pos, world, ms, builder);
 			ms.popPose();
 		}
 

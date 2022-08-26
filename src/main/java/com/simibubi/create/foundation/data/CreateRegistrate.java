@@ -277,7 +277,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	@Environment(EnvType.CLIENT)
 	private static void registerCustomRenderedItem(Item entry, CustomRenderedItemModelRenderer<?> renderer) {
 		CreateClient.MODEL_SWAPPER.getCustomRenderedItems()
-				.register(() -> entry, renderer::createModel);
+				.register(RegisteredObjects.getKeyOrThrow(entry), renderer::createModel);
 	}
 
 }

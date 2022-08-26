@@ -35,7 +35,6 @@ public class CustomRenderedItems {
 
 	private void loadEntries() {
 		finalModelFuncs.clear();
-		CustomRenderedItemModelRenderer.acceptModelFuncs(finalModelFuncs::put);
 		modelFuncs.forEach((location, func) -> {
 			Item item = Registry.ITEM.get(location);
 			if (item == null) {

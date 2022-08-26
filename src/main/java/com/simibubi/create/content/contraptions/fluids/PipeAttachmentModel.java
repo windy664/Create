@@ -24,19 +24,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PipeAttachmentModel extends ForwardingBakedModel {
 
-	private boolean hideAttachmentConnector;
-
-	public static PipeAttachmentModel opaque(BakedModel template) {
-		return new PipeAttachmentModel(template, false);
-	}
-
-	public static PipeAttachmentModel transparent(BakedModel template) {
-		return new PipeAttachmentModel(template, true);
-	}
-
-	public PipeAttachmentModel(BakedModel template, boolean hideAttachmentConnector) {
+	public PipeAttachmentModel(BakedModel template) {
 		wrapped = template;
-		this.hideAttachmentConnector = hideAttachmentConnector;
 	}
 
 	@Override
@@ -58,35 +47,28 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 
 		data.setEncased(FluidPipeBlock.shouldDrawCasing(world, pos, state));
 
-		context.pushTransform(quad -> {
-			Direction cullFace = quad.cullFace();
-			if (cullFace != null) {
-				return !data.hasRim(cullFace);
-			}
-			return true;
-		});
 		super.emitBlockQuads(world, state, pos, randomSupplier, context);
-		context.popTransform();
 
-		BakedModel bracketModel = data.getBracket();
-		if (bracketModel != null)
-			((FabricBakedModel) bracketModel).emitBlockQuads(world, state, pos, randomSupplier, context);
-		if (hideAttachmentConnector)
-			context.pushTransform(quad -> quad.cullFace() != Direction.UP);
+		addQuads(world, state, pos, randomSupplier, context, data);
+	}
+
+	private void addQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context,
+		PipeModelData pipeData) {
+		BakedModel bracket = pipeData.getBracket();
+		if (bracket != null)
+			((FabricBakedModel) bracket).emitBlockQuads(world, state, pos, randomSupplier, context);
 		for (Direction d : Iterate.directions) {
-			AttachmentTypes type = data.getAttachment(d);
+			AttachmentTypes type = pipeData.getAttachment(d);
 			for (ComponentPartials partial : type.partials) {
 				((FabricBakedModel) AllBlockPartials.PIPE_ATTACHMENTS.get(partial)
-						.get(d)
-						.get())
-						.emitBlockQuads(world, state, pos, randomSupplier, context);
+					.get(d)
+					.get())
+					.emitBlockQuads(world, state, pos, randomSupplier, context);
 			}
 		}
-		if (data.isEncased())
+		if (pipeData.isEncased())
 			((FabricBakedModel) AllBlockPartials.FLUID_PIPE_CASING.get())
 				.emitBlockQuads(world, state, pos, randomSupplier, context);
-		if (hideAttachmentConnector)
-			context.popTransform();
 	}
 
 	private static class PipeModelData {
