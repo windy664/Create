@@ -18,23 +18,23 @@ import com.simibubi.create.compat.emi.recipes.BlockCuttingEmiRecipe.CondensedBlo
 import com.simibubi.create.compat.emi.recipes.CrushingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.DeployingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.DrainEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.ManualItemApplicationEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.MechanicalCraftingEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.MillingEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.MysteriousConversionEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.PolishingEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.PressingEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.SawingEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.SequencedAssemblyEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.SpoutEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.basin.MixingEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.basin.PackingEmiRecipe;
+import com.simibubi.create.compat.emi.recipes.basin.ShapelessEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanBlastingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanHauntingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanSmokingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanWashingEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.ManualItemApplicationEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.MechanicalCraftingEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.MillingEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.basin.MixingEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.MysteriousConversionEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.basin.PackingEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.PolishingEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.PressingEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.SawingEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.SequencedAssemblyEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.basin.ShapelessEmiRecipe;
-import com.simibubi.create.compat.emi.recipes.SpoutEmiRecipe;
 import com.simibubi.create.compat.rei.ConversionRecipe;
 import com.simibubi.create.compat.rei.ToolboxColoringRecipeMaker;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
@@ -52,6 +52,11 @@ import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxBlock;
+import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
+import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
+import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
+import com.simibubi.create.content.logistics.item.filter.FilterScreen;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -148,9 +153,13 @@ public class CreateEmiPlugin implements EmiPlugin {
 			}
 		});
 
-		// TODO potentially add all potion fluid variants and drag drop handler
-
 		registry.addRecipeHandler(AllContainerTypes.CRAFTING_BLUEPRINT.get(), new BlueprintTransferHandler());
+
+		registry.addDragDropHandler(FilterScreen.class, new GhostIngredientHandler());
+		registry.addDragDropHandler(AttributeFilterScreen.class, new GhostIngredientHandler());
+		registry.addDragDropHandler(BlueprintScreen.class, new GhostIngredientHandler());
+		registry.addDragDropHandler(LinkedControllerScreen.class, new GhostIngredientHandler());
+		registry.addDragDropHandler(ScheduleScreen.class, new GhostIngredientHandler());
 
 		registerGeneratedRecipes(registry);
 
