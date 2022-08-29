@@ -9,19 +9,16 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import io.github.fabricators_of_create.porting_lib.extensions.LevelExtensions;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.LiquidBlockAccessor;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
 import it.unimi.dsi.fastutil.PriorityQueue;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
@@ -51,7 +48,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	// Execution
 	Set<BlockPos> validationSet;
 	PriorityQueue<BlockPosEntry> queue;
-	List<BlockPosEntry> queueList = new ObjectArrayList<>();
+	List<BlockPosEntry> queueList; // fabric: we need to maintain a list that matches the queue
 	boolean isValid;
 
 	// Validation
@@ -108,6 +105,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		validationSet = new HashSet<>();
 		newValidationSet = new HashSet<>();
 		queue = new ObjectHeapPriorityQueue<>(this::comparePositions);
+		queueList = new ObjectArrayList<>();
 	}
 
 	@Nullable
@@ -160,7 +158,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 					if (!tileEntity.isVirtual())
 						world.setBlock(currentPos, emptied, 2 | 16);
 					BlockPosEntry e = queue.dequeue();
-					queueList.remove(e);
+					queueList.remove(e); // fabric: match queue
 					if (queue.isEmpty()) {
 						isValid = checkValid(world, rootPos);
 						reset(ctx);
@@ -180,7 +178,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 			if (!this.fluid.isSame(fluid)) {
 				BlockPosEntry e = queue.dequeue();
-				queueList.remove(e);
+				queueList.remove(e); // fabric: match queue
 				if (queue.isEmpty()) {
 					isValid = checkValid(world, rootPos);
 					reset(ctx);
@@ -203,7 +201,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			affectedArea = BBHelper.encapsulate(affectedArea, currentPos);
 
 			BlockPosEntry e = queue.dequeue();
-			queueList.remove(e);
+			queueList.remove(e); // fabric: match queue
 			if (queue.isEmpty()) {
 				isValid = checkValid(world, rootPos);
 				reset(ctx);
@@ -224,7 +222,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 	protected void softReset(BlockPos root, TransactionContext ctx) {
 		queue.clear();
-		queueList.clear();
+		queueList.clear(); // fabric: match queue
 		validationSet.clear();
 		newValidationSet.clear();
 		validationFrontier.clear();
@@ -322,7 +320,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		fluid = search(fluid, frontier, visited, (e, d) -> {
 			BlockPosEntry entry = new BlockPosEntry(e, d);
 			queue.enqueue(entry);
-			queueList.add(entry);
+			queueList.add(entry); // fabric: match queue
 			validationSet.add(e);
 		}, false);
 
@@ -335,7 +333,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				BlockPos first = queue.first().pos;
 				if (canPullFluidsFrom(world.getBlockState(first), first) != FluidBlockType.SOURCE) {
 					BlockPosEntry e = queue.dequeue();
-					queueList.remove(e);
+					queueList.remove(e); // fabric: match queue
 					continue;
 				}
 				break;
@@ -344,10 +342,10 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			frontier.clear();
 			visited.clear();
 			queue.clear();
-			queueList.clear();
+			queueList.clear(); // fabric: match queue
 			BlockPosEntry e = new BlockPosEntry(firstValid, 0);
 			queue.enqueue(e);
-			queueList.add(e);
+			queueList.add(e); // fabric: match queue
 			tileEntity.sendData();
 			return;
 		}
@@ -390,7 +388,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		fluid = null;
 		rootPos = null;
 		queue.clear();
-		queueList.clear();
+		queueList.clear(); // fabric: match queue
 		validationSet.clear();
 		newValidationSet.clear();
 		validationFrontier.clear();

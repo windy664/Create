@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -15,9 +16,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import io.github.fabricators_of_create.porting_lib.extensions.LevelExtensions;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
-import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionSuccessCallback;
 import it.unimi.dsi.fastutil.PriorityQueue;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
@@ -29,6 +28,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Unit;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -46,10 +46,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraft.world.ticks.LevelTicks;
-
-import org.lwjgl.system.CallbackI.B;
-
-import javax.annotation.Nullable;
 
 public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
@@ -220,7 +216,23 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				BlockState blockState = world.getBlockState(currentPos);
 
 				if (!tileEntity.isVirtual())
-					((LevelExtensions) world).updateSnapshots(ctx);
+					world.updateSnapshots(ctx);
+
+				new SnapshotParticipant<Unit>() { // can't be a typical TransactionCallback because ordering refuses to cooperate
+					@Override protected Unit createSnapshot() { return Unit.INSTANCE; }
+					@Override protected void readSnapshot(Unit snapshot) {}
+
+					@Override
+					protected void onFinalCommit() {
+						playEffect(world, currentPos, fluid, false);
+						LevelTickAccess<Fluid> pendingFluidTicks = world.getFluidTicks();
+						if (pendingFluidTicks instanceof LevelTicks) {
+							LevelTicks<Fluid> serverTickList = (LevelTicks<Fluid>) pendingFluidTicks;
+							serverTickList.clearArea(new BoundingBox(currentPos));
+						}
+						affectedArea = BBHelper.encapsulate(affectedArea, currentPos);
+					}
+				}.updateSnapshots(ctx);
 
 				if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && fluid.isSame(Fluids.WATER)) {
 					if (!tileEntity.isVirtual())
@@ -234,17 +246,6 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 								.defaultFluidState()
 								.createLegacyBlock(), 2 | 16);
 				}
-
-				TransactionCallback.onSuccess(ctx, () -> {
-					playEffect(world, currentPos, fluid, false);
-					LevelTickAccess<Fluid> pendingFluidTicks = world.getFluidTicks();
-					if (pendingFluidTicks instanceof LevelTicks) {
-						LevelTicks<Fluid> serverTickList = (LevelTicks<Fluid>) pendingFluidTicks;
-						serverTickList.clearArea(new BoundingBox(currentPos));
-					}
-
-					affectedArea = BBHelper.encapsulate(affectedArea, currentPos);
-				});
 			}
 
 			visited.add(currentPos);
