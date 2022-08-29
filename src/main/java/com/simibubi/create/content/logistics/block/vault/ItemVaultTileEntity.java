@@ -48,10 +48,6 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 			@Override
 			protected void onContentsChanged(int slot) {
 				super.onContentsChanged(slot);
-			}
-
-			@Override
-			protected void onFinalCommit() {
 				recalculateComparatorsNextTick = true;
 			}
 		};
