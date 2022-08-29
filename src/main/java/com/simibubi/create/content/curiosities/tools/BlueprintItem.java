@@ -9,9 +9,6 @@ import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.util.MultiItemValue;
-
-import io.github.fabricators_of_create.porting_lib.util.ShapedRecipeUtil;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -85,10 +82,10 @@ public class BlueprintItem extends Item {
 
 		if (recipe instanceof ShapedRecipe) {
 			ShapedRecipe shapedRecipe = (ShapedRecipe) recipe;
-			for (int row = 0; row < ShapedRecipeUtil.HEIGHT; row++)
-				for (int col = 0; col < ShapedRecipeUtil.WIDTH; col++)
+			for (int row = 0; row < shapedRecipe.getHeight(); row++)
+				for (int col = 0; col < shapedRecipe.getWidth(); col++)
 					inv.setStackInSlot(row * 3 + col,
-							convertIngredientToFilter(ingredients.get(row * ShapedRecipeUtil.WIDTH + col)));
+							convertIngredientToFilter(ingredients.get(row * shapedRecipe.getWidth() + col)));
 		} else {
 			for (int i = 0; i < ingredients.size(); i++)
 				inv.setStackInSlot(i, convertIngredientToFilter(ingredients.get(i)));

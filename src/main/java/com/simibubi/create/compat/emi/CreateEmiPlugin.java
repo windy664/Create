@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
@@ -147,7 +148,9 @@ public class CreateEmiPlugin implements EmiPlugin {
 			}
 		});
 
-		// TODO potentially add all potion fluid variants, drag drop handler and blueprint handler are unimplemented
+		// TODO potentially add all potion fluid variants and drag drop handler
+
+		registry.addRecipeHandler(AllContainerTypes.CRAFTING_BLUEPRINT.get(), new BlueprintTransferHandler());
 
 		registerGeneratedRecipes(registry);
 
