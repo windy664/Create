@@ -9,6 +9,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllContainerTypes;
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
@@ -136,16 +137,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public void register(EmiRegistry registry) {
-		registry.removeEmiStacks(s -> {
-			if (s.getKey() instanceof ItemVariant item) {
-				if (item.getItem() instanceof TagDependentIngredientItem tag) {
-					return tag.shouldHide();
-				}
-			} else if (s.getKey() instanceof FluidVariant fluid) {
-				return fluid.getFluid() instanceof VirtualFluid;
-			}
-			return false;
-		});
+		registry.removeEmiStacks(s -> (s.getKey() instanceof TagDependentIngredientItem tag && tag.shouldHide()) || s.getKey() instanceof VirtualFluid);
 
 		registry.addGenericExclusionArea((screen, consumer) -> {
 			if (screen instanceof AbstractSimiContainerScreen<?> simi) {
@@ -162,6 +154,8 @@ public class CreateEmiPlugin implements EmiPlugin {
 		registry.addDragDropHandler(ScheduleScreen.class, new GhostIngredientHandler());
 
 		registerGeneratedRecipes(registry);
+
+		registry.setDefaultComparison(AllFluids.POTION.get(), c -> c.copy().nbt(true).build());
 
 		ALL.forEach((id, category) -> {
 			registry.addCategory(category);
