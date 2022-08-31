@@ -261,17 +261,15 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	private static void registerCTBehviour(Block entry, Supplier<ConnectedTextureBehaviour> behaviorSupplier) {
 		ConnectedTextureBehaviour behavior = behaviorSupplier.get();
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(RegisteredObjects.getKeyOrThrow(entry), model -> new CTModel(model, behavior));
+			.register(RegisteredObjects.getKeyOrThrow(entry), new CTModelProvider(behavior));
 	}
+
+
 
 	@Environment(EnvType.CLIENT)
 	private static <T extends Item, P> void customRenderedItem(ItemBuilder<T, P> b,
 															   Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
-		b.onRegister(entry -> {
-			CustomRenderedItemModelRenderer<?> renderer = supplier.get().get();
-			BuiltinItemRendererRegistry.INSTANCE.register(entry, renderer);
-			registerCustomRenderedItem(entry, renderer);
-		});
+		b.onRegister(new CustomRendererRegistrationHelper(supplier));
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -280,4 +278,22 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				.register(RegisteredObjects.getKeyOrThrow(entry), renderer::createModel);
 	}
 
+	// fabric: these records are required jank since @Environment doesn't strip lambdas
+	@Environment(EnvType.CLIENT)
+	private record CTModelProvider(ConnectedTextureBehaviour behavior) implements NonNullFunction<BakedModel, BakedModel> {
+		@Override
+		public BakedModel apply(BakedModel bakedModel) {
+			return new CTModel(bakedModel, behavior);
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	private record CustomRendererRegistrationHelper(Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) implements NonNullConsumer<Item> {
+		@Override
+		public void accept(Item entry) {
+			CustomRenderedItemModelRenderer<?> renderer = supplier.get().get();
+			BuiltinItemRendererRegistry.INSTANCE.register(entry, renderer);
+			registerCustomRenderedItem(entry, renderer);
+		}
+	}
 }
