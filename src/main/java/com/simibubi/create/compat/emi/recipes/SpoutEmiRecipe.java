@@ -25,8 +25,8 @@ public class SpoutEmiRecipe extends CreateEmiRecipe<FillingRecipe> {
 		addTexture(widgets, AllGuiTextures.JEI_SHADOW, 40, 57);
 		addTexture(widgets, AllGuiTextures.JEI_DOWN_ARROW, 104, 29);
 
-		addSlot(widgets, input.get(0), 4, 31);
-		addSlot(widgets, input.get(1), 4, 50);
+		addSlot(widgets, input.get(1), 4, 31);
+		addSlot(widgets, input.get(0), 4, 50);
 
 		addSlot(widgets, output.get(0), 109, 50).recipeContext(this);
 

@@ -8,24 +8,22 @@ import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import mezz.jei.api.fabric.constants.FabricTypes;
-
-import mezz.jei.api.fabric.ingredients.fluids.IJeiFluidIngredient;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.material.Fluid;
-
 import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
+import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
+import mezz.jei.api.fabric.constants.FabricTypes;
+import mezz.jei.api.fabric.ingredients.fluids.IJeiFluidIngredient;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
 import mezz.jei.api.recipe.RecipeType;
@@ -34,10 +32,13 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.material.Fluid;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -141,7 +142,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 	}
 
 	public static FluidStack fromJei(IJeiFluidIngredient jei) {
-		return new FluidStack(jei.getFluid(), jei.getAmount(), jei.getTag().get());
+		return new FluidStack(jei.getFluid(), jei.getAmount(), jei.getTag().orElse(null));
 	}
 
 	public static IJeiFluidIngredient toJei(FluidStack stack) {
@@ -195,8 +196,10 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 				tooltip.addAll(1, potionTooltip.stream().toList());
 			}
 
-			long amount = mbAmount == -1 ? fluidStack.getAmount() : mbAmount;
-			Component text = Components.literal(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
+			long amountToUse = mbAmount == -1 ? fluidStack.getAmount() : mbAmount;
+			FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
+			String amount = FluidTextUtil.getUnicodeMillibuckets(amountToUse, unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
+			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);
 			else {

@@ -108,7 +108,12 @@ public class PotionFluidHandler {
 	// Modified version of PotionUtils#addPotionTooltip
 	@Environment(EnvType.CLIENT)
 	public static void addPotionTooltip(FluidStack fs, List<Component> tooltip, float p_185182_2_) {
-		List<MobEffectInstance> list = PotionUtils.getAllEffects(fs.getOrCreateTag());
+		addPotionTooltip(fs.getType(), tooltip, p_185182_2_);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static void addPotionTooltip(FluidVariant fs, List<Component> tooltip, float p_185182_2_) {
+		List<MobEffectInstance> list = PotionUtils.getAllEffects(fs.getNbt());
 		List<Tuple<String, AttributeModifier>> list1 = Lists.newArrayList();
 		if (list.isEmpty()) {
 			tooltip.add((Components.translatable("effect.none")).withStyle(ChatFormatting.GRAY));

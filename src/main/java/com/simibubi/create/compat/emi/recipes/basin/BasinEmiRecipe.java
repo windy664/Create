@@ -66,14 +66,16 @@ public class BasinEmiRecipe extends CreateEmiRecipe<BasinRecipe> {
 		int yOff = 0;
 
 		for (int i = 0; i < inputSize; i++) {
-			addSlot(widgets, input.get(i), xOff + 16 + (i % 3) * 19, yOff + 50 + (i / 3) * 19);
+			EmiIngredient stack = input.get(i);
+			addSlot(widgets, stack, xOff + 16 + (i % 3) * 19, yOff + 50 + (i / 3) * 19);
 		}
 
 		for (int i = 0; i < outputSize; i++) {
 			int x = 140 - (outputSize % 2 != 0 && i == outputSize - 1 ? 0 : i % 2 == 0 ? 10 : -9);
 			int y = 50 - 20 * (i / 2) + yOff;
 
-			addSlot(widgets, output.get(i), x, y).recipeContext(this);
+			EmiStack stack = output.get(i);
+			addSlot(widgets, stack, x, y).recipeContext(this);
 		}
 
 		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE)) {

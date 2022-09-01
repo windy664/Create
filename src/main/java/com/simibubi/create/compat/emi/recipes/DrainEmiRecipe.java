@@ -25,7 +25,8 @@ public class DrainEmiRecipe extends CreateEmiRecipe<EmptyingRecipe> {
 
 		addSlot(widgets, input.get(0), 4, 7);
 
-		addSlot(widgets, output.get(0), 109, 7).recipeContext(this);
+		EmiStack stack = output.get(0);
+		addSlot(widgets, stack, 109, 7).recipeContext(this);
 		addSlot(widgets, output.get(1), 109, 26).recipeContext(this);
 
 		CreateEmiAnimations.addDrain(widgets, widgets.getWidth() / 2 - 13, 40, recipe.getFluidResults().get(0));

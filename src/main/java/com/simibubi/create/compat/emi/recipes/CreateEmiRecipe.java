@@ -2,12 +2,12 @@ package com.simibubi.create.compat.emi.recipes;
 
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
+
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.compat.emi.CreateSlotWidget;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
@@ -17,9 +17,6 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.jetbrains.annotations.Nullable;
-
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -28,6 +25,11 @@ import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.TextureWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 
 public abstract class CreateEmiRecipe<T extends Recipe<?>> implements EmiRecipe {
 	protected final EmiRecipeCategory category;
@@ -127,7 +129,7 @@ public abstract class CreateEmiRecipe<T extends Recipe<?>> implements EmiRecipe 
 	}
 
 	public static SlotWidget addSlot(WidgetHolder widgets, EmiIngredient stack, int x, int y, AllGuiTextures texture) {
-		return widgets.addSlot(stack, x, y).backgroundTexture(texture.location, texture.startX, texture.startY);
+		return widgets.add(new CreateSlotWidget(stack, x, y)).backgroundTexture(texture.location, texture.startX, texture.startY);
 	}
 
 	public SlotWidget addChancedSlot(WidgetHolder widgets, EmiIngredient stack, int x, int y, float chance) {

@@ -3,36 +3,26 @@ package com.simibubi.create.compat.rei.category;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
-import com.simibubi.create.compat.rei.display.CreateDisplay;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
-import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
-import me.shedaniel.math.Point;
-import me.shedaniel.rei.api.client.gui.widgets.Slot;
-import me.shedaniel.rei.api.client.gui.widgets.Widget;
-
-import me.shedaniel.rei.api.client.util.ClientEntryStacks;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
-
-import me.shedaniel.rei.api.common.util.EntryIngredients;
-
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.compat.rei.EmptyBackground;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
-import me.shedaniel.rei.api.client.gui.Renderer;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;

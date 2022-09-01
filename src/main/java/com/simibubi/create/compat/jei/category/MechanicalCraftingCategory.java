@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.minecraft.world.item.crafting.ShapedRecipe;
-
 import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -32,6 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 
 @ParametersAreNonnullByDefault
 public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe> {
@@ -89,7 +88,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	private static int getHeight(CraftingRecipe recipe) {
-		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getWidth() : 1;
+		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getHeight() : 1;
 	}
 
 	@Override

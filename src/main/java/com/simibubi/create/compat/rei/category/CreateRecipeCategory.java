@@ -213,12 +213,13 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 					PotionFluidHandler.addPotionTooltip(fluid, potionTooltip, 1);
 					ArrayList<Tooltip.Entry> potionEntries = new ArrayList<>();
 					potionTooltip.forEach(component -> potionEntries.add(Tooltip.entry(component)));
-					tooltip.entries().addAll(1, potionEntries.stream().toList());
+					// why 2 here??? it works though
+					tooltip.entries().addAll(2, potionEntries.stream().toList());
 				}
 
 				FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
 				String amount = FluidTextUtil.getUnicodeMillibuckets(amounts.get(0), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
-				Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
+				Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
 				if (tooltip.entries().isEmpty())
 					tooltip.entries().add(0, Tooltip.entry(text));
 				else {

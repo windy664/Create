@@ -16,18 +16,19 @@
     "fabric.EntityMixin"
   ],
   "client": [
-    "MapItemSavedDataMixinClient",
     "CameraMixin",
     "DestroyProgressMixin",
     "EntityContraptionInteractionMixin",
     "FixNormalScalingMixin",
     "GameRendererMixin",
     "HeavyBootsOnPlayerMixin",
+    "MapItemSavedDataMixinClient",
     "MapRendererMixin",
     "WindowResizeMixin",
     "accessor.AgeableListModelAccessor",
     "accessor.GameRendererAccessor",
-    "accessor.ParticleEngineAccessor"
+    "accessor.ParticleEngineAccessor",
+    "fabric.ClientTextTooltipAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
