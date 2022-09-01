@@ -62,7 +62,8 @@
 
   "breaks": {
     "optifabric": "*",
-    "colormatic": "<=3.1.1"
+    "colormatic": "<=3.1.1",
+    "iris": "<=1.2.5"
   },
 
   "custom": {
