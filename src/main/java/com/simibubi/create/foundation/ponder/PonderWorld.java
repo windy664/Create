@@ -19,10 +19,9 @@ import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
-import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -37,7 +36,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -234,8 +232,8 @@ public class PonderWorld extends SchematicWorld {
 	@SuppressWarnings("unchecked")
 	private <T extends ParticleOptions> Particle makeParticle(T data, double x, double y, double z, double mx, double my,
 		double mz) {
-		ResourceLocation key = RegisteredObjects.getKeyOrThrow(data.getType());
-		ParticleProvider<T> particleProvider = (ParticleProvider<T>) particleProviders.get(key);
+		int id = Registry.PARTICLE_TYPE.getId(data.getType());
+		ParticleProvider<T> particleProvider = (ParticleProvider<T>) particleProviders.get(id);
 		return particleProvider == null ? null
 			: particleProvider.createParticle(data, asClientWorld.get(), x, y, z, mx, my, mz);
 	}
