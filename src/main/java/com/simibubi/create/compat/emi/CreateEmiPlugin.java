@@ -132,7 +132,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 			AUTOMATIC_SHAPED = register("automatic_shaped", EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get())),
 			MECHANICAL_CRAFTING = register("mechanical_crafting", EmiStack.of(AllBlocks.MECHANICAL_CRAFTER.get())),
 			SEQUENCED_ASSEMBLY = register("sequenced_assembly", EmiStack.of(AllItems.PRECISION_MECHANISM.get())),
-			MYSTERY_CONVERSION = register("mystery_conversion", EmiStack.of(AllItems.CHROMATIC_COMPOUND.get()));
+			MYSTERY_CONVERSION = register("mystery_conversion", EmiStack.of(AllBlocks.PECULIAR_BELL.get()));
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
