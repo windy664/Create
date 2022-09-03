@@ -28,7 +28,7 @@ public class BackTankUtil {
 
 	public static ItemStack get(LivingEntity entity) {
 		for (ItemStack itemStack : entity.getArmorSlots())
-			if (AllTags.AllItemTags.PRESSURIZED_AIR_SOURCES.matches(itemStack))
+			if (!itemStack.isEmpty() && AllTags.AllItemTags.PRESSURIZED_AIR_SOURCES.matches(itemStack))
 				return itemStack;
 		return ItemStack.EMPTY;
 	}
