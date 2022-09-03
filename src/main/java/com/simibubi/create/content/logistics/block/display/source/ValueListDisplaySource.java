@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.simibubi.create.foundation.utility.LongAttached;
-
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
@@ -19,13 +17,13 @@ import com.simibubi.create.content.logistics.trains.management.display.FlapDispl
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LongAttached;
 
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
 
 public abstract class ValueListDisplaySource extends DisplaySource {
 

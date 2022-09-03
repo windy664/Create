@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 75",
+	"_": "Missing Localizations: 79",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1721,6 +1721,9 @@
 	"create.display_source.count_items": "Numero di oggetti filtrati",
 	"create.display_source.list_items": "Lista di oggetti filtrati",
 	"create.display_source.fluid_amount": "Quantità di fluidi filtrati",
+	"create.display_source.fluid_amount.millibuckets": "UNLOCALIZED: Millibuckets",
+	"create.display_source.fluid_amount.droplets": "UNLOCALIZED: Droplets",
+	"create.display_source.fluid_amount.display": "UNLOCALIZED: Display Unit",
 	"create.display_source.list_fluids": "Lista di fluidi filtrati",
 	"create.display_source.nixie_tube": "Copia Tubo di Nixie",
 	"create.display_source.fill_level": "Livello di riempimento",
@@ -1730,6 +1733,7 @@
 	"create.display_source.value_list.display": "Visualizzazione numero",
 	"create.display_source.value_list.shortened": "Abbreviato",
 	"create.display_source.value_list.full_number": "Num. intero",
+	"create.display_source.value_list.full_number_droplets": "UNLOCALIZED: Droplets",
 	"create.display_source.value_list.thousand": "k",
 	"create.display_source.value_list.million": "m",
 	"create.display_source.player_deaths": "Morti dei giocatori",

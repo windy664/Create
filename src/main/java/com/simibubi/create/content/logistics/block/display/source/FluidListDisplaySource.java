@@ -13,15 +13,17 @@ import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileE
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
-import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FluidFormatter;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LongAttached;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -32,7 +34,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 
 public class FluidListDisplaySource extends ValueListDisplaySource {
-
 
 	@Override
 	protected Stream<LongAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
@@ -79,7 +80,7 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 		long amount = entry.getFirst();
 		MutableComponent name = entry.getSecond().append(WHITESPACE);
 
-		Couple<MutableComponent> formatted = FluidFormatter.asComponents(amount, shortenNumbers(context));
+		Couple<MutableComponent> formatted = FluidFormatter.asComponents(amount, shortenNumbers(context), getUnit(context));
 
 		return List.of(formatted.getFirst(), formatted.getSecond(), name);
 	}
@@ -88,18 +89,21 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay, FlapDisplayLayout layout) {
 		Integer max = ((MutableInt) context.flapDisplayContext).getValue();
 		boolean shorten = shortenNumbers(context);
-		int length = FluidFormatter.asString(max, shorten).length();
+		FluidUnit fluidUnit = getUnit(context);
+		int length = FluidFormatter.asString(max, shorten, fluidUnit).length();
 		String layoutKey = "FluidList_" + length;
 
 		if (layout.isLayout(layoutKey))
 			return;
 
-		int maxCharCount = flapDisplay.getMaxCharCount(1);
-		int numberLength = Math.min(maxCharCount, Math.max(3, length - 2));
-		int nameLength = Math.max(maxCharCount - numberLength - 2, 0);
+		int unitLength = fluidUnit == FluidUnit.DROPLETS ? 8 : 2;
 
-		FlapDisplaySection value = new FlapDisplaySection(FlapDisplaySection.MONOSPACE * numberLength, "number", false, false).rightAligned();
-		FlapDisplaySection unit = new FlapDisplaySection(FlapDisplaySection.MONOSPACE * 2, "fluid_units", true, true);
+		int maxCharCount = flapDisplay.getMaxCharCount(1);
+		int numberLength = Math.min(maxCharCount, Math.max(3, length - unitLength));
+		int nameLength = Math.max(maxCharCount - numberLength - unitLength, 0);
+
+		FlapDisplaySection value = new FlapDisplaySection(FlapDisplaySection.MONOSPACE * numberLength, "number", false, false);
+		FlapDisplaySection unit = new FlapDisplaySection(FlapDisplaySection.MONOSPACE * unitLength, "fluid_units", true, true);
 		FlapDisplaySection name = new FlapDisplaySection(FlapDisplaySection.MONOSPACE * nameLength, "alphabet", false, false);
 
 		layout.configure(layoutKey, List.of(value, unit, name));
@@ -113,5 +117,18 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 	@Override
 	protected boolean valueFirst() {
 		return false;
+	}
+
+	protected FluidUnit getUnit(DisplayLinkContext context) {
+		int format = context.sourceConfig().getInt("Format");
+		return format == 2 ? FluidUnit.DROPLETS : FluidUnit.MILIBUCKETS;
+	}
+
+	@Override
+	protected void addFullNumberConfig(ModularGuiLineBuilder builder) {
+		builder.addSelectionScrollInput(0, 75,
+				(si, l) -> si.forOptions(Lang.translatedOptions("display_source.value_list", "shortened", "full_number", "full_number_droplets"))
+					.titled(Lang.translateDirect("display_source.value_list.display")),
+				"Format");
 	}
 }

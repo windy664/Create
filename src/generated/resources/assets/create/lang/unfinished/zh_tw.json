@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 75",
+	"_": "Missing Localizations: 79",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1721,6 +1721,9 @@
 	"create.display_source.count_items": "匹配的物品總量",
 	"create.display_source.list_items": "匹配的物品清單",
 	"create.display_source.fluid_amount": "匹配的流體總量",
+	"create.display_source.fluid_amount.millibuckets": "UNLOCALIZED: Millibuckets",
+	"create.display_source.fluid_amount.droplets": "UNLOCALIZED: Droplets",
+	"create.display_source.fluid_amount.display": "UNLOCALIZED: Display Unit",
 	"create.display_source.list_fluids": "匹配的流體清單",
 	"create.display_source.nixie_tube": "複製文字",
 	"create.display_source.fill_level": "容器充填程度",
@@ -1730,6 +1733,7 @@
 	"create.display_source.value_list.display": "數值格式",
 	"create.display_source.value_list.shortened": "精簡",
 	"create.display_source.value_list.full_number": "完整",
+	"create.display_source.value_list.full_number_droplets": "UNLOCALIZED: Droplets",
 	"create.display_source.value_list.thousand": "k",
 	"create.display_source.value_list.million": "m",
 	"create.display_source.player_deaths": "玩家死亡次數",
