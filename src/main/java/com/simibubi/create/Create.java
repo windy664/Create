@@ -91,6 +91,10 @@ public class Create implements ModInitializer {
 		AllTileEntities.register();
 		AllEnchantments.register();
 		AllRecipeTypes.register();
+
+		// fabric exclusive, squeeze this in here to register before stuff is used
+		REGISTRATE.get().register();
+
 		AllParticleTypes.register();
 		AllStructureProcessorTypes.register();
 		AllEntityDataSerializers.register();
@@ -98,9 +102,6 @@ public class Create implements ModInitializer {
 		AllFeatures.register();
 		AllPlacementModifiers.register();
 		BuiltinRegistration.register();
-
-		// fabric exclusive, squeeze this in here to register before stuff is ued
-		REGISTRATE.get().register();
 
 		AllConfigs.register();
 
