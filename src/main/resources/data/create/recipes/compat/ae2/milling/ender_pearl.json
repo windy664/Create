@@ -3,7 +3,7 @@
 		{
 			"condition": "fabric:all_mods_loaded",
       "values": [
-        "appliedenergistics2"
+        "ae2"
       ]
 		}
 	],
@@ -15,7 +15,7 @@
     ],
 	"results": [
 		{
-			"item": "appliedenergistics2:ender_dust",
+			"item": "ae2:ender_dust",
 			"count": 1
 		}
 	],

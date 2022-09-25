@@ -101,7 +101,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		super.addBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.MIXER);
 	}
-	
+
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).expandTowards(0, -1.5, 0);
@@ -222,10 +222,19 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	protected List<Recipe<?>> getMatchingRecipes() {
 		List<Recipe<?>> matchingRecipes = super.getMatchingRecipes();
 
+		if (!AllConfigs.SERVER.recipes.allowBrewingInMixer.get())
+			return matchingRecipes;
+
 		Optional<BasinTileEntity> basin = getBasin();
 		if (!basin.isPresent())
 			return matchingRecipes;
-		Storage<ItemVariant> availableItems = basin.get().getItemStorage(null);
+
+		BasinTileEntity basinTileEntity = basin.get();
+		if (basin.isEmpty())
+			return matchingRecipes;
+
+		IItemHandler availableItems = basinTileEntity
+			.getItemStorage(null);
 		if (availableItems == null)
 			return matchingRecipes;
 

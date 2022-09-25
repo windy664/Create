@@ -28,7 +28,7 @@ public class BrassTunnelItemHandler implements SingleSlotStorage<ItemVariant> {
 		if (!te.canTakeItems())
 			return 0;
 		int toInsert = Math.min(ItemHelper.truncateLong(maxAmount), resource.getItem().getMaxStackSize());
-
+// FIXME MERGE setStackToDistribute params
 		te.setStackToDistribute(resource.toStack(toInsert), transaction);
 		return toInsert;
 	}

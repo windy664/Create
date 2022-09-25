@@ -619,16 +619,29 @@ public class AllArmInteractionPointTypes {
 //		@Nullable
 //		@Override
 //		protected IItemHandler getHandler() {
-//			if (!cachedHandler.isPresent()) {
-//				cachedHandler = LazyOptional.of(() -> {
-//					ComposterBlock composterBlock = (ComposterBlock) Blocks.COMPOSTER;
-//					WorldlyContainer container = composterBlock.getContainer(cachedState, level, pos);
-//					SidedInvWrapper insertionHandler = new SidedInvWrapper(container, Direction.UP);
-//					SidedInvWrapper extractionHandler = new SidedInvWrapper(container, Direction.DOWN);
-//					return new CombinedInvWrapper(insertionHandler, extractionHandler);
-//				});
-//			}
-//			return cachedHandler.orElse(null);
+//			return null;
+//		}
+//
+//		protected WorldlyContainer getContainer() {
+//			ComposterBlock composterBlock = (ComposterBlock) Blocks.COMPOSTER;
+//			return composterBlock.getContainer(cachedState, level, pos);
+//		}
+//
+//		@Override
+//		public ItemStack insert(ItemStack stack, boolean simulate) {
+//			IItemHandler handler = new SidedInvWrapper(getContainer(), Direction.UP);
+//			return ItemHandlerHelper.insertItem(handler, stack, simulate);
+//		}
+//
+//		@Override
+//		public ItemStack extract(int slot, int amount, boolean simulate) {
+//			IItemHandler handler = new SidedInvWrapper(getContainer(), Direction.DOWN);
+//			return handler.extractItem(slot, amount, simulate);
+//		}
+//
+//		@Override
+//		public int getSlotCount() {
+//			return 2;
 //		}
 	}
 

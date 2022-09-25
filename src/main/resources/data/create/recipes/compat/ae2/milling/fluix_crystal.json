@@ -3,19 +3,19 @@
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
-        "appliedenergistics2"
+        "ae2"
       ]
     }
   ],
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "appliedenergistics2:fluix_crystal"
+      "item": "ae2:fluix_crystal"
     }
   ],
   "results": [
     {
-      "item": "appliedenergistics2:fluix_dust",
+      "item": "ae2:fluix_dust",
       "count": 1
     }
   ],

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.simibubi.create.AllItems;
@@ -12,6 +14,7 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
@@ -45,6 +48,7 @@ import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.EntityHitResult;
 
@@ -219,11 +223,13 @@ public class MinecartContraptionItem extends Item {
 		List<Entity> passengers = cart.getPassengers();
 		if (passengers.isEmpty() || !(passengers.get(0) instanceof OrientedContraptionEntity))
 			return InteractionResult.PASS;
-		OrientedContraptionEntity contraption = (OrientedContraptionEntity) passengers.get(0);
+		OrientedContraptionEntity oce = (OrientedContraptionEntity) passengers.get(0);
+		Contraption contraption = oce.getContraption();
 
-		if(ContraptionMovementSetting.isNoPickup(contraption.getContraption().getBlocks().values())) {
+		if (ContraptionMovementSetting.isNoPickup(contraption.getBlocks()
+			.values())) {
 			player.displayClientMessage(Lang.translateDirect("contraption.minecart_contraption_illegal_pickup")
-					.withStyle(ChatFormatting.RED), true);
+				.withStyle(ChatFormatting.RED), true);
 			return InteractionResult.PASS;
 		}
 
@@ -231,7 +237,13 @@ public class MinecartContraptionItem extends Item {
 			return InteractionResult.SUCCESS;
 		}
 
-		ItemStack generatedStack = create(type, contraption).setHoverName(entity.getCustomName());
+		contraption.stop(event.getWorld());
+
+		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors())
+			if (AllMovementBehaviours.getBehaviour(pair.left.state)instanceof PortableStorageInterfaceMovement psim)
+				psim.reset(pair.right);
+
+		ItemStack generatedStack = create(type, oce).setHoverName(entity.getCustomName());
 
 		try {
 			ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
@@ -248,13 +260,13 @@ public class MinecartContraptionItem extends Item {
 			return InteractionResult.PASS;
 		}
 
-		if (contraption.getContraption()
-			.getBlocks()
+		if (contraption.getBlocks()
 			.size() > 200)
 			AllAdvancements.CART_PICKUP.awardTo(player);
 
-		player.getInventory().placeItemBackInInventory(generatedStack);
-		contraption.discard();
+		player.getInventory()
+			.placeItemBackInInventory(generatedStack);
+		oce.discard();
 		entity.discard();
 		return InteractionResult.SUCCESS;
 	}

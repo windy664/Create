@@ -53,7 +53,9 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 			if (!(entityByID instanceof AbstractContraptionEntity))
 				return;
 			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
-			double d = sender.getAttribute(ReachEntityAttributes.REACH).getValue() + 10;
+			AABB bb = contraptionEntity.getBoundingBox();
+			double boundsExtra = Math.max(bb.getXsize(), bb.getYsize());
+			double d = sender.getAttribute(ReachEntityAttributes.REACH).getValue() + 10 + boundsExtra;
 			if (!sender.hasLineOfSight(entityByID))
 				d -= 3;
 			d *= d;

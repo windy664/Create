@@ -35,6 +35,7 @@ import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.mixin.accessor.ServerLevelAccessor;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -120,7 +121,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			return;
 		contraption.onEntityCreated(this);
 	}
-	
+
 	@Override
 	public void move(MoverType pType, Vec3 pPos) {
 		if (pType == MoverType.SHULKER)
@@ -143,6 +144,10 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	public boolean collisionEnabled() {
 		return true;
+	}
+
+	public void registerColliding(Entity collidingEntity) {
+		collidingEntities.put(collidingEntity, new MutableInt());
 	}
 
 	public void addSittingPassenger(Entity passenger, int seatIndex) {
@@ -182,16 +187,28 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		contraption.getSeatMapping()
 			.remove(passenger.getUUID());
 		AllPackets.channel.sendToClientsTracking(
-			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()), this);
+			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping(), passenger.getId()), this);
 	}
 
 	@Override
-	public Vec3 getDismountLocationForPassenger(LivingEntity pLivingEntity) {
-		Vec3 loc = super.getDismountLocationForPassenger(pLivingEntity);
-		CompoundTag data = pLivingEntity.getExtraCustomData();
+	public Vec3 getDismountLocationForPassenger(LivingEntity entityLiving) {
+		Vec3 position = super.getDismountLocationForPassenger(entityLiving);
+		CompoundTag data = entityLiving.getExtraCustomData();
 		if (!data.contains("ContraptionDismountLocation"))
-			return loc;
-		return VecHelper.readNBT(data.getList("ContraptionDismountLocation", Tag.TAG_DOUBLE));
+			return position;
+
+		position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", Tag.TAG_DOUBLE));
+		data.remove("ContraptionDismountLocation");
+		entityLiving.setOnGround(false);
+
+		if (!data.contains("ContraptionMountLocation"))
+			return position;
+
+		Vec3 prevPosition = VecHelper.readNBT(data.getList("ContraptionMountLocation", Tag.TAG_DOUBLE));
+		data.remove("ContraptionMountLocation");
+		if (entityLiving instanceof Player player && !prevPosition.closerThan(position, 5000))
+			AllAdvancements.LONG_TRAVEL.awardTo(player);
+		return position;
 	}
 
 	@Override
@@ -205,7 +222,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) - 1 / 8f, transformedVector.z);
 	}
 
-	protected Vec3 getPassengerPosition(Entity passenger, float partialTicks) {
+	public Vec3 getPassengerPosition(Entity passenger, float partialTicks) {
 		UUID id = passenger.getUUID();
 		if (passenger instanceof OrientedContraptionEntity) {
 			BlockPos localPos = contraption.getBearingPosOf(id);
@@ -305,17 +322,27 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	}
 
 	public Vec3 toGlobalVector(Vec3 localVec, float partialTicks) {
+		return toGlobalVector(localVec, partialTicks, false);
+	}
+
+	public Vec3 toGlobalVector(Vec3 localVec, float partialTicks, boolean prevAnchor) {
+		Vec3 anchor = prevAnchor ? getPrevAnchorVec() : getAnchorVec();
 		Vec3 rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
 		localVec = localVec.subtract(rotationOffset);
 		localVec = applyRotation(localVec, partialTicks);
 		localVec = localVec.add(rotationOffset)
-			.add(getAnchorVec());
+			.add(anchor);
 		return localVec;
 	}
 
-	public Vec3 toLocalVector(Vec3 globalVec, float partialTicks) {
+	public Vec3 toLocalVector(Vec3 localVec, float partialTicks) {
+		return toLocalVector(localVec, partialTicks, false);
+	}
+
+	public Vec3 toLocalVector(Vec3 globalVec, float partialTicks, boolean prevAnchor) {
+		Vec3 anchor = prevAnchor ? getPrevAnchorVec() : getAnchorVec();
 		Vec3 rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
-		globalVec = globalVec.subtract(getAnchorVec())
+		globalVec = globalVec.subtract(anchor)
 			.subtract(rotationOffset);
 		globalVec = reverseRotation(globalVec, partialTicks);
 		globalVec = globalVec.add(rotationOffset);
@@ -522,6 +549,10 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	public Vec3 getAnchorVec() {
 		return position();
+	}
+
+	public Vec3 getPrevAnchorVec() {
+		return getPrevPositionVec();
 	}
 
 	public float getYawOffset() {
@@ -796,9 +827,11 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	public Vec3 getContactPointMotion(Vec3 globalContactPoint) {
 		if (prevPosInvalid)
 			return Vec3.ZERO;
-		Vec3 contactPoint = toGlobalVector(toLocalVector(globalContactPoint, 0), 1);
-		return contactPoint.subtract(globalContactPoint)
-			.add(position().subtract(getPrevPositionVec()));
+
+		Vec3 contactPoint = toGlobalVector(toLocalVector(globalContactPoint, 0, true), 1, true);
+		Vec3 contraptionLocalMovement = contactPoint.subtract(globalContactPoint);
+		Vec3 contraptionAnchorMovement = position().subtract(getPrevPositionVec());
+		return contraptionLocalMovement.add(contraptionAnchorMovement);
 	}
 
 	public boolean canCollideWith(Entity e) {
@@ -835,7 +868,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	}
 
 	@Environment(EnvType.CLIENT)
-	public abstract void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks);
+	public abstract void applyLocalTransforms(PoseStack matrixStack, float partialTicks);
 
 	public static class ContraptionRotationState {
 		public static final ContraptionRotationState NONE = new ContraptionRotationState();

@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -205,6 +206,7 @@ public class FluidNetwork {
 				test.abort();
 			}
 			List<Pair<BlockFace, Storage<FluidVariant>>> availableOutputs = new ArrayList<>(targets);
+
 			while (!availableOutputs.isEmpty() && transfer.getAmount() > 0) {
 				long dividedTransfer = transfer.getAmount() / availableOutputs.size();
 				long remainder = transfer.getAmount() % availableOutputs.size();
@@ -226,12 +228,22 @@ public class FluidNetwork {
 						continue;
 					}
 
+					int simulatedTransfer = toTransfer;
+					if (simulate)
+						simulatedTransfer += accumulatedFill.getOrDefault(targetHandler, 0);
+
 					FluidStack divided = transfer.copy();
-					divided.setAmount(toTransfer);
+					divided.setAmount(simulatedTransfer);
 					long fill = targetHandler.insert(divided.getType(), divided.getAmount(), t);
+
+					if (simulate) {
+						accumulatedFill.put(targetHandler, Integer.valueOf(fill));
+						fill -= simulatedTransfer - toTransfer;
+					}
+
 					transfer.setAmount(transfer.getAmount() - fill);
 					transferredAmount += fill;
-					if (fill < toTransfer)
+					if (fill < simulatedTransfer)
 						iterator.remove();
 				}
 

@@ -467,7 +467,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 					return inserted;
 				if (!simulate) {
 					BeltTunnelInteractionHandler.flapTunnel(nextInventory, index, side.getOpposite(), true);
-					tunnelTE.setStackToDistribute(inserted);
+					tunnelTE.setStackToDistribute(inserted, side.getOpposite());
 				}
 				return empty;
 			}
