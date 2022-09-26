@@ -197,11 +197,10 @@ public class FluidNetwork {
 
 				if (transfer.isEmpty())
 					return;
-				flowSpeed = transfer.getAmount();
 				test.abort();
 			}
 			List<Pair<BlockFace, Storage<FluidVariant>>> availableOutputs = new ArrayList<>(targets);
-// FIXME MERGE test fluids
+
 			while (!availableOutputs.isEmpty() && transfer.getAmount() > 0) {
 				long dividedTransfer = transfer.getAmount() / availableOutputs.size();
 				long remainder = transfer.getAmount() % availableOutputs.size();
