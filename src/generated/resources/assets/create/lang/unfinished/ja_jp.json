@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 75",
+	"_": "Missing Localizations: 79",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1333,6 +1333,8 @@
 	"create.item_attributes.smokable.inverted": "燻製器で調理できないか",
 	"create.item_attributes.blastable": "溶鉱炉で精錬できるかか",
 	"create.item_attributes.blastable.inverted": "溶鉱炉で精錬できないか",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "%1$sシュルカーか",
 	"create.item_attributes.shulker_level.inverted": "%1$sシュルカーでないか",
 	"create.item_attributes.shulker_level.full": "満杯の",
@@ -1556,6 +1558,7 @@
 	"create.schedule.condition.threshold.equal": "ぴったり",
 	"create.schedule.condition.threshold.x_units_of_item": "%1$s %2$sの%3$s",
 	"create.schedule.condition.threshold.matching_content": "一致する貨物",
+	"create.schedule.condition.threshold.anything": "UNLOCALIZED: Anything",
 	"create.schedule.condition.threshold.item_measure": "アイテム単位",
 	"create.schedule.condition.threshold.items": "個",
 	"create.schedule.condition.threshold.stacks": "スタック",
@@ -1563,6 +1566,7 @@
 	"create.schedule.condition.threshold.status": "貨物: %1$s/%2$s%3$s",
 	"create.schedule.condition.threshold.place_item": "参照アイテム",
 	"create.schedule.condition.threshold.place_item_2": "フィルターも使えます",
+	"create.schedule.condition.threshold.place_item_3": "UNLOCALIZED: Leave empty to match any",
 	"create.schedule.condition.fluid_threshold": "液体貨物の状態",
 	"create.schedule.condition.item_threshold": "アイテム貨物の状態",
 	"create.schedule.condition.redstone_link": "レッドストーンリンク",
