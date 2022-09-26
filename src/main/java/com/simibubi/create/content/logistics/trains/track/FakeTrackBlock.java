@@ -6,6 +6,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomPathNodeTypeBlock;
 import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,7 +30,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterloggedBlock, CustomLandingEffectsBlock, CustomRunningEffectsBlock {
+public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterloggedBlock, CustomLandingEffectsBlock, CustomRunningEffectsBlock, CustomPathNodeTypeBlock {
 
 	public FakeTrackBlock(Properties p_49795_) {
 		super(p_49795_.randomTicks()
@@ -47,7 +48,7 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 	public RenderShape getRenderShape(BlockState pState) {
 		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
-	
+
 	@Override
 	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
 		return BlockPathTypes.DAMAGE_OTHER;

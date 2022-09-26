@@ -10,7 +10,8 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
+import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -20,9 +21,9 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+
 import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -237,7 +238,7 @@ public class MinecartContraptionItem extends Item {
 			return InteractionResult.SUCCESS;
 		}
 
-		contraption.stop(event.getWorld());
+		contraption.stop(world);
 
 		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors())
 			if (AllMovementBehaviours.getBehaviour(pair.left.state)instanceof PortableStorageInterfaceMovement psim)

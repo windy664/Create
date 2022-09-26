@@ -11,15 +11,6 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
-
-import net.minecraft.world.level.Level;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -43,12 +34,16 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
-import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
-
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,6 +55,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -90,19 +86,23 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	private BlockApiCache<Storage<ItemVariant>, Direction> beltCapabilityCache;
 	private BrassTunnelItemHandler tunnelCapability;
 
-	public final SnapshotParticipant<Pair<ItemStack, Float>> snapshotParticipant = new SnapshotParticipant<>() {
+	public final SnapshotParticipant<Data> snapshotParticipant = new SnapshotParticipant<>() {
 
 		@Override
-		protected Pair<ItemStack, Float> createSnapshot() {
-			return Pair.of(stackToDistribute.copy(), distributionProgress);
+		protected Data createSnapshot() {
+			return new Data(stackToDistribute.copy(), distributionProgress, stackEnteredFrom);
 		}
 
 		@Override
-		protected void readSnapshot(Pair<ItemStack, Float> snapshot) {
-			stackToDistribute = snapshot.getLeft();
-			distributionProgress = snapshot.getRight();
+		protected void readSnapshot(Data snapshot) {
+			stackToDistribute = snapshot.stack;
+			distributionProgress = snapshot.progress;
+			stackEnteredFrom = snapshot.enteredFrom;
 		}
 	};
+
+	private record Data(ItemStack stack, float progress, Direction enteredFrom) {
+	}
 
 	public BrassTunnelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -110,7 +110,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		syncSet = new HashSet<>();
 		stackToDistribute = ItemStack.EMPTY;
 		stackEnteredFrom = null;
-		// FIXME MERGE beltCapability?
+		// fabric: beltCapability moved to cache, initialized on level set
 		tunnelCapability = new BrassTunnelItemHandler(this);
 		previousOutputIndex = 0;
 		syncedOutputActive = false;
@@ -350,18 +350,13 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		notifyUpdate();
 	}
 
-	public void setStackToDistribute(ItemStack stack, @Nullable Direction enteredFrom, TransactionContext ctx) {
-		snapshotParticipant.updateSnapshots(ctx);
-		stackToDistribute = stack;
-		distributionProgress = -1;
-	}
-
-	public void setStackToDistribute(ItemStack stack, @Nullable Direction enteredFrom) {
+	public void setStackToDistribute(ItemStack stack, @Nullable Direction enteredFrom, @Nullable TransactionContext ctx) {
+		if (ctx != null) {
+			snapshotParticipant.updateSnapshots(ctx);
+		}
 		stackToDistribute = stack;
 		stackEnteredFrom = enteredFrom;
 		distributionProgress = -1;
-		sendData();
-		setChanged();
 	}
 
 	public ItemStack getStackToDistribute() {
@@ -375,7 +370,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		if (!own.isEmpty()) {
 			list.add(own);
 			if (!simulate)
-				setStackToDistribute(ItemStack.EMPTY, null);
+				setStackToDistribute(ItemStack.EMPTY, null, null);
 		}
 
 		for (boolean left : Iterate.trueAndFalse) {
@@ -391,7 +386,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 					continue;
 				list.add(other);
 				if (!simulate)
-					adjacent.setStackToDistribute(ItemStack.EMPTY, null);
+					adjacent.setStackToDistribute(ItemStack.EMPTY, null, null);
 			}
 		}
 

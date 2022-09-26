@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.function.Consumer;
 
 import com.google.common.base.Predicates;
 import com.jozufozu.flywheel.core.PartialModel;
@@ -51,6 +50,9 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import io.github.fabricators_of_create.porting_lib.block.CustomPathNodeTypeBlock;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -100,10 +102,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, DestroyProgressRenderingHandler, ReducedDestroyEffects {
+public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, DestroyProgressRenderingHandler, ReducedDestroyEffects, CustomPathNodeTypeBlock {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
@@ -119,7 +119,7 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
 		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TE, WATERLOGGED));
 	}
-	
+
 	@Override
 	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
 		return BlockPathTypes.RAIL;

@@ -1,12 +1,14 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.simibubi.create.AllItems;
+import java.lang.ref.WeakReference;
+import java.util.Collection;
 
-import com.simibubi.create.foundation.utility.VecHelper;
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
@@ -15,6 +17,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,10 +36,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
-
-import java.util.List;
 
 public class ContraptionHandlerClient {
 

@@ -2,41 +2,6 @@ package com.simibubi.create.events;
 
 import java.util.concurrent.Executor;
 
-import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
-import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
-
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerHandler;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
-import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItemRetrieval;
-import com.simibubi.create.foundation.block.ItemUseOverrides;
-import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkHandler;
-
-import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
-
-import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
-import io.github.fabricators_of_create.porting_lib.event.common.EntityInteractCallback;
-import io.github.fabricators_of_create.porting_lib.event.common.EntityReadExtraDataCallback;
-import io.github.fabricators_of_create.porting_lib.event.common.MinecartEvents;
-import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
-import io.github.fabricators_of_create.porting_lib.event.common.ProjectileImpactCallback;
-
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.server.packs.PackType;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -44,13 +9,18 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelTileEntity;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
+import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
+import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerHandler;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
@@ -63,18 +33,30 @@ import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
 import com.simibubi.create.content.logistics.trains.entity.CarriageEntityHandler;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItemEntityInteraction;
+import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
+import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkHandler;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
+import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
+
 import io.github.fabricators_of_create.porting_lib.event.common.BlockPlaceCallback;
+import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
+import io.github.fabricators_of_create.porting_lib.event.common.EntityInteractCallback;
+import io.github.fabricators_of_create.porting_lib.event.common.EntityReadExtraDataCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.FluidPlaceBlockCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
+import io.github.fabricators_of_create.porting_lib.event.common.MinecartEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.MobEntitySetTargetCallback;
-
+import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
+import io.github.fabricators_of_create.porting_lib.event.common.ProjectileImpactCallback;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
@@ -83,13 +65,23 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -279,7 +271,7 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
 		UseBlockCallback.EVENT.register(SuperGlueItem::glueItemAlwaysPlacesWhenUsed);
 		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
-		EntityInteractCallback.EVENT.register(ScheduleItemRetrieval::removeScheduleFromConductor); // note: fabric event fires too late, use porting lib one
+		EntityInteractCallback.EVENT.register(ScheduleItemEntityInteraction::removeScheduleFromConductor); // note: fabric event fires too late, use porting lib one
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);

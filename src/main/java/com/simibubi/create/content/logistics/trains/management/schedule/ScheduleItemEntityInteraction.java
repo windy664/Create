@@ -16,10 +16,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
-
-import org.jetbrains.annotations.Nullable;
 
 public class ScheduleItemEntityInteraction {
 
@@ -38,15 +34,13 @@ public class ScheduleItemEntityInteraction {
 			.isOnCooldown(AllItems.SCHEDULE.get()))
 			return null;
 
-		ItemStack itemStack = event.getItemStack();
+		ItemStack itemStack = player.getItemInHand(hand);
 		if (itemStack.getItem()instanceof ScheduleItem si) {
-			InteractionResult result = si.handScheduleTo(itemStack, player, living, event.getHand());
+			InteractionResult result = si.handScheduleTo(itemStack, player, living, hand);
 			if (result.consumesAction()) {
 				player.getCooldowns()
 					.addCooldown(AllItems.SCHEDULE.get(), 5);
-				event.setCancellationResult(result);
-				event.setCanceled(true);
-				return null;
+				return result;
 			}
 		}
 
@@ -74,7 +68,7 @@ public class ScheduleItemEntityInteraction {
 		if (directions == null)
 			return null;
 
-		boolean onServer = !event.getWorld().isClientSide;
+		boolean onServer = !player.level.isClientSide;
 
 		if (train.runtime.paused && !train.runtime.completed) {
 			if (onServer) {
@@ -85,7 +79,6 @@ public class ScheduleItemEntityInteraction {
 
 			player.getCooldowns()
 				.addCooldown(AllItems.SCHEDULE.get(), 5);
-			event.setCancellationResult(InteractionResult.SUCCESS);
 			return InteractionResult.SUCCESS;
 		}
 
@@ -95,7 +88,6 @@ public class ScheduleItemEntityInteraction {
 				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
 				player.displayClientMessage(Lang.translateDirect("schedule.remove_with_empty_hand"), true);
 			}
-			event.setCancellationResult(InteractionResult.SUCCESS);
 			return InteractionResult.SUCCESS;
 		}
 
@@ -112,7 +104,6 @@ public class ScheduleItemEntityInteraction {
 
 		player.getCooldowns()
 			.addCooldown(AllItems.SCHEDULE.get(), 5);
-		event.setCancellationResult(InteractionResult.SUCCESS);
 		return InteractionResult.SUCCESS;
 	}
 

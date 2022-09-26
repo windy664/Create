@@ -54,7 +54,7 @@ public class BeltTunnelInteractionHandler {
 				if (!brassTunnel.canTakeItems())
 					return true;
 				if (onServer) {
-					brassTunnel.setStackToDistribute(current.stack, movementFacing.getOpposite());
+					brassTunnel.setStackToDistribute(current.stack, movementFacing.getOpposite(), null);
 					current.stack = ItemStack.EMPTY;
 					beltInventory.belt.sendData();
 					beltInventory.belt.setChanged();

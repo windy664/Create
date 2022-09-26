@@ -12,16 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
-
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.minecraft.client.renderer.LightTexture;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
@@ -44,10 +34,15 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -467,7 +462,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 					return inserted;
 				if (!simulate) {
 					BeltTunnelInteractionHandler.flapTunnel(nextInventory, index, side.getOpposite(), true);
-					tunnelTE.setStackToDistribute(inserted, side.getOpposite());
+					tunnelTE.setStackToDistribute(inserted, side.getOpposite(), null);
 				}
 				return empty;
 			}

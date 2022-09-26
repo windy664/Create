@@ -128,7 +128,7 @@ public abstract class EntityContraptionInteractionMixin {
 
 			if (info == null)
 				return false;
-			
+
 			cEntity.registerColliding(self);
 			return true;
 		});
@@ -137,7 +137,7 @@ public abstract class EntityContraptionInteractionMixin {
 			return;
 
 		self.setOnGround(true);
-		self.getPersistentData()
+		self.getExtraCustomData()
 			.putBoolean("ContraptionGrounded", true);
 	}
 

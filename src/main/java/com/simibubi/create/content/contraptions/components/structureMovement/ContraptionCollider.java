@@ -26,9 +26,9 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.ServerGamePacketListenerImplAccessor;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.ServerGamePacketListenerImplAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.player.LocalPlayer;
@@ -375,7 +375,7 @@ public class ContraptionCollider {
 		if (!entity.isOnGround())
 			return entityMotion;
 
-		CompoundTag persistentData = entity.getPersistentData();
+		CompoundTag persistentData = entity.getExtraCustomData();
 		if (persistentData.contains("ContraptionGrounded")) {
 			persistentData.remove("ContraptionGrounded");
 			return entityMotion;
@@ -397,7 +397,7 @@ public class ContraptionCollider {
 
 		EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
 		double damage = diffMotion.length();
-		if (entity.getClassification(false) == MobCategory.MONSTER)
+		if (entity.getType().getCategory() == MobCategory.MONSTER)
 			damage *= 2;
 
 		if (entity instanceof Player p && (p.isCreative() || p.isSpectator()))

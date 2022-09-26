@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 
 public class ContraptionSeatMappingPacket extends SimplePacketBase {
 
@@ -64,7 +65,7 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 						return;
 					Vec3 transformedVector = contraptionEntity.getPassengerPosition(dismountedByID, 1);
 					if (transformedVector != null)
-						dismountedByID.getPersistentData()
+						dismountedByID.getExtraCustomData()
 							.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
 				}
 
