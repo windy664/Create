@@ -1,8 +1,10 @@
 {
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "forge:mod_loaded",
-      "modid": "byg"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "byg"
+      ]
     }
   ],
   "type": "create:pressing",
