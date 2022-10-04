@@ -26,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.ServerLevelData;
@@ -37,11 +38,12 @@ public class WrappedServerWorld extends ServerLevel {
 
 	protected Level world;
 
-	public WrappedServerWorld(Level world) {
-		super(world.getServer(), Util.backgroundExecutor(), ((MinecraftServerAccessor) world.getServer()).port_lib$getStorageSource(),
-			(ServerLevelData) world.getLevelData(), world.dimension(), world.dimensionTypeRegistration(),
-			new DummyStatusListener(), ((ServerChunkCache) world.getChunkSource()).getGenerator(), world.isDebug(),
-				BiomeManagerHelper.getSeed(world.getBiomeManager()), Collections.emptyList(), false);
+	public WrappedServerWorld(ServerLevel world) {
+		super(world.getServer(), Util.backgroundExecutor(),  ((MinecraftServerAccessor) world.getServer()).port_lib$getStorageSource(),
+				(ServerLevelData) world.getLevelData(), world.dimension(),
+				new LevelStem(world.dimensionTypeRegistration(), world.getChunkSource().getGenerator()),
+				new DummyStatusListener(), world.isDebug(), BiomeManagerHelper.getSeed(world.getBiomeManager()),
+				Collections.emptyList(), false);
 		this.world = world;
 	}
 

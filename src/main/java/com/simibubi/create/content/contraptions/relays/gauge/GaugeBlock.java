@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.gauge;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllTileEntities;
@@ -19,6 +19,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -119,7 +120,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock implements ITE<Gauge
 	}
 
 	@Override
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
 		BlockEntity te = worldIn.getBlockEntity(pos);
 		if (te == null || !(te instanceof GaugeTileEntity))
 			return;

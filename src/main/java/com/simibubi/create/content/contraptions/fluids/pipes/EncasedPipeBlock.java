@@ -8,7 +8,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WEST;
 
 import java.util.Map;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -64,7 +64,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 		builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);
 		super.createBlockStateDefinition(builder);
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
@@ -104,7 +104,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 

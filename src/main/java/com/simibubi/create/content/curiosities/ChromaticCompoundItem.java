@@ -1,6 +1,6 @@
 package com.simibubi.create.content.curiosities;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import io.github.fabricators_of_create.porting_lib.block.LightEmissiveBlock;
 
@@ -167,7 +167,7 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 		}
 
 		// Find a light source and eat it.
-		Random r = world.random;
+		RandomSource r = world.random;
 		int range = 3;
 		float rate = 1 / 2f;
 		if (r.nextFloat() > rate)

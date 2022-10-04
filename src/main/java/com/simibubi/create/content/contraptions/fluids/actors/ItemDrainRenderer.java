@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -73,7 +73,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 		ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
 
 		ItemStack itemStack = transported.stack;
-		Random r = new Random(0);
+		RandomSource r = RandomSource.create(0);
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 		int count = (int) (Mth.log2((int) (itemStack.getCount()))) / 2;

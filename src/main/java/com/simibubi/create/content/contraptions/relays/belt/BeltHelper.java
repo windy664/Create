@@ -2,8 +2,6 @@ package com.simibubi.create.content.contraptions.relays.belt;
 
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -21,7 +19,7 @@ public class BeltHelper {
 
 	public static boolean isItemUpright(ItemStack stack) {
 		return ContainerItemContext.withInitial(stack).find(FluidStorage.ITEM) != null
-			|| AllItemTags.UPRIGHT_ON_BELT.matches(stack);
+				|| AllItemTags.UPRIGHT_ON_BELT.matches(stack);
 	}
 
 	public static BeltTileEntity getSegmentTE(LevelAccessor world, BlockPos pos) {
@@ -50,7 +48,7 @@ public class BeltHelper {
 	public static BeltTileEntity getBeltAtSegment(BeltTileEntity controller, int segment) {
 		BlockPos pos = getPositionForOffset(controller, segment);
 		BlockEntity te = controller.getLevel()
-			.getBlockEntity(pos);
+				.getBlockEntity(pos);
 		if (te == null || !(te instanceof BeltTileEntity))
 			return null;
 		return (BeltTileEntity) te;
@@ -59,18 +57,18 @@ public class BeltHelper {
 	public static BlockPos getPositionForOffset(BeltTileEntity controller, int offset) {
 		BlockPos pos = controller.getBlockPos();
 		Vec3i vec = controller.getBeltFacing()
-			.getNormal();
+				.getNormal();
 		BeltSlope slope = controller.getBlockState()
-			.getValue(BeltBlock.SLOPE);
+				.getValue(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 
 		return pos.offset(offset * vec.getX(), Mth.clamp(offset, 0, controller.beltLength - 1) * verticality,
-			offset * vec.getZ());
+				offset * vec.getZ());
 	}
 
 	public static Vec3 getVectorForOffset(BeltTileEntity controller, float offset) {
 		BeltSlope slope = controller.getBlockState()
-			.getValue(BeltBlock.SLOPE);
+				.getValue(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 		float verticalMovement = verticality;
 		if (offset < .5)
@@ -78,14 +76,14 @@ public class BeltHelper {
 		verticalMovement = verticalMovement * (Math.min(offset, controller.beltLength - .5f) - .5f);
 		Vec3 vec = VecHelper.getCenterOf(controller.getBlockPos());
 		Vec3 horizontalMovement = Vec3.atLowerCornerOf(controller.getBeltFacing()
-			.getNormal())
-			.scale(offset - .5f);
+						.getNormal())
+				.scale(offset - .5f);
 
 		if (slope == BeltSlope.VERTICAL)
 			horizontalMovement = Vec3.ZERO;
 
 		vec = vec.add(horizontalMovement)
-			.add(0, verticalMovement, 0);
+				.add(0, verticalMovement, 0);
 		return vec;
 	}
 
@@ -93,11 +91,11 @@ public class BeltHelper {
 		BeltSlope slope = state.getValue(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 		Vec3 horizontalMovement = Vec3.atLowerCornerOf(state.getValue(BeltBlock.HORIZONTAL_FACING)
-			.getNormal());
+				.getNormal());
 		if (slope == BeltSlope.VERTICAL)
 			return new Vec3(0, state.getValue(BeltBlock.HORIZONTAL_FACING)
-				.getAxisDirection()
-				.getStep(), 0);
+					.getAxisDirection()
+					.getStep(), 0);
 		return new Vec3(0, verticality, 0).add(horizontalMovement);
 	}
 

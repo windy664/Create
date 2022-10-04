@@ -147,7 +147,7 @@ public class SmartInventory extends RecipeWrapper
 	}
 
 	@Override
-	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		return handler.iterator(transaction);
+	public Iterator<StorageView<ItemVariant>> iterator() {
+		return handler.iterator();
 	}
 }

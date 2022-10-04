@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
@@ -66,7 +66,7 @@ public class ToggleLatchBlock extends AbstractDiodeBlock implements ConnectableR
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
 		boolean poweredPreviously = state.getValue(POWERED);
 		super.tick(state, worldIn, pos, random);
 		BlockState newState = worldIn.getBlockState(pos);

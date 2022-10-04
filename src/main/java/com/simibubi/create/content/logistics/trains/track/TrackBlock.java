@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.google.common.base.Predicates;
 import com.jozufozu.flywheel.core.PartialModel;
@@ -121,7 +121,7 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 	}
 
 	@Override
-	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+	public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
 		return BlockPathTypes.RAIL;
 	}
 
@@ -221,7 +221,7 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel level, BlockPos pos, Random p_60465_) {
+	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource p_60465_) {
 		TrackPropagator.onRailAdded(level, pos, state);
 		if (!state.getValue(SHAPE)
 			.isPortal())
@@ -417,7 +417,7 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 		return list;
 	}
 
-	public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, Random pRand) {
+	public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRand) {
 		if (!pState.getValue(SHAPE)
 			.isPortal())
 			return;

@@ -33,8 +33,6 @@ import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import org.lwjgl.system.CallbackI.P;
-
 public class PotionMixingRecipes {
 
 	public static final List<Item> SUPPORTED_CONTAINERS = List.of(Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
@@ -139,7 +137,7 @@ public class PotionMixingRecipes {
 					Item item = itemStack.getItem();
 					if (processedItems.add(item)) {
 						byItem.computeIfAbsent(item, i -> new ArrayList<>())
-							.add(recipe);
+								.add(recipe);
 					}
 				}
 			}

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
@@ -27,7 +27,7 @@ public class BracketedKineticBlockModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
 		if (!VirtualEmptyBlockGetter.is(blockView)) {
 			BracketedModelData data = new BracketedModelData();
 			BracketedTileEntityBehaviour attachmentBehaviour =

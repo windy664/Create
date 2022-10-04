@@ -1,6 +1,6 @@
 package com.simibubi.create.content.curiosities.bell;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
@@ -34,7 +34,7 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	public PartialModel getBellModel() {
 		return AllBlockPartials.HAUNTED_BELL;
 	}
-	
+
 	@Override
 	public boolean ring(Level world, BlockPos pos, Direction direction) {
 		if (isRinging && ringingTicks < RECHARGE_TICKS)
@@ -67,7 +67,7 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 		if (!level.isClientSide)
 			return;
 
-		Random rand = level.getRandom();
+		RandomSource rand = level.getRandom();
 		if (rand.nextFloat() > 0.25f)
 			return;
 
@@ -75,7 +75,7 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 		playSound(rand);
 	}
 
-	protected void spawnParticle(Random rand) {
+	protected void spawnParticle(RandomSource rand) {
 		double x = worldPosition.getX() + rand.nextDouble();
 		double y = worldPosition.getY() + 0.5;
 		double z = worldPosition.getZ() + rand.nextDouble();
@@ -85,7 +85,7 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 		level.addParticle(ParticleTypes.SOUL, x, y, z, vx, vy, vz);
 	}
 
-	protected void playSound(Random rand) {
+	protected void playSound(RandomSource rand) {
 		float vol = rand.nextFloat() * 0.4F + rand.nextFloat() > 0.9F ? 0.6F : 0.0F;
 		float pitch = 0.6F + rand.nextFloat() * 0.4F;
 		level.playSound(null, worldPosition, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, vol, pitch);

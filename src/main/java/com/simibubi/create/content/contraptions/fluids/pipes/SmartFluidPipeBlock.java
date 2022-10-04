@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -127,7 +127,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 
@@ -145,7 +145,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 			: face == AttachFace.CEILING ? AllShapes.SMART_FLUID_PIPE_CEILING : AllShapes.SMART_FLUID_PIPE_WALL;
 		return shape.get(state.getValue(FACING));
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
@@ -161,14 +161,14 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
-	
+
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
 		BlockPos pCurrentPos, BlockPos pFacingPos) {
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState pState) {
 		return fluidState(pState);

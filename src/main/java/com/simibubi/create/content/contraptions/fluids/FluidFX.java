@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.fluids.particle.FluidParticleData;
@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class FluidFX {
 
-	static Random r = new Random();
+	static RandomSource r = RandomSource.create();
 
 	public static void splash(BlockPos pos, FluidStack fluidStack) {
 		Fluid fluid = fluidStack.getFluid();

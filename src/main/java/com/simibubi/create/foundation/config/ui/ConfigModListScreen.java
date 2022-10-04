@@ -22,7 +22,6 @@ import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.Abstrac
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
 
 public class ConfigModListScreen extends ConfigScreen {
 

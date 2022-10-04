@@ -165,10 +165,10 @@ public class ContraptionRenderDispatcher {
 	public static SuperByteBuffer buildStructureBuffer(VirtualRenderWorld renderWorld, Contraption c,
 		RenderType layer) {
 		Collection<StructureTemplate.StructureBlockInfo> values = c.getRenderedBlocks();
-		BufferBuilder builder = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
+		com.jozufozu.flywheel.util.Pair<BufferBuilder.RenderedBuffer, Integer> pair = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
 				.withBlocks(values)
 				.build();
-		return new SuperByteBuffer(builder);
+		return new SuperByteBuffer(pair.first(), pair.second());
 	}
 
 	public static int getLight(Level world, float lx, float ly, float lz) {

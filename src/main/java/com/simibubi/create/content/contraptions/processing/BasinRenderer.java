@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.processing;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.util.RandomSource;
+
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
@@ -53,7 +55,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 		TransformStack.cast(ms)
 			.rotateY(basin.ingredientRotation.getValue(partialTicks));
 
-		Random r = new Random(pos.hashCode());
+		RandomSource r = RandomSource.create(pos.hashCode());
 		Vec3 baseVector = new Vec3(.125, level, 0);
 
 		Storage<ItemVariant> inv = basin.itemCapability;

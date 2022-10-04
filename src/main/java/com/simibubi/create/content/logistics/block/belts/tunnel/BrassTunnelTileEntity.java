@@ -6,7 +6,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -230,7 +230,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		});
 	}
 
-	private static Random rand = new Random();
+	private static RandomSource rand = RandomSource.create();
 	private static Map<Pair<BrassTunnelTileEntity, Direction>, ItemStack> distributed = new IdentityHashMap<>();
 	private static Set<Pair<BrassTunnelTileEntity, Direction>> full = new HashSet<>();
 

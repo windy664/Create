@@ -2,14 +2,9 @@ package com.simibubi.create.compat.emi.recipes;
 
 import java.util.List;
 
-import com.simibubi.create.compat.emi.CreateEmiAnimations;
-
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.compat.emi.CreateEmiAnimations;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -18,6 +13,10 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 
 public class MechanicalCraftingEmiRecipe extends CreateEmiRecipe<CraftingRecipe> {
 	private static final int MAX_SIZE = 100;
@@ -79,7 +78,7 @@ public class MechanicalCraftingEmiRecipe extends CreateEmiRecipe<CraftingRecipe>
 
 		CreateEmiAnimations.addCrafter(widgets, 132, 38);
 
-		widgets.addText(new TextComponent("" + recipeAmount).getVisualOrderText(), 142, 39, -1, true);
+		widgets.addText(Component.literal("" + recipeAmount).getVisualOrderText(), 142, 39, -1, true);
 	}
 
 	public class CrafterSlotWidget extends SlotWidget {

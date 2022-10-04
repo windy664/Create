@@ -3,10 +3,13 @@ package com.simibubi.create.compat.rei.category;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.network.chat.MutableComponent;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.rei.category.animations.AnimatedCrafter;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -26,16 +29,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-
 import net.minecraft.world.item.crafting.ShapedRecipe;
-
-import org.jetbrains.annotations.Nullable;
 
 public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe> {
 
@@ -202,7 +201,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 				return Tooltip.create(ingredient.getTooltipLines(player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL));
 			} catch (RuntimeException | LinkageError e) {
 				List<Component> list = new ArrayList<>();
-				TranslatableComponent crash = new TranslatableComponent("jei.tooltip.error.crash");
+				MutableComponent crash = Component.translatable("jei.tooltip.error.crash");
 				list.add(crash.withStyle(ChatFormatting.RED));
 				return Tooltip.create(list);
 			}

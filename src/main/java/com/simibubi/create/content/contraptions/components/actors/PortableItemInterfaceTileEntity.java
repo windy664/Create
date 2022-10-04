@@ -92,15 +92,9 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 		}
 
 		@Override
-		public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-			TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
-			return super.iterator(transaction);
-		}
-
-		@Override
-		public Iterable<? extends StorageView<ItemVariant>> iterable(TransactionContext transaction) {
-			TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
-			return super.iterable(transaction);
+		public Iterator<StorageView<ItemVariant>> iterator() {
+//			TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
+			return super.iterator();
 		}
 
 		private void setWrapped(Storage<ItemVariant> wrapped) {

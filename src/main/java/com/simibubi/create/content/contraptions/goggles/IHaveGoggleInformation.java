@@ -7,22 +7,18 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
-
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 /*
-* Implement this Interface in the TileEntity class that wants to add info to the screen
-* */
+ * Implement this Interface in the TileEntity class that wants to add info to the screen
+ * */
 public interface IHaveGoggleInformation {
 
 	/**
@@ -41,7 +37,7 @@ public interface IHaveGoggleInformation {
 	 * interface
 	 *
 	 * @return {@code true} if the tooltip creation was successful and should be
-	 *         displayed, or {@code false} if the overlay should not be displayed
+	 * displayed, or {@code false} if the overlay should not be displayed
 	 */
 	default boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return false;
@@ -57,32 +53,31 @@ public interface IHaveGoggleInformation {
 		boolean isEmpty = true;
 		int tanks = 0;
 		long firstCapacity = -1;
-		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<FluidVariant> view : handler.iterable(t)) {
-				if (tanks == 0)
-					firstCapacity = view.getCapacity();
-				tanks++;
-				FluidStack fluidStack = new FluidStack(view);
-				if (fluidStack.isEmpty())
-					continue;
 
-				Lang.fluidName(fluidStack)
-						.style(ChatFormatting.GRAY)
-						.forGoggles(tooltip, 1);
+		for (StorageView<FluidVariant> view : handler) {
+			if (tanks == 0)
+				firstCapacity = view.getCapacity();
+			tanks++;
+			FluidStack fluidStack = new FluidStack(view);
+			if (fluidStack.isEmpty())
+				continue;
 
-				String amount = FluidTextUtil.getUnicodeMillibuckets(fluidStack.getAmount(), unit, simplify);
-				Lang.builder()
-						.add(Lang.text(amount)
-								.add(mb)
-								.style(ChatFormatting.GOLD))
-						.text(ChatFormatting.GRAY, " / ")
-						.add(Lang.text(FluidTextUtil.getUnicodeMillibuckets(view.getCapacity(), unit, simplify))
-								.add(mb)
-								.style(ChatFormatting.DARK_GRAY))
-						.forGoggles(tooltip, 1);
+			Lang.fluidName(fluidStack)
+					.style(ChatFormatting.GRAY)
+					.forGoggles(tooltip, 1);
 
-				isEmpty = false;
-			}
+			String amount = FluidTextUtil.getUnicodeMillibuckets(fluidStack.getAmount(), unit, simplify);
+			Lang.builder()
+					.add(Lang.text(amount)
+							.add(mb)
+							.style(ChatFormatting.GOLD))
+					.text(ChatFormatting.GRAY, " / ")
+					.add(Lang.text(FluidTextUtil.getUnicodeMillibuckets(view.getCapacity(), unit, simplify))
+							.add(mb)
+							.style(ChatFormatting.DARK_GRAY))
+					.forGoggles(tooltip, 1);
+
+			isEmpty = false;
 		}
 
 		if (tanks > 1) {

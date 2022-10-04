@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -151,7 +151,7 @@ public class PumpBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 

@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.core.model.ModelUtil;
+import com.jozufozu.flywheel.util.Pair;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -13,7 +14,7 @@ public class BakedModelRenderHelper {
 
 	public static SuperByteBuffer standardBlockRender(BlockState renderedState) {
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance()
-			.getBlockRenderer();
+				.getBlockRenderer();
 		return standardModelRender(dispatcher.getBlockModel(renderedState), renderedState);
 	}
 
@@ -22,8 +23,8 @@ public class BakedModelRenderHelper {
 	}
 
 	public static SuperByteBuffer standardModelRender(BakedModel model, BlockState referenceState, PoseStack ms) {
-		BufferBuilder builder = ModelUtil.getBufferBuilder(model, referenceState, ms);
-		return new SuperByteBuffer(builder);
+		Pair<BufferBuilder.RenderedBuffer, Integer> pair = ModelUtil.getBufferBuilder(model, referenceState, ms);
+		return new SuperByteBuffer(pair.first(), pair.second());
 	}
 
 }

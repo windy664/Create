@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllTileEntities;
@@ -71,7 +71,7 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.state != 0 && rand.nextFloat() < 0.25F)
 				addParticles(stateIn, worldIn, pos, 0.5F);

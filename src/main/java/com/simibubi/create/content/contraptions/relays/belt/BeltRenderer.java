@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
+import net.minecraft.util.RandomSource;
+
 import java.util.Random;
 import java.util.function.Supplier;
 

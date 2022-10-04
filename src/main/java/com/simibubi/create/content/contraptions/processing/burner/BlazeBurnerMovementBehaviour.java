@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.processing.burner;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -42,7 +42,7 @@ public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 		if (!shouldRender(context))
 			return;
 
-		Random r = context.world.getRandom();
+		RandomSource r = context.world.getRandom();
 		Vec3 c = context.position;
 		Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f)
 			.multiply(1, 0, 1));

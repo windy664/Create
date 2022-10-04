@@ -268,7 +268,7 @@ public class Train {
 		int carriageCount = carriages.size();
 		boolean stalled = false;
 		double maxStress = 0;
-		
+
 		if (carriageWaitingForChunks != -1)
 			distance = 0;
 
@@ -1045,7 +1045,7 @@ public class Train {
 				continue;
 
 			try (Transaction t = TransferUtil.getTransaction()) {
-				for (StorageView<ItemVariant> view : fuelItems.iterable(t)) {
+				for (StorageView<ItemVariant> view : fuelItems) {
 					ItemVariant held = view.getResource();
 					Integer burnTime = FuelRegistry.INSTANCE.get(held.getItem());
 					if (burnTime == null || burnTime <= 0)

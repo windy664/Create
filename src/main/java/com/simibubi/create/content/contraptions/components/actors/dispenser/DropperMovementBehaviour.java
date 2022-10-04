@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -23,7 +23,7 @@ import net.minecraft.world.item.Items;
 public class DropperMovementBehaviour implements MovementBehaviour {
 	protected static final MovedDefaultDispenseItemBehaviour DEFAULT_BEHAVIOUR =
 		new MovedDefaultDispenseItemBehaviour();
-	private static final Random RNG = new Random();
+	private static final RandomSource RNG = RandomSource.create();
 
 	protected void activate(MovementContext context, BlockPos pos) {
 		DispenseItemLocation location = getDispenseLocation(context);

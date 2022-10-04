@@ -1,16 +1,13 @@
 package com.simibubi.create.foundation.render;
 
-import java.util.function.IntPredicate;
-
 import com.jozufozu.flywheel.api.vertex.ShadedVertexList;
-import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.backend.ShadersModHandler;
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.DiffuseLightCalculator;
 import com.jozufozu.flywheel.util.transform.TStack;
 import com.jozufozu.flywheel.util.transform.Transform;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder.DrawState;
+import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -34,8 +31,7 @@ import net.minecraft.world.level.Level;
 
 public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<SuperByteBuffer> {
 
-	private final VertexList template;
-	private final IntPredicate shadedPredicate;
+	private final ShadedVertexList template;
 
 	// Vertex Position
 	private final PoseStack transforms;
@@ -66,15 +62,10 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	// Temporary
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
-	public SuperByteBuffer(BufferBuilder buf) {
-		if (buf instanceof ShadeSeparatedBufferBuilder separated) {
-			ShadedVertexList template = new BlockVertexList.Shaded(separated);
-			shadedPredicate = template::isShaded;
-			this.template = template;
-		} else {
-			template = new BlockVertexList(buf);
-			shadedPredicate = index -> true;
-		}
+	public SuperByteBuffer(RenderedBuffer buf, int unshadedStartVertex) {
+		DrawState drawState = buf.drawState();
+		template = new BlockVertexList.Shaded(buf.vertexBuffer(), drawState.vertexCount(), drawState.format().getVertexSize(), unshadedStartVertex);
+
 		transforms = new PoseStack();
 		transforms.pushPose();
 	}
@@ -84,24 +75,24 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 			return;
 
 		Matrix4f modelMat = input.last()
-			.pose()
-			.copy();
+				.pose()
+				.copy();
 		Matrix4f localTransforms = transforms.last()
-			.pose();
+				.pose();
 		modelMat.multiply(localTransforms);
 
 		Matrix3f normalMat;
 		if (fullNormalTransform) {
 			normalMat = input.last()
-				.normal()
-				.copy();
+					.normal()
+					.copy();
 			Matrix3f localNormalTransforms = transforms.last()
-				.normal();
+					.normal();
 			normalMat.mul(localNormalTransforms);
 		} else {
 			normalMat = transforms.last()
-				.normal()
-				.copy();
+					.normal()
+					.copy();
 		}
 
 		if (useWorldLight) {
@@ -114,7 +105,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 
 		DiffuseLightCalculator diffuseCalculator = ForcedDiffuseState.getForcedCalculator();
 		final boolean disableDiffuseMult =
-			this.disableDiffuseMult || (ShadersModHandler.isShaderPackInUse() && diffuseCalculator == null);
+				this.disableDiffuseMult || (ShadersModHandler.isShaderPackInUse() && diffuseCalculator == null);
 		if (diffuseCalculator == null) {
 			diffuseCalculator = this.diffuseCalculator;
 			if (diffuseCalculator == null) {
@@ -157,7 +148,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 			if (disableDiffuseMult) {
 				builder.color(r, g, b, a);
 			} else {
-				float instanceDiffuse = diffuseCalculator.getDiffuse(nx, ny, nz, shadedPredicate.test(i));
+				float instanceDiffuse = diffuseCalculator.getDiffuse(nx, ny, nz, template.isShaded(i));
 				int colorR = transformColor(r, instanceDiffuse);
 				int colorG = transformColor(g, instanceDiffuse);
 				int colorB = transformColor(b, instanceDiffuse);
@@ -273,40 +264,40 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	@Override
 	public SuperByteBuffer mulPose(Matrix4f pose) {
 		transforms.last()
-			.pose()
-			.multiply(pose);
+				.pose()
+				.multiply(pose);
 		return this;
 	}
 
 	@Override
 	public SuperByteBuffer mulNormal(Matrix3f normal) {
 		transforms.last()
-			.normal()
-			.mul(normal);
+				.normal()
+				.mul(normal);
 		return this;
 	}
 
 	public SuperByteBuffer transform(PoseStack stack) {
 		transforms.last()
-			.pose()
-			.multiply(stack.last()
-				.pose());
+				.pose()
+				.multiply(stack.last()
+						.pose());
 		transforms.last()
-			.normal()
-			.mul(stack.last()
-				.normal());
+				.normal()
+				.mul(stack.last()
+						.normal());
 		return this;
 	}
 
 	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
 		translate(.5f, .5f, .5f).rotate(axis, radians)
-			.translate(-.5f, -.5f, -.5f);
+				.translate(-.5f, -.5f, -.5f);
 		return this;
 	}
 
 	public SuperByteBuffer rotateCentered(Quaternion q) {
 		translate(.5f, .5f, .5f).multiply(q)
-			.translate(-.5f, -.5f, -.5f);
+				.translate(-.5f, -.5f, -.5f);
 		return this;
 	}
 
@@ -361,13 +352,13 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollU, float scrollV) {
 		this.spriteShiftFunc = (builder, u, v) -> {
 			float targetU = u - entry.getOriginal()
-				.getU0() + entry.getTarget()
+					.getU0() + entry.getTarget()
 					.getU0()
-				+ scrollU;
+					+ scrollU;
 			float targetV = v - entry.getOriginal()
-				.getV0() + entry.getTarget()
+					.getV0() + entry.getTarget()
 					.getV0()
-				+ scrollV;
+					+ scrollV;
 			builder.uv(targetU, targetV);
 		};
 		return this;
@@ -376,9 +367,9 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	public SuperByteBuffer shiftUVtoSheet(SpriteShiftEntry entry, float uTarget, float vTarget, int sheetSize) {
 		this.spriteShiftFunc = (builder, u, v) -> {
 			float targetU = entry.getTarget()
-				.getU((SpriteShiftEntry.getUnInterpolatedU(entry.getOriginal(), u) / sheetSize) + uTarget * 16);
+					.getU((SpriteShiftEntry.getUnInterpolatedU(entry.getOriginal(), u) / sheetSize) + uTarget * 16);
 			float targetV = entry.getTarget()
-				.getV((SpriteShiftEntry.getUnInterpolatedV(entry.getOriginal(), v) / sheetSize) + vTarget * 16);
+					.getV((SpriteShiftEntry.getUnInterpolatedV(entry.getOriginal(), v) / sheetSize) + vTarget * 16);
 			builder.uv(targetU, targetV);
 		};
 		return this;

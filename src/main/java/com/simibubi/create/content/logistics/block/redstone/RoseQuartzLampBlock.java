@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -150,7 +150,7 @@ public class RoseQuartzLampBlock extends Block implements IWrenchable, WeakPower
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRand) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRand) {
 		boolean wasPowering = pState.getValue(POWERING);
 		boolean shouldBePowering = pState.getValue(ACTIVATE);
 

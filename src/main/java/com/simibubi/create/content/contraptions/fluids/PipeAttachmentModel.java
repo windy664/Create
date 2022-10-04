@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids;
 
 import java.util.Arrays;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlockPartials;
@@ -34,7 +34,7 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
 		PipeModelData data = new PipeModelData();
 		FluidTransportBehaviour transport = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
 		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
@@ -52,7 +52,7 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 		addQuads(world, state, pos, randomSupplier, context, data);
 	}
 
-	private void addQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context,
+	private void addQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context,
 		PipeModelData pipeData) {
 		BakedModel bracket = pipeData.getBracket();
 		if (bracket != null)

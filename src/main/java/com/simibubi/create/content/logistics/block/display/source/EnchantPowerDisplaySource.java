@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class EnchantPowerDisplaySource extends NumericSingleLineDisplaySource {
 
-	protected static final Random random = new Random();
+	protected static final RandomSource random = RandomSource.create();
 	protected static final ItemStack stack = new ItemStack(Items.DIAMOND_PICKAXE);
 
 	@Override

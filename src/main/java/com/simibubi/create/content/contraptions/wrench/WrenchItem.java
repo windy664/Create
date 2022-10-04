@@ -70,7 +70,7 @@ public class WrenchItem extends Item {
 		if (player != null && !player.isCreative())
 			Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
 				.forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
-		state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
+		state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY, true);
 		world.destroyBlock(pos, false);
 		AllSoundEvents.WRENCH_REMOVE.playOnServer(world, pos, 1, Create.RANDOM.nextFloat() * .5f + .5f);
 		return InteractionResult.SUCCESS;

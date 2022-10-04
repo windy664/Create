@@ -1,13 +1,11 @@
 package com.simibubi.create.foundation.item.render;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.Iterate;
-import io.github.fabricators_of_create.porting_lib.util.ItemRendererHelper;
 
+import io.github.fabricators_of_create.porting_lib.util.ItemRendererHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,13 +13,14 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 
 public class PartialItemModelRenderer {
 
 	private static final PartialItemModelRenderer INSTANCE = new PartialItemModelRenderer();
 
-	private final Random random = new Random();
+	private final RandomSource random = RandomSource.create();
 
 	private ItemStack stack;
 	private ItemTransforms.TransformType transformType;

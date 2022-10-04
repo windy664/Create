@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
@@ -93,7 +93,7 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
-	public void tick(BlockState blockState, ServerLevel world, BlockPos pos, Random random) {
+	public void tick(BlockState blockState, ServerLevel world, BlockPos pos, RandomSource random) {
 		getTileEntityOptional(world, pos).ifPresent(StockpileSwitchTileEntity::updatePowerAfterDelay);
 	}
 

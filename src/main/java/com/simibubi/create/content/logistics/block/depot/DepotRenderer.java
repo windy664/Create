@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.depot;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -67,7 +67,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 
 			ItemStack itemStack = tis.stack;
 			int angle = tis.angle;
-			Random r = new Random(0);
+			RandomSource r = RandomSource.create(0);
 			renderItem(ms, buffer, light, overlay, itemStack, angle, r, itemPosition);
 			ms.popPose();
 		}
@@ -88,7 +88,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 			ms.translate(.35f, 0, 0);
 			if (renderUpright)
 				msr.rotateY(-(360 / 8f * i));
-			Random r = new Random(i + 1);
+			RandomSource r = RandomSource.create(i + 1);
 			int angle = (int) (360 * r.nextFloat());
 			renderItem(ms, buffer, light, overlay, stack, renderUpright ? angle + 90 : angle, r, itemPosition);
 			ms.popPose();
@@ -98,7 +98,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 	}
 
 	public static void renderItem(PoseStack ms, MultiBufferSource buffer, int light, int overlay, ItemStack itemStack,
-		int angle, Random r, Vec3 itemPosition) {
+		int angle, RandomSource r, Vec3 itemPosition) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 		TransformStack msr = TransformStack.cast(ms);

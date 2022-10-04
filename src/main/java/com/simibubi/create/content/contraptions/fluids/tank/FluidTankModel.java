@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
 import java.util.Arrays;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllSpriteShifts;
@@ -35,7 +35,7 @@ public class FluidTankModel extends CTModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
 		CullData cullData = new CullData();
 		for (Direction d : Iterate.horizontalDirections)
 			cullData.setCulled(d, ConnectivityHandler.isConnected(blockView, pos, pos.relative(d))); //FluidTankConnectivityHandler.isConnected(blockView, pos, pos.relative(d)));

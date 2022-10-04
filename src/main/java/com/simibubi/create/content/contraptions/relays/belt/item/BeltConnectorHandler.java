@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.belt.item;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class BeltConnectorHandler {
 
-	private static Random r = new Random();
+	private static RandomSource r = RandomSource.create();
 
 	public static void tick() {
 		Player player = Minecraft.getInstance().player;

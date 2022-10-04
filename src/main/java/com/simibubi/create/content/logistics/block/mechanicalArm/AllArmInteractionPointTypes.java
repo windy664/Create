@@ -589,7 +589,7 @@ public class AllArmInteractionPointTypes {
 				return stack;
 			ItemStack remainder = stack.copy();
 			TransactionCallback.onSuccess(ctx, () ->
-					campfireBE.placeFood(remainder.copy(), recipe.get()
+					campfireBE.placeFood(null, remainder.copy(), recipe.get()
 				.getCookingTime()));
 			remainder.shrink(1);
 			return remainder;

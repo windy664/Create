@@ -19,7 +19,6 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.material.Fluid;
 
@@ -43,7 +42,7 @@ public class CreateSlotWidget extends SlotWidget {
 		FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
 		String amount = FluidTextUtil.getUnicodeMillibuckets(stack.getAmount(), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
 
-		Component amountComponent = new TextComponent(" " + amount)
+		Component amountComponent = Component.literal(" " + amount)
 				.append(Lang.translateDirect(unit.getTranslationKey()))
 				.withStyle(ChatFormatting.GOLD);
 

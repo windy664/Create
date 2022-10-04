@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.utility.LangBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class KineticStressDisplaySource extends PercentOrProgressBarDisplaySource {
 

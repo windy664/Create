@@ -51,9 +51,9 @@ public class FluidContentsAttribute implements ItemAttribute {
 	public void writeNBT(CompoundTag nbt) {
 		if (fluid == null)
 			return;
-		ResourceLocation id = fluid.getRegistryName();
-		if (id == null)
-			return;
+		ResourceLocation id = Registry.FLUID.getKey(fluid);
+//		if (id == null)
+//			return;
 		nbt.putString("id", id.toString());
 	}
 

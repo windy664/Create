@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -62,7 +62,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource r) {
 		updateTransmittedSignal(state, worldIn, pos);
 	}
 

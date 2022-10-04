@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.girder;
 
 import java.util.Arrays;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlockPartials;
@@ -23,7 +23,7 @@ public class ConnectedGirderModel extends CTModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
 		ConnectionData data = new ConnectionData();
 		for (Direction d : Iterate.horizontalDirections)
 			data.setConnected(d, GirderBlock.isConnected(blockView, pos, state, d));

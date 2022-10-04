@@ -5,26 +5,15 @@ import java.util.List;
 
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
-import com.simibubi.create.foundation.utility.Components;
-import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
-import io.github.fabricators_of_create.porting_lib.util.FluidAttributes;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.material.Fluid;
-
-import org.jetbrains.annotations.Nullable;
 
 public class PotionFluid extends VirtualFluid {
 
@@ -50,7 +39,7 @@ public class PotionFluid extends VirtualFluid {
 			return new FluidStack(fs.getFluid(), fs.getAmount(), fs.getTag());
 		}
 		fs.getOrCreateTag()
-			.putString("Potion", resourcelocation.toString());
+				.putString("Potion", resourcelocation.toString());
 		return new FluidStack(fs.getFluid(), fs.getAmount(), fs.getTag());
 	}
 
@@ -70,34 +59,33 @@ public class PotionFluid extends VirtualFluid {
 	}
 
 	// TODO: PORT
-	public static class PotionFluidAttributes extends FluidAttributes {
-
-		public PotionFluidAttributes(Builder builder, Fluid fluid) {
-			super(builder, fluid);
-		}
-
-		@Override
-		public int getColor(FluidStack stack) {
-			CompoundTag tag = stack.getOrCreateTag();
-			int color = PotionUtils.getColor(PotionUtils.getAllEffects(tag)) | 0xff000000;
-			return color;
-		}
-
-		@Override
-		public Component getDisplayName(FluidStack stack) {
-			return Components.translatable(getTranslationKey(stack));
-		}
-
-		@Override
-		public String getTranslationKey(FluidStack stack) {
-			CompoundTag tag = stack.getOrCreateTag();
-			ItemLike itemFromBottleType =
-					PotionFluidHandler.itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
-			return PotionUtils.getPotion(tag)
-					.getName(itemFromBottleType.asItem()
-							.getDescriptionId() + ".effect.");
-		}
-
-	}
-
+//	public static class PotionFluidAttributes extends FluidAttributes {
+//
+//		public PotionFluidAttributes(Builder builder, Fluid fluid) {
+//			super(builder, fluid);
+//		}
+//
+//		@Override
+//		public int getColor(FluidStack stack) {
+//			CompoundTag tag = stack.getOrCreateTag();
+//			int color = PotionUtils.getColor(PotionUtils.getAllEffects(tag)) | 0xff000000;
+//			return color;
+//		}
+//
+//		@Override
+//		public Component getDisplayName(FluidStack stack) {
+//			return Components.translatable(getTranslationKey(stack));
+//		}
+//
+//		@Override
+//		public String getTranslationKey(FluidStack stack) {
+//			CompoundTag tag = stack.getOrCreateTag();
+//			ItemLike itemFromBottleType =
+//					PotionFluidHandler.itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
+//			return PotionUtils.getPotion(tag)
+//					.getName(itemFromBottleType.asItem()
+//							.getDescriptionId() + ".effect.");
+//		}
+//
+//	}
 }

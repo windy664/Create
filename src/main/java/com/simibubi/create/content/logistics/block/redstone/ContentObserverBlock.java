@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -108,7 +108,7 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
 		worldIn.setBlock(pos, state.setValue(POWERED, false), 2);
 		worldIn.updateNeighborsAt(pos, this);
 	}

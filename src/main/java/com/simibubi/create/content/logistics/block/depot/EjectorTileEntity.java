@@ -263,7 +263,7 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 
 		ItemStackHandler outputs = depotBehaviour.processingOutputBuffer;
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : outputs.iterable(t)) {
+			for (StorageView<ItemVariant> view : outputs) {
 				ItemVariant var = view.getResource();
 				long extracted = view.extract(view.getResource(), 64, t);
 				if (extracted != 0)

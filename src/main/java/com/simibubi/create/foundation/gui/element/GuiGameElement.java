@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui.element;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import javax.annotation.Nullable;
 
@@ -206,7 +206,7 @@ public class GuiGameElement {
 				model = FixedColorTintingBakedModel.wrap(model, color);
 			}
 			blockRenderer.getModelRenderer()
-				.tesselateBlock(VirtualEmptyBlockGetter.FULL_BRIGHT, model, blockState, BlockPos.ZERO, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
+				.tesselateBlock(VirtualEmptyBlockGetter.FULL_BRIGHT, model, blockState, BlockPos.ZERO, ms, vb, false, RandomSource.create(), 42L, OverlayTexture.NO_OVERLAY);
 			buffer.endBatch();
 		}
 

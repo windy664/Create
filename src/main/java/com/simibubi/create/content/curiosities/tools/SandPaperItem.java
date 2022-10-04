@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.tools;
 
 import java.util.Optional;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -222,7 +222,7 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	}
 
 	@Override
-	public boolean triggerUseEffects(ItemStack stack, LivingEntity entity, int count, Random random) {
+	public boolean triggerUseEffects(ItemStack stack, LivingEntity entity, int count, RandomSource random) {
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack polishing = ItemStack.of(tag.getCompound("Polishing"));

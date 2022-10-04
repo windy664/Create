@@ -89,8 +89,8 @@ public class ProcessingInventory extends ItemStackHandler {
 	}
 
 	@Override
-	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		Iterator<StorageView<ItemVariant>> base = super.iterator(transaction);
+	public Iterator<StorageView<ItemVariant>> iterator() {
+		Iterator<StorageView<ItemVariant>> base = super.iterator();
 		return new ViewOnlyWrappedIterator<>(base);
 	}
 }

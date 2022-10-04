@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
-import io.github.fabricators_of_create.porting_lib.extensions.RegistryNameProvider;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -76,7 +75,7 @@ public class CarriageBogey {
 		if (leading().edge == null || carriage.train.derailed) {
 			yRot = -90 + entity.yaw - derailAngle;
 		} else if (!entity.level.dimension()
-			.equals(getDimension())) {
+				.equals(getDimension())) {
 			yRot = -90 + entity.yaw;
 			xRot = 0;
 		} else {
@@ -114,7 +113,7 @@ public class CarriageBogey {
 		if (carriage.train.derailed)
 			return 0;
 		return type.getWheelPointSpacing() - leading().getPosition()
-			.distanceTo(trailing().getPosition());
+				.distanceTo(trailing().getPosition());
 	}
 
 	@Nullable
@@ -122,14 +121,14 @@ public class CarriageBogey {
 		if (leading().edge == null)
 			return null;
 		return points.getFirst()
-			.getPosition()
-			.add(points.getSecond()
-				.getPosition())
-			.scale(.5);
+				.getPosition()
+				.add(points.getSecond()
+						.getPosition())
+				.scale(.5);
 	}
 
 	public void updateCouplingAnchor(Vec3 entityPos, float entityXRot, float entityYRot, int bogeySpacing,
-		float partialTicks, boolean leading) {
+									 float partialTicks, boolean leading) {
 		Vec3 thisOffset = type.getConnectorAnchorOffset();
 		thisOffset = thisOffset.multiply(1, 1, leading ? -1 : 1);
 
@@ -149,7 +148,7 @@ public class CarriageBogey {
 	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("Type", RegisteredObjects.getKeyOrThrow((Block) type)
-			.toString());
+				.toString());
 		tag.put("Points", points.serializeEach(tp -> tp.write(dimensions)));
 		return tag;
 	}
@@ -158,7 +157,7 @@ public class CarriageBogey {
 		ResourceLocation location = new ResourceLocation(tag.getString("Type"));
 		IBogeyBlock type = (IBogeyBlock) Registry.BLOCK.get(location);
 		Couple<TravellingPoint> points = Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND),
-			c -> TravellingPoint.read(c, graph, dimensions));
+				c -> TravellingPoint.read(c, graph, dimensions));
 		CarriageBogey carriageBogey = new CarriageBogey(type, points.getFirst(), points.getSecond());
 		return carriageBogey;
 	}

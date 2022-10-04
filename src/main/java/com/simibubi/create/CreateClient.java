@@ -143,7 +143,7 @@ public class CreateClient implements ClientModInitializer {
 		if (mc.player == null)
 			return;
 
-		if (mc.options.graphicsMode != GraphicsStatus.FABULOUS)
+		if (mc.options.graphicsMode().get() != GraphicsStatus.FABULOUS)
 			return;
 
 		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())

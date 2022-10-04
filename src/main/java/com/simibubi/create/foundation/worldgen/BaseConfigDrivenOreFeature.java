@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.worldgen;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Function;
 
 import com.mojang.serialization.Codec;
@@ -16,7 +16,7 @@ public abstract class BaseConfigDrivenOreFeature<FC extends BaseConfigDrivenOreF
 	}
 
 	public boolean canPlaceOre(BlockState pState, Function<BlockPos, BlockState> pAdjacentStateAccessor,
-		Random pRandom, BaseConfigDrivenOreFeatureConfiguration pConfig, OreConfiguration.TargetBlockState pTargetState,
+		RandomSource pRandom, BaseConfigDrivenOreFeatureConfiguration pConfig, OreConfiguration.TargetBlockState pTargetState,
 		BlockPos.MutableBlockPos pMatablePos) {
 		if (!pTargetState.target.test(pState, pRandom))
 			return false;
@@ -26,7 +26,7 @@ public abstract class BaseConfigDrivenOreFeature<FC extends BaseConfigDrivenOreF
 		return !isAdjacentToAir(pAdjacentStateAccessor, pMatablePos);
 	}
 
-	protected boolean shouldSkipAirCheck(Random pRandom, float pChance) {
+	protected boolean shouldSkipAirCheck(RandomSource pRandom, float pChance) {
 		return pChance <= 0 ? true : pChance >= 1 ? false : pRandom.nextFloat() >= pChance;
 	}
 }

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 public class CouplingHandlerClient {
 
 	static AbstractMinecart selectedCart;
-	static Random r = new Random();
+	static RandomSource r = RandomSource.create();
 
 	public static void tick() {
 		if (selectedCart == null)

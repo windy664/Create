@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.processing.burner;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -244,7 +244,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+	public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
 		if (random.nextInt(10) != 0)
 			return;
 		if (!state.getValue(HEAT_LEVEL)

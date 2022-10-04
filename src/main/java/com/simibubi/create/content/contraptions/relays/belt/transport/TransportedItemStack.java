@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class TransportedItemStack implements Comparable<TransportedItemStack> {
 
-	private static Random R = new Random();
+	private static RandomSource R = RandomSource.create();
 	public static final TransportedItemStack EMPTY = new TransportedItemStack(ItemStack.EMPTY);
 
 	public ItemStack stack;

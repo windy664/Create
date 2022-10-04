@@ -4,27 +4,24 @@ import java.util.Collection;
 import java.util.OptionalInt;
 import java.util.UUID;
 
-import com.simibubi.create.Create;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.authlib.GameProfile;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
 import com.simibubi.create.foundation.utility.Lang;
 
 import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder;
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.Connection;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,6 +30,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
@@ -122,7 +120,12 @@ public class DeployerFakePlayer extends FakeServerPlayer {
 	}
 
 	@Override
-	protected void equipEventAndSound(ItemStack p_147219_) {}
+	protected boolean doesEmitEquipEvent(EquipmentSlot p_217035_) {
+		return false;
+	}
+
+	@Override
+	protected void playEquipSound(ItemStack p_217042_) {}
 
 	@Override
 	public void remove(RemovalReason p_150097_) {
@@ -168,7 +171,7 @@ public class DeployerFakePlayer extends FakeServerPlayer {
 		public void send(Packet<?> packetIn) {}
 
 		@Override
-		public void send(Packet<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) {}
+		public void send(Packet<?> packetIn, PacketSendListener futureListeners) {}
 	}
 
 }

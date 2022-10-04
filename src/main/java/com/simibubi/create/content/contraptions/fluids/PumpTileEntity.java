@@ -1,22 +1,5 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -27,9 +10,10 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -38,6 +22,13 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
+import javax.annotation.Nullable;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class PumpTileEntity extends KineticTileEntity {
 
@@ -49,7 +40,7 @@ public class PumpTileEntity extends KineticTileEntity {
 	public PumpTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
 		arrowDirection = LerpedFloat.linear()
-			.startWithValue(1);
+				.startWithValue(1);
 		sidesToUpdate = Couple.create(MutableBoolean::new);
 	}
 
@@ -144,11 +135,11 @@ public class PumpTileEntity extends KineticTileEntity {
 		if (!hasReachedValidEndpoint(level, start, pull)) {
 
 			pipeGraph.computeIfAbsent(worldPosition, $ -> Pair.of(0, new IdentityHashMap<>()))
-				.getSecond()
-				.put(side, pull);
+					.getSecond()
+					.put(side, pull);
 			pipeGraph.computeIfAbsent(start.getConnectedPos(), $ -> Pair.of(1, new IdentityHashMap<>()))
-				.getSecond()
-				.put(side.getOpposite(), !pull);
+					.getSecond()
+					.put(side.getOpposite(), !pull);
 
 			List<Pair<Integer, BlockPos>> frontier = new ArrayList<>();
 			Set<BlockPos> visited = new HashSet<>();
@@ -180,8 +171,8 @@ public class PumpTileEntity extends KineticTileEntity {
 						continue;
 					if (hasReachedValidEndpoint(level, blockFace, pull)) {
 						pipeGraph.computeIfAbsent(currentPos, $ -> Pair.of(distance, new IdentityHashMap<>()))
-							.getSecond()
-							.put(face, pull);
+								.getSecond()
+								.put(face, pull);
 						targets.add(blockFace);
 						continue;
 					}
@@ -195,18 +186,18 @@ public class PumpTileEntity extends KineticTileEntity {
 						continue;
 					if (distance + 1 >= maxDistance) {
 						pipeGraph.computeIfAbsent(currentPos, $ -> Pair.of(distance, new IdentityHashMap<>()))
-							.getSecond()
-							.put(face, pull);
+								.getSecond()
+								.put(face, pull);
 						targets.add(blockFace);
 						continue;
 					}
 
 					pipeGraph.computeIfAbsent(currentPos, $ -> Pair.of(distance, new IdentityHashMap<>()))
-						.getSecond()
-						.put(face, pull);
+							.getSecond()
+							.put(face, pull);
 					pipeGraph.computeIfAbsent(connectedPos, $ -> Pair.of(distance + 1, new IdentityHashMap<>()))
-						.getSecond()
-						.put(face.getOpposite(), !pull);
+							.getSecond()
+							.put(face.getOpposite(), !pull);
 					frontier.add(Pair.of(distance + 1, connectedPos));
 				}
 			}
@@ -215,7 +206,7 @@ public class PumpTileEntity extends KineticTileEntity {
 		// DFS
 		Map<Integer, Set<BlockFace>> validFaces = new HashMap<>();
 		searchForEndpointRecursively(pipeGraph, targets, validFaces,
-			new BlockFace(start.getPos(), start.getOppositeFace()), pull);
+				new BlockFace(start.getPos(), start.getOppositeFace()), pull);
 
 		float pressure = Math.abs(getSpeed());
 		for (Set<BlockFace> set : validFaces.values()) {
@@ -228,8 +219,8 @@ public class PumpTileEntity extends KineticTileEntity {
 					continue;
 
 				boolean inbound = pipeGraph.get(pipePos)
-					.getSecond()
-					.get(pipeSide);
+						.getSecond()
+						.get(pipeSide);
 				FluidTransportBehaviour pipeBehaviour = FluidPropagator.getPipe(level, pipePos);
 				if (pipeBehaviour == null)
 					continue;
@@ -241,7 +232,7 @@ public class PumpTileEntity extends KineticTileEntity {
 	}
 
 	protected boolean searchForEndpointRecursively(Map<BlockPos, Pair<Integer, Map<Direction, Boolean>>> pipeGraph,
-		Set<BlockFace> targets, Map<Integer, Set<BlockFace>> validFaces, BlockFace currentFace, boolean pull) {
+												   Set<BlockFace> targets, Map<Integer, Set<BlockFace>> validFaces, BlockFace currentFace, boolean pull) {
 		BlockPos currentPos = currentFace.getPos();
 		if (!pipeGraph.containsKey(currentPos))
 			return false;
@@ -259,7 +250,7 @@ public class PumpTileEntity extends KineticTileEntity {
 			BlockFace localTarget = new BlockFace(currentPos, nextFacing);
 			if (targets.contains(localTarget)) {
 				validFaces.computeIfAbsent(distance, $ -> new HashSet<>())
-					.add(localTarget);
+						.add(localTarget);
 				atLeastOneBranchSuccessful = true;
 				continue;
 			}
@@ -267,17 +258,17 @@ public class PumpTileEntity extends KineticTileEntity {
 			if (map.get(nextFacing) != pull)
 				continue;
 			if (!searchForEndpointRecursively(pipeGraph, targets, validFaces,
-				new BlockFace(currentPos.relative(nextFacing), nextFacing.getOpposite()), pull))
+					new BlockFace(currentPos.relative(nextFacing), nextFacing.getOpposite()), pull))
 				continue;
 
 			validFaces.computeIfAbsent(distance, $ -> new HashSet<>())
-				.add(localTarget);
+					.add(localTarget);
 			atLeastOneBranchSuccessful = true;
 		}
 
 		if (atLeastOneBranchSuccessful)
 			validFaces.computeIfAbsent(distance, $ -> new HashSet<>())
-				.add(currentFace);
+					.add(currentFace);
 
 		return atLeastOneBranchSuccessful;
 	}
@@ -290,7 +281,7 @@ public class PumpTileEntity extends KineticTileEntity {
 
 		// facing a pump
 		if (PumpBlock.isPump(connectedState) && connectedState.getValue(PumpBlock.FACING)
-			.getAxis() == face.getAxis() && tileEntity instanceof PumpTileEntity) {
+				.getAxis() == face.getAxis() && tileEntity instanceof PumpTileEntity) {
 			PumpTileEntity pumpTE = (PumpTileEntity) tileEntity;
 			return pumpTE.isPullingOnSide(pumpTE.isFront(blockFace.getOppositeFace())) != pull;
 		}
@@ -350,7 +341,7 @@ public class PumpTileEntity extends KineticTileEntity {
 
 	protected void updatePipeNetwork(boolean front) {
 		sidesToUpdate.get(front)
-			.setTrue();
+				.setTrue();
 	}
 
 	public boolean isSideAccessible(Direction side) {
@@ -358,7 +349,7 @@ public class PumpTileEntity extends KineticTileEntity {
 		if (!(blockState.getBlock() instanceof PumpBlock))
 			return false;
 		return blockState.getValue(PumpBlock.FACING)
-			.getAxis() == side.getAxis();
+				.getAxis() == side.getAxis();
 	}
 
 	public boolean isPullingOnSide(boolean front) {
@@ -389,7 +380,7 @@ public class PumpTileEntity extends KineticTileEntity {
 
 		@Override
 		public AttachmentTypes getRenderedRimAttachment(BlockAndTintGetter world, BlockPos pos, BlockState state,
-			Direction direction) {
+														Direction direction) {
 			AttachmentTypes attachment = super.getRenderedRimAttachment(world, pos, state, direction);
 			if (attachment == AttachmentTypes.RIM)
 				return AttachmentTypes.NONE;

@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.mixin;
 
 import java.lang.ref.Reference;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -41,7 +41,7 @@ public abstract class EntityContraptionInteractionMixin {
 
 	@Final
 	@Shadow
-	protected Random random;
+	protected RandomSource random;
 
 	@Shadow
 	private float nextStep;

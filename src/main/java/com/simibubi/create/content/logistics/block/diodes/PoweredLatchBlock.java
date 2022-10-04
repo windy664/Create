@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -70,7 +70,7 @@ public class PoweredLatchBlock extends ToggleLatchBlock {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
 		boolean back = state.getValue(POWERED);
 		boolean shouldBack = this.shouldTurnOn(worldIn, pos, state);
 		boolean side = state.getValue(POWERED_SIDE);

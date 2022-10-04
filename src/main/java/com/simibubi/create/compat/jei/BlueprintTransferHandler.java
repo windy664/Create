@@ -2,6 +2,11 @@ package com.simibubi.create.compat.jei;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import mezz.jei.api.constants.RecipeTypes;
+
+import mezz.jei.api.recipe.RecipeType;
+import net.minecraft.world.inventory.MenuType;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
@@ -15,6 +20,8 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 
+import java.util.Optional;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class BlueprintTransferHandler implements IRecipeTransferHandler<BlueprintContainer, CraftingRecipe> {
@@ -25,8 +32,13 @@ public class BlueprintTransferHandler implements IRecipeTransferHandler<Blueprin
 	}
 
 	@Override
-	public Class<CraftingRecipe> getRecipeClass() {
-		return CraftingRecipe.class;
+	public Optional<MenuType<BlueprintContainer>> getMenuType() {
+		return Optional.empty();
+	}
+
+	@Override
+	public RecipeType<CraftingRecipe> getRecipeType() {
+		return RecipeTypes.CRAFTING;
 	}
 
 	@Override

@@ -1,23 +1,30 @@
 package com.simibubi.create.foundation.data;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
+import java.util.Set;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.hash.Hashing;
+import com.google.common.hash.HashingOutputStream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -26,16 +33,16 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.utility.FilesHelper;
 
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.util.GsonHelper;
 
 public class LangMerger implements DataProvider {
 
 	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting()
-		.disableHtmlEscaping()
-		.create();
+			.disableHtmlEscaping()
+			.create();
 	static final String CATEGORY_HEADER = "\t\"_\": \"->------------------------]  %s  [------------------------<-\",";
 
 	private DataGenerator gen;
@@ -60,7 +67,7 @@ public class LangMerger implements DataProvider {
 	private void populateLangIgnore() {
 		// Key prefixes added here will NOT be transferred to lang templates
 		langIgnore.add("create.ponder.debug_"); // Ponder debug scene text
-		langIgnore.add("create.gui.chromatic_projector"); 
+		langIgnore.add("create.gui.chromatic_projector");
 	}
 
 	private boolean shouldIgnore(String key) {
@@ -76,27 +83,27 @@ public class LangMerger implements DataProvider {
 	}
 
 	@Override
-	public void run(HashCache cache) throws IOException {
+	public void run(CachedOutput cache) throws IOException {
 		Path path = this.gen.getOutputFolder()
-			.resolve("assets/" + Create.ID + "/lang/" + "en_us.json");
+				.resolve("assets/" + Create.ID + "/lang/" + "en_us.json");
 
 		for (Pair<String, JsonElement> pair : getAllLocalizationFiles()) {
 			if (!pair.getRight()
-				.isJsonObject())
+					.isJsonObject())
 				continue;
 			Map<String, String> localizedEntries = new HashMap<>();
 			JsonObject jsonobject = pair.getRight()
-				.getAsJsonObject();
+					.getAsJsonObject();
 			jsonobject.entrySet()
-				.stream()
-				.forEachOrdered(entry -> {
-					String key = entry.getKey();
-					if (key.startsWith("_"))
-						return;
-					String value = entry.getValue()
-						.getAsString();
-					localizedEntries.put(key, value);
-				});
+					.stream()
+					.forEachOrdered(entry -> {
+						String key = entry.getKey();
+						if (key.startsWith("_"))
+							return;
+						String value = entry.getValue()
+								.getAsString();
+						localizedEntries.put(key, value);
+					});
 			String key = pair.getKey();
 			allLocalizedEntries.put(key, localizedEntries);
 			populatedLangData.put(key, new ArrayList<>());
@@ -112,9 +119,9 @@ public class LangMerger implements DataProvider {
 		for (Entry<String, List<Object>> localization : populatedLangData.entrySet()) {
 			String key = localization.getKey();
 			Path populatedLangPath = this.gen.getOutputFolder()
-				.resolve("assets/" + Create.ID + "/lang/unfinished/" + key);
+					.resolve("assets/" + Create.ID + "/lang/unfinished/" + key);
 			save(cache, localization.getValue(), missingTranslationTally.get(key)
-				.intValue(), populatedLangPath, "Populating " + key + " with missing entries...");
+					.intValue(), populatedLangPath, "Populating " + key + " with missing entries...");
 		}
 	}
 
@@ -126,6 +133,27 @@ public class LangMerger implements DataProvider {
 
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
 			JsonObject jsonobject = GsonHelper.fromJson(GSON, reader, JsonObject.class);
+
+			/*
+			 * Erase additional sections from previous lang in case registrate did not
+			 * create a new one (this assumes advancements to be the first section after
+			 * game elements)
+			 */
+			Set<String> keysToRemove = new HashSet<>();
+			MutableBoolean startErasing = new MutableBoolean();
+			jsonobject.entrySet()
+					.stream()
+					.forEachOrdered(entry -> {
+						String key = entry.getKey();
+						if (key.startsWith("advancement"))
+							startErasing.setTrue();
+						if (startErasing.isFalse())
+							return;
+						keysToRemove.add(key);
+					});
+			jsonobject.remove("_");
+			keysToRemove.forEach(jsonobject::remove);
+
 			addAll("Game Elements", jsonobject);
 			reader.close();
 		}
@@ -142,19 +170,19 @@ public class LangMerger implements DataProvider {
 
 		MutableObject<String> previousKey = new MutableObject<>("");
 		jsonobject.entrySet()
-			.stream()
-			.forEachOrdered(entry -> {
-				String key = entry.getKey();
-				if (shouldIgnore(key))
-					return;
-				String value = entry.getValue()
-					.getAsString();
-				if (!previousKey.getValue()
-					.isEmpty() && shouldAddLineBreak(key, previousKey.getValue()))
-					writeData("\n");
-				writeEntry(key, value);
-				previousKey.setValue(key);
-			});
+				.stream()
+				.forEachOrdered(entry -> {
+					String key = entry.getKey();
+					if (shouldIgnore(key))
+						return;
+					String value = entry.getValue()
+							.getAsString();
+					if (!previousKey.getValue()
+							.isEmpty() && shouldAddLineBreak(key, previousKey.getValue()))
+						writeData("\n");
+					writeEntry(key, value);
+					previousKey.setValue(key);
+				});
 
 		writeData("\n");
 	}
@@ -162,7 +190,7 @@ public class LangMerger implements DataProvider {
 	private void writeData(String data) {
 		mergedLangData.add(data);
 		populatedLangData.values()
-			.forEach(l -> l.add(data));
+				.forEach(l -> l.add(data));
 	}
 
 	private void writeEntry(String key, String value) {
@@ -171,7 +199,7 @@ public class LangMerger implements DataProvider {
 			ForeignLangEntry entry = new ForeignLangEntry(key, value, allLocalizedEntries.get(k));
 			if (entry.isMissing())
 				missingTranslationTally.get(k)
-					.increment();
+						.increment();
 			l.add(entry);
 		});
 	}
@@ -221,27 +249,22 @@ public class LangMerger implements DataProvider {
 	private void collectEntries() {
 		for (AllLangPartials partial : AllLangPartials.values())
 			addAll(partial.getDisplay(), partial.provide()
-				.getAsJsonObject());
+					.getAsJsonObject());
 	}
 
-	private void save(HashCache cache, List<Object> dataIn, int missingKeys, Path target, String message)
-		throws IOException {
-		String data = createString(dataIn, missingKeys);
-//		data = JavaUnicodeEscaper.outsideOf(0, 0x7f)
-//			.translate(data);
-		String hash = DataProvider.SHA1.hashUnencodedChars(data)
-			.toString();
-		if (!Objects.equals(cache.getHash(target), hash) || !Files.exists(target)) {
-			Files.createDirectories(target.getParent());
+	@SuppressWarnings("deprecation")
+	private void save(CachedOutput cache, List<Object> dataIn, int missingKeys, Path target, String message)
+			throws IOException {
+		Create.LOGGER.info(message);
 
-			try (BufferedWriter bufferedwriter = Files.newBufferedWriter(target)) {
-				Create.LOGGER.info(message);
-				bufferedwriter.write(data);
-				bufferedwriter.close();
-			}
-		}
+		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+		HashingOutputStream hashingoutputstream = new HashingOutputStream(Hashing.sha1(), bytearrayoutputstream);
 
-		cache.putNew(target, hash);
+		Writer writer = new OutputStreamWriter(hashingoutputstream, StandardCharsets.UTF_8);
+		writer.append(createString(dataIn, missingKeys));
+		writer.close();
+
+		cache.writeIfNeeded(target, bytearrayoutputstream.toByteArray(), hashingoutputstream.hash());
 	}
 
 	protected String createString(List<Object> data, int missingKeys) {

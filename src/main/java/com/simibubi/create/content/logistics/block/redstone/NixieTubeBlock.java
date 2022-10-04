@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.BiConsumer;
 
 import org.jetbrains.annotations.Nullable;
@@ -221,7 +221,7 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource r) {
 		updateDisplayedRedstoneValue(state, worldIn, pos);
 	}
 

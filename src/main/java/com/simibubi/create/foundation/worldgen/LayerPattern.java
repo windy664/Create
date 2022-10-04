@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.worldgen;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +30,7 @@ public class LayerPattern {
 		this.layers = layers;
 	}
 
-	public Layer rollNext(@Nullable Layer previous, Random random) {
+	public Layer rollNext(@Nullable Layer previous, RandomSource random) {
 		int totalWeight = 0;
 		for (Layer layer : layers)
 			if (layer != previous)
@@ -103,7 +103,7 @@ public class LayerPattern {
 			this.weight = weight;
 		}
 
-		public List<TargetBlockState> rollBlock(Random random) {
+		public List<TargetBlockState> rollBlock(RandomSource random) {
 			if (targets.size() == 1)
 				return targets.get(0);
 			return targets.get(random.nextInt(targets.size()));

@@ -4,16 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-
-import net.minecraft.tags.TagKey;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,12 +24,13 @@ import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryCrystalAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryPerkGemAttribute;
 import com.simibubi.create.foundation.utility.Lang;
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.Registry;
@@ -44,7 +38,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -130,7 +124,7 @@ public interface ItemAttribute {
 	@Environment(value = EnvType.CLIENT)
 	default MutableComponent format(boolean inverted) {
 		return Lang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
-			getTranslationParameters());
+				getTranslationParameters());
 	}
 
 	public static enum StandardTraits implements ItemAttribute {
@@ -146,12 +140,12 @@ public interface ItemAttribute {
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
 		EQUIPABLE(s -> LivingEntity.getEquipmentSlotForItem(s)
-			.getType() != EquipmentSlot.Type.HAND),
+				.getType() != EquipmentSlot.Type.HAND),
 		FURNACE_FUEL(AbstractFurnaceBlockEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
 		HAUNTABLE(InWorldProcessing::isHauntable),
 		CRUSHABLE((s, w) -> testRecipe(s, w, AllRecipeTypes.CRUSHING.getType())
-			|| testRecipe(s, w, AllRecipeTypes.MILLING.getType())),
+				|| testRecipe(s, w, AllRecipeTypes.MILLING.getType())),
 		SMELTABLE((s, w) -> testRecipe(s, w, RecipeType.SMELTING)),
 		SMOKABLE((s, w) -> testRecipe(s, w, RecipeType.SMOKING)),
 		BLASTABLE((s, w) -> testRecipe(s, w, RecipeType.BLASTING)),
@@ -168,16 +162,16 @@ public interface ItemAttribute {
 		private static boolean testRecipe(ItemStack s, Level w, RecipeType<? extends Recipe<Container>> type) {
 			RECIPE_WRAPPER.setItem(0, s.copy());
 			return w.getRecipeManager()
-				.getRecipeFor(type, RECIPE_WRAPPER, w)
-				.isPresent();
+					.getRecipeFor(type, RECIPE_WRAPPER, w)
+					.isPresent();
 		}
 
 		private static boolean maxEnchanted(ItemStack s) {
 			return EnchantmentHelper.getEnchantments(s)
-				.entrySet()
-				.stream()
-				.anyMatch(e -> e.getKey()
-					.getMaxLevel() <= e.getValue());
+					.entrySet()
+					.stream()
+					.anyMatch(e -> e.getKey()
+							.getMaxLevel() <= e.getValue());
 		}
 
 		private StandardTraits(BiPredicate<ItemStack, Level> test) {
@@ -251,8 +245,8 @@ public interface ItemAttribute {
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
 			return stack.getTags()
-				.map(InTag::new)
-				.collect(Collectors.toList());
+					.map(InTag::new)
+					.collect(Collectors.toList());
 		}
 
 		@Override
@@ -262,7 +256,7 @@ public interface ItemAttribute {
 
 		@Override
 		public Object[] getTranslationParameters() {
-			return new Object[] { "#" + tag.location() };
+			return new Object[]{"#" + tag.location()};
 		}
 
 		@Override
@@ -295,7 +289,7 @@ public interface ItemAttribute {
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
 			CreativeModeTab group = stack.getItem()
-				.getItemCategory();
+					.getItemCategory();
 			return group == null ? Collections.emptyList() : Arrays.asList(new InItemGroup(group));
 		}
 
@@ -308,7 +302,7 @@ public interface ItemAttribute {
 		@Environment(value = EnvType.CLIENT)
 		public MutableComponent format(boolean inverted) {
 			return Lang.translateDirect("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
-				group.getDisplayName());
+					group.getDisplayName());
 		}
 
 		@Override
@@ -321,7 +315,7 @@ public interface ItemAttribute {
 			String readPath = nbt.getString("path");
 			for (CreativeModeTab group : CreativeModeTab.TABS)
 				if (group.getRecipeFolderName()
-					.equals(readPath))
+						.equals(readPath))
 					return new InItemGroup(group);
 			return null;
 		}
@@ -356,7 +350,7 @@ public interface ItemAttribute {
 		public Object[] getTranslationParameters() {
 			ModContainer container = FabricLoader.getInstance().getModContainer(modId).orElse(null);
 			String name = container == null ? name = StringUtils.capitalize(modId) : container.getMetadata().getName();
-			return new Object[] { name };
+			return new Object[]{name};
 		}
 
 		@Override

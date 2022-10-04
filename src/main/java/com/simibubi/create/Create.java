@@ -1,7 +1,5 @@
 package com.simibubi.create;
 
-import java.util.Random;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,6 +45,7 @@ import io.github.tropheusj.milk.Milk;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
@@ -72,9 +71,9 @@ public class Create implements ModInitializer {
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
 	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
-	/** Use the {@link Random} of a local {@link Level} or {@link Entity} or create one */
+	/** Use the {@link RandomSource} of a local {@link Level} or {@link Entity} or create one */
 	@Deprecated
-	public static final Random RANDOM = new Random();
+	public static final RandomSource RANDOM = RandomSource.create();
 
 	private static final NonNullSupplier<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
 

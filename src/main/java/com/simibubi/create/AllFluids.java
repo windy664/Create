@@ -12,7 +12,6 @@ import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.BottleType;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.PotionFluidAttributes;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -35,9 +34,9 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.base.EmptyItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.FullItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -56,7 +55,7 @@ public class AllFluids {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	public static final FluidEntry<PotionFluid> POTION =
-			REGISTRATE.virtualFluid("potion", PotionFluidAttributes::new, PotionFluid::new)
+			REGISTRATE.virtualFluid("potion", /*PotionFluidAttributes::new,*/ PotionFluid::new)
 					.lang("Potion")
 					.onRegister(potion -> {
 						Fluid still = potion.getSource();
@@ -80,7 +79,7 @@ public class AllFluids {
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
 			.lang("Builder's Tea")
 			.tag(AllTags.forgeFluidTag("tea"))
-			.onRegisterAfter(Item.class, tea -> {
+			.onRegisterAfter(Registry.ITEM_REGISTRY, tea -> {
 				Fluid still = tea.getSource();
 				Fluid flowing = tea.getFlowing();
 				FluidStorage.combinedItemApiProvider(AllItems.BUILDERS_TEA.get()).register(context ->
@@ -98,17 +97,17 @@ public class AllFluids {
 					.lang("Honey")
 //					.attributes(b -> b.viscosity(2000)
 //							.density(1400))
-					.properties(p -> p.levelDecreasePerBlock(2)
+					.fluidProperties(p -> p.levelDecreasePerBlock(2)
 							.tickRate(25)
 							.flowSpeed(3)
 							.blastResistance(100f))
 					.tag(AllFluidTags.HONEY.tag)
-					.source(SimpleFlowableFluid.Still::new) // TODO: remove when Registrate fixes FluidBuilder
+					.source(SimpleFlowableFluid.Source::new) // TODO: remove when Registrate fixes FluidBuilder
 					.bucket()
 					.tag(AllTags.forgeItemTag("buckets/honey"))
 					.build()
-					.renderHandler(() -> SimpleFluidRenderHandler::new)
-					.onRegisterAfter(Item.class, honey -> {
+//					.fluidRenderingAttributes(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Registry.ITEM_REGISTRY, honey -> {
 						Fluid source = honey.getSource();
 						FluidStorage.combinedItemApiProvider(HONEY_BOTTLE).register(context ->
 								new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(source), HONEY_BOTTLE_AMOUNT));
@@ -131,12 +130,12 @@ public class AllFluids {
 					.tag(AllTags.forgeFluidTag("chocolate"))
 //					.attributes(b -> b.viscosity(1500)
 //							.density(1400))
-					.properties(p -> p.levelDecreasePerBlock(2)
+					.fluidProperties(p -> p.levelDecreasePerBlock(2)
 							.tickRate(25)
 							.flowSpeed(3)
 							.blastResistance(100f))
-					.renderHandler(() -> SimpleFluidRenderHandler::new)
-					.onRegisterAfter(Item.class, chocolate -> {
+//					.fluidRenderingAttributes(() -> SimpleFluidRenderHandler::new)
+					.onRegisterAfter(Registry.ITEM_REGISTRY, chocolate -> {
 						Fluid source = chocolate.getSource();
 						// transfer values
 						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->
@@ -152,19 +151,20 @@ public class AllFluids {
 
 	// Load this class
 
-	public static void register() {}
+	public static void register() {
+	}
 
 	@Nullable
 	public static BlockState getLavaInteraction(FluidState fluidState) {
 		Fluid fluid = fluidState.getType();
 		if (fluid.isSame(HONEY.get()))
 			return AllPaletteStoneTypes.LIMESTONE.getBaseBlock()
-				.get()
-				.defaultBlockState();
+					.get()
+					.defaultBlockState();
 		if (fluid.isSame(CHOCOLATE.get()))
 			return AllPaletteStoneTypes.SCORIA.getBaseBlock()
-				.get()
-				.defaultBlockState();
+					.get()
+					.defaultBlockState();
 		return null;
 	}
 
@@ -201,7 +201,7 @@ public class AllFluids {
 	private static class PotionFluidVariantAttributeHandler implements FluidVariantAttributeHandler {
 		@Override
 		public Component getName(FluidVariant fluidVariant) {
-			return new TranslatableComponent(getTranslationKey(fluidVariant));
+			return Component.translatable(getTranslationKey(fluidVariant));
 		}
 
 		public String getTranslationKey(FluidVariant stack) {
@@ -219,14 +219,14 @@ public class AllFluids {
 	private static class TeaFluidVariantAttributeHandler implements FluidVariantAttributeHandler {
 		@Override
 		public Component getName(FluidVariant fluidVariant) {
-			return new TranslatableComponent("fluid.create.tea");
+			return Component.translatable("fluid.create.tea");
 		}
 	}
 
 	private record FluidNameAttributeHandler(String key) implements FluidVariantAttributeHandler {
 		@Override
 		public Component getName(FluidVariant fluidVariant) {
-			return new TranslatableComponent(this.key);
+			return Component.translatable(this.key);
 		}
 	}
 }

@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
-import io.github.fabricators_of_create.porting_lib.extensions.RegistryNameProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Registry;
@@ -50,7 +49,7 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 			return;
 
 		capacityKey = level.getBlockState(sourcePos)
-			.getBlock();
+				.getBlock();
 		this.movementDirection = direction;
 		updateGeneratedRotation();
 	}
@@ -84,7 +83,7 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 			compound.put("EnginePos", NbtUtils.writeBlockPos(enginePos));
 			compound.putFloat("EnginePower", engineEfficiency);
 			compound.putString("EngineType", RegisteredObjects.getKeyOrThrow(capacityKey)
-				.toString());
+					.toString());
 		}
 		super.write(compound, clientPacket);
 	}

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import javax.annotation.Nullable;
 
@@ -73,7 +73,7 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource r) {
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
 			worldIn.setBlock(pos, state.cycle(POWERED), 2);

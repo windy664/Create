@@ -123,9 +123,9 @@ public class TrainCargoManager extends MountedStorageManager {
 		}
 
 		@Override
-		public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-			successListener.updateSnapshots(transaction);
-			return super.iterator(transaction);
+		public Iterator<StorageView<ItemVariant>> iterator() {
+//			successListener.updateSnapshots(transaction); // idk what to do here
+			return super.iterator();
 		}
 
 	}
@@ -171,9 +171,9 @@ public class TrainCargoManager extends MountedStorageManager {
 		}
 
 		@Override
-		public Iterator<StorageView<FluidVariant>> iterator(TransactionContext transaction) {
-			successListener.updateSnapshots(transaction);
-			return super.iterator(transaction);
+		public Iterator<StorageView<FluidVariant>> iterator() {
+//			successListener.updateSnapshots(transaction);
+			return super.iterator();
 		}
 	}
 

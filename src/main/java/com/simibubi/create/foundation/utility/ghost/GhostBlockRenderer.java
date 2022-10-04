@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.utility.ghost;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
@@ -55,7 +55,7 @@ public abstract class GhostBlockRenderer {
 
 			model = DefaultLayerFilteringBakedModel.wrap(model);
 			dispatcher.getModelRenderer()
-					.tesselateBlock(VirtualEmptyBlockGetter.FULL_BRIGHT, model, params.state, pos, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
+					.tesselateBlock(VirtualEmptyBlockGetter.FULL_BRIGHT, model, params.state, pos, ms, vb, false, RandomSource.create(), 42L, OverlayTexture.NO_OVERLAY);
 
 			ms.popPose();
 		}
@@ -87,7 +87,7 @@ public abstract class GhostBlockRenderer {
 			model = FixedLightBakedModel.wrap(model, LevelRenderer.getLightColor(mc.level, pos));
 			model = TranslucentBakedModel.wrap(model, () -> params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha());
 			dispatcher.getModelRenderer()
-					.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, params.state, pos, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
+					.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, params.state, pos, ms, vb, false, RandomSource.create(), 42L, OverlayTexture.NO_OVERLAY);
 
 			ms.popPose();
 		}

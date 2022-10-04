@@ -229,20 +229,20 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 		}
 
 		@Override
-		public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-			return new MillstoneInventoryHandlerIterator(transaction);
+		public Iterator<StorageView<ItemVariant>> iterator() {
+			return new MillstoneInventoryHandlerIterator();
 		}
 
 		private class MillstoneInventoryHandlerIterator implements Iterator<StorageView<ItemVariant>> {
-			private final TransactionContext ctx;
+//			private final TransactionContext ctx;
 			private boolean open = true;
 			private boolean output = true;
 			private Iterator<StorageView<ItemVariant>> wrapped;
 
-			public MillstoneInventoryHandlerIterator(TransactionContext ctx) {
-				this.ctx = ctx;
-				ctx.addCloseCallback((t, r) -> open = false);
-				wrapped = outputInv.iterator(ctx);
+			public MillstoneInventoryHandlerIterator() {
+//				this.ctx = ctx;
+//				ctx.addCloseCallback((t, r) -> open = false);
+				wrapped = outputInv.iterator();
 			}
 
 			@Override
@@ -255,7 +255,7 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 				StorageView<ItemVariant> view = wrapped.next();
 				if (!output) view = new ViewOnlyWrappedStorageView<>(view);
 				if (output && !hasNext()) {
-					wrapped = inputInv.iterator(ctx);
+					wrapped = inputInv.iterator();
 					output = false;
 				}
 				return view;

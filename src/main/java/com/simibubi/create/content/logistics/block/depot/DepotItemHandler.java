@@ -67,8 +67,8 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 	}
 
 	@Override
-	public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		return Iterators.concat(Iterators.singletonIterator(new MainSlotView()), te.processingOutputBuffer.iterator(transaction));
+	public Iterator<StorageView<ItemVariant>> iterator() {
+		return Iterators.concat(Iterators.singletonIterator(new MainSlotView()), te.processingOutputBuffer.iterator());
 	}
 
 	@Override

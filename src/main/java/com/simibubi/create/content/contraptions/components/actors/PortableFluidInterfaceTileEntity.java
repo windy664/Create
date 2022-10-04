@@ -90,16 +90,16 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 		}
 
 		@Override
-		public Iterator<? extends StorageView<FluidVariant>> iterator(TransactionContext transaction) {
-			TransactionCallback.onSuccess(transaction, this::keepAlive);
-			return super.iterator(transaction);
+		public Iterator<StorageView<FluidVariant>> iterator() {
+//			TransactionCallback.onSuccess(transaction, this::keepAlive);
+			return super.iterator();
 		}
 
-		@Override
-		public Iterable<? extends StorageView<FluidVariant>> iterable(TransactionContext transaction) {
-			TransactionCallback.onSuccess(transaction, this::keepAlive);
-			return super.iterable(transaction);
-		}
+//		@Override
+//		public Iterable<? extends StorageView<FluidVariant>> iterable(TransactionContext transaction) {
+//			TransactionCallback.onSuccess(transaction, this::keepAlive);
+//			return super.iterable(transaction);
+//		}
 
 		public void keepAlive() {
 			onContentTransferred();

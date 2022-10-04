@@ -48,13 +48,8 @@ public class ItemHandlerWrapper implements Storage<ItemVariant> {
 	}
 
 	@Override
-	public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		return wrapped.iterator(transaction);
-	}
-
-	@Override
-	public Iterable<? extends StorageView<ItemVariant>> iterable(TransactionContext transaction) {
-		return wrapped.iterable(transaction);
+	public Iterator<StorageView<ItemVariant>> iterator() {
+		return wrapped.iterator();
 	}
 
 	@Override

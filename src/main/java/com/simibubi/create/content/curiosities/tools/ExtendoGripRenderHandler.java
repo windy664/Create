@@ -104,7 +104,7 @@ public class ExtendoGripRenderHandler {
 			// Render gun
 			ms.pushPose();
 			ms.translate(flip * -0.1f, 0, -0.3f);
-			ItemInHandRenderer firstPersonRenderer = mc.getItemInHandRenderer();
+			ItemInHandRenderer firstPersonRenderer = mc.getEntityRenderDispatcher().getItemInHandRenderer();
 			TransformType transform =
 				rightHand ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIRST_PERSON_LEFT_HAND;
 			firstPersonRenderer.renderItem(mc.player, notInOffhand ? heldItem : offhandItem, transform, !rightHand,
@@ -133,11 +133,11 @@ public class ExtendoGripRenderHandler {
 	}
 
 	private static ItemStack getRenderedMainHandStack() {
-		return FirstPersonRendererHelper.getStackInMainHand(Minecraft.getInstance().getItemInHandRenderer());
+		return FirstPersonRendererHelper.getStackInMainHand(Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer());
 	}
 
 	private static ItemStack getRenderedOffHandStack() {
-		return FirstPersonRendererHelper.getStackInOffHand(Minecraft.getInstance().getItemInHandRenderer());
+		return FirstPersonRendererHelper.getStackInOffHand(Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer());
 	}
 
 }

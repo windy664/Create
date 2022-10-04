@@ -50,7 +50,7 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 		for (Carriage carriage : train.carriages) {
 			ContraptionInvWrapper items = carriage.storage.getItems();
 			try (Transaction t = TransferUtil.getTransaction()) {
-				for (StorageView<ItemVariant> view : items.iterable(t)) {
+				for (StorageView<ItemVariant> view : items) {
 					if (view.isResourceBlank())
 						continue;
 					ItemVariant variant = view.getResource();

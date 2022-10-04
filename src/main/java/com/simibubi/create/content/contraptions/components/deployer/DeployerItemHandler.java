@@ -140,16 +140,16 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 	}
 
 	@Override
-	public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		return new DeployerItemHandlerIterator(transaction);
+	public Iterator<StorageView<ItemVariant>> iterator() {
+		return new DeployerItemHandlerIterator();
 	}
 
 	public class DeployerItemHandlerIterator implements Iterator<StorageView<ItemVariant>> {
 		private boolean open = true;
 		private int index; // -1 means held
 
-		public DeployerItemHandlerIterator(TransactionContext transaction) {
-			transaction.addCloseCallback((t, r) -> open = false);
+		public DeployerItemHandlerIterator() {
+//			transaction.addCloseCallback((t, r) -> open = false);
 			this.index = te.overflowItems.size() != 0 ? 0 : -1;
 		}
 

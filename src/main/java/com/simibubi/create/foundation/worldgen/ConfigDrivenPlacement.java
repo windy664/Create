@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.worldgen;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -30,7 +30,7 @@ public class ConfigDrivenPlacement extends PlacementModifier {
 	}
 
 	@Override
-	public Stream<BlockPos> getPositions(PlacementContext context, Random random, BlockPos pos) {
+	public Stream<BlockPos> getPositions(PlacementContext context, RandomSource random, BlockPos pos) {
 		int count = getCount(getFrequency(), random);
 		if (count == 0) {
 			return Stream.empty();
@@ -49,7 +49,7 @@ public class ConfigDrivenPlacement extends PlacementModifier {
 				});
 	}
 
-	public int getCount(float frequency, Random random) {
+	public int getCount(float frequency, RandomSource random) {
 		int floored = Mth.floor(frequency);
 		return floored + (random.nextFloat() < (frequency - floored) ? 1 : 0);
 	}

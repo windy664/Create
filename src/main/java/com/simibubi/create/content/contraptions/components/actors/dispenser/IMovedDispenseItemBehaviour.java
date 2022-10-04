@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 
@@ -129,7 +129,7 @@ public interface IMovedDispenseItemBehaviour {
 				@Override
 				protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos,
 					Vec3 facing) {
-					Random random = context.world.random;
+					RandomSource random = context.world.random;
 					double x = pos.getX() + facing.x * .7 + .5;
 					double y = pos.getY() + facing.y * .7 + .5;
 					double z = pos.getZ() + facing.z * .7 + .5;
