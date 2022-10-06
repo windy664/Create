@@ -14,7 +14,6 @@ import net.minecraft.Util;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -22,7 +21,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,14 +34,14 @@ import net.minecraft.world.ticks.LevelTicks;
 @MethodsReturnNonnullByDefault
 public class WrappedServerWorld extends ServerLevel {
 
-	protected Level world;
+	protected ServerLevel world;
 
 	public WrappedServerWorld(ServerLevel world) {
 		super(world.getServer(), Util.backgroundExecutor(),  ((MinecraftServerAccessor) world.getServer()).port_lib$getStorageSource(),
-				(ServerLevelData) world.getLevelData(), world.dimension(),
-				new LevelStem(world.dimensionTypeRegistration(), world.getChunkSource().getGenerator()),
-				new DummyStatusListener(), world.isDebug(), BiomeManagerHelper.getSeed(world.getBiomeManager()),
-				Collections.emptyList(), false);
+			(ServerLevelData) world.getLevelData(), world.dimension(),
+			new LevelStem(world.dimensionTypeRegistration(), world.getChunkSource().getGenerator()),
+			new DummyStatusListener(), world.isDebug(), BiomeManagerHelper.getSeed(world.getBiomeManager()),
+			Collections.emptyList(), false);
 		this.world = world;
 	}
 

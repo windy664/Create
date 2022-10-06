@@ -1,7 +1,8 @@
 package com.simibubi.create.foundation.utility.ghost;
 
-import net.minecraft.util.RandomSource;
+import java.util.List;
 
+import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,9 +17,15 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class GhostBlockRenderer {
 
@@ -66,17 +73,18 @@ public abstract class GhostBlockRenderer {
 
 		@Override
 		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params) {
-			ms.pushPose();
-
 			Minecraft mc = Minecraft.getInstance();
 			BlockRenderDispatcher dispatcher = mc.getBlockRenderer();
 
-			BakedModel model = dispatcher.getBlockModel(params.state);
+			BlockState state = params.state;
+			BlockPos pos = params.pos;
+			float alpha = params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha();
 
+			BakedModel model = dispatcher.getBlockModel(state);
 			RenderType layer = RenderType.translucent();
 			VertexConsumer vb = buffer.getEarlyBuffer(layer);
 
-			BlockPos pos = params.pos;
+			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
 			ms.translate(.5, .5, .5);

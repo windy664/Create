@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.worldgen;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
@@ -16,32 +15,23 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class AllOreFeatureConfigEntries {
-	private static final Predicate<BiomeSelectionContext> OVERWORLD_BIOMES = BiomeSelectors.foundInOverworld();
-
-	private static final Predicate<BiomeSelectionContext> NETHER_BIOMES = BiomeSelectors.foundInTheNether();
-
-	//
-
 	public static final OreFeatureConfigEntry ZINC_ORE =
 		create("zinc_ore", 12, 8, -63, 70)
-			.biomeExt()
-			.predicate(OVERWORLD_BIOMES)
-			.parent()
 			.standardDatagenExt()
 			.withBlocks(Couple.create(AllBlocks.ZINC_ORE, AllBlocks.DEEPSLATE_ZINC_ORE))
+			.biomeTag(BiomeTags.IS_OVERWORLD)
 			.parent();
 
 	public static final OreFeatureConfigEntry STRIATED_ORES_OVERWORLD =
 		create("striated_ores_overworld", 32, 1 / 12f, -30, 70)
-			.biomeExt()
-			.predicate(OVERWORLD_BIOMES)
-			.parent()
 			.layeredDatagenExt()
 			.withLayerPattern(AllLayerPatterns.SCORIA)
 			.withLayerPattern(AllLayerPatterns.CINNABAR)
@@ -49,16 +39,15 @@ public class AllOreFeatureConfigEntries {
 			.withLayerPattern(AllLayerPatterns.MALACHITE)
 			.withLayerPattern(AllLayerPatterns.LIMESTONE)
 			.withLayerPattern(AllLayerPatterns.OCHRESTONE)
+			.biomeTag(BiomeTags.IS_OVERWORLD)
 			.parent();
 
 	public static final OreFeatureConfigEntry STRIATED_ORES_NETHER =
 		create("striated_ores_nether", 32, 1 / 12f, 40, 90)
-			.biomeExt()
-			.predicate(NETHER_BIOMES)
-			.parent()
 			.layeredDatagenExt()
 			.withLayerPattern(AllLayerPatterns.SCORIA_NETHER)
 			.withLayerPattern(AllLayerPatterns.SCORCHIA_NETHER)
+			.biomeTag(BiomeTags.IS_NETHER)
 			.parent();
 
 	//
@@ -104,7 +93,7 @@ public class AllOreFeatureConfigEntries {
 
 		DynamicDataProvider<ConfiguredFeature<?, ?>> configuredFeatureProvider = DynamicDataProvider.create(generator, "Create's Configured Features", registryAccess, Registry.CONFIGURED_FEATURE_REGISTRY, configuredFeatures);
 		if (configuredFeatureProvider != null) {
-			generator.addProvider(configuredFeatureProvider);
+			generator.addProvider(true, configuredFeatureProvider);
 		}
 
 		//
@@ -119,7 +108,24 @@ public class AllOreFeatureConfigEntries {
 
 		DynamicDataProvider<PlacedFeature> placedFeatureProvider = DynamicDataProvider.create(generator, "Create's Placed Features", registryAccess, Registry.PLACED_FEATURE_REGISTRY, placedFeatures);
 		if (placedFeatureProvider != null) {
-			generator.addProvider(placedFeatureProvider);
+			generator.addProvider(true, placedFeatureProvider);
 		}
+
+		//
+
+// * TODO: Is this even supported by Fabric yet?
+// --------------------------
+//		Map<ResourceLocation, BiomeModifier> biomeModifiers = new HashMap<>();
+//		for (Map.Entry<ResourceLocation, OreFeatureConfigEntry> entry : OreFeatureConfigEntry.ALL.entrySet()) {
+//			DatagenExtension datagenExt = entry.getValue().datagenExt();
+//			if (datagenExt != null) {
+//				biomeModifiers.put(entry.getKey(), datagenExt.createBiomeModifier(registryAccess));
+//			}
+//		}
+//
+//		DynamicDataProvider<BiomeModifier> biomeModifierProvider = DynamicDataProvider.create(generator, "Create's Biome Modifiers", registryAccess, Keys.BIOME_MODIFIERS, biomeModifiers);
+//		if (biomeModifierProvider != null) {
+//			generator.addProvider(true, biomeModifierProvider);
+//		}
 	}
 }

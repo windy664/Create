@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.jozufozu.flywheel.util.Pair;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -23,7 +23,7 @@ public class BakedModelRenderHelper {
 	}
 
 	public static SuperByteBuffer standardModelRender(BakedModel model, BlockState referenceState, PoseStack ms) {
-		Pair<BufferBuilder.RenderedBuffer, Integer> pair = ModelUtil.getBufferBuilder(model, referenceState, ms);
+		Pair<RenderedBuffer, Integer> pair = ModelUtil.getBufferBuilder(model, referenceState, ms);
 		return new SuperByteBuffer(pair.first(), pair.second());
 	}
 

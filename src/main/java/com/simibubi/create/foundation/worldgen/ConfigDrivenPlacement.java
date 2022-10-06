@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.worldgen;
 
-import net.minecraft.util.RandomSource;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -10,6 +9,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;

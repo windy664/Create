@@ -142,15 +142,15 @@ public class LangMerger implements DataProvider {
 			Set<String> keysToRemove = new HashSet<>();
 			MutableBoolean startErasing = new MutableBoolean();
 			jsonobject.entrySet()
-					.stream()
-					.forEachOrdered(entry -> {
-						String key = entry.getKey();
-						if (key.startsWith("advancement"))
-							startErasing.setTrue();
-						if (startErasing.isFalse())
-							return;
-						keysToRemove.add(key);
-					});
+				.stream()
+				.forEachOrdered(entry -> {
+					String key = entry.getKey();
+					if (key.startsWith("advancement"))
+						startErasing.setTrue();
+					if (startErasing.isFalse())
+						return;
+					keysToRemove.add(key);
+				});
 			jsonobject.remove("_");
 			keysToRemove.forEach(jsonobject::remove);
 
@@ -254,7 +254,7 @@ public class LangMerger implements DataProvider {
 
 	@SuppressWarnings("deprecation")
 	private void save(CachedOutput cache, List<Object> dataIn, int missingKeys, Path target, String message)
-			throws IOException {
+		throws IOException {
 		Create.LOGGER.info(message);
 
 		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();

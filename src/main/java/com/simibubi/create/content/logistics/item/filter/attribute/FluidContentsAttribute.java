@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
-import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -39,13 +38,13 @@ public class FluidContentsAttribute implements ItemAttribute {
 		return "has_fluid";
 	}
 
-    @Override
-    public Object[] getTranslationParameters() {
-        String parameter = "";
-//        if(fluid != null)
-//            parameter = Components.translatable(fluid.getAttributes().getTranslationKey()).getString();
-        return new Object[] { parameter };
-    }
+	@Override
+	public Object[] getTranslationParameters() {
+		String parameter = "";
+		// if (fluid != null)
+		// 	parameter = fluid.getFluidType().getDescription().getString();
+		return new Object[] { parameter };
+	}
 
 	@Override
 	public void writeNBT(CompoundTag nbt) {

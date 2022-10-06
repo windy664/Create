@@ -20,8 +20,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
-	implements RecipeSerializer<T> {
+public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implements RecipeSerializer<T> {
 
 	private final ProcessingRecipeFactory<T> factory;
 

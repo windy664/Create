@@ -19,8 +19,8 @@ import net.minecraft.world.entity.player.ProfilePublicKey;
 @Mixin(LocalPlayer.class)
 public abstract class HeavyBootsOnPlayerMixin extends AbstractClientPlayer {
 
-	private HeavyBootsOnPlayerMixin(ClientLevel level, GameProfile profile, ProfilePublicKey publicKey) {
-		super(level, profile, publicKey);
+	private HeavyBootsOnPlayerMixin(ClientLevel level, GameProfile profile, ProfilePublicKey profileKey) {
+		super(level, profile, profileKey);
 	}
 
 	@Inject(at = @At("HEAD"), method = "isUnderWater", cancellable = true)

@@ -18,11 +18,14 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -145,6 +148,13 @@ public class OreFeatureConfigEntry extends ConfigBase {
 	}
 
 	public abstract class DatagenExtension {
+		public TagKey<Biome> biomeTag;
+
+		public DatagenExtension biomeTag(TagKey<Biome> biomes) {
+			this.biomeTag = biomes;
+			return this;
+		}
+
 		public abstract ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess);
 
 		public PlacedFeature createPlacedFeature(RegistryAccess registryAccess) {
@@ -152,6 +162,14 @@ public class OreFeatureConfigEntry extends ConfigBase {
 			Holder<ConfiguredFeature<?, ?>> featureHolder = featureRegistry.getOrCreateHolderOrThrow(ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, id));
 			return new PlacedFeature(featureHolder, List.of(new ConfigDrivenPlacement(OreFeatureConfigEntry.this)));
 		}
+
+//		public BiomeModifier createBiomeModifier(RegistryAccess registryAccess) {
+//			Registry<Biome> biomeRegistry = registryAccess.registryOrThrow(Registry.BIOME_REGISTRY);
+//			Registry<PlacedFeature> featureRegistry = registryAccess.registryOrThrow(Registry.PLACED_FEATURE_REGISTRY);
+//			HolderSet<Biome> biomes = new HolderSet.Named<>(biomeRegistry, biomeTag);
+//			Holder<PlacedFeature> featureHolder = featureRegistry.getOrCreateHolderOrThrow(ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, id));
+//			return new AddFeaturesBiomeModifier(biomes, HolderSet.direct(featureHolder), Decoration.UNDERGROUND_ORES);
+//		}
 
 		public OreFeatureConfigEntry parent() {
 			return OreFeatureConfigEntry.this;
@@ -181,6 +199,12 @@ public class OreFeatureConfigEntry extends ConfigBase {
 		}
 
 		@Override
+		public StandardDatagenExtension biomeTag(TagKey<Biome> biomes) {
+			super.biomeTag(biomes);
+			return this;
+		}
+
+		@Override
 		public ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess) {
 			List<TargetBlockState> targetStates = new ArrayList<>();
 			if (block != null)
@@ -203,6 +227,12 @@ public class OreFeatureConfigEntry extends ConfigBase {
 
 		public LayeredDatagenExtension withLayerPattern(NonNullSupplier<LayerPattern> pattern) {
 			this.layerPatterns.add(pattern);
+			return this;
+		}
+
+		@Override
+		public LayeredDatagenExtension biomeTag(TagKey<Biome> biomes) {
+			super.biomeTag(biomes);
 			return this;
 		}
 

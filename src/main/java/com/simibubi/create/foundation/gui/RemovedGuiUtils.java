@@ -144,34 +144,6 @@ public class RemovedGuiUtils {
 //		borderColorStart = colorEvent.getBorderStart();
 //		borderColorEnd = colorEvent.getBorderEnd();
 //
-//			if (mouseX > screenWidth / 2)
-//				tooltipX = mouseX - 16 - tooltipTextWidth;
-//			else
-//				tooltipX = mouseX + 12;
-//		}
-//
-//		int tooltipY = mouseY - 12;
-//		int tooltipHeight = 8;
-//
-//		if (textLines.size() > 1) {
-//			tooltipHeight += (textLines.size() - 1) * 10;
-//			if (textLines.size() > titleLinesCount)
-//				tooltipHeight += 2; // gap between title lines and next lines
-//		}
-//
-//		if (tooltipY < 4)
-//			tooltipY = 4;
-//		else if (tooltipY + tooltipHeight + 4 > screenHeight)
-//			tooltipY = screenHeight - tooltipHeight - 4;
-//
-//		final int zLevel = 400;
-//		RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, pStack, tooltipX, tooltipY,
-//			font, backgroundColor, borderColorStart, borderColorEnd, list);
-//		MinecraftForge.EVENT_BUS.post(colorEvent);
-//		backgroundColor = colorEvent.getBackgroundStart();
-//		borderColorStart = colorEvent.getBorderStart();
-//		borderColorEnd = colorEvent.getBorderEnd();
-//
 //		pStack.pushPose();
 //		Matrix4f mat = pStack.last()
 //			.pose();

@@ -984,14 +984,14 @@ public abstract class Contraption {
 			// (code copied from ServerWorld.onBlockStateChange)
 			ServerLevel serverWorld = (ServerLevel) world;
 			PoiTypes.forState(block.state)
-					.ifPresent(poiType -> {
-						world.getServer()
-								.execute(() -> {
-									serverWorld.getPoiManager()
-											.add(add, poiType);
-									DebugPackets.sendPoiAddedPacket(serverWorld, add);
-								});
-					});
+				.ifPresent(poiType -> {
+					world.getServer()
+						.execute(() -> {
+							serverWorld.getPoiManager()
+								.add(add, poiType);
+							DebugPackets.sendPoiAddedPacket(serverWorld, add);
+						});
+				});
 
 			world.markAndNotifyBlock(add, world.getChunkAt(add), block.state, Blocks.AIR.defaultBlockState(), flags,
 					512);
@@ -1138,7 +1138,7 @@ public abstract class Contraption {
 
 	protected boolean shouldUpdateAfterMovement(StructureBlockInfo info) {
 		if (PoiTypes.forState(info.state)
-				.isPresent())
+			.isPresent())
 			return false;
 		if (info.state.getBlock() instanceof SlidingDoorBlock)
 			return false;

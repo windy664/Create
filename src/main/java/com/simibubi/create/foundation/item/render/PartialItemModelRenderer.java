@@ -75,7 +75,7 @@ public class PartialItemModelRenderer {
 
 	private void renderBakedItemModel(BakedModel model, int light, PoseStack ms, VertexConsumer buffer) {
 		ItemRenderer ir = Minecraft.getInstance()
-			.getItemRenderer();
+				.getItemRenderer();
 //		IModelData data = EmptyModelData.INSTANCE;
 
 		for (Direction direction : Iterate.directions) {

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import net.minecraft.util.RandomSource;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipula
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -39,7 +40,7 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	}
 
 //	@Environment(EnvType.CLIENT)
-//	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+//	public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
 //		consumer.accept(new ReducedDestroyEffects());
 //	}
 

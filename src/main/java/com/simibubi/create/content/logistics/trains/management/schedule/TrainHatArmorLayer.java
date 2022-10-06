@@ -15,9 +15,11 @@ import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRe
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.AxolotlModel;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.FrogModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.LavaSlimeModel;
 import net.minecraft.client.model.SlimeModel;
+import net.minecraft.client.model.WardenModel;
 import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelPart.Cube;
@@ -59,6 +61,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 		boolean valid = false;
 		TransformStack msr = TransformStack.cast(ms);
+		float scale = 1;
 
 		if (entityModel instanceof AgeableListModel<?> model && entityModel instanceof io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AgeableListModelAccessor access) {
 			if (model.young) {
@@ -101,7 +104,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 				if (!head.isEmpty()) {
 					Cube cube = access.porting_lib$cubes().get(0);
 					ms.translate(offset.x, (cube.minY - cube.maxY + offset.y) / 16f, offset.z / 16f);
-					float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / (slime ? 6.5f : 8f);
+					float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / (slime ? 6.5f : 8f) * scale;
 					ms.scale(max, max, max);
 				}
 

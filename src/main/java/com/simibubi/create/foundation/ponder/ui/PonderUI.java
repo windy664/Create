@@ -5,7 +5,6 @@ import static com.simibubi.create.foundation.ponder.PonderLocalization.LANG_PREF
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.util.RandomSource;
 import java.util.stream.IntStream;
 
 import com.mojang.blaze3d.platform.ClipboardManager;

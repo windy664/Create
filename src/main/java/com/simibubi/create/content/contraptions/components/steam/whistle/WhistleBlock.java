@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.steam.whistle;
 
-import net.minecraft.util.RandomSource;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;

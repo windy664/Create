@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.worldgen;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.util.RandomSource;
 
 import javax.annotation.Nullable;
 
@@ -14,6 +13,7 @@ import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.data.worldgen.features.OreFeatures;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;

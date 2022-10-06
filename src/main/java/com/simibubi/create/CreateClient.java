@@ -5,20 +5,14 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.trinkets.Trinkets;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueSelectionHandler;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
-import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.curiosities.armor.AllArmorMaterials;
 import com.simibubi.create.content.curiosities.armor.CopperArmorItem;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
-import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
-import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.weapons.PotatoCannonRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
-import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
@@ -99,8 +93,6 @@ public class CreateClient implements ClientModInitializer {
 		PonderIndex.register();
 		PonderIndex.registerTags();
 
-		registerOverlays();
-
 		UIRenderHelper.init();
 
 		// fabric exclusive
@@ -112,23 +104,6 @@ public class CreateClient implements ClientModInitializer {
 		// causes class loading issues or something
 		// noinspection Convert2MethodRef
 		Mods.TRINKETS.executeIfInstalled(() -> () -> Trinkets.clientInit());
-	}
-
-	private static void registerOverlays() {
-		// Register overlays in reverse order
-		OverlayRenderCallback.EVENT.register(((stack, partialTicks, window, type) -> {
-			if (type == OverlayRenderCallback.Types.AIR)
-				CopperBacktankArmorLayer.renderRemainingAirOverlay(stack, partialTicks, window);
-			else {
-				TrainHUD.renderOverlay(stack, partialTicks, window);
-				GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window);
-				BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window);
-				LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window);
-				SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window);
-				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window);
-			}
-			return false;
-		}));
 	}
 
 	public static void invalidateRenderers() {

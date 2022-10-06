@@ -10,6 +10,7 @@ import com.jozufozu.flywheel.fabric.model.FabricModelUtil;
 import com.jozufozu.flywheel.fabric.model.LayerFilteringBakedModel;
 import com.jozufozu.flywheel.util.Pair;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -138,7 +139,7 @@ public class SchematicRenderer {
 		ModelBlockRenderer.clearCache();
 
 		shadeSeparatingWrapper.clear();
-		Pair<BufferBuilder.RenderedBuffer, Integer> pair = ModelUtil.endShadeSeparated(builder, unshadedBuilder);
+		Pair<RenderedBuffer, Integer> pair = ModelUtil.endShadeSeparated(builder, unshadedBuilder);
 
 		renderWorld.renderMode = false;
 
@@ -152,7 +153,7 @@ public class SchematicRenderer {
 
 	private static class ThreadLocalObjects {
 		public final PoseStack poseStack = new PoseStack();
-		public final RandomSource random = RandomSource.create();
+		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
 		public final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
 		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);

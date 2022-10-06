@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.signal;
 
-import net.minecraft.util.RandomSource;
-
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllTileEntities;

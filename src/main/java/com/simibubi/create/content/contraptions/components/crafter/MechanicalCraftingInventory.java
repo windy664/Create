@@ -17,7 +17,7 @@ public class MechanicalCraftingInventory extends CraftingContainer {
 		}
 
 		@Override
-		public ItemStack quickMoveStack(Player player, int index) {
+		public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
 			return ItemStack.EMPTY;
 		}
 	};

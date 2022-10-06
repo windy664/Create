@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.block.redstone;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import net.minecraft.util.RandomSource;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -16,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;

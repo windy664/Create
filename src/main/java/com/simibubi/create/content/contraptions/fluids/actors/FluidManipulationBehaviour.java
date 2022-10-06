@@ -28,9 +28,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
@@ -206,6 +204,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	protected void playEffect(Level world, BlockPos pos, Fluid fluid, boolean fillSound) {
 		BlockPos splooshPos = pos == null ? tileEntity.getBlockPos() : pos;
+		FluidStack stack = new FluidStack(fluid, 1);
 
 		FluidVariant variant = FluidVariant.of(fluid);
 		SoundEvent soundevent = fillSound
@@ -214,7 +213,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 		world.playSound(null, splooshPos, soundevent, SoundSource.BLOCKS, 0.3F, 1.0F);
 		if (world instanceof ServerLevel)
-			AllPackets.sendToNear(world, splooshPos, 10, new FluidSplashPacket(splooshPos, new FluidStack(fluid, 1)));
+			AllPackets.sendToNear(world, splooshPos, 10, new FluidSplashPacket(splooshPos, stack));
 	}
 
 	protected boolean canDrainInfinitely(Fluid fluid) {

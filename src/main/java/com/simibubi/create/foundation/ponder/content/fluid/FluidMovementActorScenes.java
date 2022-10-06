@@ -179,7 +179,7 @@ public class FluidMovementActorScenes {
 		scene.idle(15);
 		scene.world.rotateBearing(bearing, 270, 120);
 		scene.world.rotateSection(contraption, 0, 270, 0, 120);
-		
+
 		scene.idle(100);
 		scene.markAsFinished();
 	}

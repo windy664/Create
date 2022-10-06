@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.worldgen;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.worldgen.LayerPattern.Layer;
@@ -11,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.BulkSectionAccess;

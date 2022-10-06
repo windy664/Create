@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.ponder.content.fluid;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
@@ -28,6 +27,7 @@ import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
@@ -36,6 +36,8 @@ import net.minecraft.world.phys.Vec3;
 public class FluidTankScenes {
 
 	public static void storage(SceneBuilder scene, SceneBuildingUtil util) {
+		RandomSource random = RandomSource.create();
+
 		scene.title("fluid_tank_storage", "Storing Fluids in Fluid Tanks");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -204,7 +206,7 @@ public class FluidTankScenes {
 			scene.effects.emitParticles(util.vector.topOf(3, 1, 1)
 				.add(0, 1 / 16f, 0),
 				Emitter.simple(FluidFX.getFluidParticle(content),
-					VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, .1f)),
+					VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)),
 				1, 1);
 		}
 

@@ -90,8 +90,8 @@ public class WrenchItem extends Item {
 	}
 
 //	@Override
-//	@Environment(EnvType.CLIENT)
-//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//	@OnlyIn(Dist.CLIENT)
+//	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 //		consumer.accept(SimpleCustomRenderer.create(this, new WrenchItemRenderer()));
 //	}
 

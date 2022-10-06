@@ -4,6 +4,7 @@ import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -29,16 +30,15 @@ public class ArmItem extends BlockItem {
 	}
 
 	@Override
-	protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, Player p_195943_3_, ItemStack p_195943_4_,
+	protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, Player player, ItemStack p_195943_4_,
 		BlockState p_195943_5_) {
 		if (world.isClientSide)
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> ArmInteractionPointHandler.flushSettings(pos));
-		return super.updateCustomBlockEntityTag(pos, world, p_195943_3_, p_195943_4_, p_195943_5_);
+		return super.updateCustomBlockEntityTag(pos, world, player, p_195943_4_, p_195943_5_);
 	}
 
 	@Override
-	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos,
-		Player p_195938_4_) {
+	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player p_195938_4_) {
 		return !ArmInteractionPoint.isInteractable(world, pos, state);
 	}
 

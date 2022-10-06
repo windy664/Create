@@ -140,7 +140,7 @@ public class LinkedControllerItem extends Item implements MenuProvider, UseFirst
 
 //	@Override
 //	@Environment(EnvType.CLIENT)
-//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 //		consumer.accept(SimpleCustomRenderer.create(this, new LinkedControllerItemRenderer()));
 //	}
 

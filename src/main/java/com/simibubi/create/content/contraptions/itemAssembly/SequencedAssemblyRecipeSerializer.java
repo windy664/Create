@@ -11,8 +11,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
-public class SequencedAssemblyRecipeSerializer
-	implements RecipeSerializer<SequencedAssemblyRecipe> {
+public class SequencedAssemblyRecipeSerializer implements RecipeSerializer<SequencedAssemblyRecipe> {
 
 	public SequencedAssemblyRecipeSerializer() {}
 

@@ -70,6 +70,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	LerpedFloat clawAngle;
 	float previousBaseAngle;
 	boolean updateInteractionPoints;
+	int tooltipWarmup;
 
 	//
 	protected ScrollOptionBehaviour<SelectionMode> selectionMode;
@@ -85,7 +86,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		super(typeIn, pos, state);
 		inputs = new ArrayList<>();
 		outputs = new ArrayList<>();
-		interactionPointTag = new ListTag();
+		interactionPointTag = null;
 		heldItem = ItemStack.EMPTY;
 		phase = Phase.SEARCH_INPUTS;
 		previousTarget = ArmAngleTarget.NO_TARGET;
@@ -101,6 +102,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		previousBaseAngle = previousTarget.baseAngle;
 		updateInteractionPoints = true;
 		redstoneLocked = false;
+		tooltipWarmup = 15;
 	}
 
 	@Override
@@ -122,6 +124,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		initInteractionPoints();
 		boolean targetReached = tickMovementProgress();
 
+		if (tooltipWarmup > 0)
+			tooltipWarmup--;
 		if (chasedPointProgress < 1) {
 			if (phase == Phase.MOVE_TO_INPUT) {
 				ArmInteractionPoint point = getTargetedInteractionPoint();
@@ -495,7 +499,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	public void writeInteractionPoints(CompoundTag compound) {
-		if (updateInteractionPoints) {
+		if (updateInteractionPoints && interactionPointTag != null) {
 			compound.put("InteractionPoints", interactionPointTag);
 		} else {
 			ListTag pointsNBT = new ListTag();
@@ -575,6 +579,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		if (super.addToTooltip(tooltip, isPlayerSneaking))
 			return true;
 		if (isPlayerSneaking)
+			return false;
+		if (tooltipWarmup > 0)
 			return false;
 		if (!inputs.isEmpty())
 			return false;

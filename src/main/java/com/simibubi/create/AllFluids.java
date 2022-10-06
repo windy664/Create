@@ -1,9 +1,5 @@
 package com.simibubi.create;
 
-import static net.minecraft.world.item.Items.BUCKET;
-import static net.minecraft.world.item.Items.GLASS_BOTTLE;
-import static net.minecraft.world.item.Items.HONEY_BOTTLE;
-
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -22,7 +18,6 @@ import com.tterrag.registrate.util.entry.FluidEntry;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -37,7 +32,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -45,6 +39,10 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+
+import static net.minecraft.world.item.Items.BUCKET;
+import static net.minecraft.world.item.Items.GLASS_BOTTLE;
+import static net.minecraft.world.item.Items.HONEY_BOTTLE;
 
 @SuppressWarnings("UnstableApiUsage")
 public class AllFluids {

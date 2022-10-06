@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.block.chute;
 
-import net.minecraft.util.RandomSource;
-
 import com.simibubi.create.AllTileEntities;
 
 import net.minecraft.core.BlockPos;

@@ -1,5 +1,7 @@
 package com.simibubi.create.compat.jei;
 
+import java.util.Optional;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import mezz.jei.api.constants.RecipeTypes;
@@ -13,11 +15,14 @@ import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteReci
 import com.simibubi.create.content.curiosities.tools.BlueprintContainer;
 import com.simibubi.create.foundation.networking.AllPackets;
 
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 
 import java.util.Optional;

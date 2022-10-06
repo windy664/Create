@@ -37,6 +37,7 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -274,8 +275,8 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements EntitySwin
 	}
 
 //	@Override
-//	@Environment(EnvType.CLIENT)
-//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//	@OnlyIn(Dist.CLIENT)
+//	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 //		consumer.accept(SimpleCustomRenderer.create(this, new PotatoCannonItemRenderer()));
 //	}
 

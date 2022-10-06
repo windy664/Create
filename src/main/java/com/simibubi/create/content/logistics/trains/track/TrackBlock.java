@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import net.minecraft.util.RandomSource;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.base.Predicates;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
@@ -65,6 +67,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -121,7 +124,8 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 	}
 
 	@Override
-	public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+	public @Nullable BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos,
+		@Nullable Mob mob) {
 		return BlockPathTypes.RAIL;
 	}
 

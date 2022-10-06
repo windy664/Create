@@ -8,6 +8,8 @@ import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -58,33 +60,34 @@ public class PotionFluid extends VirtualFluid {
 		REGULAR, SPLASH, LINGERING;
 	}
 
-	// TODO: PORT
-//	public static class PotionFluidAttributes extends FluidAttributes {
+// TODO: Port this
+// --------------------------------
+//	public static class PotionFluidType extends TintedFluidType {
 //
-//		public PotionFluidAttributes(Builder builder, Fluid fluid) {
-//			super(builder, fluid);
+//		public PotionFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture) {
+//			super(properties, stillTexture, flowingTexture);
 //		}
 //
 //		@Override
-//		public int getColor(FluidStack stack) {
+//		public int getTintColor(FluidStack stack) {
 //			CompoundTag tag = stack.getOrCreateTag();
 //			int color = PotionUtils.getColor(PotionUtils.getAllEffects(tag)) | 0xff000000;
 //			return color;
 //		}
 //
 //		@Override
-//		public Component getDisplayName(FluidStack stack) {
-//			return Components.translatable(getTranslationKey(stack));
+//		public String getDescriptionId(FluidStack stack) {
+//			CompoundTag tag = stack.getOrCreateTag();
+//			ItemLike itemFromBottleType =
+//				PotionFluidHandler.itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
+//			return PotionUtils.getPotion(tag)
+//				.getName(itemFromBottleType.asItem()
+//					.getDescriptionId() + ".effect.");
 //		}
 //
 //		@Override
-//		public String getTranslationKey(FluidStack stack) {
-//			CompoundTag tag = stack.getOrCreateTag();
-//			ItemLike itemFromBottleType =
-//					PotionFluidHandler.itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
-//			return PotionUtils.getPotion(tag)
-//					.getName(itemFromBottleType.asItem()
-//							.getDescriptionId() + ".effect.");
+//		protected int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
+//			return NO_TINT;
 //		}
 //
 //	}

@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.OptionalInt;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.authlib.GameProfile;
@@ -171,7 +173,7 @@ public class DeployerFakePlayer extends FakeServerPlayer {
 		public void send(Packet<?> packetIn) {}
 
 		@Override
-		public void send(Packet<?> packetIn, PacketSendListener futureListeners) {}
+		public void send(Packet<?> p_243227_, @Nullable PacketSendListener p_243273_) {}
 	}
 
 }

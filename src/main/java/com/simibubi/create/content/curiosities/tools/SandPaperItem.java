@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.tools;
 
 import java.util.Optional;
-import net.minecraft.util.RandomSource;
+import java.util.function.Consumer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -23,6 +23,7 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -258,8 +259,8 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	}
 
 //	@Override
-//	@Environment(EnvType.CLIENT)
-//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//	@OnlyIn(Dist.CLIENT)
+//	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 //		consumer.accept(SimpleCustomRenderer.create(this, new SandPaperItemRenderer()));
 //	}
 

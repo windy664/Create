@@ -4,6 +4,7 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageSyncDataSeria
 
 import net.minecraft.network.syncher.EntityDataSerializers;
 
+
 public class AllEntityDataSerializers {
 	public static final CarriageSyncDataSerializer CARRIAGE_DATA = new CarriageSyncDataSerializer();
 

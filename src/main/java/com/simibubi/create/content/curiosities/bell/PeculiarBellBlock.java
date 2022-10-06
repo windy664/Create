@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.bell;
 
-import net.minecraft.util.RandomSource;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
@@ -9,6 +7,7 @@ import com.simibubi.create.AllTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;

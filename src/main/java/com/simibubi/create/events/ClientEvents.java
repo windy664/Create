@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
@@ -26,6 +27,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
+import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
@@ -71,6 +73,7 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
+import static com.simibubi.create.CreateClient.SCHEMATIC_HANDLER;
 
 import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback.CameraInfo;
@@ -149,7 +152,7 @@ public class ClientEvents {
 		CreateClient.SCHEMATIC_SENDER.tick();
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.tick();
 		CreateClient.GLUE_HANDLER.tick();
-		CreateClient.SCHEMATIC_HANDLER.tick();
+		SCHEMATIC_HANDLER.tick();
 		CreateClient.ZAPPER_RENDER_HANDLER.tick();
 		CreateClient.POTATO_CANNON_RENDER_HANDLER.tick();
 		CreateClient.SOUL_PULSE_EFFECT_HANDLER.tick(world);
@@ -233,7 +236,7 @@ public class ClientEvents {
 		TrackTargetingClient.render(ms, buffer);
 		CouplingRenderer.renderAll(ms, buffer);
 		CarriageCouplingRenderer.renderAll(ms, buffer);
-		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);
+		SCHEMATIC_HANDLER.render(ms, buffer);
 		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer);
 
 		CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
@@ -397,13 +400,30 @@ public class ClientEvents {
 //			CopperBacktankArmorLayer.registerOnAll(dispatcher);
 //		}
 
+		public static boolean registerGuiOverlays(PoseStack stack, float partialTicks, Window window, OverlayRenderCallback.Types type) {
+			// Register overlays in reverse order
+
+			if (type == OverlayRenderCallback.Types.AIR)
+				CopperBacktankArmorLayer.renderRemainingAirOverlay(stack, partialTicks, window);
+			else {
+				TrainHUD.renderOverlay(stack, partialTicks, window);
+				GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window);
+				BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window);
+				LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window);
+				SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window);
+				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window);
+			}
+			return false;
+		}
+
 //		@SubscribeEvent
-//		public static void loadCompleted(FMLLoadCompleteEvent event) {
+//		public static void onLoadComplete(FMLLoadCompleteEvent event) {
 //			ModContainer createContainer = ModList.get()
 //				.getModContainerById(Create.ID)
-//				.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
-//			createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-//				() -> new ConfigGuiHandler.ConfigGuiFactory((mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
+//				.orElseThrow(() -> new IllegalStateException("Create mod container missing on LoadComplete"));
+//			createContainer.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
+//				() -> new ConfigScreenHandler.ConfigScreenFactory(
+//					(mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
 //		}
 
 	}
@@ -436,6 +456,7 @@ public class ClientEvents {
 		MountEntityCallback.EVENT.register(ClientEvents::onMount);
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register(ClientEvents::addEntityRendererLayers);
 		CameraSetupCallback.EVENT.register(ClientEvents::onCameraSetup);
+		OverlayRenderCallback.EVENT.register(ModBusEvents::registerGuiOverlays);
 
 		// External Events
 

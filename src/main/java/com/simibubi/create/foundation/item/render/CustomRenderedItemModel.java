@@ -29,10 +29,10 @@ public abstract class CustomRenderedItemModel extends ForwardingBakedModel {
 	}
 
 //	@Override
-//	public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
+//	public BakedModel applyTransform(ItemTransforms.TransformType cameraTransformType, PoseStack mat, boolean leftHand) {
 //		// Super call returns originalModel, but we want to return this, else ISTER
 //		// won't be used.
-//		super.handlePerspective(cameraTransformType, mat);
+//		super.applyTransform(cameraTransformType, mat, leftHand);
 //		return this;
 //	}
 

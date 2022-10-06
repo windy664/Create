@@ -19,9 +19,10 @@ public class FluidStackParticle extends TextureSheetParticle {
 	private final float uo;
 	private final float vo;
 	private FluidStack fluid;
+//	private IClientFluidTypeExtensions clientFluid;
 
-	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientLevel world, FluidStack fluid, double x,
-		double y, double z, double vx, double vy, double vz) {
+	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientLevel world, FluidStack fluid,
+		double x, double y, double z, double vx, double vy, double vz) {
 		if (type == AllParticleTypes.BASIN_FLUID.get())
 			return new BasinFluidParticle(world, fluid, x, y, z, vx, vy, vz);
 		return new FluidStackParticle(world, fluid, x, y, z, vx, vy, vz);
@@ -31,6 +32,9 @@ public class FluidStackParticle extends TextureSheetParticle {
 	public FluidStackParticle(ClientLevel world, FluidStack fluid, double x, double y, double z, double vx, double vy,
 							  double vz) {
 		super(world, x, y, z, vx, vy, vz);
+
+//		clientFluid = IClientFluidTypeExtensions.of(fluid.getFluid());
+
 		this.fluid = fluid;
 		FluidVariantRenderHandler handler = FluidVariantRendering.getHandlerOrDefault(fluid.getFluid());
 		this.setSprite(handler.getSprites(fluid.getType())[0]);
@@ -93,7 +97,8 @@ public class FluidStackParticle extends TextureSheetParticle {
 			return;
 
 		Color color = new Color(rCol, gCol, bCol, 1);
-		level.addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, color.getRedAsFloat(), color.getGreenAsFloat(), color.getBlueAsFloat());
+		level.addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, color.getRedAsFloat(), color.getGreenAsFloat(),
+			color.getBlueAsFloat());
 	}
 
 	protected boolean canEvaporate() {

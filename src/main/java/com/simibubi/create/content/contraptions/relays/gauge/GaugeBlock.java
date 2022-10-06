@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.gauge;
 
-import net.minecraft.util.RandomSource;
-
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;

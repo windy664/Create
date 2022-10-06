@@ -8,8 +8,6 @@ import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Encoder;
@@ -27,8 +25,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 public class DynamicDataProvider<T> implements DataProvider {
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
 	private final DataGenerator generator;
 	private final String name;
 	private final RegistryAccess registryAccess;
@@ -62,9 +58,13 @@ public class DynamicDataProvider<T> implements DataProvider {
 	}
 
 	private void dumpValues(Path rootPath, CachedOutput cache, DynamicOps<JsonElement> ops, ResourceKey<? extends Registry<T>> registryKey, Map<ResourceLocation, T> values, Encoder<T> encoder) {
+		DataGenerator.PathProvider pathProvider = generator.createPathProvider(DataGenerator.Target.DATA_PACK,
+				registryKey.location().getNamespace().equals("minecraft")
+						? registryKey.location().getPath()
+						: registryKey.location().getNamespace() +  "/"  + registryKey.location().getPath());
+
 		for (Entry<ResourceLocation, T> entry : values.entrySet()) {
-			Path path = createPath(rootPath, registryKey.location(), entry.getKey());
-			dumpValue(path, cache, ops, encoder, entry.getValue());
+			dumpValue(pathProvider.json(entry.getKey()), cache, ops, encoder, entry.getValue());
 		}
 	}
 
@@ -75,15 +75,11 @@ public class DynamicDataProvider<T> implements DataProvider {
 				Create.LOGGER.error("Couldn't serialize element {}: {}", path, message);
 			});
 			if (optional.isPresent()) {
-				DataProvider.saveStable( cache, optional.get(), path);
+				DataProvider.saveStable(cache, optional.get(), path);
 			}
 		} catch (IOException e) {
 			Create.LOGGER.error("Couldn't save element {}", path, e);
 		}
-	}
-
-	private Path createPath(Path path, ResourceLocation registry, ResourceLocation value) {
-		return path.resolve("data").resolve(value.getNamespace()).resolve(registry.getPath()).resolve(value.getPath() + ".json");
 	}
 
 	@Override

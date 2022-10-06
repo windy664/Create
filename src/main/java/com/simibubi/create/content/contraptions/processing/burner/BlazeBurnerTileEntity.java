@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.processing.burner;
 
 import java.util.List;
-import net.minecraft.util.RandomSource;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;

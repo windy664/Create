@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids;
 
 import java.util.Arrays;
-import net.minecraft.util.RandomSource;
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlockPartials;
@@ -16,9 +16,12 @@ import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 

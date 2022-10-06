@@ -98,7 +98,7 @@ public class SchematicChunkSource extends ChunkSource {
 			private RegistryAccess access;
 
 			private DummyLevel(WritableLevelData p_46450_, ResourceKey<Level> p_46451_, Holder<DimensionType> p_46452_,
-							   Supplier<ProfilerFiller> p_46453_, boolean p_46454_, boolean p_46455_, long p_46456_, int p_220359_) {
+				Supplier<ProfilerFiller> p_46453_, boolean p_46454_, boolean p_46455_, long p_46456_, int p_220359_) {
 				super(p_46450_, p_46451_, p_46452_, p_46453_, p_46454_, p_46455_, p_46456_, p_220359_);
 			}
 
@@ -154,11 +154,11 @@ public class SchematicChunkSource extends ChunkSource {
 
 			@Override
 			public void playSeededSound(Player p_220363_, double p_220364_, double p_220365_, double p_220366_,
-										SoundEvent p_220367_, SoundSource p_220368_, float p_220369_, float p_220370_, long p_220371_) {}
+					SoundEvent p_220367_, SoundSource p_220368_, float p_220369_, float p_220370_, long p_220371_) {}
 
 			@Override
 			public void playSeededSound(Player p_220372_, Entity p_220373_, SoundEvent p_220374_, SoundSource p_220375_,
-										float p_220376_, float p_220377_, long p_220378_) {}
+					float p_220376_, float p_220377_, long p_220378_) {}
 
 			@Override
 			public String gatherChunkSourceStats() {
@@ -213,8 +213,8 @@ public class SchematicChunkSource extends ChunkSource {
 		}
 
 		private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null, RegistryAccess.BUILTIN.get()
-				.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY)
-				.getHolderOrThrow(BuiltinDimensionTypes.OVERWORLD), null, false, false, 0, 0);
+			.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY)
+			.getHolderOrThrow(BuiltinDimensionTypes.OVERWORLD), null, false, false, 0, 0);
 
 		public EmptierChunk(RegistryAccess registryAccess) {
 			super(DUMMY_LEVEL.withAccess(registryAccess), null);

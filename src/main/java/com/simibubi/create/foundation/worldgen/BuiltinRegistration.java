@@ -14,6 +14,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 public class BuiltinRegistration {
 	private static final LazyRegistrar<ConfiguredFeature<?, ?>> CONFIGURED_FEATURE_REGISTER = LazyRegistrar.create(BuiltinRegistries.CONFIGURED_FEATURE, Create.ID);
 	private static final LazyRegistrar<PlacedFeature> PLACED_FEATURE_REGISTER = LazyRegistrar.create(BuiltinRegistries.PLACED_FEATURE, Create.ID);
+//	private static final DeferredRegister<BiomeModifier> BIOME_MODIFIER_REGISTER = LazyRegistrar.create(ForgeRegistries.Keys.BIOME_MODIFIERS, Create.ID);
 
 	static {
 		for (Map.Entry<ResourceLocation, OreFeatureConfigEntry> entry : OreFeatureConfigEntry.ALL.entrySet()) {
@@ -23,6 +24,7 @@ public class BuiltinRegistration {
 				if (datagenExt != null) {
 					CONFIGURED_FEATURE_REGISTER.register(id.getPath(), () -> datagenExt.createConfiguredFeature(BuiltinRegistries.ACCESS));
 					PLACED_FEATURE_REGISTER.register(id.getPath(), () -> datagenExt.createPlacedFeature(BuiltinRegistries.ACCESS));
+//					BIOME_MODIFIER_REGISTER.register(id.getPath(), () -> datagenExt.createBiomeModifier(BuiltinRegistries.ACCESS));
 				}
 			}
 		}
@@ -31,5 +33,6 @@ public class BuiltinRegistration {
 	public static void register() {
 		CONFIGURED_FEATURE_REGISTER.register();
 		PLACED_FEATURE_REGISTER.register();
+//		BIOME_MODIFIER_REGISTER.register();
 	}
 }

@@ -13,6 +13,7 @@ import com.jozufozu.flywheel.fabric.model.FabricModelUtil;
 import com.jozufozu.flywheel.fabric.model.LayerFilteringBakedModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
@@ -462,14 +463,14 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		world.clearMask();
 
 		shadeSeparatingWrapper.clear();
-		com.jozufozu.flywheel.util.Pair<BufferBuilder.RenderedBuffer, Integer> pair = ModelUtil.endShadeSeparated(builder, unshadedBuilder);
+		com.jozufozu.flywheel.util.Pair<RenderedBuffer, Integer> pair = ModelUtil.endShadeSeparated(builder, unshadedBuilder);
 
 		return new SuperByteBuffer(pair.first(), pair.second());
 	}
 
 	private static class ThreadLocalObjects {
 		public final PoseStack poseStack = new PoseStack();
-		public final RandomSource random = RandomSource.create();
+		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
 		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
 		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}

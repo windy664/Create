@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
-import net.minecraft.util.RandomSource;
-
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.foundation.utility.Components;
@@ -9,6 +7,7 @@ import com.simibubi.create.foundation.utility.Components;
 import io.github.fabricators_of_create.porting_lib.enchant.EnchantmentBonusBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
