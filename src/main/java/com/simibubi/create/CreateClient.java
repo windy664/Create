@@ -93,6 +93,7 @@ public class CreateClient implements ClientModInitializer {
 		PonderIndex.register();
 		PonderIndex.registerTags();
 
+		OverlayRenderCallback.EVENT.register(ClientEvents.ModBusEvents::registerGuiOverlays);
 		UIRenderHelper.init();
 
 		// fabric exclusive

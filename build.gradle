@@ -148,8 +148,10 @@ def testMods(DependencyHandler deps) {
 //    deps.modLocalRuntime("maven.modrinth:mealapi:0.3+1.18")
 //    deps.modLocalRuntime("dev.lambdaurora:spruceui:3.3.1+1.17")
 //
-//    deps.modLocalRuntime("maven.modrinth:sodium:mc1.18.2-0.4.1")
-//    deps.modLocalRuntime("org.joml:joml:1.10.4")
+    deps.modLocalRuntime("maven.modrinth:sodium:mc1.19.2-0.4.4")
+    deps.modLocalRuntime("org.joml:joml:1.10.4")
+
+    deps.modLocalRuntime("maven.modrinth:indium:1.0.9+mc1.19.2")
 //
 //    deps.modLocalRuntime("maven.modrinth:phosphor:mc1.18.x-0.8.1")
 //

@@ -456,7 +456,6 @@ public class ClientEvents {
 		MountEntityCallback.EVENT.register(ClientEvents::onMount);
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register(ClientEvents::addEntityRendererLayers);
 		CameraSetupCallback.EVENT.register(ClientEvents::onCameraSetup);
-		OverlayRenderCallback.EVENT.register(ModBusEvents::registerGuiOverlays);
 
 		// External Events
 
