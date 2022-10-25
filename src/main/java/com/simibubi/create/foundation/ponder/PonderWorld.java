@@ -58,7 +58,7 @@ public class PonderWorld extends SchematicWorld {
 	public PonderScene scene;
 
 	protected Map<BlockPos, BlockState> originalBlocks;
-	protected Map<BlockPos, BlockEntity> originalTileEntities;
+	protected Map<BlockPos, CompoundTag> originalTileEntities;
 	protected Map<BlockPos, Integer> blockBreakingProgressions;
 	protected List<Entity> originalEntities;
 	private Supplier<ClientLevel> asClientWorld = Suppliers.memoize(() -> WrappedClientWorld.of(this));
@@ -83,8 +83,7 @@ public class PonderWorld extends SchematicWorld {
 		originalBlocks.clear();
 		originalTileEntities.clear();
 		blocks.forEach((k, v) -> originalBlocks.put(k, v));
-		tileEntities.forEach(
-			(k, v) -> originalTileEntities.put(k, BlockEntity.loadStatic(k, blocks.get(k), v.saveWithFullMetadata())));
+		tileEntities.forEach((k, v) -> originalTileEntities.put(k, v.saveWithFullMetadata()));
 		entities.forEach(e -> EntityType.create(NBTSerializer.serializeNBTCompound(e), this)
 			.ifPresent(originalEntities::add));
 	}
@@ -97,7 +96,7 @@ public class PonderWorld extends SchematicWorld {
 		renderedTileEntities.clear();
 		originalBlocks.forEach((k, v) -> blocks.put(k, v));
 		originalTileEntities.forEach((k, v) -> {
-			BlockEntity te = BlockEntity.loadStatic(k, originalBlocks.get(k), v.saveWithFullMetadata());
+			BlockEntity te = BlockEntity.loadStatic(k, originalBlocks.get(k), v);
 			onTEadded(te, te.getBlockPos());
 			tileEntities.put(k, te);
 			renderedTileEntities.add(te);
@@ -113,8 +112,7 @@ public class PonderWorld extends SchematicWorld {
 			if (originalBlocks.containsKey(p))
 				blocks.put(p, originalBlocks.get(p));
 			if (originalTileEntities.containsKey(p)) {
-				BlockEntity te = BlockEntity.loadStatic(p, originalBlocks.get(p), originalTileEntities.get(p)
-					.saveWithFullMetadata());
+				BlockEntity te = BlockEntity.loadStatic(p, originalBlocks.get(p), originalTileEntities.get(p));
 				onTEadded(te, te.getBlockPos());
 				tileEntities.put(p, te);
 			}

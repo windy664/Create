@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -30,6 +31,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
@@ -96,8 +98,6 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 						continue Ingredients;
 					long extracted = view.extract(var, 1, t);
 					if (extracted == 0) continue;
-					if (stack.getItem().hasCraftingRemainingItem())
-						recipeOutputItems.add(stack.getItem().getCraftingRemainingItem().getDefaultInstance());
 					continue Ingredients;
 				}
 				// something wasn't found
@@ -132,11 +132,17 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 				});
 			}
 
-			if (recipe instanceof BasinRecipe) {
-				recipeOutputItems.addAll(((BasinRecipe) recipe).rollResults());
-				recipeOutputFluids.addAll(((BasinRecipe) recipe).getFluidResults());
-			} else
+			if (recipe instanceof BasinRecipe basinRecipe) {
+				recipeOutputItems.addAll(basinRecipe.rollResults());
+				recipeOutputFluids.addAll(basinRecipe.getFluidResults());
+				recipeOutputItems.addAll(basinRecipe.getRemainingItems(basin.getInputInventory()));
+			} else {
 				recipeOutputItems.add(recipe.getResultItem());
+
+				if (recipe instanceof CraftingRecipe craftingRecipe) {
+					recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(availableItems, extractedItemsFromSlot)));
+				}
+			}
 
 			if (!basin.acceptOutputs(recipeOutputItems, recipeOutputFluids, t))
 				return false;
