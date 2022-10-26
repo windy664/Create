@@ -1,21 +1,26 @@
 package com.simibubi.create.foundation.utility.recipe;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
 
 public class DummyCraftingContainer extends CraftingContainer {
 
 	private final NonNullList<ItemStack> inv;
 
-	public DummyCraftingContainer(IItemHandler itemHandler, int[] extractedItemsFromSlot) {
+	public DummyCraftingContainer(Storage<ItemVariant> itemHandler) {
 		super(null, 0, 0);
 
-		this.inv = createInventory(itemHandler, extractedItemsFromSlot);
+		this.inv = createInventory(itemHandler);
 	}
 
 	@Override
@@ -57,24 +62,11 @@ public class DummyCraftingContainer extends CraftingContainer {
 	@Override
 	public void fillStackedContents(@NotNull StackedContents helper) {}
 
-	private static NonNullList<ItemStack> createInventory(IItemHandler itemHandler, int[] extractedItemsFromSlot) {
-		NonNullList<ItemStack> inv = NonNullList.create();
-
-		for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
-			ItemStack stack = itemHandler.getStackInSlot(slot);
-
-			if (stack.isEmpty())
-				continue;
-
-			for (int i = 0; i < extractedItemsFromSlot[slot]; i++) {
-				ItemStack stackCopy = stack.copy();
-				stackCopy.setCount(1);
-
-				inv.add(stackCopy);
-			}
+	private static NonNullList<ItemStack> createInventory(Storage<ItemVariant> itemHandler) {
+		try (Transaction t = TransferUtil.getTransaction()) {
+			List<ItemStack> stacks = TransferUtil.extractAllAsStacks(itemHandler);
+			return NonNullList.of(null, stacks.toArray(ItemStack[]::new));
 		}
-
-		return inv;
 	}
 
 }
