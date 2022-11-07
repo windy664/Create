@@ -63,7 +63,6 @@ def dependencies(DependencyHandler deps) {
     deps.modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
     deps.modImplementation(deps.include("io.github.fabricators_of_create.Porting-Lib:porting-lib:${project.port_lib_version}+${project.minecraft_version}"))
-    deps.modImplementation(deps.include("me.alphamode:ForgeTags:${project.forge_tags_version}"))
     deps.modImplementation(deps.include("com.electronwill.night-config:core:${project.night_config_core_version}"))
     deps.modImplementation(deps.include("com.electronwill.night-config:toml:${project.night_config_toml_version}"))
     deps.modImplementation(deps.include("curse.maven:forge-config-api-port-fabric-547434:${project.config_api_id}"))
@@ -101,7 +100,7 @@ def compat(DependencyHandler deps) {
     recipeViewers(deps)
     deps.modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
     deps.modCompileOnly("maven.modrinth:sandwichable:1.3.a+1.19")
-    deps.modImplementation("dev.emi:trinkets:${project.trinkets_version}") //{ exclude(group: "com.terraformersmc") }
+    deps.modImplementation("dev.emi:trinkets:${project.trinkets_version}") { exclude(group: "com.terraformersmc") }
 }
 
 // setup the three recipe viewer mods
@@ -222,9 +221,7 @@ processResources {
     properties.put("java_version", sourceCompatibility)
     properties.put("registrate_version", project.registrate_version)
     properties.put("flywheel_version", project.flywheel_version)
-//    properties.put("port_lib_version", "${project.port_lib_version}+${project.minecraft_version}.${project.port_lib_hash}")
     properties.put("port_lib_version", "${project.port_lib_version}+${project.minecraft_version}")
-    properties.put("forge_tags_version", project.forge_tags_version)
     properties.put("forge_config_api_port_version", project.forge_config_api_port_version)
     properties.put("reach_entity_attributes_version", project.reach_entity_attributes_version)
     properties.put("fake_player_api_version", project.fake_player_api_version)
