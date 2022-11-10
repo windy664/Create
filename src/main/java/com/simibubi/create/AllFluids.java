@@ -1,5 +1,9 @@
 package com.simibubi.create;
 
+import static net.minecraft.world.item.Items.BUCKET;
+import static net.minecraft.world.item.Items.GLASS_BOTTLE;
+import static net.minecraft.world.item.Items.HONEY_BOTTLE;
+
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -12,19 +16,16 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 import com.tterrag.registrate.util.entry.FluidEntry;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
-import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributeHandler;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.EmptyItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.FullItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -36,13 +37,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-
-import static net.minecraft.world.item.Items.BUCKET;
-import static net.minecraft.world.item.Items.GLASS_BOTTLE;
-import static net.minecraft.world.item.Items.HONEY_BOTTLE;
 
 @SuppressWarnings("UnstableApiUsage")
 public class AllFluids {
@@ -52,53 +50,36 @@ public class AllFluids {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
+	// fabric: various Attributes/Types replaced with corresponding handlers
+
 	public static final FluidEntry<PotionFluid> POTION =
-			REGISTRATE.virtualFluid("potion", /*PotionFluidAttributes::new,*/ PotionFluid::new)
+			REGISTRATE.virtualFluid("potion", PotionFluid::new)
 					.lang("Potion")
-					.onRegister(potion -> {
-						Fluid still = potion.getSource();
-						Fluid flowing = potion.getFlowing();
-						PotionFluidVariantAttributeHandler handler = new PotionFluidVariantAttributeHandler();
-						FluidVariantAttributes.register(still, handler);
-						FluidVariantAttributes.register(flowing, handler);
-						// evil. why do we need this like this only here.
-						EnvExecutor.runWhenOn(EnvType.CLIENT, () -> new Runnable() {
-							@Override
-							@Environment(EnvType.CLIENT)
-							public void run() {
-								PotionFluidVariantRenderHandler handler = new PotionFluidVariantRenderHandler();
-								FluidVariantRendering.register(still, handler);
-								FluidVariantRendering.register(flowing, handler);
-							}
-						});
-					})
+					.fluidAttributes(PotionFluidVariantAttributeHandler::new)
+					.fluidVariantRenderingAttributes(PotionFluidVariantRenderHandler::new)
 					.register();
 
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
 			.lang("Builder's Tea")
 			.tag(AllTags.forgeFluidTag("tea"))
+			.fluidAttributes(() -> new CreateAttributeHandler("fluid.create.tea"))
 			.onRegisterAfter(Registry.ITEM_REGISTRY, tea -> {
 				Fluid still = tea.getSource();
-				Fluid flowing = tea.getFlowing();
 				FluidStorage.combinedItemApiProvider(AllItems.BUILDERS_TEA.get()).register(context ->
 						new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(still), FluidConstants.BOTTLE));
 				FluidStorage.combinedItemApiProvider(GLASS_BOTTLE).register(context ->
 						new EmptyItemFluidStorage(context, bottle -> ItemVariant.of(AllItems.BUILDERS_TEA.get()), still, FluidConstants.BOTTLE));
-
-				FluidVariantAttributes.register(still, new TeaFluidVariantAttributeHandler());
-				FluidVariantAttributes.register(flowing, new TeaFluidVariantAttributeHandler());
 			})
 			.register();
 
 	public static final FluidEntry<SimpleFlowableFluid.Flowing> HONEY =
-			REGISTRATE.standardFluid("honey"/*, NoColorFluidAttributes::new*/)
+			REGISTRATE.standardFluid("honey")
 					.lang("Honey")
-//					.attributes(b -> b.viscosity(2000)
-//							.density(1400))
 					.fluidProperties(p -> p.levelDecreasePerBlock(2)
 							.tickRate(25)
 							.flowSpeed(3)
 							.blastResistance(100f))
+					.fluidAttributes(() -> new CreateAttributeHandler("block.create.honey", 2000, 1400))
 					.tag(AllFluidTags.HONEY.tag)
 					.source(SimpleFlowableFluid.Source::new) // TODO: remove when Registrate fixes FluidBuilder
 					.bucket()
@@ -114,23 +95,18 @@ public class AllFluids {
 								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
 						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
 								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
-
-						FluidVariantAttributeHandler handler = new FluidNameAttributeHandler("block.create.honey");
-						FluidVariantAttributes.register(honey, handler);
-						FluidVariantAttributes.register(source, handler);
 					})
 					.register();
 
 	public static final FluidEntry<SimpleFlowableFluid.Flowing> CHOCOLATE =
-			REGISTRATE.standardFluid("chocolate"/*, NoColorFluidAttributes::new*/)
+			REGISTRATE.standardFluid("chocolate")
 					.lang("Chocolate")
 					.tag(AllTags.forgeFluidTag("chocolate"))
-//					.attributes(b -> b.viscosity(1500)
-//							.density(1400))
 					.fluidProperties(p -> p.levelDecreasePerBlock(2)
 							.tickRate(25)
 							.flowSpeed(3)
 							.blastResistance(100f))
+					.fluidAttributes(() -> new CreateAttributeHandler("block.create.chocolate", 1500, 1400))
 					.onRegisterAfter(Registry.ITEM_REGISTRY, chocolate -> {
 						Fluid source = chocolate.getSource();
 						// transfer values
@@ -138,10 +114,6 @@ public class AllFluids {
 								new FullItemFluidStorage(context, bucket -> ItemVariant.of(BUCKET), FluidVariant.of(source), FluidConstants.BUCKET));
 						FluidStorage.combinedItemApiProvider(BUCKET).register(context ->
 								new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(source.getBucket()), source, FluidConstants.BUCKET));
-
-						FluidVariantAttributeHandler handler = new FluidNameAttributeHandler("block.create.chocolate");
-						FluidVariantAttributes.register(chocolate, handler);
-						FluidVariantAttributes.register(source, handler);
 					})
 					.register();
 
@@ -212,17 +184,25 @@ public class AllFluids {
 		}
 	}
 
-	private static class TeaFluidVariantAttributeHandler implements FluidVariantAttributeHandler {
-		@Override
-		public Component getName(FluidVariant fluidVariant) {
-			return Component.translatable("fluid.create.tea");
-		}
-	}
+	private record CreateAttributeHandler(String key, @Nullable Integer viscosity, @Nullable Integer density) implements FluidVariantAttributeHandler {
 
-	private record FluidNameAttributeHandler(String key) implements FluidVariantAttributeHandler {
+		public CreateAttributeHandler(String key) {
+			this(key, null, null);
+		}
+
 		@Override
 		public Component getName(FluidVariant fluidVariant) {
 			return Component.translatable(this.key);
+		}
+
+		@Override
+		public int getViscosity(FluidVariant variant, @Nullable Level world) {
+			return viscosity != null ? viscosity : FluidVariantAttributeHandler.super.getViscosity(variant, world);
+		}
+
+		@Override
+		public boolean isLighterThanAir(FluidVariant variant) {
+			return density != null ? density <= 0 : FluidVariantAttributeHandler.super.isLighterThanAir(variant);
 		}
 	}
 }

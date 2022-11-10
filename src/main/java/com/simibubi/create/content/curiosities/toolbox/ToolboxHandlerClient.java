@@ -33,6 +33,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -73,18 +74,18 @@ public class ToolboxHandlerClient {
 			BlockState state = level.getBlockState(pos);
 			if (state.getMaterial() == Material.AIR)
 				return false;
-			if (state.getBlock() instanceof BlockPickInteractionAware aware) {
-				result = aware.getPickedStack(state, level, pos, player, hitResult);
-			}
-
+			Block block = state.getBlock();
+			result = block instanceof BlockPickInteractionAware aware
+					? aware.getPickedStack(state, level, pos, player, hitResult)
+					: block.getCloneItemStack(level, pos, state);
 		} else if (hitResult.getType() == HitResult.Type.ENTITY) {
 			Entity entity = ((EntityHitResult) hitResult).getEntity();
-			if (entity instanceof EntityPickInteractionAware aware) {
-				result = aware.getPickedStack(player, hitResult);
-			}
+			result = entity instanceof EntityPickInteractionAware aware
+					? aware.getPickedStack(player, hitResult)
+					: entity.getPickResult();
 		}
 
-		if (result.isEmpty())
+		if (result == null || result.isEmpty())
 			return false;
 
 		for (ToolboxTileEntity toolboxTileEntity : toolboxes) {

@@ -9,8 +9,6 @@ import com.simibubi.create.foundation.utility.recipe.BlockTagIngredient;
 import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-
-import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -63,7 +61,7 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 			.output(I.andesite(), 1)),
 
 		MUD = create("mud_by_mixing", b -> b.require(BlockTagIngredient.create(BlockTags.CONVERTABLE_TO_MUD))
-			.require(Fluids.WATER, 250)
+			.require(Fluids.WATER, FluidConstants.BOTTLE)
 			.output(Blocks.MUD, 1))
 
 	;

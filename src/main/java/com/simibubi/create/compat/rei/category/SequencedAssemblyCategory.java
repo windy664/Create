@@ -131,7 +131,6 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 				return Collections.emptyList();
 			}
 
-			//			@Override
 			@Nullable
 			public Tooltip getTooltip(Point mouse) {
 				List<Component> strings = getTooltipStrings(display.getRecipe(), mouse.x - origin.x, mouse.y - origin.y);

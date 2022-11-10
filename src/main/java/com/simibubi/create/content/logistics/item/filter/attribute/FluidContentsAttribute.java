@@ -8,6 +8,8 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -41,8 +43,8 @@ public class FluidContentsAttribute implements ItemAttribute {
 	@Override
 	public Object[] getTranslationParameters() {
 		String parameter = "";
-		// if (fluid != null)
-		// 	parameter = fluid.getFluidType().getDescription().getString();
+		 if (fluid != null)
+		 	parameter = FluidVariantAttributes.getName(FluidVariant.of(fluid)).getString();
 		return new Object[] { parameter };
 	}
 
@@ -51,8 +53,8 @@ public class FluidContentsAttribute implements ItemAttribute {
 		if (fluid == null)
 			return;
 		ResourceLocation id = Registry.FLUID.getKey(fluid);
-//		if (id == null)
-//			return;
+		if (id == null)
+			return;
 		nbt.putString("id", id.toString());
 	}
 

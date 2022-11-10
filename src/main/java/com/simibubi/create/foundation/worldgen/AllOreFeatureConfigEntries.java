@@ -9,13 +9,9 @@ import com.simibubi.create.foundation.data.DynamicDataProvider;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.worldgen.OreFeatureConfigEntry.DatagenExtension;
 
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.data.BuiltinRegistries;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -74,7 +70,10 @@ public class AllOreFeatureConfigEntries {
 
 	public static void modifyBiomes() {
 		for (OreFeatureConfigEntry entry : OreFeatureConfigEntry.ALL.values()) {
-			entry.biomeExt().modifyBiomes(BuiltinRegistries.PLACED_FEATURE);
+			DatagenExtension ext = entry.datagenExt();
+			if (ext != null) {
+				ext.modifyBiomes();
+			}
 		}
 	}
 
@@ -113,8 +112,7 @@ public class AllOreFeatureConfigEntries {
 
 		//
 
-// * TODO: Is this even supported by Fabric yet?
-// --------------------------
+		// fabric: handled in-code at DatagenExtension.modifyBiomes
 //		Map<ResourceLocation, BiomeModifier> biomeModifiers = new HashMap<>();
 //		for (Map.Entry<ResourceLocation, OreFeatureConfigEntry> entry : OreFeatureConfigEntry.ALL.entrySet()) {
 //			DatagenExtension datagenExt = entry.getValue().datagenExt();

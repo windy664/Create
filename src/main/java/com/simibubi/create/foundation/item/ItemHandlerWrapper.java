@@ -1,13 +1,13 @@
 package com.simibubi.create.foundation.item;
 
+import java.util.Iterator;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Iterator;
 
 public class ItemHandlerWrapper implements Storage<ItemVariant> {
 
@@ -53,8 +53,8 @@ public class ItemHandlerWrapper implements Storage<ItemVariant> {
 	}
 
 	@Override
-	public @Nullable StorageView<ItemVariant> exactView(TransactionContext transaction, ItemVariant resource) {
-		return wrapped.exactView(transaction, resource);
+	public @Nullable StorageView<ItemVariant> exactView(ItemVariant resource) {
+		return wrapped.exactView(resource);
 	}
 
 	@Override

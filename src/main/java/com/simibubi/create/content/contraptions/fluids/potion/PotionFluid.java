@@ -8,8 +8,6 @@ import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -60,7 +58,7 @@ public class PotionFluid extends VirtualFluid {
 		REGULAR, SPLASH, LINGERING;
 	}
 
-// TODO: Port this
+// fabric: PotionFluidVariantRenderHandler and PotionFluidVariantAttributeHandler in AllFluids
 // --------------------------------
 //	public static class PotionFluidType extends TintedFluidType {
 //

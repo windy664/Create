@@ -52,8 +52,7 @@
     "java": ">=${java_version}",
     "registrate-fabric": ">=${registrate_version}",
     "flywheel": ">=${flywheel_version}",
-    "porting_lib_base": ">=${port_lib_version}",
-
+    "porting_lib": ">=${port_lib_version}",
     "forgeconfigapiport": ">=${forge_config_api_port_version}",
     "reach-entity-attributes": ">=${reach_entity_attributes_version}",
     "fake-player-api": ">=${fake_player_api_version}",

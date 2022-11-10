@@ -13,17 +13,14 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -52,6 +49,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 
 	protected RenderType getRenderType(KineticTileEntity te, BlockState state) {
 		return ItemBlockRenderTypes.getChunkRenderType(state);
+		// fabric: not needed
 		// // TODO: this is not very clean
 		// BakedModel model = Minecraft.getInstance()
 		// 	.getBlockRenderer().getBlockModel(state);

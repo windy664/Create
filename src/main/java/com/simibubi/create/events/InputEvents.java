@@ -1,7 +1,6 @@
 package com.simibubi.create.events;
 
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
@@ -9,16 +8,15 @@ import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
-import io.github.fabricators_of_create.porting_lib.event.client.KeyInputCallback;
-import io.github.fabricators_of_create.porting_lib.event.client.MouseButtonCallback;
-import io.github.fabricators_of_create.porting_lib.event.client.MouseScrolledCallback;
 
-import io.github.fabricators_of_create.porting_lib.event.client.OnStartUseItemCallback;
-import io.github.fabricators_of_create.porting_lib.event.client.PickBlockCallback;
-import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
+import io.github.fabricators_of_create.porting_lib.event.client.InteractEvents;
+import io.github.fabricators_of_create.porting_lib.event.client.KeyInputCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.MouseInputEvents;
+import io.github.fabricators_of_create.porting_lib.event.client.MouseInputEvents.Action;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.phys.HitResult;
 
 public class InputEvents {
 
@@ -32,7 +30,7 @@ public class InputEvents {
 		ToolboxHandlerClient.onKeyInput(key, pressed);
 	}
 
-	public static boolean onMouseScrolled(double delta) {
+	public static boolean onMouseScrolled(double deltaX, double delta /* Y */) {
 		if (Minecraft.getInstance().screen != null)
 			return false;
 
@@ -43,65 +41,65 @@ public class InputEvents {
 		return cancelled;
 	}
 
-	public static InteractionResult onMouseInput(int button, int action, int mods) {
+	public static boolean onMouseInput(int button, int modifiers, Action action) {
 		if (Minecraft.getInstance().screen != null)
-			return InteractionResult.PASS;
+			return false;
 
-		boolean pressed = !(action == 0);
+		boolean pressed = action == Action.PRESS;
 
-		CreateClient.SCHEMATIC_HANDLER.onMouseInput(button, pressed);
-		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.onMouseInput(button, pressed);
-		return InteractionResult.PASS;
+		if (CreateClient.SCHEMATIC_HANDLER.onMouseInput(button, pressed))
+			return true;
+		else if (CreateClient.SCHEMATIC_AND_QUILL_HANDLER.onMouseInput(button, pressed))
+			return true;
+		return false;
 	}
 
-	public static InteractionResult onClickInput(int button, int action, int mods) {
-		Minecraft mc = Minecraft.getInstance();
+	// fabric: onClickInput split up
+	public static InteractionResult onUse(Minecraft mc, HitResult hit, InteractionHand hand) {
 		if (mc.screen != null)
 			return InteractionResult.PASS;
 
-		int use = KeyBindingHelper.getKeyCode(mc.options.keyUse).getValue();
-		int attack = KeyBindingHelper.getKeyCode(mc.options.keyAttack).getValue();
-		boolean isUse = button == use;
-		boolean isAttack = button == attack;
-
-		// fabric: filter only presses
-		if (action != 1)
-			return InteractionResult.PASS;
-
-		if (CurvedTrackInteraction.onClickInput(isUse, isAttack)) {
+		if (CurvedTrackInteraction.onClickInput(true, false)) {
 			return InteractionResult.SUCCESS;
 		}
 
 
-		if (isUse || isAttack) {
-			if (CreateClient.GLUE_HANDLER.onMouseInput(isAttack))
-				return InteractionResult.SUCCESS;
-		}
+		boolean glueCancelled = CreateClient.GLUE_HANDLER.onMouseInput(false);
+		LinkedControllerClientHandler.deactivateInLectern();
+		boolean relocatorCancelled = TrainRelocator.onClicked();
 
-		return InteractionResult.PASS;
+		return glueCancelled || relocatorCancelled
+				? InteractionResult.SUCCESS
+				: InteractionResult.PASS;
 	}
 
-	public static InteractionResult onStartUseItem(InteractionHand hand) {
-		if (Minecraft.getInstance().screen == null) {
-			LinkedControllerClientHandler.deactivateInLectern();
-			TrainRelocator.onClicked();
+	public static InteractionResult onAttack(Minecraft mc, HitResult hit) {
+		if (mc.screen != null)
+			return InteractionResult.PASS;
+
+		if (CurvedTrackInteraction.onClickInput(false, true)) {
+			return InteractionResult.SUCCESS;
 		}
-		return InteractionResult.PASS;
+
+		return CreateClient.GLUE_HANDLER.onMouseInput(true)
+				? InteractionResult.SUCCESS
+				: InteractionResult.PASS;
 	}
 
-	public static boolean onPickBlock() {
-		if (Minecraft.getInstance().screen != null)
+	public static boolean onPick(Minecraft mc, HitResult hit) {
+		if (mc.screen != null)
 			return false;
+
 		return ToolboxHandlerClient.onPickItem();
 	}
 
 	public static void register() {
 		KeyInputCallback.EVENT.register(InputEvents::onKeyInput);
-		MouseScrolledCallback.EVENT.register(InputEvents::onMouseScrolled);
-		MouseButtonCallback.EVENT.register(InputEvents::onMouseInput);
-		MouseButtonCallback.EVENT.register(InputEvents::onClickInput);
-		OnStartUseItemCallback.EVENT.register(InputEvents::onStartUseItem);
-		PickBlockCallback.EVENT.register(InputEvents::onPickBlock);
+		MouseInputEvents.BEFORE_SCROLL.register(InputEvents::onMouseScrolled);
+		MouseInputEvents.BEFORE_BUTTON.register(InputEvents::onMouseInput);
+		InteractEvents.USE.register(InputEvents::onUse);
+		InteractEvents.ATTACK.register(InputEvents::onAttack);
+		InteractEvents.PICK.register(InputEvents::onPick);
 	}
 
 }

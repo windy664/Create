@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.fluid;
 
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -16,7 +14,6 @@ import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -26,8 +23,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
@@ -69,11 +64,11 @@ public class FluidHelper {
 	}
 
 	public static SoundEvent getFillSound(FluidStack fluid) {
-		return FluidVariantAttributes.getFillSound(FluidVariant.of(fluid.getFluid()));
+		return FluidVariantAttributes.getFillSound(fluid.getType());
 	}
 
 	public static SoundEvent getEmptySound(FluidStack fluid) {
-		return FluidVariantAttributes.getEmptySound(FluidVariant.of(fluid.getFluid()));
+		return FluidVariantAttributes.getEmptySound(fluid.getType());
 	}
 
 	public static boolean hasBlockState(Fluid fluid) {

@@ -19,7 +19,7 @@ public class FluidStackParticle extends TextureSheetParticle {
 	private final float uo;
 	private final float vo;
 	private FluidStack fluid;
-//	private IClientFluidTypeExtensions clientFluid;
+//	private IClientFluidTypeExtensions clientFluid; // fabric: replaced with FluidVariantRendering
 
 	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientLevel world, FluidStack fluid,
 		double x, double y, double z, double vx, double vy, double vz) {
@@ -33,16 +33,16 @@ public class FluidStackParticle extends TextureSheetParticle {
 							  double vz) {
 		super(world, x, y, z, vx, vy, vz);
 
-//		clientFluid = IClientFluidTypeExtensions.of(fluid.getFluid());
-
 		this.fluid = fluid;
 		FluidVariantRenderHandler handler = FluidVariantRendering.getHandlerOrDefault(fluid.getFluid());
 		this.setSprite(handler.getSprites(fluid.getType())[0]);
+
 		this.gravity = 1.0F;
+		this.rCol = 0.8F;
+		this.gCol = 0.8F;
+		this.bCol = 0.8F;
 		int color = handler.getColor(fluid.getType(), world, new BlockPos(x, y, z));
-		this.rCol *= (float) (color >> 16 & 255) / 255.0F;
-		this.gCol *= (float) (color >> 8 & 255) / 255.0F;
-		this.bCol *= (float) (color & 255) / 255.0F;
+		multiplyColor(color);
 
 		this.xd = vx;
 		this.yd = vy;

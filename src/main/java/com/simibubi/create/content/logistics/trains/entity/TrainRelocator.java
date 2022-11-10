@@ -9,8 +9,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.InteractionResult;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 
@@ -38,6 +36,8 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -52,8 +52,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public class TrainRelocator {
 
@@ -72,38 +70,38 @@ public class TrainRelocator {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static InteractionResult onClicked() {
+	public static boolean onClicked() {
 		if (relocatingTrain == null)
-			return InteractionResult.PASS;
+			return false;
 
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		if (player == null)
-			return InteractionResult.PASS;
+			return false;
 		if (player.isSpectator())
-			return InteractionResult.PASS;
+			return false;
 
 		if (!player.position()
 			.closerThan(relocatingOrigin, 24) || player.isSteppingCarefully()) {
 			relocatingTrain = null;
 			player.displayClientMessage(Lang.translateDirect("train.relocate.abort")
 				.withStyle(ChatFormatting.RED), true);
-			return InteractionResult.PASS;
+			return false;
 		}
 
 		if (player.isPassenger())
-			return InteractionResult.PASS;
+			return false;
 		if (mc.level == null)
-			return InteractionResult.PASS;
+			return false;
 		Train relocating = getRelocating(mc.level);
 		if (relocating != null) {
 			Boolean relocate = relocateClient(relocating, false);
 			if (relocate != null && relocate.booleanValue())
 				relocatingTrain = null;
 			if (relocate != null)
-				return InteractionResult.SUCCESS;
+				return true; // cancel
 		}
-		return InteractionResult.PASS;
+		return false;
 	}
 
 	@Nullable
