@@ -106,7 +106,7 @@ def compat(DependencyHandler deps) {
 // setup the three recipe viewer mods
 def recipeViewers(DependencyHandler deps) {
     // EMI
-    deps.modCompileOnly("dev.emi:emi:${project.emi_version}") { transitive = false }
+//    deps.modCompileOnly("dev.emi:emi:${project.emi_version}") { transitive = false }
     // JEI
     // FIXME remapping issues with API jar
 //    deps.modCompileOnly("mezz.jei:jei-${project.minecraft_version}-common-api:${project.jei_version}") { transitive = false }
