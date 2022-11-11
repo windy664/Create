@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 75",
+	"_": "Missing Localizations: 79",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -576,8 +576,10 @@
 	"entity.create.stationary_contraption": "Стационарная штуковина",
 	"entity.create.super_glue": "Суперклей",
 
-	"fluid.create.potion": "Зелье",
-	"fluid.create.tea": "Чай строителя",
+	"fluid.create.flowing_chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.flowing_honey": "UNLOCALIZED: Honey",
+	"fluid.create.flowing_potion": "UNLOCALIZED: Potion",
+	"fluid.create.flowing_tea": "UNLOCALIZED: Builder's Tea",
 
 	"item.create.andesite_alloy": "Андезитовый сплав",
 	"item.create.attribute_filter": "Фильтр атрибутов",

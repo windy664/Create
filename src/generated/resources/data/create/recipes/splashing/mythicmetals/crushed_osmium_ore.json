@@ -1,5 +1,13 @@
 {
   "type": "create:splashing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "mythicmetals"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_osmium_ore"
@@ -7,16 +15,8 @@
   ],
   "results": [
     {
-      "item": "mythicmetals:osmium_nugget",
-      "count": 9
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "mythicmetals"
-      ]
+      "count": 9,
+      "item": "mythicmetals:osmium_nugget"
     }
   ]
 }

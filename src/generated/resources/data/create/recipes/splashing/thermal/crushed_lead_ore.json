@@ -1,5 +1,13 @@
 {
   "type": "create:splashing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "thermal"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_lead_ore"
@@ -7,16 +15,8 @@
   ],
   "results": [
     {
-      "item": "thermal:lead_nugget",
-      "count": 9
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "thermal"
-      ]
+      "count": 9,
+      "item": "thermal:lead_nugget"
     }
   ]
 }

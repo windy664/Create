@@ -1,24 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "E": {
+      "tag": "c:eggs"
+    },
+    "M": {
+      "item": "minecraft:milk_bucket"
+    },
+    "P": {
+      "tag": "c:dough"
+    },
+    "S": {
+      "item": "minecraft:sugar"
+    }
+  },
   "pattern": [
     " M ",
     "SES",
     " P "
   ],
-  "key": {
-    "E": {
-      "tag": "c:eggs"
-    },
-    "S": {
-      "item": "minecraft:sugar"
-    },
-    "P": {
-      "tag": "c:dough"
-    },
-    "M": {
-      "item": "minecraft:milk_bucket"
-    }
-  },
   "result": {
     "item": "minecraft:cake"
   }
