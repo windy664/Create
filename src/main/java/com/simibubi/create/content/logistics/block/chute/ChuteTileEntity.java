@@ -30,15 +30,15 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
 import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
-
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -66,7 +66,7 @@ import net.minecraft.world.phys.Vec3;
  * Commented Code: Chutes create air streams and act similarly to encased fans
  * (Unfinished)
  */
-public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInformation, CustomRenderBoundingBoxBlockEntity, ItemTransferable { // , IAirCurrentSource {
+public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInformation, CustomRenderBoundingBoxBlockEntity, SidedStorageBlockEntity { // , IAirCurrentSource {
 
 	// public AirCurrent airCurrent;
 

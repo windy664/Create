@@ -2,9 +2,6 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.List;
 
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -14,10 +11,12 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public class HosePulleyTileEntity extends KineticTileEntity implements FluidTransferable {
+public class HosePulleyTileEntity extends KineticTileEntity implements SidedStorageBlockEntity {
 
 	LerpedFloat offset;
 	boolean isMoving;

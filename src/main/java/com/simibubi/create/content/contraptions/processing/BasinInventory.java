@@ -2,9 +2,7 @@ package com.simibubi.create.content.contraptions.processing;
 
 import com.simibubi.create.foundation.item.SmartInventory;
 
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.world.item.ItemStack;
 
@@ -34,7 +32,7 @@ public class BasinInventory extends SmartInventory {
 		maxAmount = Math.min(maxAmount, stackSize);
 		for (int i = 0; i < handler.stacks.length; i++) {
 			ItemStack stack = handler.stacks[i];
-			if (resource.matches(stack) && isItemValid(i, resource)) { // we already have this item - make sure it all fits in 1 stack
+			if (resource.matches(stack) && isItemValid(i, resource, maxAmount)) { // we already have this item - make sure it all fits in 1 stack
 				int max = Math.min(stack.getMaxStackSize(), stackSize);
 				int space = max - stack.getCount();
 				int toInsert = (int) Math.min(space, maxAmount);

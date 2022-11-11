@@ -54,7 +54,7 @@ public enum AllKeys {
 	}
 
 	public int getBoundCode() {
-		return io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper.getKeyCode(keybind)
+		return KeyBindingHelper.getBoundKeyOf(keybind)
 				.getValue();
 	}
 

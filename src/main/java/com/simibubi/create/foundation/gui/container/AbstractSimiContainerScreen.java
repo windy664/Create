@@ -13,9 +13,9 @@ import com.simibubi.create.foundation.gui.TickableGuiEventListener;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
 
-import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
@@ -140,7 +140,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	@Override
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
 		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
-		if (getFocused() != null && KeyBindingHelper.getKeyCode(Minecraft.getInstance().options.keyInventory) == mouseKey)
+		if (getFocused() != null && KeyBindingHelper.getBoundKeyOf(Minecraft.getInstance().options.keyInventory) == mouseKey)
 			return false;
 		return super.keyPressed(pKeyCode, pScanCode, pModifiers);
 	}

@@ -91,7 +91,7 @@ public class ToolboxInventory extends ItemStackHandler {
 	}
 
 	@Override
-	public boolean isItemValid(int slot, ItemVariant var) {
+	public boolean isItemValid(int slot, ItemVariant var, long amount) {
 		ItemStack stack = var.toStack();
 		if (!stack.getItem().canFitInsideContainerItems())
 			return false;
@@ -103,7 +103,7 @@ public class ToolboxInventory extends ItemStackHandler {
 		if (limitedMode && filter.isEmpty())
 			return false;
 		if (filter.isEmpty() || ToolboxInventory.canItemsShareCompartment(filter, stack))
-			return super.isItemValid(slot, var);
+			return super.isItemValid(slot, var, amount);
 		return false;
 	}
 

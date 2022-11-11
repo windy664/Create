@@ -5,6 +5,8 @@ import java.util.Collection;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.phys.HitResult;
+
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
@@ -64,9 +66,7 @@ public class ContraptionHandlerClient {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static InteractionResult rightClickingOnContraptionsGetsHandledLocally(InteractionHand hand) {
-		Minecraft mc = Minecraft.getInstance();
-
+	public static InteractionResult rightClickingOnContraptionsGetsHandledLocally(Minecraft mc, HitResult result, InteractionHand hand) {
 		if (Minecraft.getInstance().screen != null) // this is the only input event that doesn't check this?
 			return InteractionResult.PASS;
 

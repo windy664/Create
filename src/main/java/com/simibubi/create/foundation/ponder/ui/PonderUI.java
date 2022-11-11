@@ -46,8 +46,8 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
 import io.github.fabricators_of_create.porting_lib.util.client.GuiUtils;
-import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -839,13 +839,13 @@ public class PonderUI extends NavigatableSimiScreen {
 	@Override
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
 		Options settings = Minecraft.getInstance().options;
-		int sCode = KeyBindingHelper.getKeyCode(settings.keyDown)
+		int sCode = KeyBindingHelper.getBoundKeyOf(settings.keyDown)
 			.getValue();
-		int aCode = KeyBindingHelper.getKeyCode(settings.keyLeft)
+		int aCode = KeyBindingHelper.getBoundKeyOf(settings.keyLeft)
 			.getValue();
-		int dCode = KeyBindingHelper.getKeyCode(settings.keyRight)
+		int dCode = KeyBindingHelper.getBoundKeyOf(settings.keyRight)
 			.getValue();
-		int qCode = KeyBindingHelper.getKeyCode(settings.keyDrop)
+		int qCode = KeyBindingHelper.getBoundKeyOf(settings.keyDrop)
 			.getValue();
 
 		if (code == sCode) {

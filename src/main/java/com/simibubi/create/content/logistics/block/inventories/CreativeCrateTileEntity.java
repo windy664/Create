@@ -2,10 +2,6 @@ package com.simibubi.create.content.logistics.block.inventories;
 
 import java.util.List;
 
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
@@ -13,15 +9,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class CreativeCrateTileEntity extends CrateTileEntity implements ItemTransferable {
+public class CreativeCrateTileEntity extends CrateTileEntity implements SidedStorageBlockEntity {
 
 	public CreativeCrateTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);

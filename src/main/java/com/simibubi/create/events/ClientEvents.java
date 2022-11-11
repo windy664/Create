@@ -80,7 +80,7 @@ import io.github.fabricators_of_create.porting_lib.event.client.ClientWorldEvent
 import io.github.fabricators_of_create.porting_lib.event.client.DrawSelectionEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.FogEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.FogEvents.ColorData;
-import io.github.fabricators_of_create.porting_lib.event.client.OnStartUseItemCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.InteractEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.ParticleManagerRegistrationCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderHandCallback;
@@ -466,7 +466,7 @@ public class ClientEvents {
 		AttackBlockCallback.EVENT.register(EjectorTargetHandler::leftClickingBlocksDeselectsThem);
 		ParticleManagerRegistrationCallback.EVENT.register(AllParticleTypes::registerFactories);
 		RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
-		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
+		InteractEvents.USE.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		PlayerTickEvents.END.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
 		ClientPlayConnectionEvents.DISCONNECT.register(ClientEvents::onLeave);
