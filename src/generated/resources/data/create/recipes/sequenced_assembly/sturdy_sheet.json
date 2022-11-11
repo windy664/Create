@@ -17,7 +17,7 @@
           "item": "create:unprocessed_obsidian_sheet"
         },
         {
-          "amount": 500,
+          "amount": 40500,
           "fluid": "minecraft:lava",
           "nbt": {}
         }

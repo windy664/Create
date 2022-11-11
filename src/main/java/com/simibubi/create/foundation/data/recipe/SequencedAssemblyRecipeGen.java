@@ -56,7 +56,7 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 			.transitionTo(AllItems.INCOMPLETE_REINFORCED_SHEET.get())
 			.addOutput(AllItems.STURDY_SHEET.get(), 1)
 			.loops(1)
-			.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 500))
+			.addStep(FillingRecipe::new, rb -> rb.require(Fluids.LAVA, 40500))
 			.addStep(PressingRecipe::new, rb -> rb)
 			.addStep(PressingRecipe::new, rb -> rb)),
 

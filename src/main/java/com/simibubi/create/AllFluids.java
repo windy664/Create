@@ -56,7 +56,6 @@ public class AllFluids {
 			REGISTRATE.virtualFluid("potion", PotionFluid::new)
 					.lang("Potion")
 					.fluidAttributes(PotionFluidVariantAttributeHandler::new)
-					.disableDefaultRenderHandler()
 					.register();
 
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
