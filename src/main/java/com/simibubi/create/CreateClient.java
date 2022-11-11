@@ -105,6 +105,7 @@ public class CreateClient implements ClientModInitializer {
 		RenderTypes.init();
 		ArmorTextureRegistry.register(AllArmorMaterials.COPPER, CopperArmorItem.TEXTURE);
 		FluidVariantRendering.register(AllFluids.POTION.get(), new AllFluids.PotionFluidVariantRenderHandler());
+		FluidVariantRendering.register(AllFluids.POTION.get().getSource(), new AllFluids.PotionFluidVariantRenderHandler());
 		// causes class loading issues or something
 		// noinspection Convert2MethodRef
 		Mods.TRINKETS.executeIfInstalled(() -> () -> Trinkets.clientInit());

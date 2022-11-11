@@ -121,7 +121,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 
 		FluidStack fluidStack = display.getRecipe().getRequiredFluid().getMatchingFluidStacks().get(0);
 		widgets.add(WidgetUtil.textured(AllGuiTextures.JEI_SLOT, origin.getX() + 26, origin.getY() + 31));
-		Slot fluidSlot = basicSlot(27, 31, origin).disableBackground().markInput().entries(EntryIngredients.of(CreateRecipeCategory.convertToREIFluid(fluidStack)));
+		Slot fluidSlot = basicSlot(27, 32, origin).disableBackground().markInput().entries(EntryIngredients.of(CreateRecipeCategory.convertToREIFluid(fluidStack)));
 		CreateRecipeCategory.setFluidRenderRatio(fluidSlot);
 		widgets.add(fluidSlot);
 		addFluidTooltip(widgets, List.of(display.getRecipe().getRequiredFluid()), Collections.emptyList());
