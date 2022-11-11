@@ -24,16 +24,6 @@ public class DoubleItemIcon implements Renderer {
 		this.secondarySupplier = secondary;
 	}
 
-//	@Override
-//	public int getWidth() {
-//		return 18;
-//	}
-//
-//	@Override
-//	public int getHeight() {
-//		return 18;
-//	}
-
 	public DoubleItemIcon setPos(Point pos) {
 		this.pos = pos;
 		return this;
