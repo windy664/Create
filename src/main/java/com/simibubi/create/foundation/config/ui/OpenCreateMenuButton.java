@@ -12,12 +12,14 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Components;
 
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 
 public class OpenCreateMenuButton extends Button {
@@ -41,8 +43,8 @@ public class OpenCreateMenuButton extends Button {
 		public final String left, right;
 
 		public SingleMenuRow(String left, String right) {
-			this.left = left;
-			this.right = right;
+			this.left = I18n.get(left);
+			this.right = I18n.get(right);
 		}
 
 		public SingleMenuRow(String center) {
@@ -94,9 +96,7 @@ public class OpenCreateMenuButton extends Button {
 				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
 
 				int offsetX_ = offsetX;
-				((ScreenAccessor) gui).port_lib$getChildren().stream()
-						.filter(w -> w instanceof AbstractWidget)
-						.map(w -> (AbstractWidget) w)
+				Screens.getButtons(gui).stream()
 						.filter(w -> w.getMessage()
 								.getString()
 								.equals(target))
