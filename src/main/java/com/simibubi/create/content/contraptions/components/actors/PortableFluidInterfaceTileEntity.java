@@ -1,26 +1,24 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import io.github.fabricators_of_create.porting_lib.transfer.WrappedStorage;
-import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
-
-import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import java.util.Iterator;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.foundation.utility.fabric.ListeningStorageView;
+import com.simibubi.create.foundation.utility.fabric.ProcessingIterator;
 
+import io.github.fabricators_of_create.porting_lib.transfer.WrappedStorage;
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
+import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.Iterator;
 
 public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTileEntity implements FluidTransferable {
 
@@ -84,21 +82,17 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 		}
 
 		@Override
-		public @Nullable StorageView<FluidVariant> exactView(TransactionContext transaction, FluidVariant resource) {
-			TransactionCallback.onSuccess(transaction, this::keepAlive);
-			return super.exactView(transaction, resource);
+		public @Nullable StorageView<FluidVariant> exactView(FluidVariant resource) {
+			return listen(super.exactView(resource));
 		}
 
 		@Override
-		public Iterator<? extends StorageView<FluidVariant>> iterator(TransactionContext transaction) {
-			TransactionCallback.onSuccess(transaction, this::keepAlive);
-			return super.iterator(transaction);
+		public Iterator<StorageView<FluidVariant>> iterator() {
+			return new ProcessingIterator<>(super.iterator(), this::listen);
 		}
 
-		@Override
-		public Iterable<? extends StorageView<FluidVariant>> iterable(TransactionContext transaction) {
-			TransactionCallback.onSuccess(transaction, this::keepAlive);
-			return super.iterable(transaction);
+		public <T> StorageView<T> listen(StorageView<T> view) {
+			return new ListeningStorageView<>(view, this::keepAlive);
 		}
 
 		public void keepAlive() {

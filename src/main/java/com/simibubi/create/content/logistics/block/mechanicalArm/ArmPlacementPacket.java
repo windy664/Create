@@ -5,6 +5,9 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
+import net.fabricmc.api.EnvType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -63,6 +66,34 @@ public class ArmPlacementPacket extends SimplePacketBase {
 			});
 		context.get()
 			.setPacketHandled(true);
+
+	}
+
+	public static class ClientBoundRequest extends SimplePacketBase {
+
+		BlockPos pos;
+
+		public ClientBoundRequest(BlockPos pos) {
+			this.pos = pos;
+		}
+
+		public ClientBoundRequest(FriendlyByteBuf buffer) {
+			this.pos = buffer.readBlockPos();
+		}
+
+		@Override
+		public void write(FriendlyByteBuf buffer) {
+			buffer.writeBlockPos(pos);
+		}
+
+		@Override
+		public void handle(Supplier<Context> context) {
+			context.get()
+				.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
+					() -> () -> ArmInteractionPointHandler.flushSettings(pos)));
+			context.get()
+				.setPacketHandled(true);
+		}
 
 	}
 

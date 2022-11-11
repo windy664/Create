@@ -7,7 +7,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -35,7 +35,6 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
-import io.github.fabricators_of_create.porting_lib.util.FluidAttributes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -50,7 +49,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.material.Fluid;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
@@ -141,7 +140,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Palettes */
 
 	public <T extends Block> BlockBuilder<T, CreateRegistrate> paletteStoneBlock(String name,
-		NonNullFunction<BlockBehaviour.Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
+		NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
 		BlockBuilder<T, CreateRegistrate> builder = super.block(name, factory).initialProperties(propertiesFrom)
 			.transform(pickaxeOnly())
 			.blockstate((c, p) -> {
@@ -166,7 +165,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Fluids */
 
 	public <T extends SimpleFlowableFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name,
-		BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
+//		BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
 		NonNullFunction<SimpleFlowableFluid.Properties, T> factory) {
 		return entry(name,
 			c -> new VirtualFluidBuilder<>(self(), self(), name, c, Create.asResource("fluid/" + name + "_still"),
@@ -196,11 +195,32 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	public FluidBuilder<SimpleFlowableFluid.Flowing, CreateRegistrate> standardFluid(String name) {
 		return fluid(name, Create.asResource("fluid/" + name + "_still"), Create.asResource("fluid/" + name + "_flow"));
 	}
+
 /*
-	public FluidBuilder<SimpleFlowableFluid.Flowing, CreateRegistrate> standardFluid(String name,
-		NonNullBiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory) {
+	public FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> standardFluid(String name,
+		FluidBuilder.FluidTypeFactory typeFactory) {
 		return fluid(name, Create.asResource("fluid/" + name + "_still"), Create.asResource("fluid/" + name + "_flow"),
-			attributesFactory);
+			typeFactory);
+	}
+
+	public static FluidType defaultFluidType(FluidType.Properties properties, ResourceLocation stillTexture,
+		ResourceLocation flowingTexture) {
+		return new FluidType(properties) {
+			@Override
+			public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
+				consumer.accept(new IClientFluidTypeExtensions() {
+					@Override
+					public ResourceLocation getStillTexture() {
+						return stillTexture;
+					}
+
+					@Override
+					public ResourceLocation getFlowingTexture() {
+						return flowingTexture;
+					}
+				});
+			}
+		};
 	}
 */
 	/* Util */

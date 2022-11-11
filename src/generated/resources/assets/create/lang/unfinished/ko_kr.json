@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 83",
+	"_": "Missing Localizations: 87",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -576,8 +576,10 @@
 	"entity.create.stationary_contraption": "고정된 구조물",
 	"entity.create.super_glue": "강력 접착제",
 
-	"fluid.create.potion": "포션",
-	"fluid.create.tea": "건축가의 차",
+	"fluid.create.flowing_chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.flowing_honey": "UNLOCALIZED: Honey",
+	"fluid.create.flowing_potion": "UNLOCALIZED: Potion",
+	"fluid.create.flowing_tea": "UNLOCALIZED: Builder's Tea",
 
 	"item.create.andesite_alloy": "안산암 합금",
 	"item.create.attribute_filter": "속성 필터 틀",

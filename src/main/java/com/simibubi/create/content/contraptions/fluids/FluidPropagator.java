@@ -1,12 +1,5 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
@@ -20,9 +13,8 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -36,11 +28,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
+import javax.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class FluidPropagator {
 
 	public static CreateAdvancement[] getSharedTriggers() {
-		return new CreateAdvancement[] { AllAdvancements.WATER_SUPPLY, AllAdvancements.CROSS_STREAMS,
-			AllAdvancements.HONEY_DRAIN };
+		return new CreateAdvancement[]{AllAdvancements.WATER_SUPPLY, AllAdvancements.CROSS_STREAMS,
+				AllAdvancements.HONEY_DRAIN};
 	}
 
 	public static void propagateChangedPipe(LevelAccessor world, BlockPos pipePos, BlockState pipeState) {
@@ -72,7 +71,7 @@ public class FluidPropagator {
 				BlockState targetState = world.getBlockState(target);
 				if (tileEntity instanceof PumpTileEntity) {
 					if (!AllBlocks.MECHANICAL_PUMP.has(targetState) || targetState.getValue(PumpBlock.FACING)
-						.getAxis() != direction.getAxis())
+							.getAxis() != direction.getAxis())
 						continue;
 					discoveredPumps.add(Pair.of((PumpTileEntity) tileEntity, direction.getOpposite()));
 					continue;
@@ -91,7 +90,7 @@ public class FluidPropagator {
 		}
 
 		discoveredPumps.forEach(pair -> pair.getFirst()
-			.updatePipesOnSide(pair.getSecond()));
+				.updatePipesOnSide(pair.getSecond()));
 	}
 
 	public static void resetAffectedFluidNetworks(Level world, BlockPos start, Direction side) {
@@ -132,13 +131,13 @@ public class FluidPropagator {
 	}
 
 	public static Direction validateNeighbourChange(BlockState state, Level world, BlockPos pos, Block otherBlock,
-		BlockPos neighborPos, boolean isMoving) {
+													BlockPos neighborPos, boolean isMoving) {
 		if (world.isClientSide)
 			return null;
 		// calling getblockstate() as otherBlock param seems to contain the block which
 		// was replaced
 		otherBlock = world.getBlockState(neighborPos)
-			.getBlock();
+				.getBlock();
 		if (otherBlock instanceof FluidPipeBlock)
 			return null;
 		if (otherBlock instanceof AxisPipeBlock)
@@ -151,7 +150,7 @@ public class FluidPropagator {
 			return null;
 		for (Direction d : Iterate.directions) {
 			if (!pos.relative(d)
-				.equals(neighborPos))
+					.equals(neighborPos))
 				continue;
 			return d;
 		}
@@ -169,18 +168,18 @@ public class FluidPropagator {
 		if (pipe != null && pipe.canHaveFlowToward(connectedState, side.getOpposite()))
 			return false;
 		if (PumpBlock.isPump(connectedState) && connectedState.getValue(PumpBlock.FACING)
-			.getAxis() == side.getAxis())
+				.getAxis() == side.getAxis())
 			return false;
 		if (VanillaFluidTargets.shouldPipesConnectTo(connectedState))
 			return true;
 		if (BlockHelper.hasBlockSolidSide(connectedState, reader, connectedPos, side.getOpposite())
-			&& !AllBlockTags.FAN_TRANSPARENT.matches(connectedState))
+				&& !AllBlockTags.FAN_TRANSPARENT.matches(connectedState))
 			return false;
 		if (hasFluidCapability(reader, connectedPos, side.getOpposite()))
 			return false;
 		if (!(connectedState.getMaterial()
-			.isReplaceable() && connectedState.getDestroySpeed(reader, connectedPos) != -1)
-			&& !connectedState.hasProperty(BlockStateProperties.WATERLOGGED))
+				.isReplaceable() && connectedState.getDestroySpeed(reader, connectedPos) != -1)
+				&& !connectedState.hasProperty(BlockStateProperties.WATERLOGGED))
 			return false;
 		return true;
 	}
@@ -205,7 +204,7 @@ public class FluidPropagator {
 	public static Axis getStraightPipeAxis(BlockState state) {
 		if (state.getBlock() instanceof PumpBlock)
 			return state.getValue(PumpBlock.FACING)
-				.getAxis();
+					.getAxis();
 		if (state.getBlock() instanceof AxisPipeBlock)
 			return state.getValue(AxisPipeBlock.AXIS);
 		if (!FluidPipeBlock.isPipe(state))

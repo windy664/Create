@@ -5,6 +5,9 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
+import net.fabricmc.api.EnvType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -61,6 +64,34 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 			});
 		context.get()
 			.setPacketHandled(true);
+
+	}
+
+	public static class ClientBoundRequest extends SimplePacketBase {
+
+		BlockPos pos;
+
+		public ClientBoundRequest(BlockPos pos) {
+			this.pos = pos;
+		}
+
+		public ClientBoundRequest(FriendlyByteBuf buffer) {
+			this.pos = buffer.readBlockPos();
+		}
+
+		@Override
+		public void write(FriendlyByteBuf buffer) {
+			buffer.writeBlockPos(pos);
+		}
+
+		@Override
+		public void handle(Supplier<Context> context) {
+			context.get()
+				.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
+						() -> () -> EjectorTargetHandler.flushSettings(pos)));
+			context.get()
+				.setPacketHandled(true);
+		}
 
 	}
 

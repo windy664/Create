@@ -149,7 +149,7 @@ if (te instanceof ChestBlockEntity) {
 		Storage<ItemVariant> teHandler = TransferUtil.getItemStorage(te);
 		if (teHandler != null && teHandler.supportsInsertion()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
-				for (StorageView<ItemVariant> view : teHandler.iterable(t)) {
+				for (StorageView<ItemVariant> view : teHandler) {
 					// we need to remove whatever is in there to fill with our modified contents
 					if (view.isResourceBlank()) continue;
 					view.extract(view.getResource(), view.getAmount(), t);

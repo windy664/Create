@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
+import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
 import com.jozufozu.flywheel.fabric.model.CullingBakedModel;
 import com.jozufozu.flywheel.fabric.model.FabricModelUtil;
 import com.jozufozu.flywheel.fabric.model.LayerFilteringBakedModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
@@ -45,6 +45,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -62,7 +63,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class WorldSectionElement extends AnimatedSceneElement {
 
 	public static final SuperByteBufferCache.Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION =
-		new SuperByteBufferCache.Compartment<>();
+			new SuperByteBufferCache.Compartment<>();
 
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
@@ -188,7 +189,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		world.setMask(this.section);
 		Vec3 transformedTarget = reverseTransformVec(target);
 		BlockHitResult rayTraceBlocks = world.clip(new ClipContext(reverseTransformVec(source), transformedTarget,
-			ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, null));
+				ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, null));
 		world.clearMask();
 
 		if (rayTraceBlocks == null)
@@ -197,9 +198,9 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			return null;
 
 		double t = rayTraceBlocks.getLocation()
-			.subtract(transformedTarget)
-			.lengthSqr()
-			/ source.subtract(target)
+				.subtract(transformedTarget)
+				.lengthSqr()
+				/ source.subtract(target)
 				.lengthSqr();
 		Vec3 actualHit = VecHelper.lerp((float) t, target, source);
 		return Pair.of(actualHit, rayTraceBlocks);
@@ -232,7 +233,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	public void transformMS(PoseStack ms, float pt) {
 		TransformStack.cast(ms)
-			.translate(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
+				.translate(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
 		if (!animatedRotation.equals(Vec3.ZERO) || !prevAnimatedRotation.equals(Vec3.ZERO)) {
 			if (centerOfRotation == null)
 				centerOfRotation = section.getCenter();
@@ -240,18 +241,18 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			double rotZ = Mth.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
 			double rotY = Mth.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
 			TransformStack.cast(ms)
-				.translate(centerOfRotation)
-				.rotateX(rotX)
-				.rotateZ(rotZ)
-				.rotateY(rotY)
-				.translateBack(centerOfRotation);
+					.translate(centerOfRotation)
+					.rotateX(rotX)
+					.rotateZ(rotZ)
+					.rotateY(rotY)
+					.translateBack(centerOfRotation);
 			if (stabilizationAnchor != null) {
 				TransformStack.cast(ms)
-					.translate(stabilizationAnchor)
-					.rotateX(-rotX)
-					.rotateZ(-rotZ)
-					.rotateY(-rotY)
-					.translateBack(stabilizationAnchor);
+						.translate(stabilizationAnchor)
+						.rotateX(-rotX)
+						.rotateZ(-rotZ)
+						.rotateY(-rotY)
+						.translateBack(stabilizationAnchor);
 			}
 		}
 	}
@@ -263,12 +264,12 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			return;
 		loadTEsIfMissing(scene.getWorld());
 		renderedTileEntities.removeIf(te -> scene.getWorld()
-			.getBlockEntity(te.getBlockPos()) != te);
+				.getBlockEntity(te.getBlockPos()) != te);
 		tickableTileEntities.removeIf(te -> scene.getWorld()
-			.getBlockEntity(te.getFirst()
-				.getBlockPos()) != te.getFirst());
+				.getBlockEntity(te.getFirst()
+						.getBlockPos()) != te.getFirst());
 		tickableTileEntities.forEach(te -> te.getSecond()
-			.accept(scene.getWorld()));
+				.accept(scene.getWorld()));
 	}
 
 	@Override
@@ -304,7 +305,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	@SuppressWarnings("unchecked")
 	private <T extends BlockEntity> void addTicker(T tileEntity, BlockEntityTicker<?> ticker) {
 		tickableTileEntities.add(Pair.of(tileEntity, w -> ((BlockEntityTicker<T>) ticker).tick(w,
-			tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity)));
+				tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity)));
 	}
 
 	@Override
@@ -343,10 +344,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			}
 
 			VertexConsumer builder = new SheetedDecalTextureGenerator(
-				buffer.getBuffer(ModelBakery.DESTROY_TYPES.get(entry.getValue())), overlayMS.last()
+					buffer.getBuffer(ModelBakery.DESTROY_TYPES.get(entry.getValue())), overlayMS.last()
 					.pose(),
-				overlayMS.last()
-					.normal());
+					overlayMS.last()
+							.normal());
 
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -360,25 +361,25 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	@Override
 	protected void renderLayer(PonderWorld world, MultiBufferSource buffer, RenderType type, PoseStack ms, float fade,
-		float pt) {
+							   float pt) {
 		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
 
 		int code = hashCode() ^ world.hashCode();
 		Pair<Integer, Integer> key = Pair.of(code, RenderType.chunkBufferLayers()
-			.indexOf(type));
+				.indexOf(type));
 
 		if (redraw)
 			bufferCache.invalidate(DOC_WORLD_SECTION, key);
 		SuperByteBuffer contraptionBuffer =
-			bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
+				bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
 		if (contraptionBuffer.isEmpty())
 			return;
 
 		transformMS(contraptionBuffer.getTransforms(), pt);
 		int light = lightCoordsFromFade(fade);
 		contraptionBuffer
-			.light(light)
-			.renderInto(ms, buffer.getBuffer(type));
+				.light(light)
+				.renderInto(ms, buffer.getBuffer(type));
 	}
 
 	@Override
@@ -390,7 +391,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (blockState.isAir())
 			return;
 		VoxelShape shape =
-			blockState.getShape(world, selectedBlock, CollisionContext.of(Minecraft.getInstance().player));
+				blockState.getShape(world, selectedBlock, CollisionContext.of(Minecraft.getInstance().player));
 		if (shape.isEmpty())
 			return;
 
@@ -400,9 +401,9 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 		AABBOutline aabbOutline = new AABBOutline(shape.bounds());
 		aabbOutline.getParams()
-			.lineWidth(1 / 64f)
-			.colored(0xefefef)
-			.disableNormals();
+				.lineWidth(1 / 64f)
+				.colored(0xefefef)
+				.disableNormals();
 		aabbOutline.render(ms, (SuperRenderTypeBuffer) buffer, pt);
 
 		ms.popPose();
@@ -418,9 +419,9 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
 
 		PoseStack poseStack = objects.poseStack;
-		Random random = objects.random;
+		RandomSource random = objects.random;
 		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		ShadeSeparatedBufferBuilder builder = new ShadeSeparatedBufferBuilder(512);
+		BufferBuilder builder = new BufferBuilder(512);
 		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
 
 		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
@@ -462,16 +463,14 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		world.clearMask();
 
 		shadeSeparatingWrapper.clear();
-		unshadedBuilder.end();
-		builder.appendUnshadedVertices(unshadedBuilder);
-		builder.end();
+		com.jozufozu.flywheel.util.Pair<RenderedBuffer, Integer> pair = ModelUtil.endShadeSeparated(builder, unshadedBuilder);
 
-		return new SuperByteBuffer(builder);
+		return new SuperByteBuffer(pair.first(), pair.second());
 	}
 
 	private static class ThreadLocalObjects {
 		public final PoseStack poseStack = new PoseStack();
-		public final Random random = new Random();
+		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
 		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
 		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}

@@ -2,8 +2,6 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -23,6 +21,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -79,7 +78,7 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
-	
+
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (world.isClientSide)
@@ -110,7 +109,7 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 

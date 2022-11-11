@@ -78,7 +78,7 @@ public abstract class ShootableGadgetRenderHandler {
 		AbstractClientPlayer player = mc.player;
 		PlayerRenderer playerrenderer = (PlayerRenderer) mc.getEntityRenderDispatcher()
 			.getRenderer(player);
-		ItemInHandRenderer firstPersonRenderer = mc.getItemInHandRenderer();
+		ItemInHandRenderer firstPersonRenderer = mc.getEntityRenderDispatcher().getItemInHandRenderer();
 
 		PoseStack ms = event.getPoseStack();
 		MultiBufferSource buffer = event.getMultiBufferSource();

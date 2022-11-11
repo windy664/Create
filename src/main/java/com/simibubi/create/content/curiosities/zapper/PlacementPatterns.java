@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.zapper;
 
 import java.util.List;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
@@ -33,9 +33,9 @@ public enum PlacementPatterns {
 		CompoundTag tag = stack.getTag();
 		PlacementPatterns pattern =
 			!tag.contains("Pattern") ? Solid : valueOf(tag.getString("Pattern"));
-		Random r = new Random();
+		RandomSource r = RandomSource.create();
 		Predicate<BlockPos> filter = Predicates.alwaysFalse();
-	
+
 		switch (pattern) {
 		case Chance25:
 			filter = pos -> r.nextBoolean() || r.nextBoolean();
@@ -56,7 +56,7 @@ public enum PlacementPatterns {
 		default:
 			break;
 		}
-	
+
 		blocksIn.removeIf(filter);
 	}
 

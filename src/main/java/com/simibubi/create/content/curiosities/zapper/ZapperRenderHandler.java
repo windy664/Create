@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.zapper;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -64,7 +64,7 @@ public class ZapperRenderHandler extends ShootableGadgetRenderHandler {
 	}
 
 	public void addBeam(LaserBeam beam) {
-		Random r = new Random();
+		RandomSource r = RandomSource.create();
 		double x = beam.end.x;
 		double y = beam.end.y;
 		double z = beam.end.z;

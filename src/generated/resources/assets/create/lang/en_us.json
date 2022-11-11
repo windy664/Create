@@ -575,8 +575,10 @@
 	"entity.create.stationary_contraption": "Stationary Contraption",
 	"entity.create.super_glue": "Super Glue",
 
-	"fluid.create.potion": "Potion",
-	"fluid.create.tea": "Builder's Tea",
+	"fluid.create.flowing_chocolate": "Chocolate",
+	"fluid.create.flowing_honey": "Honey",
+	"fluid.create.flowing_potion": "Potion",
+	"fluid.create.flowing_tea": "Builder's Tea",
 
 	"item.create.andesite_alloy": "Andesite Alloy",
 	"item.create.attribute_filter": "Attribute Filter",

@@ -20,11 +20,10 @@ import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Pair;
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractSelectionList$EntryAccessor;
 
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractSelectionList$EntryAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractSelectionList;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {

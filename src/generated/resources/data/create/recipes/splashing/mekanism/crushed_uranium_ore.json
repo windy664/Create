@@ -1,5 +1,13 @@
 {
   "type": "create:splashing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "mekanism"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_uranium_ore"
@@ -7,16 +15,8 @@
   ],
   "results": [
     {
-      "item": "mekanism:nugget_uranium",
-      "count": 9
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "mekanism"
-      ]
+      "count": 9,
+      "item": "mekanism:nugget_uranium"
     }
   ]
 }

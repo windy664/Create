@@ -1,9 +1,5 @@
 package com.simibubi.create.content.schematics;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
@@ -11,7 +7,6 @@ import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.tileEntity.IMergeableTE;
 import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,6 +25,10 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SchematicPrinter {
 
@@ -66,8 +65,8 @@ public class SchematicPrinter {
 		printingEntityIndex = compound.getInt("EntityProgress");
 		printStage = PrintStage.valueOf(compound.getString("PrintStage"));
 		compound.getList("DeferredBlocks", 10).stream()
-			.map(p -> NbtUtils.readBlockPos((CompoundTag) p))
-			.collect(Collectors.toCollection(() -> deferredBlocks));
+				.map(p -> NbtUtils.readBlockPos((CompoundTag) p))
+				.collect(Collectors.toCollection(() -> deferredBlocks));
 	}
 
 	public void write(CompoundTag compound) {
@@ -92,16 +91,16 @@ public class SchematicPrinter {
 		StructurePlaceSettings settings = SchematicItem.getSettings(blueprint, processNBT);
 
 		schematicAnchor = NbtUtils.readBlockPos(blueprint.getTag()
-			.getCompound("Anchor"));
+				.getCompound("Anchor"));
 		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
 		activeTemplate.placeInWorld(blockReader, schematicAnchor, schematicAnchor, settings, blockReader.getRandom(), Block.UPDATE_CLIENTS);
 
 		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, new BlockPos(activeTemplate.getSize())
-			.offset(-1, -1, -1));
+				.offset(-1, -1, -1));
 		blockReader.bounds = BBHelper.encapsulate(blockReader.bounds, extraBounds);
 
 		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
-			settings.getRotation(), settings.getMirror());
+				settings.getRotation(), settings.getMirror());
 		for (BlockEntity te : blockReader.tileEntities.values())
 			transform.apply(te);
 
@@ -150,6 +149,7 @@ public class SchematicPrinter {
 	public interface BlockTargetHandler {
 		void handle(BlockPos target, BlockState blockState, BlockEntity tileEntity);
 	}
+
 	@FunctionalInterface
 	public interface EntityTargetHandler {
 		void handle(BlockPos target, Entity entity);
@@ -160,8 +160,8 @@ public class SchematicPrinter {
 
 		if (printStage == PrintStage.ENTITIES) {
 			Entity entity = blockReader.getEntityStream()
-				.collect(Collectors.toList())
-				.get(printingEntityIndex);
+					.collect(Collectors.toList())
+					.get(printingEntityIndex);
 			entityHandler.handle(target, entity);
 		} else {
 			BlockState blockState = BlockHelper.setZeroAge(blockReader.getBlockState(target));
@@ -176,7 +176,9 @@ public class SchematicPrinter {
 							BlockState toReplace, BlockState toReplaceOther, boolean isNormalCube);
 	}
 
-	public boolean shouldPlaceCurrent(Level world) { return shouldPlaceCurrent(world, (a,b,c,d,e,f) -> true); }
+	public boolean shouldPlaceCurrent(Level world) {
+		return shouldPlaceCurrent(world, (a, b, c, d, e, f) -> true);
+	}
 
 	public boolean shouldPlaceCurrent(Level world, PlacementPredicate predicate) {
 		if (world == null)
@@ -204,7 +206,7 @@ public class SchematicPrinter {
 			toReplaceOther = world.getBlockState(pos.above());
 
 		boolean mergeTEs = tileEntity != null && toReplaceTE instanceof IMergeableTE mergeTE && toReplaceTE.getType()
-			.equals(tileEntity.getType());
+				.equals(tileEntity.getType());
 
 		if (!world.isLoaded(pos))
 			return false;
@@ -223,8 +225,8 @@ public class SchematicPrinter {
 	public ItemRequirement getCurrentRequirement() {
 		if (printStage == PrintStage.ENTITIES)
 			return ItemRequirement.of(blockReader.getEntityStream()
-				.collect(Collectors.toList())
-				.get(printingEntityIndex));
+					.collect(Collectors.toList())
+					.get(printingEntityIndex));
 
 		BlockPos target = getCurrentTarget();
 		BlockState blockState = BlockHelper.setZeroAge(blockReader.getBlockState(target));
@@ -258,14 +260,14 @@ public class SchematicPrinter {
 
 	public void markAllEntityRequirements(MaterialChecklist checklist) {
 		blockReader.getEntityStream()
-			.forEach(entity -> {
-				ItemRequirement requirement = ItemRequirement.of(entity);
-				if (requirement.isEmpty())
-					return;
-				if (requirement.isInvalid())
-					return;
-				checklist.require(requirement);
-			});
+				.forEach(entity -> {
+					ItemRequirement requirement = ItemRequirement.of(entity);
+					if (requirement.isEmpty())
+						return;
+					if (requirement.isInvalid())
+						return;
+					checklist.require(requirement);
+				});
 	}
 
 	public boolean advanceCurrentPos() {
@@ -322,7 +324,7 @@ public class SchematicPrinter {
 
 	public static boolean shouldDeferBlock(BlockState state) {
 		return AllBlocks.GANTRY_CARRIAGE.has(state) || AllBlocks.MECHANICAL_ARM.has(state)
-			|| BlockMovementChecks.isBrittle(state);
+				|| BlockMovementChecks.isBrittle(state);
 	}
 
 }

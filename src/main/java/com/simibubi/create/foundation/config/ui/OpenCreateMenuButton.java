@@ -12,16 +12,12 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Components;
 
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 
 public class OpenCreateMenuButton extends Button {
@@ -43,10 +39,12 @@ public class OpenCreateMenuButton extends Button {
 
 	public static class SingleMenuRow {
 		public final String left, right;
+
 		public SingleMenuRow(String left, String right) {
 			this.left = left;
 			this.right = right;
 		}
+
 		public SingleMenuRow(String center) {
 			this(center, center);
 		}
@@ -54,18 +52,18 @@ public class OpenCreateMenuButton extends Button {
 
 	public static class MenuRows {
 		public static final MenuRows MAIN_MENU = new MenuRows(Arrays.asList(
-			new SingleMenuRow("menu.singleplayer"),
-			new SingleMenuRow("menu.multiplayer"),
-			new SingleMenuRow("menu.online"),
-			new SingleMenuRow("narrator.button.language", "narrator.button.accessibility")
+				new SingleMenuRow("menu.singleplayer"),
+				new SingleMenuRow("menu.multiplayer"),
+				new SingleMenuRow("menu.online"),
+				new SingleMenuRow("narrator.button.language", "narrator.button.accessibility")
 		));
 
 		public static final MenuRows INGAME_MENU = new MenuRows(Arrays.asList(
-			new SingleMenuRow("menu.returnToGame"),
-			new SingleMenuRow("gui.advancements", "gui.stats"),
-			new SingleMenuRow("menu.sendFeedback", "menu.reportBugs"),
-			new SingleMenuRow("menu.options", "menu.shareToLan"),
-			new SingleMenuRow("menu.returnToMenu")
+				new SingleMenuRow("menu.returnToGame"),
+				new SingleMenuRow("gui.advancements", "gui.stats"),
+				new SingleMenuRow("menu.sendFeedback", "menu.reportBugs"),
+				new SingleMenuRow("menu.options", "menu.shareToLan"),
+				new SingleMenuRow("menu.returnToMenu")
 		));
 
 		protected final List<String> leftButtons, rightButtons;
@@ -99,7 +97,9 @@ public class OpenCreateMenuButton extends Button {
 				((ScreenAccessor) gui).port_lib$getChildren().stream()
 						.filter(w -> w instanceof AbstractWidget)
 						.map(w -> (AbstractWidget) w)
-						.filter(w -> w.getMessage() instanceof TranslatableComponent t && target.equals(t.getKey()))
+						.filter(w -> w.getMessage()
+								.getString()
+								.equals(target))
 						.findFirst()
 						.ifPresent(w -> {
 							gui.addRenderableWidget(

@@ -62,8 +62,8 @@ public class BottomlessItemHandler extends ItemStackHandler implements SingleSlo
 	}
 
 	@Override
-	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		return SingleSlotStorage.super.iterator(transaction); // no, this is not pointless
+	public Iterator<StorageView<ItemVariant>> iterator() {
+		return SingleSlotStorage.super.iterator(); // no, this is not pointless
 	}
 
 	@Override

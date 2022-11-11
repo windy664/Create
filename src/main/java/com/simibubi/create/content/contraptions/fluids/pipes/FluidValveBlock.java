@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
-import java.util.Random;
-
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllShapes;
@@ -17,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -128,7 +127,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 

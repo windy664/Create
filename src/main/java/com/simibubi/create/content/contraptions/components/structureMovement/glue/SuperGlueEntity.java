@@ -17,17 +17,9 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
-import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
-import com.tterrag.registrate.fabric.EnvExecutor;
 
-import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -37,7 +29,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -64,21 +55,21 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class SuperGlueEntity extends Entity
-	implements ExtraSpawnDataEntity, ISpecialEntityItemRequirement {
+		implements ExtraSpawnDataEntity, ISpecialEntityItemRequirement {
 
 	public static AABB span(BlockPos startPos, BlockPos endPos) {
 		return new AABB(startPos, endPos).expandTowards(1, 1, 1);
 	}
 
 	public static boolean isGlued(LevelAccessor level, BlockPos blockPos, Direction direction,
-		Set<SuperGlueEntity> cached) {
+								  Set<SuperGlueEntity> cached) {
 		BlockPos targetPos = blockPos.relative(direction);
 		if (cached != null)
 			for (SuperGlueEntity glueEntity : cached)
 				if (glueEntity.contains(blockPos) && glueEntity.contains(targetPos))
 					return true;
 		for (SuperGlueEntity glueEntity : level.getEntitiesOfClass(SuperGlueEntity.class,
-			span(blockPos, targetPos).inflate(16))) {
+				span(blockPos, targetPos).inflate(16))) {
 			if (!glueEntity.contains(blockPos) || !glueEntity.contains(targetPos))
 				continue;
 			if (cached != null)
@@ -118,7 +109,8 @@ public class SuperGlueEntity extends Entity
 	}
 
 	@Override
-	protected void defineSynchedData() {}
+	protected void defineSynchedData() {
+	}
 
 	public static boolean isValidFace(Level world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
@@ -182,7 +174,7 @@ public class SuperGlueEntity extends Entity
 		setPosRaw(x, y, z);
 		Vec3 center = bb.getCenter();
 		setBoundingBox(bb.move(-center.x, -bb.minY, -center.z)
-			.move(x, y, z));
+				.move(x, y, z));
 	}
 
 	@Override
@@ -258,10 +250,12 @@ public class SuperGlueEntity extends Entity
 	}
 
 	@Override
-	public void thunderHit(ServerLevel world, LightningBolt lightningBolt) {}
+	public void thunderHit(ServerLevel world, LightningBolt lightningBolt) {
+	}
 
 	@Override
-	public void refreshDimensions() {}
+	public void refreshDimensions() {
+	}
 
 	public static FabricEntityTypeBuilder<?> build(FabricEntityTypeBuilder<?> builder) {
 //		@SuppressWarnings("unchecked")
@@ -304,7 +298,7 @@ public class SuperGlueEntity extends Entity
 	public PushReaction getPistonPushReaction() {
 		return PushReaction.IGNORE;
 	}
-	
+
 	@Override
 	public PortalInfo findDimensionEntryPoint(ServerLevel pDestination) {
 		portalEntrancePos = blockPosition();
@@ -323,26 +317,26 @@ public class SuperGlueEntity extends Entity
 			AxisDirection positive = AxisDirection.POSITIVE;
 			double max = axis.choose(extents.x, extents.y, extents.z);
 			Vec3 normal = Vec3.atLowerCornerOf(Direction.fromAxisAndDirection(axis, positive)
-				.getNormal());
+					.getNormal());
 			for (Axis axis2 : Iterate.axes) {
 				if (axis2 == axis)
 					continue;
 				double max2 = axis2.choose(extents.x, extents.y, extents.z);
 				Vec3 normal2 = Vec3.atLowerCornerOf(Direction.fromAxisAndDirection(axis2, positive)
-					.getNormal());
+						.getNormal());
 				for (Axis axis3 : Iterate.axes) {
 					if (axis3 == axis2 || axis3 == axis)
 						continue;
 					double max3 = axis3.choose(extents.x, extents.y, extents.z);
 					Vec3 normal3 = Vec3.atLowerCornerOf(Direction.fromAxisAndDirection(axis3, positive)
-						.getNormal());
+							.getNormal());
 
 					for (int i = 0; i <= max * 2; i++) {
 						for (int o1 : Iterate.zeroAndOne) {
 							for (int o2 : Iterate.zeroAndOne) {
 								Vec3 v = origin.add(normal.scale(i / 2f))
-									.add(normal2.scale(max2 * o1))
-									.add(normal3.scale(max3 * o2));
+										.add(normal2.scale(max2 * o1))
+										.add(normal3.scale(max3 * o2));
 
 								slevel.sendParticles(ParticleTypes.ITEM_SLIME, v.x, v.y, v.z, 1, 0, 0, 0, 0);
 

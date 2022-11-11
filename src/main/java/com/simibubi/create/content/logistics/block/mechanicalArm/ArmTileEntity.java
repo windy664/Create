@@ -27,9 +27,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
-import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
-
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -72,6 +70,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	LerpedFloat clawAngle;
 	float previousBaseAngle;
 	boolean updateInteractionPoints;
+	int tooltipWarmup;
 
 	//
 	protected ScrollOptionBehaviour<SelectionMode> selectionMode;
@@ -87,7 +86,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		super(typeIn, pos, state);
 		inputs = new ArrayList<>();
 		outputs = new ArrayList<>();
-		interactionPointTag = new ListTag();
+		interactionPointTag = null;
 		heldItem = ItemStack.EMPTY;
 		phase = Phase.SEARCH_INPUTS;
 		previousTarget = ArmAngleTarget.NO_TARGET;
@@ -103,6 +102,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		previousBaseAngle = previousTarget.baseAngle;
 		updateInteractionPoints = true;
 		redstoneLocked = false;
+		tooltipWarmup = 15;
 	}
 
 	@Override
@@ -110,12 +110,12 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		super.addBehaviours(behaviours);
 
 		selectionMode = new ScrollOptionBehaviour<SelectionMode>(SelectionMode.class,
-			Lang.translateDirect("logistics.when_multiple_outputs_available"), this, new SelectionModeValueBox());
+				Lang.translateDirect("logistics.when_multiple_outputs_available"), this, new SelectionModeValueBox());
 		selectionMode.requiresWrench();
 		behaviours.add(selectionMode);
 
 		registerAwardables(behaviours, AllAdvancements.ARM_BLAZE_BURNER, AllAdvancements.ARM_MANY_TARGETS,
-			AllAdvancements.MECHANICAL_ARM, AllAdvancements.MUSICAL_ARM);
+				AllAdvancements.MECHANICAL_ARM, AllAdvancements.MUSICAL_ARM);
 	}
 
 	@Override
@@ -124,6 +124,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		initInteractionPoints();
 		boolean targetReached = tickMovementProgress();
 
+		if (tooltipWarmup > 0)
+			tooltipWarmup--;
 		if (chasedPointProgress < 1) {
 			if (phase == Phase.MOVE_TO_INPUT) {
 				ArmInteractionPoint point = getTargetedInteractionPoint();
@@ -180,7 +182,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 				continue;
 			BlockState state = level.getBlockState(armInteractionPoint.getPos());
 			if (state.getOptionalValue(JukeboxBlock.HAS_RECORD)
-				.orElse(false))
+					.orElse(false))
 				return true;
 		}
 		return false;
@@ -197,10 +199,10 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		ArmInteractionPoint targetedInteractionPoint = getTargetedInteractionPoint();
 		ArmAngleTarget previousTarget = this.previousTarget;
 		ArmAngleTarget target = targetedInteractionPoint == null ? ArmAngleTarget.NO_TARGET
-			: targetedInteractionPoint.getTargetAngles(worldPosition, isOnCeiling());
+				: targetedInteractionPoint.getTargetAngles(worldPosition, isOnCeiling());
 
 		baseAngle.setValue(AngleHelper.angleLerp(chasedPointProgress, previousBaseAngle,
-			target == ArmAngleTarget.NO_TARGET ? previousBaseAngle : target.baseAngle));
+				target == ArmAngleTarget.NO_TARGET ? previousBaseAngle : target.baseAngle));
 
 		// Arm's angles first backup to resting position and then continue
 		if (chasedPointProgress < .5f)
@@ -219,7 +221,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	protected boolean isOnCeiling() {
 		BlockState state = getBlockState();
 		return hasLevel() && state.getOptionalValue(ArmBlock.CEILING)
-			.orElse(false);
+				.orElse(false);
 	}
 
 	@Nullable
@@ -248,7 +250,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		if (scanRange > inputs.size())
 			scanRange = inputs.size();
 
-		InteractionPoints: for (int i = startIndex; i < scanRange; i++) {
+		InteractionPoints:
+		for (int i = startIndex; i < scanRange; i++) {
 			ArmInteractionPoint armInteractionPoint = inputs.get(i);
 			if (!armInteractionPoint.isValid())
 				continue;
@@ -343,8 +346,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			for (ArmInteractionPoint armInteractionPoint : outputs) {
 				if (armInteractionPoint.isValid())
 					stack = armInteractionPoint.insert(stack, t);
-			if (stack.isEmpty())
-				break;
+				if (stack.isEmpty())
+					break;
 			}
 			return stack;
 		}
@@ -391,7 +394,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 				if (!prevHeld.sameItem(heldItem))
 					level.playSound(null, worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .125f,
-						.5f + Create.RANDOM.nextFloat() * .25f);
+							.5f + Create.RANDOM.nextFloat() * .25f);
 				t.commit();
 				return;
 			}
@@ -496,16 +499,16 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	public void writeInteractionPoints(CompoundTag compound) {
-		if (updateInteractionPoints) {
+		if (updateInteractionPoints && interactionPointTag != null) {
 			compound.put("InteractionPoints", interactionPointTag);
 		} else {
 			ListTag pointsNBT = new ListTag();
 			inputs.stream()
-				.map(aip -> aip.serialize(worldPosition))
-				.forEach(pointsNBT::add);
+					.map(aip -> aip.serialize(worldPosition))
+					.forEach(pointsNBT::add);
 			outputs.stream()
-				.map(aip -> aip.serialize(worldPosition))
-				.forEach(pointsNBT::add);
+					.map(aip -> aip.serialize(worldPosition))
+					.forEach(pointsNBT::add);
 			compound.put("InteractionPoints", pointsNBT);
 		}
 	}
@@ -557,7 +560,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			if (previousPhase == Phase.MOVE_TO_OUTPUT && previousIndex < outputs.size())
 				previousPoint = outputs.get(previousIndex);
 			previousTarget = previousPoint == null ? ArmAngleTarget.NO_TARGET
-				: previousPoint.getTargetAngles(worldPosition, ceiling);
+					: previousPoint.getTargetAngles(worldPosition, ceiling);
 			if (previousPoint != null)
 				previousBaseAngle = previousTarget.baseAngle;
 
@@ -576,6 +579,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		if (super.addToTooltip(tooltip, isPlayerSneaking))
 			return true;
 		if (isPlayerSneaking)
+			return false;
+		if (tooltipWarmup > 0)
 			return false;
 		if (!inputs.isEmpty())
 			return false;
@@ -600,7 +605,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 		public SelectionModeValueBox() {
 			super((blockState, direction) -> !direction.getAxis()
-				.isVertical());
+					.isVertical());
 		}
 
 		@Override

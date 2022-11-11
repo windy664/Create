@@ -15,7 +15,8 @@ import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
 import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
-import io.github.fabricators_of_create.porting_lib.extensions.RegistryNameProvider;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,8 +26,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public interface IBogeyBlock extends IWrenchable {
 
@@ -48,7 +47,7 @@ public interface IBogeyBlock extends IWrenchable {
 
 	@Environment(EnvType.CLIENT)
 	public void render(@Nullable BlockState state, float wheelAngle, PoseStack ms, float partialTicks,
-		MultiBufferSource buffers, int light, int overlay);
+					   MultiBufferSource buffers, int light, int overlay);
 
 	@Environment(EnvType.CLIENT)
 	public BogeyInstance createInstance(MaterialManager materialManager, CarriageBogey bogey);
@@ -80,8 +79,8 @@ public interface IBogeyBlock extends IWrenchable {
 				BlockState matchingBogey = bogey.getMatchingBogey(bogeyUpDirection, trackAxisAlongFirstCoordinate);
 				if (matchingBogey != null)
 					return matchingBogey.hasProperty(WATERLOGGED)
-						? matchingBogey.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
-						: matchingBogey;
+							? matchingBogey.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
+							: matchingBogey;
 			}
 			index = (index + 1) % BOGEYS.size();
 		}

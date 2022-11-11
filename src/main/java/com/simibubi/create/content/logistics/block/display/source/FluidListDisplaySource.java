@@ -53,7 +53,7 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 		Map<Fluid, FluidStack> fluidNames = new HashMap<>();
 
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<FluidVariant> view : handler.iterable(t)) {
+			for (StorageView<FluidVariant> view : handler) {
 				if (view.isResourceBlank())
 					continue;
 				FluidStack stack = new FluidStack(view);

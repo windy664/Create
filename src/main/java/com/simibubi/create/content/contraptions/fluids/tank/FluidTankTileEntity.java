@@ -336,7 +336,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 				for (int xOffset = 0; xOffset < width; xOffset++)
 					for (int zOffset = 0; zOffset < width; zOffset++)
 						if (level.getBlockEntity(
-							worldPosition.offset(xOffset, yOffset, zOffset))instanceof FluidTankTileEntity fte)
+							worldPosition.offset(xOffset, yOffset, zOffset)) instanceof FluidTankTileEntity fte)
 							fte.refreshCapability();
 		}
 

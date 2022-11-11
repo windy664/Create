@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.Random;
 
 import javax.annotation.Nullable;
 
@@ -23,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -95,7 +95,7 @@ public class FluidPipeBlock extends PipeBlock
 				.filter(pc -> pc != null && pc.hasFlow())
 				.findAny()
 				.ifPresent($ -> AllAdvancements.GLASS_PIPE.awardTo(context.getPlayer())));
-			
+
 			FluidTransportBehaviour.cacheFlows(world, pos);
 			world.setBlockAndUpdate(pos, AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
 				.setValue(GlassFluidPipeBlock.AXIS, axis)
@@ -118,7 +118,7 @@ public class FluidPipeBlock extends PipeBlock
 			return InteractionResult.PASS;
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
-		
+
 		FluidTransportBehaviour.cacheFlows(world, pos);
 		world.setBlockAndUpdate(pos,
 			EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));
@@ -171,7 +171,7 @@ public class FluidPipeBlock extends PipeBlock
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 

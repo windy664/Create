@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.gui.element;
 
-import java.util.Random;
-
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.core.PartialModel;
@@ -36,6 +34,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -206,7 +205,7 @@ public class GuiGameElement {
 				model = FixedColorTintingBakedModel.wrap(model, color);
 			}
 			blockRenderer.getModelRenderer()
-				.tesselateBlock(VirtualEmptyBlockGetter.FULL_BRIGHT, model, blockState, BlockPos.ZERO, ms, vb, false, new Random(), 42L, OverlayTexture.NO_OVERLAY);
+				.tesselateBlock(VirtualEmptyBlockGetter.FULL_BRIGHT, model, blockState, BlockPos.ZERO, ms, vb, false, RandomSource.create(), 42L, OverlayTexture.NO_OVERLAY);
 			buffer.endBatch();
 		}
 

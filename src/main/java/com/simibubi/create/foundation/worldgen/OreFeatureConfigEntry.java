@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -16,15 +14,16 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
@@ -43,7 +42,6 @@ public class OreFeatureConfigEntry extends ConfigBase {
 	public final ConfigInt minHeight;
 	public final ConfigInt maxHeight;
 
-	private BiomeExtension biomeExt;
 	private DatagenExtension datagenExt;
 
 	public OreFeatureConfigEntry(ResourceLocation id, int clusterSize, float frequency, int minHeight, int maxHeight) {
@@ -56,13 +54,6 @@ public class OreFeatureConfigEntry extends ConfigBase {
 		this.maxHeight = i(maxHeight, "maxHeight");
 
 		ALL.put(id, this);
-	}
-
-	public BiomeExtension biomeExt() {
-		if (biomeExt == null) {
-			biomeExt = new BiomeExtension();
-		}
-		return biomeExt;
 	}
 
 	@Nullable
@@ -113,44 +104,30 @@ public class OreFeatureConfigEntry extends ConfigBase {
 		}
 	}
 
-	public class BiomeExtension {
-		public ResourceLocation placedFeatureLocation = id;
-		public Predicate<BiomeSelectionContext> biomePredicate = e -> false;
-
-		public BiomeExtension feature(ResourceLocation placedFeature) {
-			this.placedFeatureLocation = placedFeature;
-			return this;
-		}
-
-		public BiomeExtension predicate(Predicate<BiomeSelectionContext> predicate) {
-			this.biomePredicate = predicate;
-			return this;
-		}
-
-		public void modifyBiomes(Registry<PlacedFeature> registry) {
-			ResourceKey<PlacedFeature> key = ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, placedFeatureLocation);
-			Optional<Holder<PlacedFeature>> optionalFeature = registry.getHolder(key);
-			if (optionalFeature.isPresent()) {
-				BiomeModifications.addFeature(
-						biomePredicate,
-						GenerationStep.Decoration.UNDERGROUND_ORES,
-						key
-				);
-			}
-		}
-
-		public OreFeatureConfigEntry parent() {
-			return OreFeatureConfigEntry.this;
-		}
-	}
-
 	public abstract class DatagenExtension {
+		public TagKey<Biome> biomeTag;
+
+		public DatagenExtension biomeTag(TagKey<Biome> biomes) {
+			this.biomeTag = biomes;
+			return this;
+		}
+
 		public abstract ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess);
 
 		public PlacedFeature createPlacedFeature(RegistryAccess registryAccess) {
 			Registry<ConfiguredFeature<?, ?>> featureRegistry = registryAccess.registryOrThrow(Registry.CONFIGURED_FEATURE_REGISTRY);
-			Holder<ConfiguredFeature<?, ?>> featureHolder = featureRegistry.getOrCreateHolder(ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, id));
+			Holder<ConfiguredFeature<?, ?>> featureHolder = featureRegistry.getOrCreateHolderOrThrow(ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, id));
 			return new PlacedFeature(featureHolder, List.of(new ConfigDrivenPlacement(OreFeatureConfigEntry.this)));
+		}
+
+		// fabric: BiomeModifiers translate to BiomeModifications
+		public void modifyBiomes() {
+			ResourceKey<PlacedFeature> featureKey = ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, id);
+			BiomeModifications.addFeature(
+					ctx -> ctx.hasTag(biomeTag),
+					Decoration.UNDERGROUND_ORES,
+					featureKey
+			);
 		}
 
 		public OreFeatureConfigEntry parent() {
@@ -181,6 +158,12 @@ public class OreFeatureConfigEntry extends ConfigBase {
 		}
 
 		@Override
+		public StandardDatagenExtension biomeTag(TagKey<Biome> biomes) {
+			super.biomeTag(biomes);
+			return this;
+		}
+
+		@Override
 		public ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess) {
 			List<TargetBlockState> targetStates = new ArrayList<>();
 			if (block != null)
@@ -203,6 +186,12 @@ public class OreFeatureConfigEntry extends ConfigBase {
 
 		public LayeredDatagenExtension withLayerPattern(NonNullSupplier<LayerPattern> pattern) {
 			this.layerPatterns.add(pattern);
+			return this;
+		}
+
+		@Override
+		public LayeredDatagenExtension biomeTag(TagKey<Biome> biomes) {
+			super.biomeTag(biomes);
 			return this;
 		}
 

@@ -28,6 +28,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -53,7 +54,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 		TransformStack.cast(ms)
 			.rotateY(basin.ingredientRotation.getValue(partialTicks));
 
-		Random r = new Random(pos.hashCode());
+		RandomSource r = RandomSource.create(pos.hashCode());
 		Vec3 baseVector = new Vec3(.125, level, 0);
 
 		Storage<ItemVariant> inv = basin.itemCapability;

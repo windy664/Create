@@ -64,7 +64,7 @@ public class SharedDepotBlockMethods {
 		}
 		ItemStackHandler outputs = behaviour.processingOutputBuffer;
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : outputs.iterable(t)) {
+			for (StorageView<ItemVariant> view : outputs) {
 				if (view.isResourceBlank()) continue;
 				ItemVariant var = view.getResource();
 				long extracted = view.extract(var, 64, t);

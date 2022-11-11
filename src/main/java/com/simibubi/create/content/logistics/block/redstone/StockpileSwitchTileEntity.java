@@ -114,7 +114,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 				// Item inventory
 				try (Transaction t = TransferUtil.getTransaction()) {
 					Storage<ItemVariant> inv = observedInventory.getInventory();
-					for (StorageView<ItemVariant> view : inv.iterable(t)) {
+					for (StorageView<ItemVariant> view : inv) {
 						long space = Math.min(view.getCapacity(), view.getResource().getItem().getMaxStackSize());
 						long count = view.getAmount();
 						if (space == 0)
@@ -131,7 +131,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 				// Fluid inventory
 				try (Transaction t = TransferUtil.getTransaction()) {
 					Storage<FluidVariant> tank = observedTank.getInventory();
-					for (StorageView<FluidVariant> view : tank.iterable(t)) {
+					for (StorageView<FluidVariant> view : tank) {
 						long space = view.getCapacity();
 						long count = view.getAmount();
 						if (space == 0)
@@ -160,7 +160,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 		currentLevel = Mth.clamp(currentLevel, 0, 1);
 		changed = currentLevel != prevLevel;
-		
+
 		boolean previouslyPowered = redstoneState;
 		if (redstoneState && currentLevel <= offWhenBelow)
 			redstoneState = false;

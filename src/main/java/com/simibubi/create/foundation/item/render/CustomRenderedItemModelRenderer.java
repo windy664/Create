@@ -32,5 +32,4 @@ public abstract class CustomRenderedItemModelRenderer<M extends CustomRenderedIt
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay);
 
 	public abstract M createModel(BakedModel originalModel);
-
 }

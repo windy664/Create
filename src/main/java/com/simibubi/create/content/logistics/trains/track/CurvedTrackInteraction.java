@@ -56,7 +56,7 @@ public class CurvedTrackInteraction {
 				mc.getSoundManager()
 					.play(new SimpleSoundInstance(soundtype.getHitSound(), SoundSource.BLOCKS,
 						(soundtype.getVolume() + 1.0F) / 8.0F, soundtype.getPitch() * 0.5F,
-						new BlockPos(result.vec())));
+						level.random, new BlockPos(result.vec())));
 			}
 
 			boolean creative = player.getAbilities().instabuild;

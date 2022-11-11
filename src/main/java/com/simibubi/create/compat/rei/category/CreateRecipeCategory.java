@@ -37,7 +37,6 @@ import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -112,8 +111,8 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 		if (rollableResults.size() <= index)
 			return jeiSlot;
 		if (processingRecipe.getRollableResults()
-			.get(index)
-			.getChance() == 1)
+				.get(index)
+				.getChance() == 1)
 			return jeiSlot;
 		return AllGuiTextures.JEI_CHANCE_SLOT;
 	}
@@ -157,8 +156,8 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 	public static List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
 		return stacks.stream()
-			.map(CreateRecipeCategory::withImprovedVisibility)
-			.collect(Collectors.toList());
+				.map(CreateRecipeCategory::withImprovedVisibility)
+				.collect(Collectors.toList());
 	}
 
 	public static FluidStack withImprovedVisibility(FluidStack stack) {
@@ -186,12 +185,12 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 	}
 
 	public static void addFluidTooltip(List<Widget> fluidStacks, List<FluidIngredient> inputs,
-		List<FluidStack> outputs) {
+									   List<FluidStack> outputs) {
 		addFluidTooltip(fluidStacks, inputs, outputs, -1);
 	}
 
 	public static void addFluidTooltip(List<Widget> fluidStacks, List<FluidIngredient> inputs,
-		List<FluidStack> outputs, int index) {
+									   List<FluidStack> outputs, int index) {
 		List<Long> amounts = new ArrayList<>();
 		inputs.forEach(f -> amounts.add(f.getRequiredAmount()));
 		outputs.forEach(f -> amounts.add(f.getAmount()));
@@ -219,12 +218,12 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 				FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
 				String amount = FluidTextUtil.getUnicodeMillibuckets(amounts.get(0), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
-				Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
+				Component text = Component.literal(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
 				if (tooltip.entries().isEmpty())
 					tooltip.entries().add(0, Tooltip.entry(text));
 				else {
 					List<Component> siblings = tooltip.entries().get(0).getAsText().getSiblings();
-					siblings.add(new TextComponent(" "));
+					siblings.add(Component.literal(" "));
 					siblings.add(text);
 				}
 				tooltip.entries().remove(1); // Remove REI added amount
@@ -254,12 +253,12 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 			FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
 			String amount = FluidTextUtil.getUnicodeMillibuckets(fluid.getAmount(), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
-			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
+			Component text = Component.literal(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
 			if (tooltip.entries().isEmpty())
 				tooltip.entries().add(0, Tooltip.entry(text));
 			else {
 				List<Component> siblings = tooltip.entries().get(0).getAsText().getSiblings();
-				siblings.add(new TextComponent(" "));
+				siblings.add(Component.literal(" "));
 				siblings.add(text);
 			}
 			tooltip.entries().remove(1); // Remove REI added amount
@@ -295,11 +294,16 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 		return widgets;
 	}
 
-	public void draw(T recipe, PoseStack matrixStack, double mouseX, double mouseY) {}
+	public void draw(T recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	}
 
-	public void draw(T recipe, CreateDisplay<T> display, PoseStack matrixStack, double mouseX, double mouseY) {}
+	public void draw(T recipe, CreateDisplay<T> display, PoseStack matrixStack, double mouseX, double mouseY) {
+	}
 
-	public record Info<T extends Recipe<?>>(CategoryIdentifier<CreateDisplay<T>> recipeType, Component title, Renderer background, Renderer icon, Supplier<List<T>> recipes, List<Supplier<? extends ItemStack>> catalysts, int width, int height, Function<T, ? extends CreateDisplay<T>> displayFactory) {
+	public record Info<T extends Recipe<?>>(CategoryIdentifier<CreateDisplay<T>> recipeType, Component title,
+											Renderer background, Renderer icon, Supplier<List<T>> recipes,
+											List<Supplier<? extends ItemStack>> catalysts, int width, int height,
+											Function<T, ? extends CreateDisplay<T>> displayFactory) {
 	}
 
 	public interface Factory<T extends Recipe<?>> {

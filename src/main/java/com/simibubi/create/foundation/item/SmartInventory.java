@@ -6,10 +6,11 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
+
+import io.github.fabricators_of_create.porting_lib.extensions.INBTSerializable;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 
-import io.github.fabricators_of_create.porting_lib.util.INBTSerializable;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -147,7 +148,7 @@ public class SmartInventory extends RecipeWrapper
 	}
 
 	@Override
-	public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		return handler.iterator(transaction);
+	public Iterator<StorageView<ItemVariant>> iterator() {
+		return handler.iterator();
 	}
 }

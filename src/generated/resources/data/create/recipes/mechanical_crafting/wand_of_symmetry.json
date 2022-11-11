@@ -1,5 +1,23 @@
 {
   "type": "create:mechanical_crafting",
+  "acceptMirrored": true,
+  "key": {
+    "B": {
+      "tag": "c:ingots/brass"
+    },
+    "E": {
+      "tag": "c:ender_pearls"
+    },
+    "G": {
+      "tag": "c:glass"
+    },
+    "O": {
+      "tag": "c:obsidian"
+    },
+    "P": {
+      "item": "create:precision_mechanism"
+    }
+  },
   "pattern": [
     " G ",
     "GEG",
@@ -7,25 +25,7 @@
     " B ",
     " O "
   ],
-  "key": {
-    "E": {
-      "tag": "c:ender_pearls"
-    },
-    "G": {
-      "tag": "c:glass"
-    },
-    "P": {
-      "item": "create:precision_mechanism"
-    },
-    "O": {
-      "tag": "c:obsidian"
-    },
-    "B": {
-      "tag": "c:ingots/brass"
-    }
-  },
   "result": {
     "item": "create:wand_of_symmetry"
-  },
-  "acceptMirrored": true
+  }
 }

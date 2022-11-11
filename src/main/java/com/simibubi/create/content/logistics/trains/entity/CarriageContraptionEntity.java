@@ -88,6 +88,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		validForRender = false;
 		firstPositionUpdate = true;
 		arrivalSoundTicks = Integer.MIN_VALUE;
+		derailParticleOffset = VecHelper.offsetRandomly(Vec3.ZERO, world.random, 1.5f)
+				.multiply(1, .25f, 1);
 	}
 
 	@Override
@@ -388,8 +390,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	@Override
 	protected void handleStallInformation(float x, float y, float z, float angle) {}
 
-	Vec3 derailParticleOffset = VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, 1.5f)
-		.multiply(1, .25f, 1);
+	Vec3 derailParticleOffset;
 
 	private void spawnDerailParticles(Carriage carriage) {
 		if (random.nextFloat() < 1 / 20f) {

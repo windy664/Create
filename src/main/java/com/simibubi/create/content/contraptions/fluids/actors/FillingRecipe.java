@@ -19,8 +19,6 @@ import io.github.fabricators_of_create.porting_lib.util.FluidUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -35,7 +33,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 	@Override
 	public boolean matches(RecipeWrapper inv, Level p_77569_2_) {
 		return ingredients.get(0)
-			.test(inv.getItem(0));
+				.test(inv.getItem(0));
 	}
 
 	@Override
@@ -60,7 +58,8 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 	}
 
 	@Override
-	public void addAssemblyIngredients(List<Ingredient> list) {}
+	public void addAssemblyIngredients(List<Ingredient> list) {
+	}
 
 	@Override
 	public void addAssemblyFluidIngredients(List<FluidIngredient> list) {
@@ -77,7 +76,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 
 		Fluid fluid = matchingFluidStacks.get(0).getFluid();
 		String translationKey = FluidUtil.getTranslationKey(fluid);
-		return Lang.translateDirect("recipe.assembly.spout_filling_fluid", new TranslatableComponent(translationKey).getString());
+		return Lang.translateDirect("recipe.assembly.spout_filling_fluid", Component.translatable(translationKey).getString());
 	}
 
 	@Override

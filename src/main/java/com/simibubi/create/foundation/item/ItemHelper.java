@@ -35,7 +35,7 @@ public class ItemHelper {
 
 	public static void dropContents(Level world, BlockPos pos, Storage<ItemVariant> inv) {
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : inv.iterable(t)) {
+			for (StorageView<ItemVariant> view : inv) {
 				ItemStack stack = view.getResource().toStack((int) view.getAmount());
 				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 			}
@@ -87,7 +87,7 @@ public class ItemHelper {
 		int totalSlots = 0;
 
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : inv.iterable(t)) {
+			for (StorageView<ItemVariant> view : inv) {
 				long slotLimit = view.getCapacity();
 				if (slotLimit == 0) {
 					continue;
@@ -178,7 +178,7 @@ public class ItemHelper {
 
 		if (inv.supportsExtraction()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
-				for (StorageView<ItemVariant> view : inv.iterable(t)) {
+				for (StorageView<ItemVariant> view : inv) {
 					if (view.isResourceBlank()) continue;
 					ItemVariant contained = view.getResource();
 					// amount stored, amount needed, or max size, whichever is lowest.
@@ -240,7 +240,7 @@ public class ItemHelper {
 		int maxExtractionCount = AllConfigs.SERVER.logistics.defaultExtractionLimit.get();
 
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : inv.iterable(t)) {
+			for (StorageView<ItemVariant> view : inv) {
 				ItemVariant var = view.getResource();
 				ItemStack stackInSlot = var.toStack();
 				if (view.isResourceBlank() || !test.test(stackInSlot))

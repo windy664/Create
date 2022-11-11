@@ -2,6 +2,9 @@ package com.simibubi.create.events;
 
 import java.util.concurrent.Executor;
 
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.Commands;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -57,7 +60,7 @@ import io.github.fabricators_of_create.porting_lib.event.common.MinecartEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.MobEntitySetTargetCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.ProjectileImpactCallback;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -167,7 +170,7 @@ public class CommonEvents {
 		return WrenchItem.wrenchInstaKillsMinecarts(playerEntity, world, hand, entity, entityRayTraceResult);
 	}
 
-	public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
+	public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
 		AllCommands.register(dispatcher);
 	}
 

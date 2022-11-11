@@ -1,28 +1,22 @@
 package com.simibubi.create.foundation.config.ui.compat.flywheel;
 
+import java.util.Locale;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.jozufozu.flywheel.config.FlwConfig;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
-
 import com.simibubi.create.foundation.config.ui.ConfigModListScreen;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
-import com.simibubi.create.foundation.config.ui.SubMenuConfigScreen;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.TextStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
-import com.simibubi.create.foundation.item.TooltipHelper;
-
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fml.config.ModConfig;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Locale;
 
 public class FlwConfigScreen extends BaseConfigScreen {
 
@@ -41,7 +35,7 @@ public class FlwConfigScreen extends BaseConfigScreen {
 		guiTop += windowYOffset;
 		returnOnClose = true;
 
-		TextStencilElement clientText = new TextStencilElement(minecraft.font, new TextComponent(clientTile)).centered(true, true);
+		TextStencilElement clientText = new TextStencilElement(minecraft.font, Component.literal(clientTile)).centered(true, true);
 		addRenderableWidget(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 30, 200, 16).showingElement(clientText));
 
 		if (flwConfig != null) {
@@ -53,7 +47,7 @@ public class FlwConfigScreen extends BaseConfigScreen {
 			clientText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement commonText = new TextStencilElement(minecraft.font, new TextComponent(commonTile)).centered(true, true);
+		TextStencilElement commonText = new TextStencilElement(minecraft.font, Component.literal(commonTile)).centered(true, true);
 		addRenderableWidget(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 16).showingElement(commonText));
 
 		commonConfigWidget.active = false;
@@ -61,7 +55,7 @@ public class FlwConfigScreen extends BaseConfigScreen {
 		commonText.withElementRenderer(DISABLED_RENDERER);
 
 
-		TextStencilElement serverText = new TextStencilElement(minecraft.font, new TextComponent(serverTile)).centered(true, true);
+		TextStencilElement serverText = new TextStencilElement(minecraft.font, Component.literal(serverTile)).centered(true, true);
 		addRenderableWidget(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 30, 200, 16).showingElement(serverText));
 
 		serverConfigWidget.active = false;
@@ -95,10 +89,10 @@ public class FlwConfigScreen extends BaseConfigScreen {
 		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil()
 				.withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
 		goBack.getToolTip()
-				.add(new TextComponent("Go Back"));
+				.add(Component.literal("Go Back"));
 		addRenderableWidget(goBack);
 
-		TextStencilElement othersText = new TextStencilElement(minecraft.font, new TextComponent("Access Configs of other Mods")).centered(true, true);
+		TextStencilElement othersText = new TextStencilElement(minecraft.font, Component.literal("Access Configs of other Mods")).centered(true, true);
 		others = new BoxWidget(width / 2 - 100, height / 2 - 15 + 90, 200, 16).showingElement(othersText);
 		othersText.withElementRenderer(BoxWidget.gradientFactory.apply(others));
 		others.withCallback(() -> linkTo(new ConfigModListScreen(this)));

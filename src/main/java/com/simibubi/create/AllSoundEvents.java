@@ -8,19 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import com.simibubi.create.foundation.utility.Couple;
-
-import io.github.fabricators_of_create.porting_lib.util.RegistryObject;
 import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -353,7 +348,7 @@ public class AllSoundEvents {
 		}
 
 		@Override
-		public void run(HashCache cache) throws IOException {
+		public void run(CachedOutput cache) throws IOException {
 			generate(generator.getOutputFolder(), cache);
 		}
 
@@ -362,10 +357,7 @@ public class AllSoundEvents {
 			return "Create's Custom Sounds";
 		}
 
-		public void generate(Path path, HashCache cache) {
-			Gson GSON = (new GsonBuilder()).setPrettyPrinting()
-				.disableHtmlEscaping()
-				.create();
+		public void generate(Path path, CachedOutput cache) {
 			path = path.resolve("assets/create");
 
 			try {
@@ -377,7 +369,7 @@ public class AllSoundEvents {
 						entry.getValue()
 							.write(json);
 					});
-				DataProvider.save(GSON, cache, json, path.resolve("sounds.json"));
+				DataProvider.saveStable(cache, json, path.resolve("sounds.json"));
 
 			} catch (IOException e) {
 				e.printStackTrace();

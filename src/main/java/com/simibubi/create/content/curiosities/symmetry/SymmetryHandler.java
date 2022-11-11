@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.symmetry;
 
-import java.util.Random;
-
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -25,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -97,7 +96,7 @@ public class SymmetryHandler {
 	public static void render(WorldRenderContext context) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
-		Random random = new Random();
+		RandomSource random = RandomSource.create();
 
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			ItemStack stackInSlot = player.getInventory()
@@ -168,7 +167,7 @@ public class SymmetryHandler {
 					if (mirror instanceof EmptyMirror)
 						continue;
 
-					Random r = new Random();
+					RandomSource r = RandomSource.create();
 					double offsetX = (r.nextDouble() - 0.5) * 0.3;
 					double offsetZ = (r.nextDouble() - 0.5) * 0.3;
 
@@ -194,7 +193,7 @@ public class SymmetryHandler {
 			.scale(density);
 		int steps = (int) (diff.length() / step.length());
 
-		Random r = new Random();
+		RandomSource r = RandomSource.create();
 		for (int i = 3; i < steps - 1; i++) {
 			Vec3 pos = start.add(step.scale(i));
 			Vec3 speed = new Vec3(0, r.nextDouble() * -40f, 0);

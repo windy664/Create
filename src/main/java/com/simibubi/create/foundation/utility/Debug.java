@@ -8,7 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 /** Deprecated so simi doensn't forget to remove debug calls **/
 @Environment(value = EnvType.CLIENT)

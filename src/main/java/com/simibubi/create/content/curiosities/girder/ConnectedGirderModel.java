@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.girder;
 
 import java.util.Arrays;
-import java.util.Random;
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlockPartials;
@@ -10,9 +10,12 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -23,7 +26,7 @@ public class ConnectedGirderModel extends CTModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
 		ConnectionData data = new ConnectionData();
 		for (Direction d : Iterate.horizontalDirections)
 			data.setConnected(d, GirderBlock.isConnected(blockView, pos, state, d));

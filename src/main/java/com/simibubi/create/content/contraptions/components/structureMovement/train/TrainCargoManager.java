@@ -9,7 +9,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption.ContraptionInvWrapper;
 import com.simibubi.create.content.contraptions.components.structureMovement.MountedStorageManager;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+import com.simibubi.create.foundation.utility.fabric.ListeningStorageView;
+import com.simibubi.create.foundation.utility.fabric.ProcessingIterator;
 
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -19,7 +22,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Unit;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class TrainCargoManager extends MountedStorageManager {
@@ -84,24 +86,6 @@ public class TrainCargoManager extends MountedStorageManager {
 
 	class CargoInvWrapper extends ContraptionInvWrapper {
 
-		public final SnapshotParticipant<Unit> successListener = new SnapshotParticipant<>() {
-
-			@Override
-			protected Unit createSnapshot() {
-				return Unit.INSTANCE;
-			}
-
-			@Override
-			protected void readSnapshot(Unit snapshot) {
-			}
-
-			@Override
-			protected void onFinalCommit() {
-				super.onFinalCommit();
-				changeDetected();
-			}
-		};
-
 		public CargoInvWrapper(Storage<ItemVariant>... itemHandler) {
 			super(false, itemHandler);
 		}
@@ -110,7 +94,7 @@ public class TrainCargoManager extends MountedStorageManager {
 		public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 			long inserted = super.insert(resource, maxAmount, transaction);
 			if (inserted != 0)
-				successListener.updateSnapshots(transaction);
+				TransactionCallback.onSuccess(transaction, TrainCargoManager.this::changeDetected);
 			return inserted;
 		}
 
@@ -118,14 +102,13 @@ public class TrainCargoManager extends MountedStorageManager {
 		public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 			long extracted = super.extract(resource, maxAmount, transaction);
 			if (extracted != 0)
-				successListener.updateSnapshots(transaction);
+				TransactionCallback.onSuccess(transaction, TrainCargoManager.this::changeDetected);
 			return extracted;
 		}
 
 		@Override
-		public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-			successListener.updateSnapshots(transaction);
-			return super.iterator(transaction);
+		public Iterator<StorageView<ItemVariant>> iterator() {
+			return new ProcessingIterator<>(super.iterator(), view -> new ListeningStorageView<>(view, TrainCargoManager.this::changeDetected));
 		}
 
 	}
@@ -171,9 +154,9 @@ public class TrainCargoManager extends MountedStorageManager {
 		}
 
 		@Override
-		public Iterator<StorageView<FluidVariant>> iterator(TransactionContext transaction) {
-			successListener.updateSnapshots(transaction);
-			return super.iterator(transaction);
+		public Iterator<StorageView<FluidVariant>> iterator() {
+//			successListener.updateSnapshots(transaction);
+			return super.iterator();
 		}
 	}
 

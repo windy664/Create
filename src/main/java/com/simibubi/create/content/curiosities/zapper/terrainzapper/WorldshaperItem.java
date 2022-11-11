@@ -94,8 +94,8 @@ public class WorldshaperItem extends ZapperItem {
 	}
 
 //	@Override
-//	@Environment(EnvType.CLIENT)
-//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//	@OnlyIn(Dist.CLIENT)
+//	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 //		consumer.accept(SimpleCustomRenderer.create(this, new WorldshaperItemRenderer()));
 //	}
 

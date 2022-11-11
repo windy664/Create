@@ -10,8 +10,8 @@
       "item": "minecraft:glass_bottle"
     },
     {
-      "fluid": "create:honey",
-      "amount": 20250
+      "amount": 20250,
+      "fluid": "create:honey"
     }
   ]
 }

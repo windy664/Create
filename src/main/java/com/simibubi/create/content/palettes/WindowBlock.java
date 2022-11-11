@@ -9,17 +9,28 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class WindowBlock extends ConnectedGlassBlock {
 
-	public WindowBlock(Properties p_i48392_1_) {
+	protected final boolean translucent;
+
+	public WindowBlock(Properties p_i48392_1_, boolean translucent) {
 		super(p_i48392_1_);
+		this.translucent = translucent;
+	}
+
+	public boolean isTranslucent() {
+		return translucent;
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-		return adjacentBlockState.getBlock() instanceof ConnectedGlassBlock
-			? (ItemBlockRenderTypes.getChunkRenderType(state) != RenderType.translucent() && side.getAxis()
-				.isHorizontal() || state.getBlock() == adjacentBlockState.getBlock())
-			: super.skipRendering(state, adjacentBlockState, side);
+		if (state.getBlock() == adjacentBlockState.getBlock()) {
+			return true;
+		}
+		if (state.getBlock() instanceof WindowBlock windowBlock
+				&& adjacentBlockState.getBlock() instanceof ConnectedGlassBlock) {
+			return !windowBlock.isTranslucent() && side.getAxis().isHorizontal();
+		}
+		return super.skipRendering(state, adjacentBlockState, side);
 	}
 
 }

@@ -5,7 +5,6 @@ import static com.simibubi.create.foundation.ponder.PonderLocalization.LANG_PREF
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 import com.mojang.blaze3d.platform.ClipboardManager;
@@ -60,9 +59,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -386,7 +385,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			PonderStoryBoardEntry sb = list.get(index);
 			StructureTemplate activeTemplate = PonderRegistry.loadSchematic(sb.getSchematicLocation());
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().level);
-			activeTemplate.placeInWorld(world, BlockPos.ZERO, BlockPos.ZERO, new StructurePlaceSettings(), new Random(),
+			activeTemplate.placeInWorld(world, BlockPos.ZERO, BlockPos.ZERO, new StructurePlaceSettings(), RandomSource.create(),
 				Block.UPDATE_CLIENTS);
 			world.createBackup();
 			scene = PonderRegistry.compileScene(index, sb, world);
@@ -585,7 +584,7 @@ public class PonderUI extends NavigatableSimiScreen {
 								.withStyle(ChatFormatting.WHITE))
 						.withStyle(ChatFormatting.GRAY);
 					renderComponentTooltip(ms, font.getSplitter()
-						.splitLines(text, width / 3, Style.EMPTY).stream().map(formatted -> (Component) new TextComponent(formatted.getString())).toList(), 0, 0/*, font*/);
+						.splitLines(text, width / 3, Style.EMPTY).stream().map(formatted -> (Component) Component.literal(formatted.getString())).toList(), 0, 0/*, font*/);
 				} else
 					renderTooltip(ms, hoveredTooltipItem, 0, 0);
 				if (hoveredBlockPos != null && PonderIndex.editingModeActive() && !userViewMode) {

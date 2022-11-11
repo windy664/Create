@@ -5,9 +5,9 @@
       "item": "create:blaze_cake_base"
     },
     {
+      "amount": 27000,
       "fluid": "minecraft:lava",
-      "nbt": {},
-      "amount": 27000
+      "nbt": {}
     }
   ],
   "results": [

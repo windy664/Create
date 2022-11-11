@@ -5,8 +5,8 @@
       "item": "minecraft:apple"
     },
     {
-      "fluidTag": "c:honey",
-      "amount": 20250
+      "amount": 20250,
+      "fluidTag": "c:honey"
     }
   ],
   "results": [

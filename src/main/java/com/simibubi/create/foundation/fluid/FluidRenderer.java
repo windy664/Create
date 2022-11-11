@@ -73,22 +73,21 @@ public class FluidRenderer {
 
 		for (int i = 0; i < 4; i++) {
 			ms.pushPose();
-			renderFlowingTiledFace(Direction.SOUTH, hMin, yMin, hMax, yMax, h,
-				builder, ms, light, color, flowTexture);
+			renderFlowingTiledFace(Direction.SOUTH, hMin, yMin, hMax, yMax, h, builder, ms, light, color, flowTexture);
 			ms.popPose();
 			msr.rotateY(90);
 		}
 
 		if (progress != 1)
-			renderStillTiledFace(Direction.DOWN, hMin, hMin, hMax, hMax, yMin,
-				builder, ms, light, color, stillTexture);
+			renderStillTiledFace(Direction.DOWN, hMin, hMin, hMax, hMax, yMin, builder, ms, light, color, stillTexture);
 
 		ms.popPose();
 	}
 
-	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
-		float yMax, float zMax, MultiBufferSource buffer, PoseStack ms, int light, boolean renderBottom) {
-		renderFluidBox(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, getFluidBuilder(buffer), ms, light, renderBottom);
+	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax, float yMax,
+		float zMax, MultiBufferSource buffer, PoseStack ms, int light, boolean renderBottom) {
+		renderFluidBox(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, getFluidBuilder(buffer), ms, light,
+			renderBottom);
 	}
 
 	public static void renderFluidBox(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
@@ -120,36 +119,36 @@ public class FluidRenderer {
 			if (side.getAxis()
 				.isHorizontal()) {
 				if (side.getAxis() == Axis.X) {
-					renderStillTiledFace(side, zMin, yMin, zMax, yMax, positive ? xMax : xMin,
-						builder, ms, light, color, fluidTexture);
+					renderStillTiledFace(side, zMin, yMin, zMax, yMax, positive ? xMax : xMin, builder, ms, light,
+						color, fluidTexture);
 				} else {
-					renderStillTiledFace(side, xMin, yMin, xMax, yMax, positive ? zMax : zMin,
-						builder, ms, light, color, fluidTexture);
+					renderStillTiledFace(side, xMin, yMin, xMax, yMax, positive ? zMax : zMin, builder, ms, light,
+						color, fluidTexture);
 				}
 			} else {
-				renderStillTiledFace(side, xMin, zMin, xMax, zMax, positive ? yMax : yMin,
-					builder, ms, light, color, fluidTexture);
+				renderStillTiledFace(side, xMin, zMin, xMax, zMax, positive ? yMax : yMin, builder, ms, light, color,
+					fluidTexture);
 			}
 		}
 
 		ms.popPose();
 	}
 
-	public static void renderStillTiledFace(Direction dir, float left, float down, float right, float up,
-		float depth, VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
+	public static void renderStillTiledFace(Direction dir, float left, float down, float right, float up, float depth,
+		VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
 		FluidRenderer.renderTiledFace(dir, left, down, right, up, depth, builder, ms, light, color, texture, 1);
 	}
 
-	public static void renderFlowingTiledFace(Direction dir, float left, float down, float right, float up,
-		float depth, VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
+	public static void renderFlowingTiledFace(Direction dir, float left, float down, float right, float up, float depth,
+		VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
 		FluidRenderer.renderTiledFace(dir, left, down, right, up, depth, builder, ms, light, color, texture, 0.5f);
 	}
 
-	public static void renderTiledFace(Direction dir, float left, float down, float right, float up,
-		float depth, VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture,
-		float textureScale) {
+	public static void renderTiledFace(Direction dir, float left, float down, float right, float up, float depth,
+		VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture, float textureScale) {
 		boolean positive = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE;
-		boolean horizontal = dir.getAxis().isHorizontal();
+		boolean horizontal = dir.getAxis()
+			.isHorizontal();
 		boolean x = dir.getAxis() == Axis.X;
 
 		float shrink = texture.uvShrinkRatio() * 0.25f * textureScale;

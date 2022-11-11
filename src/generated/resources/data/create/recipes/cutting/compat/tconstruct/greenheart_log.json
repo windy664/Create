@@ -1,22 +1,22 @@
 {
   "type": "create:cutting",
-  "ingredients": [
-    {
-      "item": "tconstruct:greenheart_log"
-    }
-  ],
-  "results": [
-    {
-      "item": "tconstruct:stripped_greenheart_log"
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "tconstruct"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "tconstruct:greenheart_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "tconstruct:stripped_greenheart_log"
     }
   ]
 }

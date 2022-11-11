@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -35,7 +35,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntity> {
 
-	private static Random r = new Random();
+	private static RandomSource r = RandomSource.create();
 
 	public NixieTubeRenderer(BlockEntityRendererProvider.Context context) {}
 
@@ -199,7 +199,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		ms.popPose();
 
 	}
-	
+
 	@Override
 	public int getViewDistance() {
 		return 128;

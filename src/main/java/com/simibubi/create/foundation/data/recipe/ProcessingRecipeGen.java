@@ -15,9 +15,10 @@ import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.minecraft.core.Registry;
+
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -43,7 +44,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 		GENERATORS.add(new HauntingRecipeGen(gen));
 		GENERATORS.add(new ItemApplicationRecipeGen(gen));
 
-		gen.addProvider(new DataProvider() {
+		gen.addProvider(true, new DataProvider() {
 
 			@Override
 			public String getName() {
@@ -51,7 +52,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 			}
 
 			@Override
-			public void run(HashCache dc) throws IOException {
+			public void run(CachedOutput dc) throws IOException {
 				GENERATORS.forEach(g -> {
 					try {
 						g.run(dc);

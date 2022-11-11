@@ -34,8 +34,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.material.Fluid;
@@ -82,18 +80,6 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 	@Override
 	public IDrawable getIcon() {
 		return icon;
-	}
-
-	@Override
-	@Deprecated
-	public final ResourceLocation getUid() {
-		return type.getUid();
-	}
-
-	@Override
-	@Deprecated
-	public final Class<? extends T> getRecipeClass() {
-		return type.getRecipeClass();
 	}
 
 	public void registerRecipes(IRecipeRegistration registration) {
@@ -199,7 +185,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 			long amountToUse = mbAmount == -1 ? fluidStack.getAmount() : mbAmount;
 			FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
 			String amount = FluidTextUtil.getUnicodeMillibuckets(amountToUse, unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
-			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
+			Component text = Component.literal(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);
 			else {

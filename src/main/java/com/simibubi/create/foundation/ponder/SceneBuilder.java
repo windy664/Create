@@ -121,7 +121,7 @@ public class SceneBuilder {
 	public final EffectInstructions effects;
 
 	/**
-	 * Random other instructions that might come in handy
+	 * RandomSource other instructions that might come in handy
 	 */
 	public final SpecialInstructions special;
 

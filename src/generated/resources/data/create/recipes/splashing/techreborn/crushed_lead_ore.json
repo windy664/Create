@@ -1,5 +1,13 @@
 {
   "type": "create:splashing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "techreborn"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_lead_ore"
@@ -7,16 +15,8 @@
   ],
   "results": [
     {
-      "item": "techreborn:lead_nugget",
-      "count": 9
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "techreborn"
-      ]
+      "count": 9,
+      "item": "techreborn:lead_nugget"
     }
   ]
 }

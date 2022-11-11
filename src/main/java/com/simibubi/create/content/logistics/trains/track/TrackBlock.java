@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import com.google.common.base.Predicates;
 import com.jozufozu.flywheel.core.PartialModel;
@@ -50,9 +49,9 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import io.github.fabricators_of_create.porting_lib.block.CustomPathNodeTypeBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.registry.LandPathNodeTypesRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -65,10 +64,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -103,7 +102,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
 
-public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, DestroyProgressRenderingHandler, ReducedDestroyEffects, CustomPathNodeTypeBlock {
+public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, DestroyProgressRenderingHandler, ReducedDestroyEffects {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
@@ -113,16 +112,12 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 		registerDefaultState(defaultBlockState().setValue(SHAPE, TrackShape.ZO)
 			.setValue(HAS_TE, false)
 			.setValue(WATERLOGGED, false));
+		LandPathNodeTypesRegistry.register(this, BlockPathTypes.RAIL, null);
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
 		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TE, WATERLOGGED));
-	}
-
-	@Override
-	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
-		return BlockPathTypes.RAIL;
 	}
 
 	@Override
@@ -221,7 +216,7 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel level, BlockPos pos, Random p_60465_) {
+	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource p_60465_) {
 		TrackPropagator.onRailAdded(level, pos, state);
 		if (!state.getValue(SHAPE)
 			.isPortal())
@@ -417,7 +412,7 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 		return list;
 	}
 
-	public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, Random pRand) {
+	public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRand) {
 		if (!pState.getValue(SHAPE)
 			.isPortal())
 			return;

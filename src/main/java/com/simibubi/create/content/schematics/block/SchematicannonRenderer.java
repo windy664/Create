@@ -1,8 +1,7 @@
 package com.simibubi.create.content.schematics.block;
 
-import java.util.Random;
-
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -32,6 +31,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -197,7 +197,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 						model = DefaultLayerFilteringBakedModel.wrap(model);
 						model = FixedLightBakedModel.wrap(model, light);
 						dispatcher.getModelRenderer()
-								.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, state, BlockPos.ZERO, ms, buffer.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)), false, new Random(), 42L, overlay);
+								.tesselateBlock(VirtualEmptyBlockGetter.INSTANCE, model, state, BlockPos.ZERO, ms, buffer.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)), false, RandomSource.create(), 42L, overlay);
 					}
 					case ENTITYBLOCK_ANIMATED -> ((BlockRenderDispatcherAccessor) dispatcher).getBlockEntityRenderer().renderByItem(new ItemStack(state.getBlock()), ItemTransforms.TransformType.NONE, ms, buffer, light, overlay);
 				}
@@ -216,7 +216,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			if (launched.ticksRemaining == launched.totalTicks && tileEntityIn.firstRenderTick) {
 				tileEntityIn.firstRenderTick = false;
 				for (int i = 0; i < 10; i++) {
-					Random r = tileEntityIn.getLevel()
+					RandomSource r = tileEntityIn.getLevel()
 						.getRandom();
 					double sX = cannonOffset.x * .01f;
 					double sY = (cannonOffset.y + 1) * .01f;

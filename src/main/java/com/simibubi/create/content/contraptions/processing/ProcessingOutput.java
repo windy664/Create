@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.processing;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -22,7 +22,7 @@ public class ProcessingOutput {
 
 	public static final ProcessingOutput EMPTY = new ProcessingOutput(ItemStack.EMPTY, 1);
 
-	private static final Random r = new Random();
+	private static final RandomSource r = RandomSource.create();
 	private final ItemStack stack;
 	private final float chance;
 

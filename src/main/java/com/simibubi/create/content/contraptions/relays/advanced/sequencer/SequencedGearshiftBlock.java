@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
-import java.util.Random;
-
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTileEntities;
@@ -24,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -71,7 +70,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource r) {
 		boolean previouslyPowered = state.getValue(STATE) != 0;
 		boolean isPowered = worldIn.hasNeighborSignal(pos);
 		withTileEntityDo(worldIn, pos, sgte -> sgte.onRedstoneUpdate(isPowered, previouslyPowered));

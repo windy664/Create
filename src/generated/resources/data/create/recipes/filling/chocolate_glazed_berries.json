@@ -5,9 +5,9 @@
       "item": "minecraft:sweet_berries"
     },
     {
+      "amount": 27000,
       "fluid": "create:chocolate",
-      "nbt": {},
-      "amount": 27000
+      "nbt": {}
     }
   ],
   "results": [

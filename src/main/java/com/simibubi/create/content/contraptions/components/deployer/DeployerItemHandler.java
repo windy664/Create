@@ -1,5 +1,10 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import java.util.Iterator;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
@@ -11,11 +16,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Iterator;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class DeployerItemHandler extends SnapshotParticipant<Unit> implements Storage<ItemVariant> {
 
@@ -140,22 +140,20 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 	}
 
 	@Override
-	public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		return new DeployerItemHandlerIterator(transaction);
+	public Iterator<StorageView<ItemVariant>> iterator() {
+		return new DeployerItemHandlerIterator();
 	}
 
 	public class DeployerItemHandlerIterator implements Iterator<StorageView<ItemVariant>> {
-		private boolean open = true;
 		private int index; // -1 means held
 
-		public DeployerItemHandlerIterator(TransactionContext transaction) {
-			transaction.addCloseCallback((t, r) -> open = false);
+		public DeployerItemHandlerIterator() {
 			this.index = te.overflowItems.size() != 0 ? 0 : -1;
 		}
 
 		@Override
 		public boolean hasNext() {
-			return open && index < te.overflowItems.size();
+			return index < te.overflowItems.size();
 		}
 
 		@Override

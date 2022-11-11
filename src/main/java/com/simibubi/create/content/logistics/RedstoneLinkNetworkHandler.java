@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.WorldHelper;
-import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
@@ -24,7 +23,7 @@ import net.minecraft.world.level.LevelAccessor;
 public class RedstoneLinkNetworkHandler {
 
 	static final Map<LevelAccessor, Map<Couple<Frequency>, Set<IRedstoneLinkable>>> connections =
-		new IdentityHashMap<>();
+			new IdentityHashMap<>();
 
 	public final AtomicInteger globalPowerVersion = new AtomicInteger();
 
@@ -64,7 +63,7 @@ public class RedstoneLinkNetworkHandler {
 			if (this == obj)
 				return true;
 			return obj instanceof Frequency ? ((Frequency) obj).item == item && ((Frequency) obj).color == color
-				: false;
+					: false;
 		}
 
 	}
@@ -107,7 +106,7 @@ public class RedstoneLinkNetworkHandler {
 		globalPowerVersion.incrementAndGet();
 		int power = 0;
 
-		for (Iterator<IRedstoneLinkable> iterator = network.iterator(); iterator.hasNext();) {
+		for (Iterator<IRedstoneLinkable> iterator = network.iterator(); iterator.hasNext(); ) {
 			IRedstoneLinkable other = iterator.next();
 			if (!other.isAlive()) {
 				iterator.remove();
@@ -143,7 +142,7 @@ public class RedstoneLinkNetworkHandler {
 		if (from == to)
 			return true;
 		return from.getLocation()
-			.closerThan(to.getLocation(), AllConfigs.SERVER.logistics.linkRange.get());
+				.closerThan(to.getLocation(), AllConfigs.SERVER.logistics.linkRange.get());
 	}
 
 	public Map<Couple<Frequency>, Set<IRedstoneLinkable>> networksIn(LevelAccessor world) {

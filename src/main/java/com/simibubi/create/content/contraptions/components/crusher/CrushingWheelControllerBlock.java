@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.crusher;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -9,14 +7,15 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
 
+import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -112,7 +111,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 	}
 
 	@Override
-	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
 		if (!stateIn.getValue(VALID))
 			return;
 		if (rand.nextInt(1) != 0)
@@ -151,11 +150,11 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 					continue;
 				te.crushingspeed = Math.abs(cwte.getSpeed() / 50f);
 				te.sendData();
-				
+
 				cwte.award(AllAdvancements.CRUSHING_WHEEL);
-				if (cwte.getSpeed() > 255) 
+				if (cwte.getSpeed() > 255)
 					cwte.award(AllAdvancements.CRUSHER_MAXED);
-				
+
 				break;
 			}
 		});

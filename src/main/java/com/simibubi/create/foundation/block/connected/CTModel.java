@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.block.connected;
 
 import java.util.Arrays;
-import java.util.Random;
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
@@ -12,6 +12,8 @@ import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -20,6 +22,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.util.RandomSource;
 
 public class CTModel extends ForwardingBakedModel {
 
@@ -52,7 +55,7 @@ public class CTModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
 		CTData data = createCTData(blockView, pos, state);
 
 		SpriteFinder spriteFinder = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS));

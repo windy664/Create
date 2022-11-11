@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -24,7 +23,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
@@ -58,6 +56,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -284,7 +283,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 		else
 			particleData = new ItemParticleOption(ParticleTypes.ITEM, stack);
 
-		Random r = level.random;
+		RandomSource r = level.random;
 		Vec3 v = VecHelper.getCenterOf(this.worldPosition)
 			.add(0, 5 / 16f, 0);
 		for (int i = 0; i < 10; i++) {
@@ -307,7 +306,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 			speed = .125f;
 		}
 
-		Random r = level.random;
+		RandomSource r = level.random;
 		Vec3 vec = getItemMovementVec();
 		Vec3 pos = VecHelper.getCenterOf(this.worldPosition);
 		float offset = inventory.recipeDuration != 0 ? (float) (inventory.remainingTime) / inventory.recipeDuration : 0;
@@ -351,8 +350,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 				ItemHelper.addToList(stack, list);
 			}
 		}
-		
-		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++) 
+
+		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
 			inventory.setStackInSlot(slot + 1, list.get(slot));
 
 		award(AllAdvancements.SAW_PROCESSING);
@@ -487,6 +486,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 		if (stateToBreak.is(BlockTags.SAPLINGS))
 			return false;
 		if (TreeCutter.isLog(stateToBreak) || (stateToBreak.is(BlockTags.LEAVES)))
+			return true;
+		if (TreeCutter.isRoot(stateToBreak))
 			return true;
 		Block block = stateToBreak.getBlock();
 		if (block instanceof BambooBlock)

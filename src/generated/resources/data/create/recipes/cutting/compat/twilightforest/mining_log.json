@@ -1,22 +1,22 @@
 {
   "type": "create:cutting",
-  "ingredients": [
-    {
-      "item": "twilightforest:mining_log"
-    }
-  ],
-  "results": [
-    {
-      "item": "twilightforest:stripped_mining_log"
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "twilightforest"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "twilightforest:mining_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "twilightforest:stripped_mining_log"
     }
   ]
 }

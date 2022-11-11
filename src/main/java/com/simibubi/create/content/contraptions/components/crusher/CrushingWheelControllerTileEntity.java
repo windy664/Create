@@ -3,20 +3,13 @@ package com.simibubi.create.content.contraptions.components.crusher;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
-
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
-import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
@@ -26,12 +19,16 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
-import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
+import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -42,6 +39,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -287,7 +285,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 		else
 			particleData = new ItemParticleOption(ParticleTypes.ITEM, stack);
 
-		Random r = level.random;
+		RandomSource r = level.random;
 		for (int i = 0; i < 4; i++)
 			level.addParticle(particleData, worldPosition.getX() + r.nextFloat(), worldPosition.getY() + r.nextFloat(),
 				worldPosition.getZ() + r.nextFloat(), 0, 0, 0);

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids;
 
 import java.util.Optional;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Predicate;
 
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -204,7 +204,7 @@ public class PipeConnection {
 
 		float flowSpeed = (1 / 32f + Mth.clamp(pressure.get(flow.inbound) / 512f, 0, 1) * 31 / 32f);
 		flow.progress.setValue(Math.min(flow.progress.getValue() + flowSpeed, 1));
-		if (flow.progress.getValue() >= 1) 
+		if (flow.progress.getValue() >= 1)
 			flow.complete = true;
 	}
 
@@ -354,7 +354,7 @@ public class PipeConnection {
 	public static final int SPLASH_PARTICLE_AMOUNT = 1;
 	public static final float IDLE_PARTICLE_SPAWN_CHANCE = 1 / 1000f;
 	public static final float RIM_RADIUS = 1 / 4f + 1 / 64f;
-	public static final Random r = new Random();
+	public static final RandomSource r = RandomSource.create();
 
 	public void spawnSplashOnRim(Level world, BlockPos pos, FluidStack fluid) {
 		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> spawnSplashOnRimInner(world, pos, fluid));

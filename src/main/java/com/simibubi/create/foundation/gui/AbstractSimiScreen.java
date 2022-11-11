@@ -2,27 +2,22 @@ package com.simibubi.create.foundation.gui;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.InputConstants.Key;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 import com.simibubi.create.foundation.utility.Components;
 
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
-
 import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 @Environment(EnvType.CLIENT)
 public abstract class AbstractSimiScreen extends Screen {
@@ -135,7 +130,8 @@ public abstract class AbstractSimiScreen extends Screen {
 		return false;
 	}
 
-	protected void prepareFrame() {}
+	protected void prepareFrame() {
+	}
 
 	protected void renderWindowBackground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(ms);
@@ -146,7 +142,7 @@ public abstract class AbstractSimiScreen extends Screen {
 	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		for (Widget widget : ((ScreenAccessor) this).port_lib$getRenderables()) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()
-				&& simiWidget.visible) {
+					&& simiWidget.visible) {
 				List<Component> tooltip = simiWidget.getToolTip();
 				if (tooltip.isEmpty())
 					continue;
@@ -157,7 +153,8 @@ public abstract class AbstractSimiScreen extends Screen {
 		}
 	}
 
-	protected void endFrame() {}
+	protected void endFrame() {
+	}
 
 	@Deprecated
 	protected void debugWindowArea(PoseStack matrixStack) {

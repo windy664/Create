@@ -161,7 +161,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 
 		if (isPowered != pState.getValue(OPEN)) {
 			this.playSound(pLevel, pPos, isPowered);
-			pLevel.gameEvent(isPowered ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pPos);
+			pLevel.gameEvent(null, isPowered ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pPos);
 
 			DoorHingeSide hinge = changedState.getValue(HINGE);
 			Direction facing = changedState.getValue(FACING);

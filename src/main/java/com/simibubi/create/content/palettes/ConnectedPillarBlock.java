@@ -1,9 +1,6 @@
 package com.simibubi.create.content.palettes;
 
-import java.util.Random;
-
 import com.simibubi.create.foundation.utility.Iterate;
-import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -11,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -30,9 +28,9 @@ public class ConnectedPillarBlock extends LayeredBlock {
 	public ConnectedPillarBlock(Properties p_55926_) {
 		super(p_55926_);
 		registerDefaultState(defaultBlockState().setValue(NORTH, false)
-			.setValue(WEST, false)
-			.setValue(EAST, false)
-			.setValue(SOUTH, false));
+				.setValue(WEST, false)
+				.setValue(EAST, false)
+				.setValue(SOUTH, false));
 	}
 
 	@Override
@@ -55,7 +53,8 @@ public class ConnectedPillarBlock extends LayeredBlock {
 				continue;
 
 			boolean connect = true;
-			Move: for (Direction movement : Iterate.directionsInAxis(axis)) {
+			Move:
+			for (Direction movement : Iterate.directionsInAxis(axis)) {
 				currentPos.set(pos);
 				for (int i = 0; i < 1000; i++) {
 					if (!level.isLoaded(currentPos))
@@ -91,11 +90,11 @@ public class ConnectedPillarBlock extends LayeredBlock {
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		if (pState.getBlock() != this)
 			return;
 		BlockPos belowPos =
-			pPos.relative(Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.NEGATIVE));
+				pPos.relative(Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.NEGATIVE));
 		BlockState belowState = pLevel.getBlockState(belowPos);
 		if (!canConnect(pState, belowState))
 			pLevel.setBlock(pPos, updateColumn(pLevel, pPos, pState, true), 3);
@@ -103,7 +102,7 @@ public class ConnectedPillarBlock extends LayeredBlock {
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction pDirection, BlockState pNeighborState,
-		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+								  LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
 		if (!canConnect(state, pNeighborState))
 			return setConnection(state, pDirection, false);
 		if (pDirection.getAxis() == state.getValue(AXIS))
@@ -146,46 +145,46 @@ public class ConnectedPillarBlock extends LayeredBlock {
 
 		if (axis == Axis.X) {
 			switch (side) {
-			case UP:
-				return EAST;
-			case NORTH:
-				return NORTH;
-			case SOUTH:
-				return SOUTH;
-			case DOWN:
-				return WEST;
-			default:
-				return null;
+				case UP:
+					return EAST;
+				case NORTH:
+					return NORTH;
+				case SOUTH:
+					return SOUTH;
+				case DOWN:
+					return WEST;
+				default:
+					return null;
 			}
 		}
 
 		if (axis == Axis.Y) {
 			switch (side) {
-			case EAST:
-				return EAST;
-			case NORTH:
-				return NORTH;
-			case SOUTH:
-				return SOUTH;
-			case WEST:
-				return WEST;
-			default:
-				return null;
+				case EAST:
+					return EAST;
+				case NORTH:
+					return NORTH;
+				case SOUTH:
+					return SOUTH;
+				case WEST:
+					return WEST;
+				default:
+					return null;
 			}
 		}
 
 		if (axis == Axis.Z) {
 			switch (side) {
-			case UP:
-				return WEST;
-			case WEST:
-				return SOUTH;
-			case EAST:
-				return NORTH;
-			case DOWN:
-				return EAST;
-			default:
-				return null;
+				case UP:
+					return WEST;
+				case WEST:
+					return SOUTH;
+				case EAST:
+					return NORTH;
+				case DOWN:
+					return EAST;
+				default:
+					return null;
 			}
 		}
 

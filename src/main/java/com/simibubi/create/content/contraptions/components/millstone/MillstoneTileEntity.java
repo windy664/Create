@@ -4,19 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.ViewOnlyWrappedStorageView;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
-
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
@@ -27,14 +15,20 @@ import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.transfer.ViewOnlyWrappedStorageView;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -229,25 +223,21 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 		}
 
 		@Override
-		public Iterator<StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-			return new MillstoneInventoryHandlerIterator(transaction);
+		public @NotNull Iterator<StorageView<ItemVariant>> iterator() {
+			return new MillstoneInventoryHandlerIterator();
 		}
 
 		private class MillstoneInventoryHandlerIterator implements Iterator<StorageView<ItemVariant>> {
-			private final TransactionContext ctx;
-			private boolean open = true;
 			private boolean output = true;
 			private Iterator<StorageView<ItemVariant>> wrapped;
 
-			public MillstoneInventoryHandlerIterator(TransactionContext ctx) {
-				this.ctx = ctx;
-				ctx.addCloseCallback((t, r) -> open = false);
-				wrapped = outputInv.iterator(ctx);
+			public MillstoneInventoryHandlerIterator() {
+				wrapped = outputInv.iterator();
 			}
 
 			@Override
 			public boolean hasNext() {
-				return open && wrapped.hasNext();
+				return wrapped.hasNext();
 			}
 
 			@Override
@@ -255,7 +245,7 @@ public class MillstoneTileEntity extends KineticTileEntity implements ItemTransf
 				StorageView<ItemVariant> view = wrapped.next();
 				if (!output) view = new ViewOnlyWrappedStorageView<>(view);
 				if (output && !hasNext()) {
-					wrapped = inputInv.iterator(ctx);
+					wrapped = inputInv.iterator();
 					output = false;
 				}
 				return view;

@@ -1,23 +1,23 @@
 {
   "type": "create:cutting",
-  "ingredients": [
-    {
-      "item": "quark:stripped_blossom_wood"
-    }
-  ],
-  "results": [
-    {
-      "item": "quark:blossom_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "quark"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "quark:stripped_blossom_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "quark:blossom_planks"
     }
   ]
 }

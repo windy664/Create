@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.processing.burner;
 
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -92,7 +92,7 @@ public class LitBlazeBurnerBlock extends Block implements IWrenchable, BlockPick
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+	public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
 		world.addAlwaysVisibleParticle(ParticleTypes.LARGE_SMOKE, true,
 			(double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1),
 			(double) pos.getY() + random.nextDouble() + random.nextDouble(),

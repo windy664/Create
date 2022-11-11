@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.utility;
 
-import java.util.Random;
-
 import javax.annotation.Nullable;
 
 import com.mojang.math.Quaternion;
@@ -9,8 +7,6 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.foundation.mixin.accessor.GameRendererAccessor;
 
 import io.github.fabricators_of_create.porting_lib.extensions.Vector3fExtensions;
-import io.github.fabricators_of_create.porting_lib.util.GameRendererHelper;
-
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -23,6 +19,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Mirror;
@@ -119,7 +116,7 @@ public class VecHelper {
 			.add(.5f, .5f, .5f);
 	}
 
-	public static Vec3 offsetRandomly(Vec3 vec, Random r, float radius) {
+	public static Vec3 offsetRandomly(Vec3 vec, RandomSource r, float radius) {
 		return new Vec3(vec.x + (r.nextFloat() - .5f) * 2 * radius, vec.y + (r.nextFloat() - .5f) * 2 * radius,
 			vec.z + (r.nextFloat() - .5f) * 2 * radius);
 	}
@@ -254,7 +251,7 @@ public class VecHelper {
 		// ----- compensate for view bobbing (if active) -----
 		// the following code adapted from GameRenderer::applyBobbing (to invert it)
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.options.bobView) {
+		if (mc.options.bobView().get()) {
 			Entity renderViewEntity = mc.getCameraEntity();
 			if (renderViewEntity instanceof Player) {
 				Player playerentity = (Player) renderViewEntity;

@@ -2,8 +2,8 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "fluidTag": "c:honey",
-      "amount": 81000
+      "amount": 81000,
+      "fluidTag": "c:honey"
     }
   ],
   "results": [

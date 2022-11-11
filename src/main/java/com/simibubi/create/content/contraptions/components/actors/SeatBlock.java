@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Optional;
@@ -10,9 +9,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import io.github.fabricators_of_create.porting_lib.block.CustomPathNodeTypeBlock;
-import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
+import io.github.fabricators_of_create.porting_lib.util.TagUtil;
+import net.fabricmc.fabric.api.registry.LandPathNodeTypesRegistry;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,7 +45,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SeatBlock extends Block implements ProperWaterloggedBlock, CustomPathNodeTypeBlock {
+public class SeatBlock extends Block implements ProperWaterloggedBlock {
 
 	protected final DyeColor color;
 	protected final boolean inCreativeTab;
@@ -56,6 +55,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock, CustomPa
 		this.color = color;
 		this.inCreativeTab = inCreativeTab;
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
+		LandPathNodeTypesRegistry.register(this, BlockPathTypes.RAIL, null);
 	}
 
 	@Override
@@ -114,11 +114,6 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock, CustomPa
 			.getBlock() != this)
 			return;
 		sitDown(entity.level, pos, entity);
-	}
-
-	@Override
-	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
-		return BlockPathTypes.RAIL;
 	}
 
 	@Override

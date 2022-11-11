@@ -49,6 +49,15 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 
 	protected RenderType getRenderType(KineticTileEntity te, BlockState state) {
 		return ItemBlockRenderTypes.getChunkRenderType(state);
+		// fabric: not needed
+		// // TODO: this is not very clean
+		// BakedModel model = Minecraft.getInstance()
+		// 	.getBlockRenderer().getBlockModel(state);
+		// ChunkRenderTypeSet typeSet = model.getRenderTypes(state, RandomSource.create(42L), ModelData.EMPTY);
+		// for (RenderType type : REVERSED_CHUNK_BUFFER_LAYERS)
+		// 	if (typeSet.contains(type))
+		// 		return type;
+		// return null;
 	}
 
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {

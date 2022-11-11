@@ -1,6 +1,5 @@
 package com.simibubi.create.content.schematics.block;
 
-import java.awt.Taskbar.State;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,11 +29,10 @@ import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
+
 import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.util.LevelUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -442,7 +440,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		}
 
 		if (!blueprint.getTag()
-			.getBoolean("Deployed")) {
+				.getBoolean("Deployed")) {
 			state = State.STOPPED;
 			statusMsg = "schematicNotPlaced";
 			sendUpdate = true;
@@ -462,7 +460,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		}
 
 		if (!printer.getAnchor()
-			.closerThan(getBlockPos(), MAX_ANCHOR_DISTANCE)) {
+				.closerThan(getBlockPos(), MAX_ANCHOR_DISTANCE)) {
 			state = State.STOPPED;
 			statusMsg = "targetOutsideRange";
 			printer.resetSchematic();
@@ -493,7 +491,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		if (usage == ItemUseType.DAMAGE) {
 			for (Storage<ItemVariant> iItemHandler : attachedInventories) {
 				try (Transaction t = transaction.openNested()) {
-					for (StorageView<ItemVariant> view : iItemHandler.iterable(t)) {
+					for (StorageView<ItemVariant> view : iItemHandler) {
 						if (view.isResourceBlank()) continue;
 						ItemVariant variant = view.getResource();
 						ItemStack stack = variant.toStack();
@@ -544,7 +542,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	public void finishedPrinting() {
 		inventory.setStackInSlot(0, ItemStack.EMPTY);
 		inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_SCHEMATIC.get(), inventory.getStackInSlot(1)
-			.getCount() + 1));
+				.getCount() + 1));
 		state = State.STOPPED;
 		statusMsg = "finished";
 		resetPrinter();
@@ -562,11 +560,11 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	protected boolean shouldPlace(BlockPos pos, BlockState state, BlockEntity te, BlockState toReplace,
-		BlockState toReplaceOther, boolean isNormalCube) {
+								  BlockState toReplaceOther, boolean isNormalCube) {
 		if (pos.closerThan(getBlockPos(), 2f))
 			return false;
 		if (!replaceTileEntities
-			&& (toReplace.hasBlockEntity() || (toReplaceOther != null && toReplaceOther.hasBlockEntity())))
+				&& (toReplace.hasBlockEntity() || (toReplaceOther != null && toReplaceOther.hasBlockEntity())))
 			return false;
 
 		if (shouldIgnoreBlockState(state, te))
@@ -579,10 +577,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		if (replaceMode == 2 && !placingAir)
 			return true;
 		if (replaceMode == 1 && (isNormalCube || (!toReplace.isRedstoneConductor(level, pos)
-			&& (toReplaceOther == null || !toReplaceOther.isRedstoneConductor(level, pos)))) && !placingAir)
+				&& (toReplaceOther == null || !toReplaceOther.isRedstoneConductor(level, pos)))) && !placingAir)
 			return true;
 		if (replaceMode == 0 && !toReplace.isRedstoneConductor(level, pos)
-			&& (toReplaceOther == null || !toReplaceOther.isRedstoneConductor(level, pos)) && !placingAir)
+				&& (toReplaceOther == null || !toReplaceOther.isRedstoneConductor(level, pos)) && !placingAir)
 			return true;
 
 		return false;
@@ -601,10 +599,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 
 		// Block doesn't need to be placed twice (Doors, beds, double plants)
 		if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
-			&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
+				&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
 			return true;
 		if (state.hasProperty(BlockStateProperties.BED_PART)
-			&& state.getValue(BlockStateProperties.BED_PART) == BedPart.HEAD)
+				&& state.getValue(BlockStateProperties.BED_PART) == BedPart.HEAD)
 			return true;
 		if (state.getBlock() instanceof PistonHeadBlock)
 			return true;
@@ -628,11 +626,11 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		if (1 - fuelLevel + 1 / 128f < getFuelAddedByGunPowder())
 			return;
 		if (inventory.getStackInSlot(4)
-			.isEmpty())
+				.isEmpty())
 			return;
 
 		inventory.getStackInSlot(4)
-			.shrink(1);
+				.shrink(1);
 		fuelLevel += getFuelAddedByGunPowder();
 		sendUpdate = true;
 	}
@@ -702,22 +700,22 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		boolean end = part == BeltPart.END;
 
 		switch (slope) {
-		case DOWNWARD:
-			isLastSegment = start;
-			break;
-		case UPWARD:
-			isLastSegment = end;
-			break;
-		default:
-			isLastSegment = positive && end || !positive && start;
+			case DOWNWARD:
+				isLastSegment = start;
+				break;
+			case UPWARD:
+				isLastSegment = end;
+				break;
+			default:
+				isLastSegment = positive && end || !positive && start;
 		}
 		if (isLastSegment)
 			return blockState;
 
 		return AllBlocks.SHAFT.getDefaultState()
-			.setValue(AbstractSimpleShaftBlock.AXIS, slope == BeltSlope.SIDEWAYS ? Axis.Y :
-				facing.getClockWise()
-					.getAxis());
+				.setValue(AbstractSimpleShaftBlock.AXIS, slope == BeltSlope.SIDEWAYS ? Axis.Y :
+						facing.getClockWise()
+								.getAxis());
 	}
 
 	protected void launchBlockOrBelt(BlockPos target, ItemStack icon, BlockState blockState, BlockEntity tile) {
@@ -802,7 +800,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+	}
 
 	@Override
 	public void lazyTick() {
