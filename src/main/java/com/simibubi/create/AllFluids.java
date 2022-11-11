@@ -56,7 +56,7 @@ public class AllFluids {
 			REGISTRATE.virtualFluid("potion", PotionFluid::new)
 					.lang("Potion")
 					.fluidAttributes(PotionFluidVariantAttributeHandler::new)
-					.fluidVariantRenderingAttributes(PotionFluidVariantRenderHandler::new)
+					.disableDefaultRenderHandler()
 					.register();
 
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
@@ -154,7 +154,7 @@ public class AllFluids {
 //	}
 
 	@Environment(EnvType.CLIENT)
-	private static class PotionFluidVariantRenderHandler implements FluidVariantRenderHandler {
+	public static class PotionFluidVariantRenderHandler implements FluidVariantRenderHandler {
 		@Override
 		public int getColor(FluidVariant fluidVariant, @Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
 			return PotionUtils.getColor(PotionUtils.getAllEffects(fluidVariant.getNbt())) | 0xff000000;
