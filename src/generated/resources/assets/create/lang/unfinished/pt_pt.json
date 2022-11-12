@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2275",
+	"_": "Missing Localizations: 2273",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -576,10 +576,10 @@
 	"entity.create.stationary_contraption": "Engenhoca estacionária",
 	"entity.create.super_glue": "Super Cola",
 
-	"fluid.create.flowing_chocolate": "UNLOCALIZED: Chocolate",
-	"fluid.create.flowing_honey": "UNLOCALIZED: Honey",
-	"fluid.create.flowing_potion": "UNLOCALIZED: Potion",
-	"fluid.create.flowing_tea": "UNLOCALIZED: Builder's Tea",
+	"fluid.create.chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.honey": "UNLOCALIZED: Honey",
+	"fluid.create.potion": "Poção",
+	"fluid.create.tea": "Chá do Construtor",
 
 	"item.create.andesite_alloy": "Liga de Andesito",
 	"item.create.attribute_filter": "Filtro de Atributo",

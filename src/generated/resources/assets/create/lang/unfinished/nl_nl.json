@@ -576,10 +576,10 @@
 	"entity.create.stationary_contraption": "UNLOCALIZED: Stationary Contraption",
 	"entity.create.super_glue": "UNLOCALIZED: Super Glue",
 
-	"fluid.create.flowing_chocolate": "UNLOCALIZED: Chocolate",
-	"fluid.create.flowing_honey": "UNLOCALIZED: Honey",
-	"fluid.create.flowing_potion": "UNLOCALIZED: Potion",
-	"fluid.create.flowing_tea": "UNLOCALIZED: Builder's Tea",
+	"fluid.create.chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.honey": "UNLOCALIZED: Honey",
+	"fluid.create.potion": "UNLOCALIZED: Potion",
+	"fluid.create.tea": "UNLOCALIZED: Builder's Tea",
 
 	"item.create.andesite_alloy": "UNLOCALIZED: Andesite Alloy",
 	"item.create.attribute_filter": "UNLOCALIZED: Attribute Filter",

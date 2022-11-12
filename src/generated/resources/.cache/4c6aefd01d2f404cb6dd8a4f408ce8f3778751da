@@ -1,18 +1,18 @@
-// 1.19.2	2022-11-11T16:20:41.376124197	Lang merger
-f91c14cafc59437053a693eb00b08890e0c7f6e1 assets/create/lang/unfinished/uk_ua.json
-89af2a4fbdc8c61b1d7455e9978c81b17a469813 assets/create/lang/unfinished/fr_fr.json
-85a2d5e7af6535e1e99d2b36ad4fa36128406f0b assets/create/lang/unfinished/zh_tw.json
-6db0608d8ea98e72dbff20c3ac5ba598632f8033 assets/create/lang/unfinished/de_de.json
-5b7750beea6cc592e95b4db7a791e92ba4aef39c assets/create/lang/unfinished/zh_cn.json
-064f019e4257091188734ea2baa839604f60dd73 assets/create/lang/en_us.json
-6d7dc4b02000c63e18ab5a66157dcca879261fd2 assets/create/lang/unfinished/es_cl.json
-8eb2b6802c3cf6168d9f9b7f0614e9bb189ed1a7 assets/create/lang/unfinished/ro_ro.json
-2189c4743d5c51ac148fc3eec280ce203fb048b5 assets/create/lang/unfinished/pt_pt.json
-af34b193bd850c4bae0a6ecdf4ebec08379f4120 assets/create/lang/unfinished/es_es.json
-f2ec0de36d8e017ffc7a14f2a7b04fdb98060d8e assets/create/lang/unfinished/ja_jp.json
-939034d7266719594f531c58a42005d9adba69d7 assets/create/lang/unfinished/ru_ru.json
-d9213af2d85476ae83f05b0562ab948ca5b00483 assets/create/lang/unfinished/nl_nl.json
-5d2c4245a6d710b6ac56d4d737052955aa8c06ff assets/create/lang/unfinished/pl_pl.json
-0c66a896a966bdc0d3ddb8b79e81d28b78f3096c assets/create/lang/unfinished/ko_kr.json
-010e812a92383005c3bd859ac35d38c2ca480fa4 assets/create/lang/unfinished/pt_br.json
-35bd6858d9d94e4307e5a8beab539d8d0cc87f57 assets/create/lang/unfinished/it_it.json
+// 1.19.2	2022-11-12T16:47:29.2603172	Lang merger
+8eaa5b15aace8a4dfc40786d4f3079942b778c66 assets\create\lang\unfinished\de_de.json
+55416f2c29c1d619db82e0e095aa1c83542e87c3 assets\create\lang\en_us.json
+99f56625085725cb1fe354b0b2075f466f466d90 assets\create\lang\unfinished\ja_jp.json
+1cb0cbd792111a68e14e7287e9df9424d77919d8 assets\create\lang\unfinished\pt_pt.json
+6c07d51a36c4249fc65b1b74c475f2b16f85557a assets\create\lang\unfinished\ro_ro.json
+80117e19cfd022b221d8d10a7e21d100982a7fb0 assets\create\lang\unfinished\uk_ua.json
+7359c25a0e2c9f78bbd8f3e1d0d5434647f8295f assets\create\lang\unfinished\nl_nl.json
+406c9ed9392aabaddd0804a6ba64e31888095176 assets\create\lang\unfinished\zh_tw.json
+9d9274b0486b2125170bcc6948e1eb83fd17a9d7 assets\create\lang\unfinished\ru_ru.json
+219f41cc7dd8799416556f79c53a4cdbdce4ce45 assets\create\lang\unfinished\es_cl.json
+a7e6114f34f79c86a1cb93720d452f04df0268f4 assets\create\lang\unfinished\es_es.json
+ceec6c336a6b19e2730a712ba39b48e6f83875e1 assets\create\lang\unfinished\zh_cn.json
+5f6772c545535b1eaa7beae2985ff050a34439a5 assets\create\lang\unfinished\ko_kr.json
+2b06ae4a87689f3fe3cdaccabe7e332808f99fdb assets\create\lang\unfinished\fr_fr.json
+ec60d2a29b64c2e80712009cbad2b4389f2bf2e2 assets\create\lang\unfinished\it_it.json
+afdbdb6a4ee2c2f50fdaac668d2e1f4761bc0b01 assets\create\lang\unfinished\pt_br.json
+f92875cf09cbb281e306ac87bbd796ac6a6bd81f assets\create\lang\unfinished\pl_pl.json
