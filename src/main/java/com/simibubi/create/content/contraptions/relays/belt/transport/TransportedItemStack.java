@@ -1,18 +1,20 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
-import net.minecraft.util.RandomSource;
+import java.util.Random;
 
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public class TransportedItemStack implements Comparable<TransportedItemStack> {
 
-	private static RandomSource R = RandomSource.create();
+	private static Random R = new Random();
+
+	// fabric: can't use null in some places, have a static empty stack
 	public static final TransportedItemStack EMPTY = new TransportedItemStack(ItemStack.EMPTY);
 
 	public ItemStack stack;

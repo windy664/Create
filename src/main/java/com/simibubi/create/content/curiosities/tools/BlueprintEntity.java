@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.Validate;
 
-import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
@@ -20,6 +19,7 @@ import com.simibubi.create.foundation.networking.ISyncPersistentData;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.fabric.ReachUtil;
 
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
@@ -260,8 +260,7 @@ public class BlueprintEntity extends HangingEntity
 			return super.skipAttackInteraction(source);
 
 		Player player = (Player) source;
-		double attrib = player.getAttribute(ReachEntityAttributes.REACH)
-			.getValue() + (player.isCreative() ? 0 : -0.5F);
+		double attrib = ReachUtil.reach(player);
 
 		Vec3 eyePos = source.getEyePosition(1);
 		Vec3 look = source.getViewVector(1);
