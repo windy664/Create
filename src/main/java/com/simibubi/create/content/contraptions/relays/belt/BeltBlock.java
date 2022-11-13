@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
+import com.simibubi.create.foundation.block.render.MultiPosDestructionHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
 import io.github.fabricators_of_create.porting_lib.block.CustomPathNodeTypeBlock;
@@ -47,7 +48,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -487,7 +487,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			BlockPos currentPos = nextSegmentPosition(state, pos, forward);
 			if (currentPos == null)
 				continue;
-			world.destroyBlockProgress(currentPos.hashCode(), currentPos, -1);
 			BlockState currentState = world.getBlockState(currentPos);
 			if (!AllBlocks.BELT.has(currentState))
 				continue;
@@ -707,17 +706,15 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		return false;
 	}
 
-	@Environment(EnvType.CLIENT)
-	@Override
-	public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos,
-			int progress, BlockState blockState) {
-		BlockEntity blockEntity = level.getBlockEntity(pos);
-		if (blockEntity instanceof BeltTileEntity belt) {
-			for (BlockPos beltPos : BeltBlock.getBeltChain(level, belt.getController())) {
-				renderer.destroyBlockProgress(beltPos.hashCode(), beltPos, progress);
+	public static class RenderProperties extends ReducedDestroyEffects implements MultiPosDestructionHandler {
+		@Override
+		public Set<BlockPos> getExtraPositions(ClientLevel level, BlockPos pos, BlockState blockState, int progress) {
+			BlockEntity blockEntity = level.getBlockEntity(pos);
+			if (blockEntity instanceof BeltTileEntity belt) {
+				return new HashSet<>(BeltBlock.getBeltChain(level, belt.getController()));
 			}
+			return null;
 		}
-		return false;
 	}
 
 }
