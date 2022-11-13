@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -105,7 +106,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
 
-public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, DestroyProgressRenderingHandler, ReducedDestroyEffects, CustomPathNodeTypeBlock {
+public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock,
+		ISpecialBlockItemRequirement, ProperWaterloggedBlock, ReducedDestroyEffects, CustomPathNodeTypeBlock, MultiPosDestructionHandler {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
@@ -768,17 +770,18 @@ public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchab
 		return new ItemRequirement(ItemUseType.CONSUME, stacks);
 	}
 
-	public static class RenderProperties extends ReducedDestroyEffects implements MultiPosDestructionHandler {
+//	public static class RenderProperties extends ReducedDestroyEffects implements MultiPosDestructionHandler {
 		@Override
 		@Nullable
+		@Environment(EnvType.CLIENT)
 		public Set<BlockPos> getExtraPositions(ClientLevel level, BlockPos pos, BlockState blockState,
-				int progress) {
+											   int progress) {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (blockEntity instanceof TrackTileEntity track) {
 				return new HashSet<>(track.connections.keySet());
 			}
 			return null;
 		}
-	}
+//	}
 
 }

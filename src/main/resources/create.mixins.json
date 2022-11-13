@@ -6,7 +6,6 @@
   "refmap": "${archivesBaseName}-refmap.json",
   "mixins": [
     "ClientboundMapItemDataPacketMixin",
-    "ContraptionDriverInteractMixin",
     "CustomItemUseEffectsMixin",
     "MapItemSavedDataMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
@@ -26,7 +25,6 @@
     "HeavyBootsOnPlayerMixin",
     "LevelRendererMixin",
     "MapRendererMapInstanceMixin",
-    "ModelDataRefreshMixin",
     "WindowResizeMixin",
     "accessor.AgeableListModelAccessor",
     "accessor.GameRendererAccessor",
