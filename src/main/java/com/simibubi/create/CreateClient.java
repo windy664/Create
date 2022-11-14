@@ -37,8 +37,6 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
 import io.github.fabricators_of_create.porting_lib.util.ArmorTextureRegistry;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
@@ -104,8 +102,7 @@ public class CreateClient implements ClientModInitializer {
 		AllPackets.channel.initClientListener();
 		RenderTypes.init();
 		ArmorTextureRegistry.register(AllArmorMaterials.COPPER, CopperArmorItem.TEXTURE);
-		FluidVariantRendering.register(AllFluids.POTION.get(), new AllFluids.PotionFluidVariantRenderHandler());
-		FluidVariantRendering.register(AllFluids.POTION.get().getSource(), new AllFluids.PotionFluidVariantRenderHandler());
+		AllFluids.initRendering();
 		// causes class loading issues or something
 		// noinspection Convert2MethodRef
 		Mods.TRINKETS.executeIfInstalled(() -> () -> Trinkets.clientInit());

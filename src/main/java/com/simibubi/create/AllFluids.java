@@ -22,6 +22,7 @@ import com.tterrag.registrate.util.entry.FluidEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -33,6 +34,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -79,7 +81,7 @@ public class AllFluids {
 							.flowSpeed(3)
 							.blastResistance(100f))
 					.fluidAttributes(() -> new CreateAttributeHandler("block.create.honey", 2000, 1400))
-					.tag(AllFluidTags.HONEY.tag)
+					.tag(AllFluidTags.HONEY.tag, FluidTags.WATER) // fabric: water tag controls physics
 					.source(SimpleFlowableFluid.Source::new) // TODO: remove when Registrate fixes FluidBuilder
 					.bucket()
 					.tag(AllTags.forgeItemTag("buckets/honey"))
@@ -100,7 +102,7 @@ public class AllFluids {
 	public static final FluidEntry<SimpleFlowableFluid.Flowing> CHOCOLATE =
 			REGISTRATE.standardFluid("chocolate")
 					.lang("Chocolate")
-					.tag(AllTags.forgeFluidTag("chocolate"))
+					.tag(AllTags.forgeFluidTag("chocolate"), FluidTags.WATER) // fabric: water tag controls physics
 					.fluidProperties(p -> p.levelDecreasePerBlock(2)
 							.tickRate(25)
 							.flowSpeed(3)
@@ -119,6 +121,16 @@ public class AllFluids {
 	// Load this class
 
 	public static void register() {
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static void initRendering() {
+		// FluidRenderHandler has sane defaults and is handled by registrate
+		// potion is the only fluid with custom variant rendering
+		PotionFluidVariantRenderHandler handler = new PotionFluidVariantRenderHandler();
+		PotionFluid potionFluid = AllFluids.POTION.get();
+		FluidVariantRendering.register(potionFluid.getFlowing(), handler);
+		FluidVariantRendering.register(potionFluid.getSource(), handler);
 	}
 
 	@Nullable
@@ -183,25 +195,28 @@ public class AllFluids {
 		}
 	}
 
-	private record CreateAttributeHandler(String key, @Nullable Integer viscosity, @Nullable Integer density) implements FluidVariantAttributeHandler {
+	private record CreateAttributeHandler(Component name, int viscosity, boolean lighterThanAir) implements FluidVariantAttributeHandler {
+		private CreateAttributeHandler(String key, int viscosity, int density) {
+			this(Component.translatable(key), viscosity, density <= 0);
+		}
 
 		public CreateAttributeHandler(String key) {
-			this(key, null, null);
+			this(key, FluidConstants.WATER_VISCOSITY, 1000);
 		}
 
 		@Override
 		public Component getName(FluidVariant fluidVariant) {
-			return Component.translatable(this.key);
+			return name;
 		}
 
 		@Override
 		public int getViscosity(FluidVariant variant, @Nullable Level world) {
-			return viscosity != null ? viscosity : FluidVariantAttributeHandler.super.getViscosity(variant, world);
+			return viscosity;
 		}
 
 		@Override
 		public boolean isLighterThanAir(FluidVariant variant) {
-			return density != null ? density <= 0 : FluidVariantAttributeHandler.super.isLighterThanAir(variant);
+			return lighterThanAir;
 		}
 	}
 }
