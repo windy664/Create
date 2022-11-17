@@ -12,15 +12,14 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import io.github.fabricators_of_create.porting_lib.event.client.RenderTooltipBorderColorCallback;
-import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 
+import io.github.fabricators_of_create.porting_lib.event.client.RenderTooltipBorderColorCallback;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -55,7 +54,7 @@ public class PonderTooltipHandler {
 		}
 
 		float value = holdWProgress.getValue();
-		int keyCode = KeyBindingHelper.getKeyCode(ponderKeybind()).getValue();
+		int keyCode = KeyBindingHelper.getBoundKeyOf(ponderKeybind()).getValue();
 		long window = instance.getWindow()
 			.getWindow();
 

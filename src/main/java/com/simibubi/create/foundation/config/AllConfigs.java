@@ -11,7 +11,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.BlockStressValues;
 
 import net.minecraftforge.api.ModLoadingContext;
-import net.minecraftforge.api.fml.event.config.ModConfigEvent;
+import net.minecraftforge.api.fml.event.config.ModConfigEvents;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
@@ -50,8 +50,8 @@ public class AllConfigs {
 
 		BlockStressValues.registerProvider(Create.ID, SERVER.kinetics.stressValues);
 
-		ModConfigEvent.LOADING.register(AllConfigs::onLoad);
-		ModConfigEvent.RELOADING.register(AllConfigs::onReload);
+		ModConfigEvents.loading(Create.ID).register(AllConfigs::onLoad);
+		ModConfigEvents.reloading(Create.ID).register(AllConfigs::onReload);
 	}
 
 	public static void onLoad(ModConfig modConfig) {
