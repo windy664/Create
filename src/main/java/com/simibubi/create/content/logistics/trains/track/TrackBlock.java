@@ -15,6 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Predicates;
 import com.jozufozu.flywheel.core.PartialModel;
@@ -102,7 +105,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
 
-public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, DestroyProgressRenderingHandler, ReducedDestroyEffects, MultiPosDestructionHandler {
+public class TrackBlock extends Block implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, ReducedDestroyEffects, MultiPosDestructionHandler {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");

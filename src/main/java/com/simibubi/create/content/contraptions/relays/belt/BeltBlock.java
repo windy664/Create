@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -27,11 +28,9 @@ import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.render.MultiPosDestructionHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
-import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 import me.alphamode.forgetags.Tags;
@@ -88,7 +87,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement, ITransformableBlock,
-		BlockPickInteractionAware, DestroyProgressRenderingHandler, ReducedDestroyEffects, MultiPosDestructionHandler {
+		BlockPickInteractionAware, ReducedDestroyEffects, MultiPosDestructionHandler {
 
 	public static final Property<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
 	public static final Property<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
