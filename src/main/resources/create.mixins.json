@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "${archivesBaseName}-refmap.json",
   "mixins": [
+    "ClientboundMapItemDataPacketMixin",
     "CustomItemUseEffectsMixin",
     "MapItemSavedDataMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
@@ -16,14 +17,14 @@
     "fabric.EntityMixin"
   ],
   "client": [
+    "BlockDestructionProgressMixin",
     "CameraMixin",
-    "DestroyProgressMixin",
     "EntityContraptionInteractionMixin",
     "FixNormalScalingMixin",
     "GameRendererMixin",
     "HeavyBootsOnPlayerMixin",
-    "MapItemSavedDataMixinClient",
-    "MapRendererMixin",
+    "LevelRendererMixin",
+    "MapRendererMapInstanceMixin",
     "WindowResizeMixin",
     "accessor.AgeableListModelAccessor",
     "accessor.GameRendererAccessor",
