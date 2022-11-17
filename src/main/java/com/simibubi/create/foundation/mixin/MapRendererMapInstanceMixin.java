@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
-@Mixin(targets = "net.minecraft.client.gui.MapRenderer$MapInstance")
+@Mixin(targets = "net.minecraft.client.gui.MapRenderer$MapInstance", priority = 1100) // apply after porting lib's current busted mixin here
 public class MapRendererMapInstanceMixin {
 	@Shadow
 	private MapItemSavedData data;
