@@ -194,6 +194,10 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 					tileEntity.award(AllAdvancements.HOSE_PULLEY_LAVA);
 			});
 
+			if (infinite) {
+				return true;
+			}
+
 			if (!tileEntity.isVirtual()) {
 				world.updateSnapshots(ctx);
 				world.setBlock(currentPos, emptied, 2 | 16);
