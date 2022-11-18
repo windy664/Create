@@ -14,11 +14,12 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.foundation.map.CustomRenderedMapDecoration;
 
+import net.minecraft.client.gui.MapRenderer.MapInstance;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
-@Mixin(targets = "net.minecraft.client.gui.MapRenderer$MapInstance", priority = 1100) // apply after porting lib's current busted mixin here
+@Mixin(value = MapInstance.class, priority = 1100) // apply after porting lib's current busted mixin here
 public class MapRendererMapInstanceMixin {
 	@Shadow
 	private MapItemSavedData data;
