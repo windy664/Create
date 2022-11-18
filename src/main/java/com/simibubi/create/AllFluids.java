@@ -206,7 +206,7 @@ public class AllFluids {
 
 		@Override
 		public Component getName(FluidVariant fluidVariant) {
-			return name;
+			return name.copy();
 		}
 
 		@Override
