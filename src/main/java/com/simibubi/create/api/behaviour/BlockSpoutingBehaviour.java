@@ -5,11 +5,10 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.compat.botania.ApothecaryFilling;
 import com.simibubi.create.compat.tconstruct.SpoutCasting;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
-import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -49,7 +48,8 @@ public abstract class BlockSpoutingBehaviour {
 
 	public static void registerDefaults() {
 		addCustomSpoutInteraction(Create.asResource("ticon_casting"), new SpoutCasting());
-		addCustomSpoutInteraction(Create.asResource("botania_apothecary_filling"), new ApothecaryFilling());
+		// TODO: re-add when Botania updates to 1.19
+//		addCustomSpoutInteraction(Create.asResource("botania_apothecary_filling"), new ApothecaryFilling());
 	}
 
 }
