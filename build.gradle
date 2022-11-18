@@ -103,7 +103,7 @@ def compat(DependencyHandler deps) {
     deps.modCompileOnly("maven.modrinth:sandwichable:1.3.a+1.19")
     deps.modImplementation("dev.emi:trinkets:${project.trinkets_version}") { exclude(group: "com.terraformersmc") }
     // TODO: modImplementation when updated
-    deps.modCompileOnly("vazkii.botania:Botania:${project.botania_version}")
+    deps.modCompileOnly("vazkii.botania:Botania:${project.botania_version}") { transitive = false }
 }
 
 // setup the three recipe viewer mods
