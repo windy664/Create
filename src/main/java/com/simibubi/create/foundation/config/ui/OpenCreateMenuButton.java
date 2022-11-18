@@ -17,7 +17,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.item.ItemStack;
 
@@ -42,8 +41,8 @@ public class OpenCreateMenuButton extends Button {
 		public final String left, right;
 
 		public SingleMenuRow(String left, String right) {
-			this.left = I18n.get(left);
-			this.right = I18n.get(right);
+			this.left = left;
+			this.right = right;
 		}
 
 		public SingleMenuRow(String center) {
