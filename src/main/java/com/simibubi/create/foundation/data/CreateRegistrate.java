@@ -68,11 +68,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.lazy(() -> new CreateRegistrate(modid));
 	}
 
-	@Override
-	public CreateRegistrate registerEventListeners(IEventBus bus) {
-		return super.registerEventListeners(bus);
-	}
-
 	/* Section Tracking */
 
 	protected static final Map<RegistryEntry<?>, AllSections> SECTION_LOOKUP = new IdentityHashMap<>();

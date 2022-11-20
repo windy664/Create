@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.Create.REGISTRATE;
 import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.item.Items.GLASS_BOTTLE;
 import static net.minecraft.world.item.Items.HONEY_BOTTLE;
@@ -15,7 +16,6 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.Bottle
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.PotionFluidAttributes;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
-import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.fabric.SimpleFlowableFluid;
