@@ -269,6 +269,7 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 				if (extracted != 0)
 					addToLaunchedItems(var.toStack(ItemHelper.truncateLong(extracted)));
 			}
+			t.commit();
 		}
 	}
 
