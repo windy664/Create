@@ -108,6 +108,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -1006,7 +1007,7 @@ public abstract class Contraption {
 		if (disassembled)
 			return;
 		disassembled = true;
-		
+
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (StructureBlockInfo block : blocks.values()) {
 				if (nonBrittles == BlockMovementChecks.isBrittle(block.state))
