@@ -29,8 +29,6 @@ import io.github.fabricators_of_create.porting_lib.transfer.callbacks.Transactio
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
-
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -165,6 +163,12 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			: processingBehaviour.handleReceivedItem(heldItem, transportedHandler);
 		if (result == ProcessingResult.REMOVE) {
 			heldItem = null;
+			tileEntity.sendData();
+			return;
+		}
+
+		// fabric: might be set to null in processing
+		if (heldItem == null) {
 			tileEntity.sendData();
 			return;
 		}
