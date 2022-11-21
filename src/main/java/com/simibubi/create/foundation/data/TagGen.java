@@ -68,42 +68,48 @@ public class TagGen {
 		Create.REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, TagGen::genFluidTags);
 	}
 
+	// fabric: addTag -> forceAddTag
+	// tag gen checks that all added tags are part of the generator
+	// vanilla tags of course aren't. This is supposed to be supported based on javadoc, but doesn't work.
+	// forge mitigates it with an extra filter using ExistingFileHelper
+	// here, since we know these tags will always exist, just force them
+
 	private static void genBlockTags(RegistrateTagsProvider<Block> prov) {
 		prov.tag(AllBlockTags.BRITTLE.tag)
 			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT)
-			.addTag(BlockTags.BEDS)
-			.addTag(BlockTags.DOORS);
+			.forceAddTag(BlockTags.BEDS)
+			.forceAddTag(BlockTags.DOORS);
 
 		prov.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 			.add(Blocks.IRON_BARS)
-			.addTag(BlockTags.CAMPFIRES)
-			.addTag(BlockTags.FENCES);
+			.forceAddTag(BlockTags.CAMPFIRES)
+			.forceAddTag(BlockTags.FENCES);
 
 		prov.tag(AllBlockTags.ORE_OVERRIDE_STONE.tag)
-			.addTag(BlockTags.STONE_ORE_REPLACEABLES);
+			.forceAddTag(BlockTags.STONE_ORE_REPLACEABLES);
 
 		prov.tag(AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
 			.add(Blocks.MAGMA_BLOCK, Blocks.LAVA)
-			.addTag(BlockTags.CAMPFIRES)
-			.addTag(BlockTags.FIRE);
+			.forceAddTag(BlockTags.CAMPFIRES)
+			.forceAddTag(BlockTags.FIRE);
 
 		prov.tag(AllBlockTags.SAFE_NBT.tag)
-			.addTag(BlockTags.BANNERS)
-			.addTag(BlockTags.SIGNS);
+			.forceAddTag(BlockTags.BANNERS)
+			.forceAddTag(BlockTags.SIGNS);
 
 		prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag)
 			.add(Blocks.BEE_NEST, Blocks.COCOA, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT, Blocks.VINE);
 
 		prov.tag(AllBlockTags.WINDMILL_SAILS.tag)
-			.addTag(BlockTags.WOOL);
+			.forceAddTag(BlockTags.WOOL);
 
 		prov.tag(AllBlockTags.WRENCH_PICKUP.tag)
 			.add(Blocks.REDSTONE_WIRE, Blocks.REDSTONE_TORCH, Blocks.REPEATER, Blocks.LEVER,
 					Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
 					Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET, Blocks.HOPPER)
-			.addTag(BlockTags.BUTTONS)
-			.addTag(BlockTags.PRESSURE_PLATES)
-			.addTag(BlockTags.RAILS);
+			.forceAddTag(BlockTags.BUTTONS)
+			.forceAddTag(BlockTags.PRESSURE_PLATES)
+			.forceAddTag(BlockTags.RAILS);
 
 		// COMPAT
 
@@ -127,12 +133,12 @@ public class TagGen {
 			.add(Items.STONE_SLAB, Items.SMOOTH_STONE_SLAB, Items.ANDESITE_SLAB);
 
 		prov.tag(AllItemTags.STRIPPED_LOGS.tag)
-			.addTag(AllItemTags.VANILLA_STRIPPED_LOGS.tag)
-			.addTag(AllItemTags.MODDED_STRIPPED_LOGS.tag);
+			.forceAddTag(AllItemTags.VANILLA_STRIPPED_LOGS.tag)
+			.forceAddTag(AllItemTags.MODDED_STRIPPED_LOGS.tag);
 
 		prov.tag(AllItemTags.STRIPPED_WOOD.tag)
-			.addTag(AllItemTags.VANILLA_STRIPPED_WOOD.tag)
-			.addTag(AllItemTags.MODDED_STRIPPED_WOOD.tag);
+			.forceAddTag(AllItemTags.VANILLA_STRIPPED_WOOD.tag)
+			.forceAddTag(AllItemTags.MODDED_STRIPPED_WOOD.tag);
 
 		prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
 			.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,
@@ -149,10 +155,10 @@ public class TagGen {
 					Items.STRIPPED_OAK_WOOD, Items.STRIPPED_SPRUCE_WOOD, Items.STRIPPED_WARPED_HYPHAE);
 
 		prov.tag(ItemTags.BEACON_PAYMENT_ITEMS)
-			.addTag(AllItemTags.CREATE_INGOTS.tag);
+			.forceAddTag(AllItemTags.CREATE_INGOTS.tag);
 
 		prov.tag(Tags.Items.INGOTS)
-			.addTag(AllItemTags.CREATE_INGOTS.tag);
+			.forceAddTag(AllItemTags.CREATE_INGOTS.tag);
 
 		// COMPAT
 

@@ -124,18 +124,18 @@ def recipeViewers(DependencyHandler deps) {
     deps.modCompileOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
 
     String recipeViewer = project.recipe_viewer
-    if (recipeViewer == "emi") {
+//    if (recipeViewer == "emi") {
         deps.modLocalRuntime("dev.emi:emi:${project.emi_version}") { transitive = false }
-    } else if (recipeViewer == "jei") {
-        deps.modLocalRuntime("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}") { transitive = false }
-    } else if (recipeViewer == "rei") {
+//    } else if (recipeViewer == "jei") {
+//        deps.modLocalRuntime("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}") { transitive = false }
+//    } else if (recipeViewer == "rei") {
         deps.modLocalRuntime("me.shedaniel.cloth:basic-math:0.6.0") { transitive = false }
         deps.modLocalRuntime("dev.architectury:architectury-fabric:${project.architectury_version}") { transitive = false }
         deps.modLocalRuntime("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") { exclude(group: "net.fabricmc.fabric-api"); transitive = false }
         deps.modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") { transitive = false }
-    } else {
-        println("unknown recipe viewer: $recipeViewer")
-    }
+//    } else {
+//        println("unknown recipe viewer: $recipeViewer")
+//    }
 }
 
 // mods that can be uncommented to test in development
