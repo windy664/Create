@@ -15,11 +15,11 @@ import java.util.function.UnaryOperator;
 
 import net.minecraft.data.CachedOutput;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
+import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
