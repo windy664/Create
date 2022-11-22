@@ -191,7 +191,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 
 		if (!doNotConsume) {
-			ItemStack container = stack.getItem().hasCraftingRemainingItem() ? new ItemStack(stack.getItem().getCraftingRemainingItem()) : ItemStack.EMPTY;
+			ItemStack container = stack.getRecipeRemainder();
 			if (!world.isClientSide) {
 				stack.shrink(1);
 			}

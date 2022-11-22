@@ -559,7 +559,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			}
 
 			for (ItemStack itemStack : outputItems) {
-				if (itemStack.getItem().hasCraftingRemainingItem() && itemStack.is(itemStack.getItem().getCraftingRemainingItem()))
+				ItemStack remainder = itemStack.getRecipeRemainder();
+				if (!remainder.isEmpty() && itemStack.sameItem(remainder))
 					continue;
 				spoutputBuffer.add(itemStack.copy());
 			}
@@ -601,8 +602,9 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	private boolean acceptItemOutputsIntoBasin(List<ItemStack> outputItems, TransactionContext ctx, Storage<ItemVariant> targetInv) {
 		for (ItemStack itemStack : outputItems) {
 			// Catalyst items are never consumed
-			if (itemStack.getItem().hasCraftingRemainingItem() && itemStack.getItem().getCraftingRemainingItem()
-					.equals(itemStack.getItem()))
+			ItemStack remainder = itemStack.getRecipeRemainder();
+			if (!remainder.isEmpty() && remainder
+					.sameItem(itemStack))
 				continue;
 			long inserted = targetInv.insert(ItemVariant.of(itemStack), itemStack.getCount(), ctx);
 			if (inserted != itemStack.getCount())
