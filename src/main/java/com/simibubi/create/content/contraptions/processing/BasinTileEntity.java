@@ -393,6 +393,9 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		try (Transaction t = TransferUtil.getTransaction()) {
 			for (Iterator<ItemStack> iterator = spoutputBuffer.iterator(); iterator.hasNext();) {
 				ItemStack itemStack = iterator.next();
+				// fabric: cleanup for #599
+				if (itemStack.isEmpty())
+					continue;
 
 				if (direction == Direction.DOWN) {
 					Block.popResource(level, worldPosition, itemStack);
