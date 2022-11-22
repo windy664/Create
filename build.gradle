@@ -11,10 +11,10 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 String buildNumber = System.getenv("GITHUB_RUN_NUMBER")
-version = mod_version + (buildNumber != null ? "-${buildNumber}" : "")
+version = mod_version + (buildNumber != null ? "-${buildNumber}" : "") + "+${project.minecraft_version}"
 
 group = project.maven_group
-archivesBaseName = "create-fabric-${project.minecraft_version}"
+archivesBaseName = "create-fabric"
 
 repositories {
     mavenCentral()
@@ -271,7 +271,7 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = archivesBaseName
+            artifactId = archivesBaseName + "-${project.minecraft_version}"
             from components.java
         }
     }
