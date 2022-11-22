@@ -13,8 +13,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
-import net.minecraft.data.CachedOutput;
-
 import org.slf4j.Logger;
 
 import com.google.common.collect.Sets;
@@ -618,7 +616,7 @@ public class AllAdvancements implements DataProvider {
 
 	// Datagen
 
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogUtils.getLogger();
 	private final DataGenerator generator;
 
 	public AllAdvancements(DataGenerator generatorIn) {
