@@ -162,7 +162,7 @@ def testMods(DependencyHandler deps) {
 //
 //    deps.modLocalRuntime("vazkii.botania:Botania:1.18.2-434-FABRIC")
 //
-//    deps.modLocalRuntime("curse.maven:nbt-crafting-314633:3707208") { transitive = false }
+//    deps.modLocalRuntime("curse.maven:nbt-crafting-314633:4041802") { transitive = false }
 //
 //    deps.modLocalRuntime("curse.maven:alloygery-573592:3847602") { transitive = false }
 //
