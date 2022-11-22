@@ -268,6 +268,7 @@ public class EjectorTileEntity extends KineticTileEntity implements SidedStorage
 				if (extracted != 0)
 					addToLaunchedItems(var.toStack(ItemHelper.truncateLong(extracted)));
 			}
+			t.commit();
 		}
 	}
 

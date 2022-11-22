@@ -167,6 +167,12 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			return;
 		}
 
+		// fabric: might be set to null in processing
+		if (heldItem == null) {
+			tileEntity.sendData();
+			return;
+		}
+
 		heldItem.locked = result == ProcessingResult.HOLD;
 		if (heldItem.locked != wasLocked || !ItemStackUtil.equals(previousItem, heldItem.stack, false))
 			tileEntity.sendData();
