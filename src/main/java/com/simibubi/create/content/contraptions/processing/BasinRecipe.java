@@ -147,7 +147,11 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 			// fabric: add remainders that were stored above
 			if (remainders != null) {
-				recipeOutputItems.addAll(remainders);
+				for (ItemStack remainder : remainders) {
+					if (!remainder.isEmpty()) {
+						recipeOutputItems.add(remainder);
+					}
+				}
 			}
 
 			if (!basin.acceptOutputs(recipeOutputItems, recipeOutputFluids, t))
