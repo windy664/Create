@@ -136,6 +136,10 @@ public class ClientEvents {
 		LinkedControllerClientHandler.tick();
 		ControlsHandler.tick();
 		AirCurrent.tickClientPlayerSounds();
+		// fabric: fix #608
+		// This tracks the current held item. Because of event order differences from forge, it gets changed too
+		// quickly for the update packet to work properly. Move to here to fix.
+		ArmInteractionPointHandler.tick();
 	}
 
 	public static void onTick(Minecraft client) {
@@ -178,7 +182,8 @@ public class ClientEvents {
 		KineticDebugger.tick();
 		ExtendoGripRenderHandler.tick();
 		// CollisionDebugger.tick();
-		ArmInteractionPointHandler.tick();
+		// fabric: fix #608, see above
+//		ArmInteractionPointHandler.tick();
 		EjectorTargetHandler.tick();
 		PlacementHelpers.tick();
 		CreateClient.OUTLINER.tickOutlines();
