@@ -799,13 +799,13 @@ public class AllBlocks {
 	public static final BlockEntry<MetalLadderBlock> BRASS_LADDER =
 		REGISTRATE.block("brass_ladder", MetalLadderBlock::new)
 			.transform(
-				BuilderTransformers.ladder("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/brass"))))
+				BuilderTransformers.ladder("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("brass_plates"))))
 			.register();
 
 	public static final BlockEntry<MetalLadderBlock> COPPER_LADDER =
 		REGISTRATE.block("copper_ladder", MetalLadderBlock::new)
 			.transform(
-				BuilderTransformers.ladder("copper", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper"))))
+				BuilderTransformers.ladder("copper", () -> DataIngredient.tag(AllTags.forgeItemTag("copper_plates"))))
 			.register();
 
 	// Fluids
@@ -1983,7 +1983,7 @@ public class AllBlocks {
 					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
-		.transform(tagBlockAndItem("ores/zinc", "ores_in_ground/stone"))
+		.transform(tagBlockAndItem("zinc_ores", "ores_in_ground/stone"))
 		.tag(Tags.Items.ORES)
 		.build()
 		.register();
@@ -2000,7 +2000,7 @@ public class AllBlocks {
 					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
-		.transform(tagBlockAndItem("ores/zinc", "ores_in_ground/deepslate"))
+		.transform(tagBlockAndItem("zinc_ores", "ores_in_ground/deepslate"))
 		.tag(Tags.Items.ORES)
 		.build()
 		.register();
@@ -2013,7 +2013,7 @@ public class AllBlocks {
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.lang("Block of Raw Zinc")
-		.transform(tagBlockAndItem("storage_blocks/raw_zinc"))
+		.transform(tagBlockAndItem("raw_zinc_blocks"))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.register();
@@ -2026,7 +2026,7 @@ public class AllBlocks {
 			.tag(BlockTags.NEEDS_IRON_TOOL)
 			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.tag(BlockTags.BEACON_BASE_BLOCKS)
-			.transform(tagBlockAndItem("storage_blocks/zinc"))
+			.transform(tagBlockAndItem("zinc_blocks"))
 			.tag(Tags.Items.STORAGE_BLOCKS)
 			.build()
 			.lang("Block of Zinc")
@@ -2041,7 +2041,7 @@ public class AllBlocks {
 			.tag(BlockTags.NEEDS_IRON_TOOL)
 			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.tag(BlockTags.BEACON_BASE_BLOCKS)
-			.transform(tagBlockAndItem("storage_blocks/brass"))
+			.transform(tagBlockAndItem("brass_blocks"))
 			.tag(Tags.Items.STORAGE_BLOCKS)
 			.build()
 			.lang("Block of Brass")
@@ -2082,12 +2082,12 @@ public class AllBlocks {
 
 	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles",
 		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
-			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
+			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("copper_plates")), c::get, 2);
 		});
 
 	public static final CopperBlockSet COPPER_TILES =
 		new CopperBlockSet(REGISTRATE, "copper_tiles", "copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
-			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
+			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("copper_plates")), c::get, 2);
 		});
 
 	// Load this class

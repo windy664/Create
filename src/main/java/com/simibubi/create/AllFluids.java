@@ -82,7 +82,7 @@ public class AllFluids {
 					.tag(AllFluidTags.HONEY.tag, FluidTags.WATER) // fabric: water tag controls physics
 					.source(SimpleFlowableFluid.Source::new) // TODO: remove when Registrate fixes FluidBuilder
 					.bucket()
-					.tag(AllTags.forgeItemTag("buckets/honey"))
+					.tag(AllTags.forgeItemTag("honey_buckets"))
 					.build()
 					.onRegisterAfter(Registry.ITEM_REGISTRY, honey -> {
 						Fluid source = honey.getSource();
