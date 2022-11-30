@@ -446,6 +446,8 @@ public class ClientEvents {
 		ClientTickEvents.END_WORLD_TICK.register(CommonEvents::onWorldTick);
 		ClientWorldEvents.LOAD.register(ClientEvents::onLoadWorld);
 		ClientWorldEvents.UNLOAD.register(ClientEvents::onUnloadWorld);
+		ClientWorldEvents.LOAD.register(CommonEvents::onLoadWorld);
+		ClientWorldEvents.UNLOAD.register(CommonEvents::onUnloadWorld);
 		ClientChunkEvents.CHUNK_UNLOAD.register(CommonEvents::onChunkUnloaded);
 		ClientPlayConnectionEvents.JOIN.register(ClientEvents::onJoin);
 		ClientEntityEvents.ENTITY_LOAD.register(CommonEvents::onEntityAdded);
