@@ -2,7 +2,7 @@
   "type": "minecraft:stonecutting",
   "count": 2,
   "ingredient": {
-    "tag": "c:plates/copper"
+    "tag": "c:copper_plates"
   },
   "result": "create:copper_ladder"
 }

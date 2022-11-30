@@ -2,7 +2,7 @@
   "type": "minecraft:stonecutting",
   "count": 2,
   "ingredient": {
-    "tag": "c:plates/brass"
+    "tag": "c:copper_plates"
   },
-  "result": "create:brass_ladder"
+  "result": "create:copper_tiles"
 }

@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_glass_colorless": {
+    "has_copper_plates": {
       "conditions": {
         "items": [
           {
-            "tag": "c:glass/colorless"
+            "tag": "c:copper_plates"
           }
         ]
       },
@@ -13,20 +13,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "create:framed_glass_from_glass_colorless_stonecutting"
+        "recipe": "create:copper_shingles_from_copper_plates_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_glass_colorless",
+      "has_copper_plates",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "create:framed_glass_from_glass_colorless_stonecutting"
+      "create:copper_shingles_from_copper_plates_stonecutting"
     ]
   }
 }

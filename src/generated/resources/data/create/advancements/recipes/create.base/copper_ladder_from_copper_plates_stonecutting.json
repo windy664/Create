@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_plates_brass": {
+    "has_copper_plates": {
       "conditions": {
         "items": [
           {
-            "tag": "c:plates/brass"
+            "tag": "c:copper_plates"
           }
         ]
       },
@@ -13,20 +13,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "create:brass_ladder_from_plates_brass_stonecutting"
+        "recipe": "create:copper_ladder_from_copper_plates_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_plates_brass",
+      "has_copper_plates",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "create:brass_ladder_from_plates_brass_stonecutting"
+      "create:copper_ladder_from_copper_plates_stonecutting"
     ]
   }
 }
