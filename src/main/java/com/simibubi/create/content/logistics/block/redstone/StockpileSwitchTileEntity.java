@@ -113,7 +113,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 				try (Transaction t = TransferUtil.getTransaction()) {
 					Storage<ItemVariant> inv = observedInventory.getInventory();
 					for (StorageView<ItemVariant> view : inv.iterable(t)) {
-						long space = Math.min(view.getCapacity(), view.getResource().getItem().getMaxStackSize());
+						long space = view.getCapacity();
 						long count = view.getAmount();
 						if (space == 0)
 							continue;
