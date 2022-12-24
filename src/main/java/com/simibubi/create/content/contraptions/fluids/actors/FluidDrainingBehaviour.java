@@ -139,7 +139,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		while (!queue.isEmpty()) {
 			// Dont dequeue here, so we can decide not to dequeue a valid entry when
 			// simulating
-			BlockPos currentPos = queue.first().pos;
+			BlockPos currentPos = queue.first().pos();
 			BlockState blockState = world.getBlockState(currentPos);
 			BlockState emptied = blockState;
 			Fluid fluid = Fluids.EMPTY;
@@ -321,12 +321,17 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	private void continueSearch() {
-		fluid = search(fluid, frontier, visited, (e, d) -> {
-			BlockPosEntry entry = new BlockPosEntry(e, d);
+		try {
+			fluid = search(fluid, frontier, visited, (e, d) -> {
+				BlockPosEntry entry = new BlockPosEntry(e, d);
 			queue.enqueue(entry);
 			queueList.add(entry); // fabric: match queue
-			validationSet.add(e);
-		}, false);
+				validationSet.add(e);
+			}, false);
+		} catch (ChunkNotLoadedException e) {
+			tileEntity.sendData();
+			visited.clear();
+		}
 
 		Level world = getWorld();
 		int maxBlocks = maxBlocks();
@@ -334,7 +339,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			infinite = true;
 			// Find first block with valid fluid
 			while (true) {
-				BlockPos first = queue.first().pos;
+				BlockPos first = queue.first().pos();
 				if (canPullFluidsFrom(world.getBlockState(first), first) != FluidBlockType.SOURCE) {
 					BlockPosEntry e = queue.dequeue();
 					queueList.remove(e); // fabric: match queue
@@ -342,7 +347,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				}
 				break;
 			}
-			BlockPos firstValid = queue.first().pos;
+			BlockPos firstValid = queue.first().pos();
 			frontier.clear();
 			visited.clear();
 			queue.clear();
@@ -362,7 +367,13 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	private void continueValidation() {
-		search(fluid, validationFrontier, validationVisited, (e, d) -> newValidationSet.add(e), false);
+		try {
+			search(fluid, validationFrontier, validationVisited, (e, d) -> newValidationSet.add(e), false);
+		} catch (ChunkNotLoadedException e) {
+			validationFrontier.clear();
+			setLongValidationTimer();
+			return;
+		}
 
 		int maxBlocks = maxBlocks();
 		if (validationVisited.size() > maxBlocks && canDrainInfinitely(fluid)) {

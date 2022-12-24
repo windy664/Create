@@ -744,8 +744,15 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidate() {
+		super.invalidate();
+	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		Block.popResource(level, worldPosition, stackToDistribute);
+		stackEnteredFrom = null;
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
+import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.TagGen;
@@ -146,7 +147,7 @@ public class Create implements ModInitializer {
 
 	public static void gatherData(FabricDataGenerator gen, ExistingFileHelper helper) {
 		TagGen.datagen();
-		gen.addProvider(new LangMerger(gen));
+		gen.addProvider(new LangMerger(gen, ID, "Create", AllLangPartials.values()));
 		gen.addProvider(AllSoundEvents.provider(gen));
 		gen.addProvider(new AllAdvancements(gen));
 		gen.addProvider(new StandardRecipeGen(gen));

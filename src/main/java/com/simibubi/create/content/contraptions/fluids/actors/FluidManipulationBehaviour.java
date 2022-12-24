@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
@@ -41,14 +42,11 @@ import javax.annotation.Nullable;
 
 public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
-	protected static class BlockPosEntry {
-		public BlockPos pos;
-		public int distance;
+	public static record BlockPosEntry(BlockPos pos, int distance) {
+	};
 
-		public BlockPosEntry(BlockPos pos, int distance) {
-			this.pos = pos;
-			this.distance = distance;
-		}
+	public static class ChunkNotLoadedException extends Exception {
+		private static final long serialVersionUID = 1L;
 	}
 
 	BoundingBox affectedArea;
@@ -57,7 +55,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	protected boolean counterpartActed;
 
 	// Search
-	static final int searchedPerTick = 256;
+	static final int searchedPerTick = 1024;
 	static final int validationTimerMin = 160;
 	List<BlockPosEntry> frontier;
 	Set<BlockPos> visited;
@@ -152,7 +150,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected Fluid search(Fluid fluid, List<BlockPosEntry> frontier, Set<BlockPos> visited,
-		BiConsumer<BlockPos, Integer> add, boolean searchDownward) {
+		BiConsumer<BlockPos, Integer> add, boolean searchDownward) throws ChunkNotLoadedException {
 		Level world = getWorld();
 		int maxBlocks = maxBlocks();
 		int maxRange = canDrainInfinitely(fluid) ? maxRange() : maxRange() / 2;
@@ -166,6 +164,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 			if (visited.contains(currentPos))
 				continue;
 			visited.add(currentPos);
+
+			if (!world.isLoaded(currentPos))
+				throw new ChunkNotLoadedException();
 
 			FluidState fluidState = world.getFluidState(currentPos);
 			if (fluidState.isEmpty())
@@ -184,6 +185,8 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 					continue;
 
 				BlockPos offsetPos = currentPos.relative(side);
+				if (!world.isLoaded(offsetPos))
+					throw new ChunkNotLoadedException();
 				if (visited.contains(offsetPos))
 					continue;
 				if (offsetPos.distSqr(rootPos) > maxRangeSq)
@@ -226,6 +229,8 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
+		if (infinite)
+			NBTHelper.putMarker(nbt, "Infinite");
 		if (rootPos != null)
 			nbt.put("LastPos", NbtUtils.writeBlockPos(rootPos));
 		if (affectedArea != null) {
@@ -239,6 +244,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
+		infinite = nbt.contains("Infinite");
 		if (nbt.contains("LastPos"))
 			rootPos = NbtUtils.readBlockPos(nbt.getCompound("LastPos"));
 		if (nbt.contains("AffectedAreaFrom") && nbt.contains("AffectedAreaTo"))
@@ -247,21 +253,21 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		super.read(nbt, clientPacket);
 	}
 
-	// fabric: anonymous enums are cursed and apparently aren't enums!
 	public enum BottomlessFluidMode implements Predicate<Fluid> {
-		ALLOW_ALL,
-		DENY_ALL,
-		ALLOW_BY_TAG,
-		DENY_BY_TAG;
+		ALLOW_ALL(fluid -> true),
+		DENY_ALL(fluid -> false),
+		ALLOW_BY_TAG(fluid -> AllFluidTags.BOTTOMLESS_ALLOW.matches(fluid)),
+		DENY_BY_TAG(fluid -> !AllFluidTags.BOTTOMLESS_DENY.matches(fluid));
+
+		private final Predicate<Fluid> predicate;
+
+		BottomlessFluidMode(Predicate<Fluid> predicate) {
+			this.predicate = predicate;
+		}
 
 		@Override
 		public boolean test(Fluid fluid) {
-			return switch (this) {
-				case ALLOW_ALL -> true;
-				case DENY_ALL -> false;
-				case ALLOW_BY_TAG -> AllFluidTags.BOTTOMLESS_ALLOW.matches(fluid);
-				case DENY_BY_TAG -> !AllFluidTags.BOTTOMLESS_DENY.matches(fluid);
-			};
+			return predicate.test(fluid);
 		}
 	}
 

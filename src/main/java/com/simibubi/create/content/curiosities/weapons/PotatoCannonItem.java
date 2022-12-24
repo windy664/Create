@@ -21,6 +21,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel.ArmPose;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -43,7 +45,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class PotatoCannonItem extends ProjectileWeaponItem implements EntitySwingListenerItem, ReequipAnimationItem {
+public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmPoseItem, EntitySwingListenerItem, ReequipAnimationItem {
 
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
@@ -266,6 +268,15 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements EntitySwin
 	@Override
 	public UseAnim getUseAnimation(ItemStack stack) {
 		return UseAnim.NONE;
+	}
+
+	@Override
+	@Nullable
+	public ArmPose getArmPose(ItemStack stack, AbstractClientPlayer player, InteractionHand hand) {
+		if (!player.swinging) {
+			return ArmPose.CROSSBOW_HOLD;
+		}
+		return null;
 	}
 
 	@Override

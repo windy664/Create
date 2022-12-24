@@ -219,8 +219,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity implements It
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidate() {
+		super.invalidate();
 	}
 
 	public int getCountDownSpeed() {

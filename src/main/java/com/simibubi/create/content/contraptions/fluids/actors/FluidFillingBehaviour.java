@@ -102,8 +102,15 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	protected void continueValidation(Fluid fluid) {
-		search(fluid, infinityCheckFrontier, infinityCheckVisited,
-			(p, d) -> infinityCheckFrontier.add(new BlockPosEntry(p, d)), true);
+		try {
+			search(fluid, infinityCheckFrontier, infinityCheckVisited,
+				(p, d) -> infinityCheckFrontier.add(new BlockPosEntry(p, d)), true);
+		} catch (ChunkNotLoadedException e) {
+			infinityCheckFrontier.clear();
+			setLongValidationTimer();
+			return;
+		}
+
 		int maxBlocks = maxBlocks();
 
 		if (infinityCheckVisited.size() > maxBlocks && maxBlocks != -1 && !fillInfinite()) {
@@ -188,7 +195,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		boolean success = false;
 		for (int i = 0; !success && !queue.isEmpty() && i < searchedPerTick; i++) {
 			BlockPosEntry entry = queue.first();
-			BlockPos currentPos = entry.pos;
+			BlockPos currentPos = entry.pos();
 
 			if (visited.contains(currentPos)) {
 				BlockPosEntry e = queue.dequeue();
@@ -264,11 +271,10 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 				SpaceType nextSpaceType = getAtPos(world, offsetPos, fluid);
 				if (nextSpaceType != SpaceType.BLOCKING) {
-					BlockPosEntry posEntry = new BlockPosEntry(offsetPos, entry.distance + 1);
+					BlockPosEntry posEntry = new BlockPosEntry(offsetPos, entry.distance() + 1);
 					queue.enqueue(posEntry);
 					queueList.add(posEntry);
 				}
-
 			}
 		}
 
