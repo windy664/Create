@@ -204,7 +204,7 @@ public class MinecartContraptionItem extends Item {
 		if (player == null || entity == null)
 			return InteractionResult.PASS;
 		if (!AllConfigs.SERVER.kinetics.survivalContraptionPickup.get() && !player.isCreative())
-			return;
+			return InteractionResult.PASS;
 
 		if (player.isSpectator()) // forge checks this, fabric does not
 			return InteractionResult.PASS;

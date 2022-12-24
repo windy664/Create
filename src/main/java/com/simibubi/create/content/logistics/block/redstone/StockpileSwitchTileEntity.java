@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.List;
 
-import com.simibubi.create.compat.storageDrawers.StorageDrawers;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -13,7 +12,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipul
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -23,7 +21,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -111,10 +108,10 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 		if (targetTile instanceof StockpileSwitchObservable observable) {
 			currentLevel = observable.getPercent() / 100f;
-		
-		} else if (StorageDrawers.isDrawer(targetTile) && observedInventory.hasInventory()) {
-			currentLevel = StorageDrawers.getTrueFillLevel(observedInventory.getInventory(), filtering);
-			
+
+//		} else if (StorageDrawers.isDrawer(targetTile) && observedInventory.hasInventory()) {
+//			currentLevel = StorageDrawers.getTrueFillLevel(observedInventory.getInventory(), filtering);
+
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
 				// Item inventory
@@ -166,7 +163,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 		currentLevel = Mth.clamp(currentLevel, 0, 1);
 		changed = currentLevel != prevLevel;
-		
+
 		boolean previouslyPowered = redstoneState;
 		if (redstoneState && currentLevel <= offWhenBelow)
 			redstoneState = false;

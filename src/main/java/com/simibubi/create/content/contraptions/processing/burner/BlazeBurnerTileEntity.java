@@ -194,7 +194,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			newBurnTime = 1000;
 			newFuel = FuelType.SPECIAL;
 		} else {
-			newBurnTime = (int) Math.min(ForgeHooks.getBurnTime(itemStack, null), MAX_HEAT_CAPACITY * 0.95f);
+			Integer fuel = FuelRegistry.INSTANCE.get(itemStack.getItem());
+			newBurnTime = (int) Math.min(fuel == null ? 0 : fuel, MAX_HEAT_CAPACITY * 0.95f);
 			if (newBurnTime > 0)
 				newFuel = FuelType.NORMAL;
 			else if (AllItemTags.BLAZE_BURNER_FUEL_REGULAR.matches(itemStack)) {

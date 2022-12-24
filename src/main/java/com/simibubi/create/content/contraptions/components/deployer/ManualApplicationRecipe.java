@@ -57,11 +57,11 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 		if (foundRecipe.isEmpty())
 			return InteractionResult.PASS;
 
-		event.setCancellationResult(InteractionResult.SUCCESS);
-		event.setCanceled(true);
+//		event.setCancellationResult(InteractionResult.SUCCESS);
+//		event.setCanceled(true);
 
 		if (level.isClientSide())
-			return;
+			return InteractionResult.SUCCESS;
 
 		level.playSound(null, pos, SoundEvents.COPPER_BREAK, SoundSource.PLAYERS, 1, 1.45f);
 		ManualApplicationRecipe recipe = (ManualApplicationRecipe) foundRecipe.get();
@@ -72,8 +72,7 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 		recipe.rollResults()
 			.forEach(stack -> Block.popResource(level, pos, stack));
 
-		boolean creative = event.getPlayer() != null && event.getPlayer()
-			.isCreative();
+		boolean creative = player.isCreative();
 		boolean unbreakable = heldItem.hasTag() && heldItem.getTag()
 			.getBoolean("Unbreakable");
 		boolean keepHeld = recipe.shouldKeepHeldItem() || creative;
@@ -85,7 +84,8 @@ public class ManualApplicationRecipe extends ItemApplicationRecipe {
 				heldItem.shrink(1);
 		}
 
-		awardAdvancements(event.getPlayer(), transformedBlock);
+		awardAdvancements(player, transformedBlock);
+		return InteractionResult.SUCCESS;
 	}
 
 	private static void awardAdvancements(Player player, BlockState placed) {
