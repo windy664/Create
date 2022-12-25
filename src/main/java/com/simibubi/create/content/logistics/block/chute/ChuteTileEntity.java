@@ -542,6 +542,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		ItemStack previousItem = item;
 		item = ItemStack.of(compound.getCompound("Item"));
+		itemHandler.update();
 		itemPosition.startWithValue(compound.getFloat("ItemPosition"));
 		pull = compound.getFloat("Pull");
 		push = compound.getFloat("Push");
