@@ -1,22 +1,26 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.mixin.fabric.SortedArraySetAccessor;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -28,27 +32,18 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.FluidTags;
+import net.minecraft.util.SortedArraySet;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
-
 public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
-	protected static class BlockPosEntry {
-		public BlockPos pos;
-		public int distance;
-
-		public BlockPosEntry(BlockPos pos, int distance) {
-			this.pos = pos;
-			this.distance = distance;
-		}
+	// fabric: use a record for equals impl since these are stored in sets
+	protected record BlockPosEntry(BlockPos pos, int distance) {
 	}
 
 	BoundingBox affectedArea;
@@ -145,10 +140,18 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		int compareDistance = Integer.compare(e2.distance, e1.distance);
 		if (compareDistance != 0)
 			return compareDistance;
-		return Double.compare(VecHelper.getCenterOf(pos2)
-			.distanceToSqr(centerOfRoot),
-			VecHelper.getCenterOf(pos1)
-				.distanceToSqr(centerOfRoot));
+		int distanceCompared = Double.compare(VecHelper.getCenterOf(pos2)
+						.distanceToSqr(centerOfRoot),
+				VecHelper.getCenterOf(pos1)
+						.distanceToSqr(centerOfRoot));
+		// fabric: since we're using a set for the queue, we need to only have them equal if they're really equal.
+		if (distanceCompared != 0)
+			return distanceCompared;
+		// equidistant, go by X and Z
+		int xCompared = Integer.compare(pos2.getX(), pos1.getX());
+		if (xCompared != 0)
+			return xCompared;
+		return Integer.compare(pos2.getZ(), pos1.getZ());
 	}
 
 	protected Fluid search(Fluid fluid, List<BlockPosEntry> frontier, Set<BlockPos> visited,
@@ -263,6 +266,33 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 				case DENY_BY_TAG -> !AllFluidTags.BOTTOMLESS_DENY.matches(fluid);
 			};
 		}
+	}
+
+
+	/**
+	 * Quickly copy the given set.
+	 * This is a shallow copy, so entries must be immutable.
+	 */
+	public static <T> SortedArraySet<T> copySet(SortedArraySet<T> set) {
+		int size = set.size();
+		SortedArraySetAccessor<T> access = (SortedArraySetAccessor<T>) set;
+		Comparator<T> comparator = access.create$getComparator();
+		T[] contents = access.create$getContents();
+		T[] copiedContents = (T[]) new Object[size];
+		System.arraycopy(contents, 0, copiedContents, 0, size);
+		SortedArraySet<T> copy = SortedArraySet.create(comparator, size);
+		SortedArraySetAccessor<T> copyAccess = ((SortedArraySetAccessor<T>) copy);
+		copyAccess.create$setContents(copiedContents);
+		copyAccess.create$setSize(size);
+		return copy;
+	}
+
+	/**
+	 * Remove the first entry from the given set.
+	 * identical to {@code set.remove(set.first())}
+	 */
+	public static <T> void dequeue(SortedArraySet<T> set) {
+		((SortedArraySetAccessor<T>) set).create$callRemoveInternal(0);
 	}
 
 }
