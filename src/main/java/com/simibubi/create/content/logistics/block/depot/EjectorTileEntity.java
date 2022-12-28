@@ -481,6 +481,12 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 		return launcher.getGlobalVelocity(time, getFacing().getOpposite(), worldPosition)
 			.scale(.5f);
 	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		dropFlyingItems();
+	}
 
 	public void dropFlyingItems() {
 		for (LongAttached<ItemStack> LongAttached : launchedItems) {

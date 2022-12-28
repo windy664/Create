@@ -80,10 +80,15 @@ public class TagGen {
 			.forceAddTag(BlockTags.BEDS)
 			.forceAddTag(BlockTags.DOORS);
 
+		prov.tag(AllBlockTags.MOVABLE_EMPTY_COLLIDER.tag)
+				.add(Blocks.COBWEB, Blocks.POWDER_SNOW)
+				.forceAddTag(BlockTags.FENCE_GATES);
+
 		prov.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 			.add(Blocks.IRON_BARS)
 			.forceAddTag(BlockTags.CAMPFIRES)
-			.forceAddTag(BlockTags.FENCES);
+			.forceAddTag(BlockTags.FENCES)
+			.forceAddTag(BlockTags.LEAVES);
 
 		prov.tag(AllBlockTags.ORE_OVERRIDE_STONE.tag)
 			.forceAddTag(BlockTags.STONE_ORE_REPLACEABLES);

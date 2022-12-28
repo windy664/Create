@@ -99,8 +99,15 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	protected void continueValidation(Fluid fluid) {
-		search(fluid, infinityCheckFrontier, infinityCheckVisited,
-			(p, d) -> infinityCheckFrontier.add(new BlockPosEntry(p, d)), true);
+		try {
+			search(fluid, infinityCheckFrontier, infinityCheckVisited,
+				(p, d) -> infinityCheckFrontier.add(new BlockPosEntry(p, d)), true);
+		} catch (ChunkNotLoadedException e) {
+			infinityCheckFrontier.clear();
+			setLongValidationTimer();
+			return;
+		}
+
 		int maxBlocks = maxBlocks();
 
 		if (infinityCheckVisited.size() > maxBlocks && maxBlocks != -1 && !fillInfinite()) {
@@ -258,7 +265,6 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				SpaceType nextSpaceType = getAtPos(world, offsetPos, fluid);
 				if (nextSpaceType != SpaceType.BLOCKING)
 					queue.add(new BlockPosEntry(offsetPos, entry.distance() + 1));
-
 			}
 		}
 

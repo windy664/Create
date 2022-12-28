@@ -262,8 +262,14 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidate() {
+		super.invalidate();
+	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		ItemHelper.dropContents(level, worldPosition, inventory);
 	}
 
 	@Nullable
@@ -350,8 +356,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity implements Ite
 				ItemHelper.addToList(stack, list);
 			}
 		}
-		
-		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++) 
+
+		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
 			inventory.setStackInSlot(slot + 1, list.get(slot));
 
 		award(AllAdvancements.SAW_PROCESSING);

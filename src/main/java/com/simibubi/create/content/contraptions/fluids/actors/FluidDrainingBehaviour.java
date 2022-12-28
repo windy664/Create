@@ -312,11 +312,16 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	private void continueSearch() {
-		fluid = search(fluid, frontier, visited, (e, d) -> {
-			BlockPosEntry entry = new BlockPosEntry(e, d);
+		try {
+			fluid = search(fluid, frontier, visited, (e, d) -> {
+				BlockPosEntry entry = new BlockPosEntry(e, d);
 			queue.add(entry);
-			validationSet.add(e);
-		}, false);
+				validationSet.add(e);
+			}, false);
+		} catch (ChunkNotLoadedException e) {
+			tileEntity.sendData();
+			visited.clear();
+		}
 
 		Level world = getWorld();
 		int maxBlocks = maxBlocks();
@@ -348,7 +353,13 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	private void continueValidation() {
-		search(fluid, validationFrontier, validationVisited, (e, d) -> newValidationSet.add(e), false);
+		try {
+			search(fluid, validationFrontier, validationVisited, (e, d) -> newValidationSet.add(e), false);
+		} catch (ChunkNotLoadedException e) {
+			validationFrontier.clear();
+			setLongValidationTimer();
+			return;
+		}
 
 		int maxBlocks = maxBlocks();
 		if (validationVisited.size() > maxBlocks && canDrainInfinitely(fluid)) {

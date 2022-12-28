@@ -22,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -103,9 +104,13 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 		BlockPos target = worldPosition.relative(getBlockState().getOptionalValue(StockpileSwitchBlock.FACING)
 			.orElse(Direction.NORTH));
+		BlockEntity targetTile = level.getBlockEntity(target);
 
-		if (level.getBlockEntity(target) instanceof StockpileSwitchObservable observable) {
+		if (targetTile instanceof StockpileSwitchObservable observable) {
 			currentLevel = observable.getPercent() / 100f;
+
+//		} else if (StorageDrawers.isDrawer(targetTile) && observedInventory.hasInventory()) {
+//			currentLevel = StorageDrawers.getTrueFillLevel(observedInventory.getInventory(), filtering);
 
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
