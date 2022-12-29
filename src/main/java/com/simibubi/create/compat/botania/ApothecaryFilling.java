@@ -14,8 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import vazkii.botania.api.block.IPetalApothecary;
-import vazkii.botania.common.block.tile.TileAltar;
+import vazkii.botania.api.block.PetalApothecary;
 
 public class ApothecaryFilling extends BlockSpoutingBehaviour {
 
@@ -38,19 +37,19 @@ public class ApothecaryFilling extends BlockSpoutingBehaviour {
 			return 0;
 
 		// this shouldn't fail but... better safe than sorry.
-		if (!(te instanceof IPetalApothecary apothecary))
+		if (!(te instanceof PetalApothecary apothecary))
 			return 0;
 		// don't insert if it's not empty
-		if (apothecary.getFluid() != IPetalApothecary.State.EMPTY)
+		if (apothecary.getFluid() != PetalApothecary.State.EMPTY)
 			return 0;
 
-		IPetalApothecary.State fluidState;
+		PetalApothecary.State fluidState;
 
 		Fluid fluid = availableFluid.getType().getFluid();
 		if (fluid == Fluids.WATER) {
-			fluidState = IPetalApothecary.State.WATER;
+			fluidState = PetalApothecary.State.WATER;
 		} else if (fluid == Fluids.LAVA) {
-			fluidState = IPetalApothecary.State.LAVA;
+			fluidState = PetalApothecary.State.LAVA;
 		} else {
 			return 0;
 		}
