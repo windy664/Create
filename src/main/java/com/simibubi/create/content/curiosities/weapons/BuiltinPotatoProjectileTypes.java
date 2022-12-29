@@ -12,10 +12,9 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.mixin.accessor.FallingBlockEntityAccessor;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
-import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder;
-import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents.Teleport.EntityTeleportEvent;
+import io.github.fabricators_of_create.porting_lib.fake_players.FakePlayer;
 import io.github.fabricators_of_create.porting_lib.util.PlantUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
