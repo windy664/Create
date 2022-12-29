@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
-import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import net.fabricmc.api.EnvType;
@@ -153,7 +152,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<
 		}
 
 		boolean doNotConsume = player.isCreative();
-		boolean forceOverflow = !(player instanceof FakeServerPlayer);
+		boolean forceOverflow = !(player.isFake());
 		try (Transaction t = TransferUtil.getTransaction()) {
 			InteractionResultHolder<ItemStack> res =
 					tryInsert(state, world, pos, heldItem, doNotConsume, forceOverflow, t);
