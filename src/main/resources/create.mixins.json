@@ -14,7 +14,8 @@
     "accessor.LivingEntityAccessor",
     "accessor.ServerLevelAccessor",
     "fabric.AbstractMinecartMixin",
-    "fabric.EntityMixin"
+    "fabric.EntityMixin",
+    "fabric.SortedArraySetAccessor"
   ],
   "client": [
     "BlockDestructionProgressMixin",
@@ -25,6 +26,7 @@
     "HeavyBootsOnPlayerMixin",
     "LevelRendererMixin",
     "MapRendererMapInstanceMixin",
+    "PlayerRendererMixin",
     "WindowResizeMixin",
     "accessor.AgeableListModelAccessor",
     "accessor.GameRendererAccessor",

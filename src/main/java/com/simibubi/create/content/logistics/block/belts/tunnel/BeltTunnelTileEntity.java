@@ -65,8 +65,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements SidedStorag
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidate() {
+		super.invalidate();
 	}
 
 	protected void writeFlapsAndSides(CompoundTag compound) {

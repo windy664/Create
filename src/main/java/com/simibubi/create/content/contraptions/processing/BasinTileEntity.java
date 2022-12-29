@@ -209,19 +209,27 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		visualizedOutputFluids.clear();
 	}
 
+	@Override
+	public void destroy() {
+		super.destroy();
+		ItemHelper.dropContents(level, worldPosition, inputInventory);
+		ItemHelper.dropContents(level, worldPosition, outputInventory);
+		spoutputBuffer.forEach(is -> Block.popResource(level, worldPosition, is));
+	}
+
+	@Override
+	public void remove() {
+		super.remove();
+		onEmptied();
+	}
+
 	public void onEmptied() {
 		getOperator().ifPresent(te -> te.basinRemoved = true);
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
-	}
-
-	@Override
-	protected void setRemovedNotDueToChunkUnload() {
-		onEmptied();
-		super.setRemovedNotDueToChunkUnload();
+	public void invalidate() {
+		super.invalidate();
 	}
 
 //	@Nonnull

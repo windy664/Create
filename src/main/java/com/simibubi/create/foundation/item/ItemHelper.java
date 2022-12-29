@@ -176,14 +176,20 @@ public class ItemHelper {
 				for (StorageView<ItemVariant> view : inv) {
 					if (view.isResourceBlank()) continue;
 					ItemVariant contained = view.getResource();
+					int maxStackSize = contained.getItem().getMaxStackSize();
 					// amount stored, amount needed, or max size, whichever is lowest.
-					int amountToExtractFromThisSlot = Math.min(truncateLong(view.getAmount()), Math.min(amount - extracted, contained.getItem().getMaxStackSize()));
+					int amountToExtractFromThisSlot = Math.min(truncateLong(view.getAmount()), Math.min(amount - extracted, maxStackSize));
 					if (!test.test(contained.toStack(amountToExtractFromThisSlot)))
 						continue;
 					if (extracting == null) {
 						extracting = contained; // we found a target
 					}
-					if (!contained.equals(extracting)) {
+					boolean sameType = extracting.equals(contained);
+					if (sameType && maxStackSize == extracted) {
+						// stack is maxed out, skip
+						continue;
+					}
+					if (!sameType) {
 						// multiple types passed the test
 						if (otherTargets == null) {
 							otherTargets = new ArrayList<>();

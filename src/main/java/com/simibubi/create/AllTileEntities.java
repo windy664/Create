@@ -54,6 +54,7 @@ import com.simibubi.create.content.contraptions.components.saw.SawInstance;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftTileEntity;
+import com.simibubi.create.content.contraptions.components.steam.SteamEngineInstance;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineRenderer;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineTileEntity;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleRenderer;
@@ -531,6 +532,7 @@ public class AllTileEntities {
 
 	public static final BlockEntityEntry<SteamEngineTileEntity> STEAM_ENGINE = REGISTRATE
 		.tileEntity("steam_engine", SteamEngineTileEntity::new)
+		.instance(() -> SteamEngineInstance::new, false)
 		.validBlocks(AllBlocks.STEAM_ENGINE)
 		.renderer(() -> SteamEngineRenderer::new)
 		.register();

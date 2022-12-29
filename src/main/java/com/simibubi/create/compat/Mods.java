@@ -13,6 +13,7 @@ import net.fabricmc.loader.api.FabricLoader;
 public enum Mods {
 	DYNAMICTREES,
 	TCONSTRUCT,
+	STORAGEDRAWERS,
 	SANDWICHABLE,
 	TRINKETS,
 	MODMENU,
