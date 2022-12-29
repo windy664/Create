@@ -56,7 +56,6 @@
     "forge_tags": ">=${forge_tags_version}",
     "forgeconfigapiport": ">=${forge_config_api_port_version}",
     "reach-entity-attributes": ">=${reach_entity_attributes_version}",
-    "fake-player-api": ">=${fake_player_api_version}",
     "milk": ">=${milk_lib_version}"
   },
 
