@@ -96,9 +96,6 @@ def devEnv(DependencyHandler deps) {
     deps.modLocalRuntime("maven.modrinth:lithium:mc1.19.2-0.10.0")
     deps.modLocalRuntime("com.terraformersmc:modmenu:${project.modmenu_version}")
     deps.modLocalRuntime("dev.emi:trinkets:${project.trinkets_version}")
-    // used to prevent forge config api port from complaining
-    deps.modImplementation("com.github.AlphaMode:fakeconfig:master-SNAPSHOT") { exclude(group: "net.fabricmc.fabric-api") }
-    deps.modImplementation("com.github.AlphaMode:fakeconfigtoml:master-SNAPSHOT") { exclude(group: "net.fabricmc.fabric-api") }
 }
 
 // setup mods that are available for compatibility reasons
