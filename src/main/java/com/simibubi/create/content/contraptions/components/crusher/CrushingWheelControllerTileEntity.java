@@ -21,7 +21,6 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
-import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.fabricmc.api.EnvType;
@@ -40,6 +39,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;

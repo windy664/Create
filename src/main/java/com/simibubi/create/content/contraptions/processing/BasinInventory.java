@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.processing;
 import com.simibubi.create.foundation.item.SmartInventory;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 public class BasinInventory extends SmartInventory {
