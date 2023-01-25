@@ -546,7 +546,7 @@ public class DeployerTileEntity extends KineticTileEntity implements SidedStorag
 		animatedOffset.setValue(offset);
 	}
 
-	RecipeWrapper recipeInv = new RecipeWrapper(new ItemStackHandler(2));
+	ItemStackHandlerContainer recipeInv = new ItemStackHandlerContainer(2);
 	SandPaperInv sandpaperInv = new SandPaperInv(ItemStack.EMPTY);
 
 	@Nullable

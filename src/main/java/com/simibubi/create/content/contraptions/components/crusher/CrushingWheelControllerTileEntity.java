@@ -57,7 +57,6 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 	protected boolean searchForEntity;
 
 	public ProcessingInventory inventory;
-	private RecipeWrapper wrapper;
 	public float crushingspeed;
 
 	public CrushingWheelControllerTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -70,7 +69,6 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 			}
 
 		};
-		wrapper = new RecipeWrapper(inventory);
 	}
 
 	@Override
@@ -292,7 +290,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 	}
 
 	private void applyRecipe() {
-		Optional<ProcessingRecipe<RecipeWrapper>> recipe = findRecipe();
+		Optional<ProcessingRecipe<Container>> recipe = findRecipe();
 
 		List<ItemStack> list = new ArrayList<>();
 		if (recipe.isPresent()) {
@@ -315,10 +313,10 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 
 	}
 
-	public Optional<ProcessingRecipe<RecipeWrapper>> findRecipe() {
-		Optional<ProcessingRecipe<RecipeWrapper>> crushingRecipe = AllRecipeTypes.CRUSHING.find(wrapper, level);
+	public Optional<ProcessingRecipe<Container>> findRecipe() {
+		Optional<ProcessingRecipe<Container>> crushingRecipe = AllRecipeTypes.CRUSHING.find(inventory, level);
 		if (!crushingRecipe.isPresent())
-			crushingRecipe = AllRecipeTypes.MILLING.find(wrapper, level);
+			crushingRecipe = AllRecipeTypes.MILLING.find(inventory, level);
 		return crushingRecipe;
 	}
 
@@ -348,7 +346,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity implement
 	}
 
 	private void itemInserted(ItemStack stack) {
-		Optional<ProcessingRecipe<RecipeWrapper>> recipe = findRecipe();
+		Optional<ProcessingRecipe<Container>> recipe = findRecipe();
 		inventory.remainingTime = recipe.isPresent() ? recipe.get()
 			.getProcessingDuration() : 100;
 		inventory.appliedRecipe = false;
