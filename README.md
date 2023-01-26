@@ -1,7 +1,7 @@
 <p align="center"><img src="https://i.imgur.com/SXaePW6.png" alt="Logo" width="200"></p>
 <h1 align="center">Create  <br>
 	<a href="https://www.patreon.com/simibubi"><img src="https://img.shields.io/badge/Supporters-80-ff5733" alt="Patreon"></a>
-	<a href="https://www.curseforge.com/minecraft/mc-mods/create-fabric/files"><img src="https://img.shields.io/badge/Available%20for-MC%201.18-c70039" alt="Supported Versions"></a>
+	<a href="https://www.curseforge.com/minecraft/mc-mods/create-fabric/files"><img src="https://img.shields.io/badge/Available%20for-MC%201.18%20to%20MC%201.19-c70039" alt="Supported Versions"></a>
 	<a href="https://github.com/Creators-of-Create/Create/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Creators-of-Create/Create?style=flat&color=900c3f" alt="License"></a>
 	<a href="https://discord.gg/hmaD7Se"><img src="https://img.shields.io/discord/620934202875183104?color=5865f2&label=Discord&style=flat" alt="Discord"></a>
 	<a href="https://www.curseforge.com/minecraft/mc-mods/create-fabric"><img src="http://cf.way2muchnoise.eu/624165.svg" alt="CF"></a>
@@ -30,4 +30,7 @@
 
 <h3 align="center">Development</h3>
 
-Looking to make an addon for Create? A template mod for a Fabric addon can be found [here](https://github.com/Fabricators-of-Create/create-fabric-addon-template).
+Looking to make an addon for Create? A template mod for a Fabric addon can be found
+[here](https://github.com/Fabricators-of-Create/create-fabric-addon-template),
+and a template for a multi-loader addon with Architectury can be found
+[here](https://github.com/Fabricators-of-Create/create-multiloader-addon-template).
