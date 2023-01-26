@@ -52,6 +52,7 @@ public class ClientMotionPacket extends SimplePacketBase {
 					sender.causeFallDamage(sender.fallDistance, 1, DamageSource.FALL);
 					sender.fallDistance = 0;
 					((ServerGamePacketListenerImplAccessor)sender.connection).port_lib$setAboveGroundTickCount(0);
+					sender.connection.aboveGroundVehicleTickCount = 0;
 				}
 				AllPackets.channel.sendToClientsTracking(new LimbSwingUpdatePacket(sender.getId(), sender.position(), limbSwing), sender);
 			});

@@ -12,6 +12,7 @@
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
     "accessor.LivingEntityAccessor",
+    "accessor.NbtAccounterAccessor",
     "accessor.ServerLevelAccessor",
     "fabric.AbstractMinecartMixin",
     "fabric.EntityMixin",
