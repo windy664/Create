@@ -184,7 +184,7 @@ public class BeltTileEntity extends KineticTileEntity implements ItemTransferabl
 	@Nullable
 	@Override
 	public Storage<ItemVariant> getItemStorage(@Nullable Direction direction) {
-		if (!isRemoved() && !itemHandler.isPresent())
+		if (!isRemoved() && itemHandler == null)
 			initializeItemHandler();
 		if (direction == Direction.UP || BeltBlock.canAccessFromSide(direction, getBlockState())) {
 			return itemHandler;
