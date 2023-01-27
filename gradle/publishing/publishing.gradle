@@ -13,7 +13,7 @@ ext /* -ra properties */ {
 task publishMod {
     if (version_valid) {
         dependsOn(tasks.getByName("modrinth"))
-        dependsOn(tasks.getByName("curseforge$curseforge_id"))
+        dependsOn(tasks.getByName("curseforge"))
     }
 }
 
@@ -36,4 +36,5 @@ static String getChangelog(File changelogFile) {
 }
 
 apply from: "gradle/publishing/modrinth.gradle"
+apply from: "gradle/publishing/curseforge.gradle"
 apply from: "gradle/publishing/maven.gradle"
