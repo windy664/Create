@@ -1,4 +1,4 @@
-name: actually_build
+name: build
 on: [ pull_request, push ]
 
 jobs:
