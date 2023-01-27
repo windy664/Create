@@ -1,0 +1,21 @@
+curseforge {
+    apiKey = System.getenv().get("CURSEFORGE_TOKEN")
+    project {
+        id = curseforge_id
+        changelog = changelog_text
+        releaseType = release_type
+        addGameVersion("Fabric")
+        addGameVersion("Quilt")
+        addGameVersion(minecraft_version)
+        relations {
+            requiredDependency("fabric-api")
+        }
+        mainArtifact(jar) {
+            displayName = published_version_name
+
+        }
+    }
+    options {
+        forgeGradleIntegration = false
+    }
+}

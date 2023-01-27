@@ -53,22 +53,6 @@ jobs:
       - name: prepare changelog for publish
         run: ./gradlew prepareChangelog
 
-      - name: publish to Modrinth, CurseForge, and GitHub Releases
+      - name: publish to Modrinth and CurseForge
         if: ${{ github.event.inputs.publish }}
-        uses: Kir-Antipov/mc-publish@v3.2
-        with:
-          modrinth-id: h06RZwls # testing project ID
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          modrinth-featured: true
-
-          curseforge-id: 624165
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-          loaders: |
-            fabric
-            quilt
-          version-type: beta
-
-          changelog-file: CHANGELOG.txt
+        run: ./gradlew publishMod

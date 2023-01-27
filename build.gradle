@@ -1,12 +1,14 @@
-import java.nio.file.Files
-
 //file:noinspection GradlePackageVersionRange
 //file:noinspection GrMethodMayBeStatic
 plugins {
     id "fabric-loom" version "1.0.+"
-    id "maven-publish"
+
     id "io.github.juuxel.loom-quiltflower" version "1.+" // Quiltflower, a better decompiler
     id "io.github.p03w.machete" version "1.1.4" // automatic jar compressing on build
+
+    id "com.modrinth.minotaur" version "2.+" // modrinth publishing
+    id "com.matthewprenger.cursegradle" version "1.+" // curseforge publishing
+    id "maven-publish" // maven publishing
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -255,38 +257,5 @@ jar {
     }
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = archivesBaseName + "-${project.minecraft_version}"
-            from components.java
-        }
-    }
-
-    repositories {
-        maven {
-            url = "https://mvn.devos.one/${System.getenv().PUBLISH_SUFFIX}/"
-            credentials {
-                username = System.getenv().MAVEN_USER
-                password = System.getenv().MAVEN_PASS
-            }
-            authentication { basic(BasicAuthentication) }
-        }
-    }
-}
-
-String changelogFileName = "CHANGELOG.txt"
-String changelogSplit = "----------"
-
-// removes the header so it can be read easily
-task prepareChangelog  {
-    doFirst {
-        java.nio.file.Path changelogFile = project.file(changelogFileName).toPath()
-        String text = Files.readString(changelogFile)
-        String[] split = text.split(changelogSplit)
-        if (split.length != 2)
-            throw new IllegalStateException("Malformed changelog")
-        String content = split[1].trim()
-        Files.writeString(changelogFile, content)
-    }
-}
+// see gradle/publishing.gradle for publishing
+apply from: "gradle/publishing.gradle"
