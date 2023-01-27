@@ -13,8 +13,7 @@ ext /* -ra properties */ {
 task publishMod {
     if (version_valid) {
         dependsOn(tasks.getByName("modrinth"))
-        dependsOn(tasks.getByName("curseforge"))
-        tasks.getByName("curseforge").outputs.upToDateWhen { false }
+        dependsOn(tasks.getByName("curseforge$curseforge_id"))
     }
 }
 
