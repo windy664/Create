@@ -14,7 +14,9 @@ curseforge {
         mainArtifact(file("build/libs/${remapJar.archiveBaseName}-${version}.jar")) {
             displayName = published_version_name
         }
-        uploadTask.dependsOn(remapJar)
+        afterEvaluate {
+            uploadTask.dependsOn(remapJar)
+        }
     }
     curseGradleOptions {
         forgeGradleIntegration = false
