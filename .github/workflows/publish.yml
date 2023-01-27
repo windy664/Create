@@ -48,7 +48,7 @@ jobs:
             - name: publish to Modrinth, CurseForge, and GitHub Releases
               uses: Kir-Antipov/mc-publish@v3.2
               with:
-                  modrinth-id: B83mKD8S # Staging ID for now
+                  modrinth-id: h06RZwls # testing project ID
                   modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
                   modrinth-featured: true
 
