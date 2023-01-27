@@ -3,7 +3,7 @@ on:
     workflow_dispatch:
           inputs:
               publish:
-                  description: Publish to Modrinth, CurseForge, GitHub Releases, and Maven
+                  description: Publish to Modrinth and CurseForge
                   required: true
                   default: "false"
     pull_request:
@@ -49,9 +49,6 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
-
-      - name: prepare changelog for publish
-        run: ./gradlew prepareChangelog
 
       - name: publish to Modrinth and CurseForge
         if: ${{ github.event.inputs.publish }}
