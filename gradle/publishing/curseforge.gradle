@@ -19,5 +19,4 @@ curseforge {
         }
     }
     curseGradleOptions.forgeGradleIntegration = false
-    curseGradleOptions.debug = true
 }
