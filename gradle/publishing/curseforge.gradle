@@ -18,8 +18,6 @@ curseforge {
             uploadTask.dependsOn(remapJar)
         }
     }
-    curseGradleOptions {
-        forgeGradleIntegration = false
-        debug = true
-    }
+    curseGradleOptions.forgeGradleIntegration = false
+    curseGradleOptions.debug = true
 }
