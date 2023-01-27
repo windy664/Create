@@ -8,7 +8,6 @@ ext /* -ra properties */ {
     version_valid = versionValidForPublishing(version)
     published_version_name = version_valid ? makeName(version) : "INVALID"
     changelog_text = getChangelog(file(changelog_file))
-    built_jar = getBuiltJar(file(build_output))
 }
 
 task publishMod {
@@ -34,26 +33,6 @@ static String getChangelog(File changelogFile) {
     if (split.length != 2)
         throw new IllegalStateException("Malformed changelog")
     return split[1].trim()
-}
-
-static File getBuiltJar(File dir) {
-    File[] files = dir.listFiles()
-    File valid = null
-    String all = ""
-    for (File file : files) {
-        String name = file.getName()
-        all += "$name, "
-        for (String suffix : [ "sources", "dev", "javadoc" ]) {
-            if (name.endsWith("-${suffix}.jar")) {
-                break
-            }
-            if (valid != null) {
-                throw new IllegalStateException("Multiple valid built files: $name and ${valid.getName()}")
-            }
-            valid = file
-        }
-    }
-    throw new IllegalStateException("No valid built jars found; options: $all")
 }
 
 apply from: "gradle/publishing/modrinth.gradle"

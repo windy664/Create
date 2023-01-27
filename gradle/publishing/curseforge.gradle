@@ -10,7 +10,7 @@ curseforge {
         relations {
             requiredDependency("fabric-api")
         }
-        mainArtifact(built_jar) {
+        mainArtifact(remapJar) {
             displayName = published_version_name
         }
     }
