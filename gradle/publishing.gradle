@@ -11,12 +11,10 @@ ext /* -ra properties */ {
 }
 
 task publishMod {
-    doFirst {
-        if (!version_valid)
-            throw new IllegalStateException("Verson is not valid for publishing")
+    if (version_valid) {
+        dependsOn(tasks.getByName("modrinth"))
+//    dependsOn(tasks.getByName("curseforge"))
     }
-    dependsOn(modrinth)
-//    dependsOn(curseforge)
 }
 
 static String makeName(String version) {
