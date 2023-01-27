@@ -1,0 +1,8 @@
+INFO:
+All changes should be appended to this file with each commit.
+On publish, it will be cleared to prepare for the next release cycle.
+No formatting, just plain text. CurseForge support for it is terrible.
+
+Change logging starts below:
+----------
+- added easy publishing to Modrinth, CurseForge, GitHub Releases, and Maven through a GitHub Action

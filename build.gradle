@@ -1,3 +1,5 @@
+import java.nio.file.Files
+
 //file:noinspection GradlePackageVersionRange
 //file:noinspection GrMethodMayBeStatic
 plugins {
@@ -270,5 +272,21 @@ publishing {
             }
             authentication { basic(BasicAuthentication) }
         }
+    }
+}
+
+String changelogFileName = "CHANGELOG.txt"
+String changelogSplit = "----------"
+
+// removes the header so it can be read easily
+task prepareChangelog  {
+    doFirst {
+        java.nio.file.Path changelogFile = project.file(changelogFileName).toPath()
+        String text = Files.readString(changelogFile)
+        String[] split = text.split(changelogSplit)
+        if (split.length != 2)
+            throw new IllegalStateException("Malformed changelog")
+        String content = split[1].trim()
+        Files.writeString(changelogFile, content)
     }
 }
