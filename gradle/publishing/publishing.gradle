@@ -51,6 +51,7 @@ static File getBuiltJar(File dir) {
             valid = file
         }
     }
+    throw new IllegalStateException("No valid built jars found")
 }
 
 apply from: "gradle/publishing/modrinth.gradle"
