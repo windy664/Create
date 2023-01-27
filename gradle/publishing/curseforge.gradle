@@ -20,5 +20,6 @@ curseforge {
     }
     curseGradleOptions {
         forgeGradleIntegration = false
+        debug = true
     }
 }
