@@ -39,11 +39,11 @@ static String getChangelog(File changelogFile) {
 static File getBuiltJar(File dir) {
     File[] files = dir.listFiles()
     File valid = null
-    Files: for (File file : files) {
+    for (File file : files) {
         String name = file.getName()
         for (String suffix : [ "sources", "dev", "javadoc" ]) {
             if (name.endsWith("-$suffix.jar")) {
-                break Files
+                break
             }
             if (valid != null) {
                 throw new IllegalStateException("Multiple valid built files: $name and ${valid.getName()}")
