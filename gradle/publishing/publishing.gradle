@@ -39,10 +39,12 @@ static String getChangelog(File changelogFile) {
 static File getBuiltJar(File dir) {
     File[] files = dir.listFiles()
     File valid = null
+    String all = ""
     for (File file : files) {
         String name = file.getName()
+        all += "$name, "
         for (String suffix : [ "sources", "dev", "javadoc" ]) {
-            if (name.endsWith("-$suffix.jar")) {
+            if (name.endsWith("-${suffix}.jar")) {
                 break
             }
             if (valid != null) {
@@ -51,7 +53,7 @@ static File getBuiltJar(File dir) {
             valid = file
         }
     }
-    throw new IllegalStateException("No valid built jars found")
+    throw new IllegalStateException("No valid built jars found; options: $all")
 }
 
 apply from: "gradle/publishing/modrinth.gradle"
