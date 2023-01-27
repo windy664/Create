@@ -10,6 +10,7 @@ buildscript {
 
 
 import com.modrinth.minotaur.dependencies.ModDependency
+import com.modrinth.minotaur.dependencies.Dependency
 
 modrinth {
     token = System.getenv().get("MODRINTH_TOKEN")
@@ -22,6 +23,6 @@ modrinth {
     gameVersions = [ minecraft_version ]
     loaders = [ "fabric", "quilt" ]
     dependencies = [
-            new ModDependency("P7dR8mSH", "required") // FAPI
+            (Dependency) new ModDependency("P7dR8mSH", "required") // FAPI
     ]
 }
