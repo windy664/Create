@@ -10,8 +10,11 @@ curseforge {
         relations {
             requiredDependency("fabric-api")
         }
-        mainArtifact(remapJar) {
-            displayName = published_version_name
+        afterEvaluate {
+            mainArtifact(remapJar) {
+                displayName = published_version_name
+            }
+            uploadTask.dependsOn(remapJar)
         }
     }
     curseGradleOptions {
