@@ -14,7 +14,7 @@ curseforge {
             mainArtifact(remapJar) {
                 displayName = published_version_name
             }
-            uploadTask.dependsOn(remapJar)
+            uploadTask.outputs.upToDateWhen { false }
         }
     }
     curseGradleOptions {
