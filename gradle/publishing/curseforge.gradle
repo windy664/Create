@@ -10,12 +10,12 @@ curseforge {
         relations {
             requiredDependency("fabric-api")
         }
-        mainArtifact(jar) {
+        mainArtifact(built_jar) {
             displayName = published_version_name
-
         }
     }
-    options {
+    curseGradleOptions {
         forgeGradleIntegration = false
+        debug = true
     }
 }

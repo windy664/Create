@@ -2,27 +2,26 @@ import java.nio.file.Files
 
 ext /* -ra properties */ {
     Properties properties = new Properties()
-    properties.load(new FileInputStream(file("gradle/publishing.properties")))
+    properties.load(new FileInputStream(file("gradle/publishing/publishing.properties")))
     properties.forEach((k, v) -> set(k, v))
 
     version_valid = versionValidForPublishing(version)
     published_version_name = version_valid ? makeName(version) : "INVALID"
     changelog_text = getChangelog(file(changelog_file))
+    built_jar = getBuiltJar(file(build_output))
 }
 
 task publishMod {
     if (version_valid) {
         dependsOn(tasks.getByName("modrinth"))
-//    dependsOn(tasks.getByName("curseforge"))
+        dependsOn(tasks.getByName("curseforge"))
     }
 }
 
 static String makeName(String version) {
     // version example: 0.5.0.h-861+1.18.2
-    String createVersion = version.split("-")[0]
-    String build = version.split("-")[1].split("\\+")[0]
-    String mcVer = version.split("\\+")[1]
-    return "Create %s build %s for %s".formatted(createVersion, build, mcVer)
+    return "Create " + version.replace("-", " build ").replace("+", " for ")
+    // Create 0.5.0.h build 861 for 1.18.2
 }
 
 static boolean versionValidForPublishing(String version) {
@@ -35,6 +34,18 @@ static String getChangelog(File changelogFile) {
     if (split.length != 2)
         throw new IllegalStateException("Malformed changelog")
     return split[1].trim()
+}
+
+static File getBuiltJar(File dir) {
+    List<File> valid = Arrays.stream(dir.listFiles())
+            .filter(file -> !file.getName().endsWith("-sources.jar"))
+            .filter(file -> !file.getName().endsWith("-dev.jar"))
+            .filter(file -> !file.getName().endsWith("-javadoc.jar"))
+            .toList()
+    int size = valid.size()
+    if (size != 1)
+        throw new IllegalStateException("Expected 1 valid file, found $size")
+    return valid.get(0)
 }
 
 apply from: "gradle/publishing/modrinth.gradle"

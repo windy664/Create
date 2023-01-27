@@ -258,4 +258,4 @@ jar {
 }
 
 // see gradle/publishing.gradle for publishing
-apply from: "gradle/publishing.gradle"
+apply from: "gradle/publishing/publishing.gradle"
