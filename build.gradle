@@ -14,8 +14,9 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
-String buildNumber = System.getenv("GITHUB_RUN_NUMBER")
-version = mod_version + (buildNumber != null ? "-${buildNumber}" : "") + "+${project.minecraft_version}"
+String runNumber = System.getenv("GITHUB_RUN_NUMBER")
+String build = runNumber != null ? runNumber : "local"
+version = "$mod_version-$build+$minecraft_version"
 
 group = project.maven_group
 archivesBaseName = "create-fabric"
@@ -181,7 +182,7 @@ def testMods(DependencyHandler deps) {
 }
 
 machete {
-    if (buildNumber == null) {
+    if (runNumber == null) {
         enabled = false // don't optimize local builds
     }
 }
