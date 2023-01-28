@@ -5,4 +5,6 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- added easy publishing to Modrinth, CurseForge, GitHub Releases, and Maven through a GitHub Action
+- Synced with Patch H
+- added easy publishing to Modrinth, CurseForge, GitHub Releases, and Maven through a GitHub Action.
+- added easy change logging. Future change logs will be much more thorough.
