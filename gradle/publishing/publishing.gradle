@@ -19,8 +19,14 @@ task publishMod {
 
 static String makeName(String version) {
     // version example: 0.5.0.h-861+1.18.2
-    return "Create " + version.replace("-", " build ").replace("+", " for ")
-    // Create 0.5.0.h build 861 for 1.18.2
+    String createVer = "v" + version.split("-")[0]
+    String mcVer = version.split("\\+")[1]
+    String rawPatch = System.getenv("PATCH_NUMBER")
+    if (rawPatch === null || rawPatch.isEmpty())
+        throw new IllegalStateException("Patch nuber not specified")
+    String patch = rawPatch == "0" ? "" : "Patch $rawPatch"
+    return "Create $mcVer $createVer $patch".trim()
+    // Create 1.18.2 v0.5.0.h Patch 1
 }
 
 static boolean versionValidForPublishing(String version) {

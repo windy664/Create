@@ -6,6 +6,9 @@ on:
                   description: Publish to Modrinth and CurseForge
                   required: true
                   default: "false"
+              patch:
+                  description: Patch number, 0 for first (ex. Create 1.19.2 v0.5.0.g Patch N)
+                  required: true
     pull_request:
     push:
 
@@ -21,6 +24,7 @@ jobs:
       MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
       CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+      PATCH_NUMBER: ${{ github.event.inputs.patch }}
     steps:
 
       - name: checkout repository
