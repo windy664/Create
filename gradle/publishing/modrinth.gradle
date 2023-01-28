@@ -1,5 +1,5 @@
 modrinth {
-    token = System.getenv().get("MODRINTH_TOKEN")
+    token = System.getenv("MODRINTH_TOKEN")
     projectId = modrinth_id
     versionNumber = version
     versionName = published_version_name

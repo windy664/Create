@@ -1,5 +1,6 @@
 curseforge {
-    apiKey = System.getenv().get("CURSEFORGE_TOKEN")
+    String token = System.getenv("CURSEFORGE_TOKEN")
+    apiKey = token == null || token.isEmpty() ? "unset" : token
     project {
         id = curseforge_id
         changelog = changelog_text
