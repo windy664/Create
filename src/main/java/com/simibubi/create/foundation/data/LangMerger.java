@@ -3,21 +3,17 @@ package com.simibubi.create.foundation.data;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.google.common.hash.Hashing;
@@ -192,7 +188,7 @@ public class LangMerger implements DataProvider {
 		HashingOutputStream hashingoutputstream = new HashingOutputStream(Hashing.sha1(), bytearrayoutputstream);
 
 		Writer writer = new OutputStreamWriter(hashingoutputstream, StandardCharsets.UTF_8);
-		writer.append(createString(dataIn, missingKeys));
+		writer.append(createString(dataIn));
 		writer.close();
 
 		cache.writeIfNeeded(target, bytearrayoutputstream.toByteArray(), hashingoutputstream.hash());
