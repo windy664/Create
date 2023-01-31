@@ -142,7 +142,6 @@ public class CommonEvents {
 	}
 
 	public static void onWorldTick(Level world) {
-		// on forge, this is only called on ServerLevels
 		if (!world.isClientSide()) {
 			ContraptionHandler.tick(world);
 			CapabilityMinecartController.tick(world);
