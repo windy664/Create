@@ -1,10 +1,12 @@
 {
-	"conditions": [
-		{
-		  "type": "forge:mod_loaded",
-		  "modid": "ae2"
-		}
-	],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "ae2"
+      ]
+    }
+  ],
     "type": "create:crushing",
     "ingredients": [
     	{
