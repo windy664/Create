@@ -252,8 +252,11 @@ public class Carriage {
 
 			boolean discard =
 				!currentlyTraversedDimensions.isEmpty() && !currentlyTraversedDimensions.contains(entry.getKey());
-			ServerLevel currentLevel = level.getServer()
-				.getLevel(entry.getKey());
+
+			MinecraftServer server = level.getServer();
+			if (server == null)
+				continue;
+			ServerLevel currentLevel = server.getLevel(entry.getKey());
 			if (currentLevel == null)
 				continue;
 
@@ -851,7 +854,7 @@ public class Carriage {
 					train.carriageWaitingForChunks = id;
 					return;
 				}
-				
+
 				if (entity.getPassengers()
 					.stream()
 					.anyMatch(p -> p instanceof Player)
