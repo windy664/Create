@@ -2,9 +2,6 @@ package com.simibubi.create.events;
 
 import java.util.concurrent.Executor;
 
-import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.Commands;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -76,7 +73,9 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -141,7 +140,7 @@ public class CommonEvents {
 		return null;
 	}
 
-	public static void onWorldTick(Level world) {
+	public static void onServerWorldTick(Level world) {
 		if (!world.isClientSide()) {
 			ContraptionHandler.tick(world);
 			CapabilityMinecartController.tick(world);
@@ -241,7 +240,7 @@ public class CommonEvents {
 		// Fabric Events
 		ServerTickEvents.END_SERVER_TICK.register(CommonEvents::onServerTick);
 		ServerChunkEvents.CHUNK_UNLOAD.register(CommonEvents::onChunkUnloaded);
-		ServerTickEvents.END_WORLD_TICK.register(CommonEvents::onWorldTick);
+		ServerTickEvents.END_WORLD_TICK.register(CommonEvents::onServerWorldTick);
 		ServerEntityEvents.ENTITY_LOAD.register(CommonEvents::onEntityAdded);
 		ServerLifecycleEvents.SERVER_STOPPED.register(CommonEvents::serverStopping);
 		ServerWorldEvents.LOAD.register(CommonEvents::onLoadWorld);

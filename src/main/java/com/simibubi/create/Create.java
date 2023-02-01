@@ -142,6 +142,7 @@ public class Create implements ModInitializer {
 			AllAdvancements.register();
 			AllTriggers.register();
 			BoilerHeaters.registerDefaults();
+			AllFluids.registerFluidInteractions();
 //		});
 	}
 

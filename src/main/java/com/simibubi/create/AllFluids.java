@@ -131,6 +131,34 @@ public class AllFluids {
 		FluidVariantRendering.register(potionFluid.getSource(), handler);
 	}
 
+	public static void registerFluidInteractions() {
+		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
+				HONEY.get().getFluidType(),
+				fluidState -> {
+					if (fluidState.isSource()) {
+						return Blocks.OBSIDIAN.defaultBlockState();
+					} else {
+						return AllPaletteStoneTypes.LIMESTONE.getBaseBlock()
+								.get()
+								.defaultBlockState();
+					}
+				}
+		));
+
+		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
+				CHOCOLATE.get().getFluidType(),
+				fluidState -> {
+					if (fluidState.isSource()) {
+						return Blocks.OBSIDIAN.defaultBlockState();
+					} else {
+						return AllPaletteStoneTypes.SCORIA.getBaseBlock()
+								.get()
+								.defaultBlockState();
+					}
+				}
+		));
+	}
+
 	@Nullable
 	public static BlockState getLavaInteraction(FluidState fluidState) {
 		Fluid fluid = fluidState.getType();

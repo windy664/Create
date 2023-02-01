@@ -182,7 +182,6 @@ public class LangMerger implements DataProvider {
 	@SuppressWarnings("deprecation")
 	private void save(CachedOutput cache, List<Object> dataIn, Path target, String message)
 		throws IOException {
-		Create.LOGGER.info(message);
 
 		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
 		HashingOutputStream hashingoutputstream = new HashingOutputStream(Hashing.sha1(), bytearrayoutputstream);
