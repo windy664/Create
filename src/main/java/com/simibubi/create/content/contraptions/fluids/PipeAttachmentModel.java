@@ -52,7 +52,7 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 		addQuads(world, state, pos, randomSupplier, context, data);
 	}
 
-	// FIXME PORT
+	// fabric: unnecessary
 	// TODO: Update once MinecraftForge#9163 is merged
 //	@SuppressWarnings("removal")
 //	@Override
