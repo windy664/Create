@@ -5,7 +5,6 @@ import java.util.concurrent.Executor;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelTileEntity;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
@@ -36,11 +35,9 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageEntityHandler
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItemEntityInteraction;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.command.AllCommands;
-import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkHandler;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
@@ -50,7 +47,6 @@ import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
 import io.github.fabricators_of_create.porting_lib.event.common.BlockPlaceCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityReadExtraDataCallback;
-import io.github.fabricators_of_create.porting_lib.event.common.FluidPlaceBlockCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.MinecartEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.MobEntitySetTargetCallback;
@@ -76,14 +72,11 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -93,9 +86,7 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.EntityHitResult;
 
 public class CommonEvents {
@@ -119,25 +110,6 @@ public class CommonEvents {
 	public static void playerLoggedOut(ServerGamePacketListenerImpl handler, MinecraftServer server) {
 		Player player = handler.getPlayer();
 		Create.RAILWAYS.playerLogout(player);
-	}
-
-	public static BlockState whenFluidsMeet(LevelAccessor world, BlockPos pos, BlockState blockState) {
-		FluidState fluidState = blockState.getFluidState();
-
-		if (fluidState.isSource() && FluidHelper.isLava(fluidState.getType()))
-			return null;
-
-		for (Direction direction : Iterate.directions) {
-			FluidState metFluidState =
-				fluidState.isSource() ? fluidState : world.getFluidState(pos.relative(direction));
-			if (!metFluidState.is(FluidTags.WATER))
-				continue;
-			BlockState lavaInteraction = AllFluids.getLavaInteraction(metFluidState);
-			if (lavaInteraction == null)
-				continue;
-			return lavaInteraction;
-		}
-		return null;
 	}
 
 	public static void onServerWorldTick(Level world) {
@@ -252,7 +224,6 @@ public class CommonEvents {
 		EntityEvents.ENTERING_SECTION.register(CommonEvents::onEntityEnterSection);
 		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
 		ServerPlayConnectionEvents.JOIN.register(CommonEvents::playerLoggedIn);
-		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(CommonEvents::onDatapackSync);
 		// fabric: some features using events on forge don't use events here.
 		// they've been left in this class for upstream compatibility.

@@ -1,10 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Supplier;
-
-import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
@@ -18,9 +15,6 @@ import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,15 +54,15 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 
 	// FIXME PORT
 	// TODO: Update once MinecraftForge#9163 is merged
-	@SuppressWarnings("removal")
-	@Override
-	public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
-		ChunkRenderTypeSet set = super.getRenderTypes(state, rand, data);
-		if (set.isEmpty()) {
-			return ItemBlockRenderTypes.getRenderLayers(state);
-		}
-		return set;
-	}
+//	@SuppressWarnings("removal")
+//	@Override
+//	public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+//		ChunkRenderTypeSet set = super.getRenderTypes(state, rand, data);
+//		if (set.isEmpty()) {
+//			return ItemBlockRenderTypes.getRenderLayers(state);
+//		}
+//		return set;
+//	}
 
 	private void addQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context,
 		PipeModelData pipeData) {
