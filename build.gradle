@@ -220,6 +220,10 @@ loom {
             vmArg "-Dfabric-api.datagen.modid=create"
             vmArg "-Dporting_lib.datagen.existing_resources=${file("src/main/resources")}"
         }
+
+        server {
+            runDir "run/server"
+        }
     }
 }
 
