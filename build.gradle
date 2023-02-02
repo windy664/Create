@@ -79,9 +79,6 @@ def dependencies(DependencyHandler deps) {
     deps.modImplementation(deps.include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
     deps.modImplementation(deps.include("io.github.tropheusj:milk-lib:${project.milk_lib_version}"))
     deps.implementation(deps.include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
-
-    // we only need this present, don't need to do anything with it
-    deps.include("me.luligabi:NoIndium:${project.no_indium_version}")
 }
 
 // initial project setup
@@ -110,6 +107,7 @@ def compat(DependencyHandler deps) {
     deps.modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
     deps.modCompileOnly("dev.emi:trinkets:${project.trinkets_version}") { exclude(group: "com.terraformersmc") }
     deps.modCompileOnly("vazkii.botania:Botania:${project.botania_version}") { transitive = false }
+    deps.modCompileOnly("maven.modrinth:sodium:${project.sodium_version}")
 }
 
 // setup the three recipe viewer mods
@@ -219,10 +217,11 @@ loom {
             vmArg "-Dfabric-api.datagen"
             vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated/resources")}"
             vmArg "-Dfabric-api.datagen.modid=create"
-            // from ae2
-            property "com.simibubi.create.existingData", file("src/main/resources").absolutePath
+            vmArg "-Dporting_lib.datagen.existing_resources=${file("src/main/resources")}"
+        }
 
-            runDir "build/datagen"
+        server {
+            runDir "run/server"
         }
     }
 }
