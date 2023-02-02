@@ -10,3 +10,4 @@ Change logging starts below:
 - added easy change logging. Future change logs will be much more thorough.
 - updated AE2 compat recipes
 - fixed error when using mechanical crafters with an empty hand
+- dedicated Sodium compat fixes #695 and replaces NoIndium with a chat message
