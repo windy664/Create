@@ -12,3 +12,4 @@ Change logging starts below:
 - fixed error when using mechanical crafters with an empty hand
 - dedicated Sodium compat fixes #695 and replaces NoIndium with a chat message
 - updated zinc tags: raw_materials -> raw_ores, raw_zinc_materials -> raw_zinc_ores
+- fix '/create ponder' crashing servers
