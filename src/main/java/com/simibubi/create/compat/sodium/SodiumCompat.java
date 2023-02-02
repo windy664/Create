@@ -67,7 +67,7 @@ public class SodiumCompat {
 			SpriteUtil.markSpriteActive(null); // null is safe, protected by instanceof
 			return true;
 		} catch (Throwable t) {
-			Create.LOGGER.error("Create's Sodium compat errored and has partially disabled. Report this!", t);
+			Create.LOGGER.error("Create's Sodium compat errored and has been partially disabled. Report this!", t);
 		}
 		return false;
 	}
