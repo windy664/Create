@@ -116,7 +116,7 @@ public class CreateClient implements ClientModInitializer {
 	@SuppressWarnings("Convert2MethodRef") // may cause class loading issues if changed
 	private static void initCompat() {
 		Mods.TRINKETS.executeIfInstalled(() -> () -> Trinkets.clientInit());
-		Mods.TRINKETS.executeIfInstalled(() -> () -> SodiumCompat.init());
+		Mods.SODIUM.executeIfInstalled(() -> () -> SodiumCompat.init());
 	}
 
 	private static void registerOverlays() {
