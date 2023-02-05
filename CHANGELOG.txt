@@ -11,3 +11,4 @@ Change logging starts below:
 - fix crashes with mechanical arms and many more things (#795)
 - fix toolbox return erroring (#794)
 - fix alt sometimes getting stuck when closing toolbox menu
+- fix Sequenced Gearshifts getting powered too easily (#791)
