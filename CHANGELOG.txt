@@ -8,4 +8,5 @@ Change logging starts below:
 - fix extraction from crushing wheels
 - fix crashes with contraptions breaking blocks
 - implement PlayerBlockBreakEvents into BlockHelper#destroyBlockAs
--
+- fix crashes with mechanical arms and many more things (#795)
+
