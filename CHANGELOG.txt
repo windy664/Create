@@ -6,3 +6,6 @@ No formatting, just plain text. CurseForge support for it is terrible.
 Change logging starts below:
 ----------
 - fix extraction from crushing wheels
+- fix crashes with contraptions breaking blocks
+- implement PlayerBlockBreakEvents into BlockHelper#destroyBlockAs
+-
