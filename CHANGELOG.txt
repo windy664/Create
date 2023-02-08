@@ -13,4 +13,3 @@ Change logging starts below:
 - fix alt sometimes getting stuck when closing toolbox menu
 - fix Sequenced Gearshifts getting powered too easily (#791)
 - refactor transfer in many places to improve compat and code quality (related: #496)
-- fix transfer in Ponder
