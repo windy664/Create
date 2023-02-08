@@ -47,7 +47,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements SidedStorag
 	public Map<Direction, LerpedFloat> flaps;
 	public Set<Direction> sides;
 
-	protected StorageProvider<ItemVariant> storageBelow;
+	protected StorageProvider<ItemVariant> belowProvider;
 	protected List<Pair<Direction, Boolean>> flapsToSend;
 
 	public BeltTunnelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -55,6 +55,12 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements SidedStorag
 		flaps = new EnumMap<>(Direction.class);
 		sides = new HashSet<>();
 		flapsToSend = new LinkedList<>();
+	}
+
+	@Override
+	public void setLevel(Level level) {
+		super.setLevel(level);
+		belowProvider = StorageProvider.createForItems(level, worldPosition.below());
 	}
 
 	@Override

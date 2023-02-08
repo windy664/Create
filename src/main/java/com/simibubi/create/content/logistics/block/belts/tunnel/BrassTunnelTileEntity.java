@@ -81,6 +81,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	private Set<BrassTunnelTileEntity> syncSet;
 
 	protected ScrollOptionBehaviour<SelectionMode> selectionMode;
+	private StorageProvider<ItemVariant> beltProvider;
 	private BrassTunnelItemHandler tunnelCapability;
 
 	public final SnapshotParticipant<Data> snapshotParticipant = new SnapshotParticipant<>() {
@@ -111,6 +112,12 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		tunnelCapability = new BrassTunnelItemHandler(this);
 		previousOutputIndex = 0;
 		syncedOutputActive = false;
+	}
+
+	@Override
+	public void setLevel(Level level) {
+		super.setLevel(level);
+		beltProvider = StorageProvider.createForItems(level, worldPosition.below());
 	}
 
 	@Override
@@ -752,7 +759,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	}
 
 	public Storage<ItemVariant> getBeltCapability() {
-		return storageBelow != null ? storageBelow.get(Direction.UP) : null;
+		return beltProvider != null ? beltProvider.get(Direction.UP) : null;
 	}
 
 	public enum SelectionMode implements INamedIconOptions {

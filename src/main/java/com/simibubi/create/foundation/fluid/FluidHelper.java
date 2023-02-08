@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -138,13 +139,13 @@ public class FluidHelper {
 	}
 
 	public static boolean tryEmptyItemIntoTE(Level worldIn, Player player, InteractionHand handIn, ItemStack heldItem,
-		SmartTileEntity te) {
+		SmartTileEntity te, Direction side) {
 		if (!EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))
 			return false;
 
 		Pair<FluidStack, ItemStack> emptyingResult = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
 
-		Storage<FluidVariant> tank = TransferUtil.getFluidStorage(te);
+		Storage<FluidVariant> tank = TransferUtil.getFluidStorage(worldIn, te.getBlockPos(), te, side);
 		FluidStack fluidStack = emptyingResult.getFirst();
 
 		if (tank == null)
@@ -174,11 +175,11 @@ public class FluidHelper {
 	}
 
 	public static boolean tryFillItemFromTE(Level world, Player player, InteractionHand handIn, ItemStack heldItem,
-		SmartTileEntity te) {
+		SmartTileEntity te, Direction side) {
 		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
 			return false;
 
-		Storage<FluidVariant> tank = TransferUtil.getFluidStorage(te);
+		Storage<FluidVariant> tank = TransferUtil.getFluidStorage(world, te.getBlockPos(), te, side);
 
 		if (tank == null)
 			return false;

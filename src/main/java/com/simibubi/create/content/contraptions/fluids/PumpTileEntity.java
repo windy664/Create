@@ -18,7 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -273,10 +273,10 @@ public class PumpTileEntity extends KineticTileEntity {
 		return atLeastOneBranchSuccessful;
 	}
 
-	private boolean hasReachedValidEndpoint(LevelAccessor world, BlockFace blockFace, boolean pull) {
+	private boolean hasReachedValidEndpoint(Level world, BlockFace blockFace, boolean pull) {
 		BlockPos connectedPos = blockFace.getConnectedPos();
-		BlockState connectedState = world.getBlockState(connectedPos);
 		BlockEntity tileEntity = world.getBlockEntity(connectedPos);
+		BlockState connectedState = tileEntity != null ? tileEntity.getBlockState() : world.getBlockState(connectedPos);
 		Direction face = blockFace.getFace();
 
 		// facing a pump
@@ -292,12 +292,8 @@ public class PumpTileEntity extends KineticTileEntity {
 			return false;
 
 		// fluid handler endpoint
-		if (tileEntity != null) {
-			Storage<FluidVariant> capability =
-					TransferUtil.getFluidStorage(tileEntity, face.getOpposite());
-			if (capability != null)
-				return true;
-		}
+		if (TransferUtil.getFluidStorage(world, connectedPos, tileEntity, face.getOpposite()) != null)
+			return true;
 
 		// open endpoint
 		return FluidPropagator.isOpenEnd(world, blockFace.getPos(), face);

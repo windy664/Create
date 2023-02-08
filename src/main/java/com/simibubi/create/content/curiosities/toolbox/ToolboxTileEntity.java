@@ -258,18 +258,19 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 		if (keepItems)
 			return;
 
-		Inventory playerInv = player.getInventory();
-		ItemStack playerStack = playerInv.getItem(hotbarSlot);
-		ItemStack toInsert = ToolboxInventory.cleanItemNBT(playerStack.copy());
+		PlayerInventoryStorage playerInv = PlayerInventoryStorage.of(player);
+		SingleSlotStorage<ItemVariant> storage = playerInv.getSlot(hotbarSlot);
+		if (storage.isResourceBlank())
+			return;
+		ItemVariant resource = storage.getResource();
+		int amount = (int) storage.getAmount();
+		ItemStack toInsert = ToolboxInventory.cleanItemNBT(resource.toStack(amount));
 		try (Transaction t = TransferUtil.getTransaction()) {
 			ItemStack remainder = inventory.distributeToCompartment(toInsert, slot, t);
-
-			if (remainder.getCount() != toInsert.getCount())
-				playerInv.setItem(hotbarSlot, remainder);
+			int inserted = amount - remainder.getCount();
+			storage.extract(resource, inserted, t);
 			t.commit();
 		}
-
-
 	}
 
 	private void tickAudio() {

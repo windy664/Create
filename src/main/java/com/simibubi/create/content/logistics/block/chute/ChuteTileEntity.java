@@ -32,6 +32,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
+import io.github.fabricators_of_create.porting_lib.transfer.StorageProvider;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
@@ -501,7 +502,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (level == null)
 			return null;
 		StorageProvider<ItemVariant> provider = side == Direction.UP ? capAbove : capBelow;
-		BlockEntity te = level.getBlockEntity(provider.pos);
+		BlockEntity te = provider.findBlockEntity();
 		if (te instanceof ChuteTileEntity) {
 			if (side != Direction.DOWN || !(te instanceof SmartChuteTileEntity) || getItemMotion() > 0)
 				return null;
