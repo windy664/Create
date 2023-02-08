@@ -31,9 +31,9 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import io.github.fabricators_of_create.porting_lib.block.CustomRenderBoundingBoxBlockEntity;
-import io.github.fabricators_of_create.porting_lib.transfer.StorageProvider;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib.util.StorageProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -827,7 +827,7 @@ if (printer.isErrored())
 				Storage<ItemVariant> storage = entry.getValue().get(entry.getKey().getOpposite());
 				if (storage == null)
 					continue;
-				TransferUtil.getNonEmpty(storage, t).forEach(checklist::collect);
+				TransferUtil.getNonEmpty(storage).forEach(checklist::collect);
 			}
 		}
 		sendUpdate = true;

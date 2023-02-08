@@ -1,3 +1,4 @@
+//file:noinspection GradlePackageVersionRange
 //file:noinspection GrMethodMayBeStatic
 plugins {
     id "fabric-loom" version "1.0.+"
@@ -51,7 +52,7 @@ dependencies {
 def dependencies(DependencyHandler deps) {
     deps.modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
-    deps.modImplementation(deps.include("io.github.fabricators_of_create:Porting-Lib:$port_lib_version+$minecraft_version"))
+    deps.modImplementation(deps.include("io.github.fabricators_of_create.Porting-Lib:porting-lib:$port_lib_version+$minecraft_version"))
     deps.modImplementation(deps.include("com.electronwill.night-config:core:$night_config_version"))
     deps.modImplementation(deps.include("com.electronwill.night-config:toml:$night_config_version"))
     deps.modImplementation(deps.include("curse.maven:forge-config-api-port-fabric-547434:$config_api_id"))
@@ -185,10 +186,9 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_$archivesBaseName" }
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }
 
 // see gradle/publishing.gradle for publishing
 apply from: "gradle/publishing/publishing.gradle"
-apply from: "gradle/compat/compat.gradle"
