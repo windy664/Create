@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.RegisteredObjects;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -39,7 +40,7 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 		if (!registryName.equals(TABLE) && !registryName.equals(BASIN))
 			return 0;
 
-		Storage<FluidVariant> handler = TransferUtil.getFluidStorage(level, pos, te, Direction.UP);
+		Storage<FluidVariant> handler = FluidStorage.SIDED.find(level, pos, null, te, Direction.UP);
 		if (handler == null)
 			return 0;
 

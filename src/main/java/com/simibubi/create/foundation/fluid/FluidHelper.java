@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -145,7 +146,7 @@ public class FluidHelper {
 
 		Pair<FluidStack, ItemStack> emptyingResult = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
 
-		Storage<FluidVariant> tank = TransferUtil.getFluidStorage(worldIn, te.getBlockPos(), te, side);
+		Storage<FluidVariant> tank = FluidStorage.SIDED.find(worldIn, te.getBlockPos(), null, te, side);
 		FluidStack fluidStack = emptyingResult.getFirst();
 
 		if (tank == null)
@@ -179,7 +180,7 @@ public class FluidHelper {
 		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
 			return false;
 
-		Storage<FluidVariant> tank = TransferUtil.getFluidStorage(world, te.getBlockPos(), te, side);
+		Storage<FluidVariant> tank = FluidStorage.SIDED.find(world, te.getBlockPos(), null, te, side);
 
 		if (tank == null)
 			return false;
