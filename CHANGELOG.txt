@@ -5,3 +5,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
+- fix occasional crash in fluid transfer
