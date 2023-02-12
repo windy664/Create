@@ -7,3 +7,4 @@ Change logging starts below:
 ----------
 - fix occasional crash with pipes
 - add 'create:diving_fluids' tag to dictate which fluids the Diving Helmet works in
+- fix funnels extracting from the opposite side they should be
