@@ -5,4 +5,5 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- fix occasional crash in fluid transfer
+- fix occasional crash with pipes
+- add 'create:diving_fluids' tag to dictate which fluids the Diving Helmet works in
