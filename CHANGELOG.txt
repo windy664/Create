@@ -6,3 +6,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 Change logging starts below:
 ----------
 - fix a client crash with deployers (#822)
+- fix REI category icon alignment

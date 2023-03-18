@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
-import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemIcon implements Renderer {
@@ -21,16 +20,6 @@ public class ItemIcon implements Renderer {
 		this.supplier = stack;
 	}
 
-//	@Override // FIXME RECIPE VIEWERS
-//	public int getWidth() {
-//		return 18;
-//	}
-//
-//	@Override
-//	public int getHeight() {
-//		return 18;
-//	}
-
 	@Override
 	public void render(PoseStack matrixStack, Rectangle bounds, int mouseX, int mouseY, float delta) {
 		if (stack == null) {
@@ -42,7 +31,7 @@ public class ItemIcon implements Renderer {
 
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose();
-		matrixStack.translate(xOffset + 1, yOffset + 1, 0);
+		matrixStack.translate(xOffset, yOffset, 0);
 
 		GuiGameElement.of(stack)
 				.render(matrixStack);
