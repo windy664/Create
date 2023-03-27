@@ -7,3 +7,7 @@ Change logging starts below:
 ----------
 - fix a client crash with deployers (#822)
 - fix REI category icon alignment
+- fix large mechanical crafting recipes in REI (#826), improve them in EMI
+- update EMI compat for 0.7: chanced recipes in trees
+- update EMI recipe defaults
+- fix handling of sequenced assembly inputs and outputs in EMI
