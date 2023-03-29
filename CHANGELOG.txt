@@ -11,3 +11,5 @@ Change logging starts below:
 - update EMI compat for 0.7: chanced recipes in trees
 - update EMI recipe defaults
 - fix handling of sequenced assembly inputs and outputs in EMI
+- fix Wand of Symmetry mirroring placement even when it fails, deleting blocks (#856)
+- fix EMI plugin breaking with Farmer's Delight (#629)
