@@ -275,7 +275,7 @@ public class CommonEvents {
 		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);
 		MountEntityCallback.EVENT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
 		LivingEntityEvents.EXPERIENCE_DROP.register(DeployerFakePlayer::deployerKillsDoNotSpawnXP);
-		LivingEntityEvents.HURT.register(ExtendoGripItem::bufferLivingAttackEvent);
+		LivingEntityEvents.ACTUALLY_HURT.register(ExtendoGripItem::bufferLivingAttackEvent);
 		LivingEntityEvents.KNOCKBACK_STRENGTH.register(ExtendoGripItem::attacksByExtendoGripHaveMoreKnockback);
 		LivingEntityEvents.TICK.register(ExtendoGripItem::holdingExtendoGripIncreasesRange);
 		LivingEntityEvents.TICK.register(DivingBootsItem::accellerateDescentUnderwater);
