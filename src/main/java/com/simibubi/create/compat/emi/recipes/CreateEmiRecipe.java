@@ -2,6 +2,7 @@ package com.simibubi.create.compat.emi.recipes;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.Nullable;
@@ -147,5 +148,21 @@ public abstract class CreateEmiRecipe<T extends Recipe<?>> implements EmiRecipe 
 
 	public static TextureWidget addTexture(WidgetHolder widgets, AllGuiTextures texture, int x, int y) {
 		return widgets.addTexture(texture.location, x, y, texture.width, texture.height, texture.startX, texture.startY);
+	}
+
+	public static <T, U> U firstOrElse(List<T> list, U empty, Function<T, U> function) {
+		return list.isEmpty() ? empty : function.apply(list.get(0));
+	}
+
+	public static EmiIngredient firstIngredientOrEmpty(List<Ingredient> ingredients) {
+		return firstOrElse(ingredients, EmiStack.EMPTY, EmiIngredient::of);
+	}
+
+	public static EmiStack firstFluidOrEmpty(List<FluidStack> fluids) {
+		return firstOrElse(fluids, EmiStack.EMPTY, CreateEmiRecipe::fluidStack);
+	}
+
+	public static EmiStack firstResultOrEmpty(List<ProcessingOutput> outputs) {
+		return firstOrElse(outputs, EmiStack.EMPTY, output -> EmiStack.of(output.getStack()));
 	}
 }
