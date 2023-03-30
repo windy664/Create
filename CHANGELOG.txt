@@ -13,3 +13,4 @@ Change logging starts below:
 - fix handling of sequenced assembly inputs and outputs in EMI
 - fix Wand of Symmetry mirroring placement even when it fails, deleting blocks (#856)
 - fix EMI plugin breaking with Farmer's Delight (#629)
+- fix crash with Modern Dynamics (#820)
