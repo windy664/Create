@@ -44,7 +44,7 @@ import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
 
-import io.github.fabricators_of_create.porting_lib.event.common.BlockPlaceCallback;
+import io.github.fabricators_of_create.porting_lib.event.common.BlockEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityReadExtraDataCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
@@ -257,8 +257,8 @@ public class CommonEvents {
 		LivingEntityEvents.LOOTING_LEVEL.register(CrushingWheelTileEntity::crushingIsFortunate);
 		LivingEntityEvents.DROPS_WITH_LEVEL.register(DeployerFakePlayer::deployerCollectsDropsFromKilledEntities);
 		EntityEvents.EYE_HEIGHT.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
-		BlockPlaceCallback.EVENT.register(SymmetryHandler::onBlockPlaced);
-		BlockPlaceCallback.EVENT.register(SuperGlueHandler::glueListensForBlockPlacement);
+		BlockEvents.AFTER_PLACE.register(SymmetryHandler::onBlockPlaced);
+		BlockEvents.AFTER_PLACE.register(SuperGlueHandler::glueListensForBlockPlacement);
 		ProjectileImpactCallback.EVENT.register(BlazeBurnerHandler::onThrowableImpact);
 		EntityReadExtraDataCallback.EVENT.register(ExtendoGripItem::addReachToJoiningPlayersHoldingExtendo);
 		MinecartEvents.SPAWN.register(AbstractMinecartExtensions::minecartSpawn);

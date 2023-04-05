@@ -214,11 +214,8 @@ public class ExtendoGripItem extends Item  {
 
 	public static float bufferLivingAttackEvent(DamageSource source, LivingEntity damaged, float amount) {
 		// Workaround for removed patch to get the attacking entity.
-		lastActiveDamageSource = source;//event.getSource();
+		lastActiveDamageSource = source;
 
-//		DamageSource source = event.getSource();
-//		if (source == null)
-//			return;
 		Entity trueSource = source.getEntity();
 		if (trueSource instanceof Player)
 			findAndDamageExtendoGrip((Player) trueSource);
