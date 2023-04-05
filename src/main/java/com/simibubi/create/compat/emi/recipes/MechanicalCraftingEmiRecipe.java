@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.emi.CreateEmiAnimations;
-import com.simibubi.create.compat.emi.CreateEmiAnimations;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -14,6 +13,7 @@ import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
