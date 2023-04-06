@@ -9,3 +9,4 @@ Change logging starts below:
 - fix basins collecting remainders from all items, not just those consumed (#870)
 - fix GL error spam when unbinding Create's keybinds (#824)
 - fix some cases where item processing would be skipped (#874)
+- fix Dank Storage duping XP nuggets (#836)
