@@ -52,17 +52,16 @@ public class ExperienceNuggetItem extends Item {
 				.add(offset.scale(.1));
 			Vec3 cross = look.cross(VecHelper.rotate(new Vec3(-.75f, 0, 0), -pPlayer.getYRot(), Axis.Y));
 
-			Vec3 global = offset.add(pPlayer.getPosition(1));
-			global = pPlayer.getEyePosition()
+			Vec3 global = pPlayer.getEyePosition()
 				.add(look.scale(.5f))
 				.add(cross);
 			ExperienceOrb xp = new ExperienceOrb(pLevel, global.x, global.y, global.z, value);
 			xp.setDeltaMovement(motion);
 			pLevel.addFreshEntity(xp);
 		}
-		
-		pPlayer.setItemInHand(pUsedHand, ItemStack.EMPTY);
-		return InteractionResultHolder.consume(itemInHand);
+
+		// whole stack is used, set held to empty
+		return InteractionResultHolder.consume(ItemStack.EMPTY);
 	}
 
 }
