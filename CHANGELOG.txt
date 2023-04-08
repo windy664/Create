@@ -5,8 +5,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- prevent inserting multiple unstackables into basins
-- fix basins collecting remainders from all items, not just those consumed (#870)
-- fix GL error spam when unbinding Create's keybinds (#824)
-- fix some cases where item processing would be skipped (#874)
-- fix Dank Storage duping XP nuggets (#836)
+- fix Lithium class analysis failing on train carriage entities (#883)
