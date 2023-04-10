@@ -51,10 +51,7 @@ dependencies {
 def dependencies(DependencyHandler deps) {
     deps.modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
-    Project portingLib = getParent() == null ? null : getParent().findProject("porting-lib")
-    if (portingLib != null) // if project is present, use local version, otherwise get from maven
-        deps.api(deps.include(deps.project(path: portingLib.path, configuration: "namedElements")))
-    else deps.modApi(deps.include("io.github.fabricators_of_create:Porting-Lib:$port_lib_version+$minecraft_version"))
+    deps.modApi(deps.include("io.github.fabricators_of_create:Porting-Lib:$port_lib_version+$minecraft_version"))
 
     deps.modApi(deps.include("com.tterrag.registrate_fabric:Registrate:$registrate_version")) {
         exclude(group: "io.github.fabricators_of_create") // avoid duplicate Porting Lib
