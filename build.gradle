@@ -51,15 +51,19 @@ dependencies {
 def dependencies(DependencyHandler deps) {
     deps.modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
-    deps.modImplementation(deps.include("io.github.fabricators_of_create.Porting-Lib:porting-lib:$port_lib_version+$minecraft_version"))
-    deps.modImplementation(deps.include("com.electronwill.night-config:core:$night_config_version"))
-    deps.modImplementation(deps.include("com.electronwill.night-config:toml:$night_config_version"))
-    deps.modImplementation(deps.include("curse.maven:forge-config-api-port-fabric-547434:$config_api_id"))
-    deps.modImplementation(deps.include("com.tterrag.registrate_fabric:Registrate:$registrate_version"))
-    deps.modImplementation(deps.include("com.jozufozu.flywheel:flywheel-fabric-$flywheel_minecraft_version:$flywheel_version"))
-    deps.modImplementation(deps.include("com.jamieswhiteshirt:reach-entity-attributes:$reach_entity_attributes_version"))
-    deps.modImplementation(deps.include("io.github.tropheusj:milk-lib:$milk_lib_version"))
-    deps.implementation(deps.include("com.google.code.findbugs:jsr305:$jsr305_version"))
+    deps.modApi(deps.include("io.github.fabricators_of_create.Porting-Lib:porting-lib:$port_lib_version+$minecraft_version"))
+
+    deps.modApi(deps.include("com.tterrag.registrate_fabric:Registrate:$registrate_version")) {
+        exclude(group: "io.github.fabricators_of_create") // avoid duplicate Porting Lib
+    }
+
+    deps.modApi(deps.include("com.electronwill.night-config:core:$night_config_version"))
+    deps.modApi(deps.include("com.electronwill.night-config:toml:$night_config_version"))
+    deps.modApi(deps.include("curse.maven:forge-config-api-port-fabric-547434:$config_api_id"))
+    deps.modApi(deps.include("com.jozufozu.flywheel:flywheel-fabric-$flywheel_minecraft_version:$flywheel_version"))
+    deps.modApi(deps.include("com.jamieswhiteshirt:reach-entity-attributes:$reach_entity_attributes_version"))
+    deps.modApi(deps.include("io.github.tropheusj:milk-lib:$milk_lib_version"))
+    deps.api(deps.include("com.google.code.findbugs:jsr305:$jsr305_version"))
 }
 
 // initial project setup
