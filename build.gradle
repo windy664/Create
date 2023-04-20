@@ -1,7 +1,6 @@
-//file:noinspection GradlePackageVersionRange
 //file:noinspection GrMethodMayBeStatic
 plugins {
-    id "fabric-loom" version "1.0.+"
+    id "fabric-loom" version "1.1.+"
 
     id "io.github.juuxel.loom-quiltflower" version "1.+" // Quiltflower, a better decompiler
     id "io.github.p03w.machete" version "1.1.4" // automatic jar compressing on build
@@ -87,7 +86,11 @@ def compat(DependencyHandler deps) {
     deps.modCompileOnly("com.terraformersmc:modmenu:$modmenu_version")
     deps.modCompileOnly("maven.modrinth:sandwichable:$sandwichable_version")
     deps.modCompileOnly("maven.modrinth:sodium:$sodium_version")
+
     deps.modCompileOnly("dev.emi:trinkets:$trinkets_version") { exclude(group: "com.terraformersmc") }
+    deps.modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-base:$cca_version")
+    deps.modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:$cca_version")
+
     recipeViewers(deps)
 }
 
@@ -186,9 +189,10 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_$archivesBaseName" }
     }
 }
 
 // see gradle/publishing.gradle for publishing
 apply from: "gradle/publishing/publishing.gradle"
+apply from: "gradle/compat/compat.gradle"

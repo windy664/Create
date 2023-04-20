@@ -5,4 +5,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- fix crashes due to missing classes (#845, #881)
+- fix Lithium class analysis failing on train carriage entities (#883)

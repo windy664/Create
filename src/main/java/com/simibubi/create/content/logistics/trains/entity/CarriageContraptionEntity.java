@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -791,14 +792,20 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		int bogeySpacing = carriage.bogeySpacing;
 
-		carriage.bogeys.forEachWithContext((bogey, first) -> {
+		// fabric: do not pass instance to lambda, class loading issues
+		Couple<Boolean> bogeyVisibility = carriage.bogeys.map(bogey -> {
 			if (bogey == null)
-				return;
+				return null;
 
 			BlockPos bogeyPos = bogey.isLeading ? BlockPos.ZERO
-				: BlockPos.ZERO.relative(getInitialOrientation().getCounterClockWise(), bogeySpacing);
-			instance.setBogeyVisibility(first, !contraption.isHiddenInPortal(bogeyPos));
+					: BlockPos.ZERO.relative(getInitialOrientation().getCounterClockWise(), bogeySpacing);
+			return !contraption.isHiddenInPortal(bogeyPos);
 		});
+		for (boolean first : Iterate.trueAndFalse) {
+			Boolean visible = bogeyVisibility.get(first);
+			if (visible != null)
+				instance.setBogeyVisibility(first, visible);
+		}
 	}
 
 }
