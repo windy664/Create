@@ -40,6 +40,14 @@ repositories {
     }
 }
 
+configurations.configureEach {
+    resolutionStrategy.eachDependency {
+        if (requested.module.name == "fabric-loader") {
+            useVersion(loader_version)
+        }
+    }
+}
+
 dependencies {
     setup(dependencies)
     devEnv(dependencies)
@@ -51,7 +59,7 @@ dependencies {
 def dependencies(DependencyHandler deps) {
     deps.modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
-    deps.modApi(deps.include("io.github.fabricators_of_create.Porting-Lib:porting-lib:$port_lib_version+$minecraft_version"))
+    deps.modApi(deps.include("io.github.fabricators_of_create.Porting-Lib:Porting-Lib:$port_lib_version+$minecraft_version"))
 
     deps.modApi(deps.include("com.tterrag.registrate_fabric:Registrate:$registrate_version")) {
         exclude(group: "io.github.fabricators_of_create") // avoid duplicate Porting Lib
@@ -121,14 +129,14 @@ machete {
     enabled = Boolean.getBoolean("PUBLISHING") // only optimize published releases
 }
 
-task buildOrPublish {
+tasks.register("buildOrPublish") {
     group = "build"
     String mavenUser = System.getenv("MAVEN_USER")
     if (mavenUser != null && !mavenUser.isEmpty()) {
-        dependsOn(tasks.getByName("publish"))
+        dependsOn(tasks.named("publish"))
         println("prepared for publish")
     } else {
-        dependsOn(tasks.getByName("build"))
+        dependsOn(tasks.named("build"))
         println("prepared for build")
     }
 }
