@@ -5,4 +5,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- fix Lithium class analysis failing on train carriage entities (#883)
+- fix dupe with belts, tunnels, and andesite funnels (#920)

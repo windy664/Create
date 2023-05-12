@@ -42,33 +42,8 @@ public class BeltInventory {
 	boolean beltMovementPositive;
 	final float SEGMENT_WINDOW = .75f;
 
-	public final SnapshotParticipant<Data> snapshotParticipant = new SnapshotParticipant<>() {
-
-		@Override
-		protected Data createSnapshot() {
-			List<TransportedItemStack> items = new LinkedList<>();
-			BeltInventory.this.items.forEach(transported -> items.add(transported.fullCopy()));
-			List<TransportedItemStack> toInsert = new LinkedList<>();
-			BeltInventory.this.toInsert.forEach(transported -> toInsert.add(transported.fullCopy()));
-			List<TransportedItemStack> toRemove = new LinkedList<>();
-			BeltInventory.this.toRemove.forEach(transported -> toRemove.add(transported.fullCopy()));
-			return new Data(items, toInsert, toRemove);
-		}
-
-		@Override
-		protected void readSnapshot(Data snapshot) {
-			BeltInventory.this.items = snapshot.items;
-			BeltInventory.this.toInsert = snapshot.toInsert;
-			BeltInventory.this.toRemove = snapshot.toRemove;
-		}
-
-		@Override
-		protected void onFinalCommit() {
-			super.onFinalCommit();
-			belt.setChanged();
-			belt.sendData();
-		}
-	};
+	public final ToInsertSnapshotParticipant toInsertSnapshotParticipant = new ToInsertSnapshotParticipant();
+	public final ItemsSnapshotParticipant itemsSnapshotParticipant = new ItemsSnapshotParticipant();
 
 	public BeltInventory(BeltTileEntity te) {
 		this.belt = te;
@@ -495,4 +470,43 @@ public class BeltInventory {
 		return items;
 	}
 
+	public class ToInsertSnapshotParticipant extends SnapshotParticipant<List<TransportedItemStack>> {
+		@Override
+		protected List<TransportedItemStack> createSnapshot() {
+			List<TransportedItemStack> snapshot = new LinkedList<>();
+			toInsert.forEach(stack -> snapshot.add(stack.fullCopy()));
+			return snapshot;
+		}
+
+		@Override
+		protected void readSnapshot(List<TransportedItemStack> snapshot) {
+			toInsert = snapshot;
+		}
+
+		@Override
+		protected void onFinalCommit() {
+			belt.setChanged();
+			belt.sendData();
+		}
+	}
+
+	public class ItemsSnapshotParticipant extends SnapshotParticipant<List<TransportedItemStack>> {
+		@Override
+		protected List<TransportedItemStack> createSnapshot() {
+			List<TransportedItemStack> snapshot = new LinkedList<>();
+			items.forEach(stack -> snapshot.add(stack.fullCopy()));
+			return snapshot;
+		}
+
+		@Override
+		protected void readSnapshot(List<TransportedItemStack> snapshot) {
+			items = snapshot;
+		}
+
+		@Override
+		protected void onFinalCommit() {
+			belt.setChanged();
+			belt.sendData();
+		}
+	}
 }

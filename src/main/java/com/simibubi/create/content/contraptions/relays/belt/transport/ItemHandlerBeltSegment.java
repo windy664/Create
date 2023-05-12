@@ -22,7 +22,7 @@ public class ItemHandlerBeltSegment implements SingleSlotStorage<ItemVariant> {
 			newStack.insertedAt = offset;
 			newStack.beltPosition = offset + .5f + (beltInventory.beltMovementPositive ? -1 : 1) / 16f;
 			newStack.prevBeltPosition = newStack.beltPosition;
-			this.beltInventory.snapshotParticipant.updateSnapshots(transaction);
+			this.beltInventory.toInsertSnapshotParticipant.updateSnapshots(transaction);
 			this.beltInventory.addItem(newStack);
 			return toInsert;
 		}
@@ -35,9 +35,8 @@ public class ItemHandlerBeltSegment implements SingleSlotStorage<ItemVariant> {
 		if (transported == null)
 			return 0;
 
-		// TODO PORT
 		int toExtract = (int) Math.min(maxAmount, transported.stack.getCount());
-		this.beltInventory.snapshotParticipant.updateSnapshots(transaction);
+		this.beltInventory.itemsSnapshotParticipant.updateSnapshots(transaction);
 		transported.stack.shrink(toExtract);
 		return toExtract;
 	}
