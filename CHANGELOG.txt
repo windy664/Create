@@ -5,4 +5,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- fix dupe with belts, tunnels, and andesite funnels (#920)
+- fix pipes trying to extract the first thing, even if not extractable (#909)
