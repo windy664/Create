@@ -20,8 +20,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 
+import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -52,13 +52,7 @@ public class BeltInventory {
 		toRemove = new LinkedList<>();
 	}
 
-	public record Data(List<TransportedItemStack> items,
-					   List<TransportedItemStack> toInsert,
-					   List<TransportedItemStack> toRemove) {
-	}
-
 	public void tick() {
-
 		// Added/Removed items from previous cycle
 		if (!toInsert.isEmpty() || !toRemove.isEmpty()) {
 			toInsert.forEach(this::insert);
@@ -375,6 +369,9 @@ public class BeltInventory {
 	}
 
 	private void insert(TransportedItemStack newStack) {
+		// fabric: avoid unnecessary adding
+		if (newStack.stack.isEmpty())
+			return;
 		if (items.isEmpty())
 			items.add(newStack);
 		else {
