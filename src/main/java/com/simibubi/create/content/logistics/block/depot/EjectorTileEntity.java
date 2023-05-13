@@ -233,8 +233,10 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 
 			ItemStackHandler outputs = depotBehaviour.processingOutputBuffer;
 			for (int i = 0; i < outputs.getSlots(); i++) {
-				ItemStack remainder =
-					directOutput.tryExportingToBeltFunnel(outputs.getStackInSlot(i), funnelFacing, false);
+				ItemStack stack = outputs.getStackInSlot(i);
+				if (stack.isEmpty())
+					continue;
+				ItemStack remainder = directOutput.tryExportingToBeltFunnel(stack, funnelFacing, false);
 				if (remainder != null)
 					outputs.setStackInSlot(i, remainder);
 			}
