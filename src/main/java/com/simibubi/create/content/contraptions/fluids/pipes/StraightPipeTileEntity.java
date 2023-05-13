@@ -2,8 +2,11 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.contraptions.fluids.PipeAttachmentBlockEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -15,7 +18,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class StraightPipeTileEntity extends SmartTileEntity {
+public class StraightPipeTileEntity extends SmartTileEntity implements PipeAttachmentBlockEntity {
 
 	public StraightPipeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -26,6 +29,12 @@ public class StraightPipeTileEntity extends SmartTileEntity {
 		behaviours.add(new StraightPipeFluidTransportBehaviour(this));
 		behaviours.add(new BracketedTileEntityBehaviour(this));
 		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
+	}
+
+	@Override
+	@Nullable
+	public Object getRenderAttachmentData() {
+		return PipeAttachmentBlockEntity.getAttachments(this);
 	}
 
 	static class StraightPipeFluidTransportBehaviour extends FluidTransportBehaviour {

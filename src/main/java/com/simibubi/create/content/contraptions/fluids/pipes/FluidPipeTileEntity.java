@@ -2,11 +2,14 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.contraptions.fluids.PipeAttachmentBlockEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -17,7 +20,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FluidPipeTileEntity extends SmartTileEntity implements ITransformableTE {
+public class FluidPipeTileEntity extends SmartTileEntity implements ITransformableTE, PipeAttachmentBlockEntity {
 
 	public FluidPipeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -40,6 +43,12 @@ public class FluidPipeTileEntity extends SmartTileEntity implements ITransformab
 
 	private boolean canHaveBracket(BlockState state) {
 		return !(state.getBlock() instanceof EncasedPipeBlock);
+	}
+
+	@Override
+	@Nullable
+	public Object getRenderAttachmentData() {
+		return PipeAttachmentBlockEntity.getAttachments(this);
 	}
 
 	class StandardPipeFluidTransportBehaviour extends FluidTransportBehaviour {

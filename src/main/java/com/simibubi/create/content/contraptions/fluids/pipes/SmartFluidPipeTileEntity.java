@@ -2,9 +2,12 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
+import com.simibubi.create.content.contraptions.fluids.PipeAttachmentBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeFluidTransportBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -12,8 +15,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -23,7 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.Vec3;
 
-public class SmartFluidPipeTileEntity extends SmartTileEntity {
+public class SmartFluidPipeTileEntity extends SmartTileEntity implements PipeAttachmentBlockEntity {
 
 	private FilteringBehaviour filter;
 
@@ -43,6 +46,12 @@ public class SmartFluidPipeTileEntity extends SmartTileEntity {
 		if (level.isClientSide)
 			return;
 		FluidPropagator.propagateChangedPipe(level, worldPosition, getBlockState());
+	}
+
+	@Override
+	@Nullable
+	public Object getRenderAttachmentData() {
+		return PipeAttachmentBlockEntity.getAttachments(this);
 	}
 
 	class SmartPipeBehaviour extends StraightPipeFluidTransportBehaviour {

@@ -2,15 +2,18 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
+import com.simibubi.create.content.contraptions.fluids.PipeAttachmentBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeFluidTransportBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +21,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FluidValveTileEntity extends KineticTileEntity {
+public class FluidValveTileEntity extends KineticTileEntity implements PipeAttachmentBlockEntity {
 
 	LerpedFloat pointer;
 
@@ -80,6 +83,12 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new ValvePipeBehaviour(this));
 		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
+	}
+
+	@Override
+	@Nullable
+	public Object getRenderAttachmentData() {
+		return PipeAttachmentBlockEntity.getAttachments(this);
 	}
 
 	class ValvePipeBehaviour extends StraightPipeFluidTransportBehaviour {
