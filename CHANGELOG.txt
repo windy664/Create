@@ -7,3 +7,4 @@ Change logging starts below:
 ----------
 - fix pipes trying to extract the first thing, even if not extractable (#909)
 - fix belt processing easily causing dupes (#903)
+- fix Mechanical Arms interfering with other processing (#897)
