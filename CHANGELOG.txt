@@ -10,3 +10,4 @@ Change logging starts below:
 - fix Mechanical Arms interfering with other processing (#897)
 - fix funnels flapping unnecessarily when arms target them
 - fix pipes not fully connecting to things (#885)
+- fix checking uses for potion fluid in EMI ignoring the potion (#884)
