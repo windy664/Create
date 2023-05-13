@@ -9,3 +9,4 @@ Change logging starts below:
 - fix belt processing easily causing dupes (#903)
 - fix Mechanical Arms interfering with other processing (#897)
 - fix funnels flapping unnecessarily when arms target them
+- fix pipes not fully connecting to things (#885)
