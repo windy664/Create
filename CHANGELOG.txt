@@ -11,3 +11,4 @@ Change logging starts below:
 - fix funnels flapping unnecessarily when arms target them
 - fix pipes not fully connecting to things (#885)
 - fix checking uses for potion fluid in EMI ignoring the potion (#884)
+- fix crashing when pumping fluid from an entirely flowing body (#875)
