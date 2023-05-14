@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import java.util.function.Supplier;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;

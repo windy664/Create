@@ -21,6 +21,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.fluids.FluidBottleItemHook;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerHandler;
+import com.simibubi.create.content.contraptions.wrench.WrenchEventHandler;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
@@ -262,6 +263,7 @@ public class CommonEvents {
 
 		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
 		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
+		UseBlockCallback.EVENT.register(WrenchEventHandler::useOwnWrenchLogicForCreateBlocks);
 		UseBlockCallback.EVENT.register(FilteringHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);

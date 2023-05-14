@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import java.util.function.Supplier;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -31,8 +33,6 @@ import net.minecraft.world.phys.HitResult;
 
 public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 	implements ITE<KineticTileEntity>, ISpecialBlockItemRequirement, BlockPickInteractionAware, EncasedBlock {
-
-	private BlockEntry<CasingBlock> casing;
 
 	private final Supplier<Block> casing;
 
