@@ -35,8 +35,9 @@ public class ExperienceNuggetItem extends Item {
 			return InteractionResultHolder.consume(itemInHand);
 		}
 
-		int total = Mth.ceil(3f * itemInHand.getCount());
-		int maxOrbs = 5;
+		int amountUsed = pPlayer.isSteppingCarefully() ? 1 : itemInHand.getCount();
+		int total = Mth.ceil(3f * amountUsed);
+		int maxOrbs = amountUsed == 1 ? 1 : 5;
 		int valuePer = Math.max(1, 1 + total / maxOrbs);
 
 		for (int i = 0; i < maxOrbs; i++) {
@@ -60,8 +61,12 @@ public class ExperienceNuggetItem extends Item {
 			pLevel.addFreshEntity(xp);
 		}
 
-		// whole stack is used, set held to empty
-		return InteractionResultHolder.consume(ItemStack.EMPTY);
+		itemInHand.shrink(amountUsed);
+		if (!itemInHand.isEmpty())
+			return InteractionResultHolder.success(itemInHand);
+
+		pPlayer.setItemInHand(pUsedHand, ItemStack.EMPTY);
+		return InteractionResultHolder.consume(itemInHand);
 	}
 
 }

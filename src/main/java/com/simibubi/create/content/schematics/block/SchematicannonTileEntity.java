@@ -164,7 +164,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		schematicProgress = compound.getFloat("Progress");
 		bookPrintingProgress = compound.getFloat("PaperProgress");
 		fuelLevel = compound.getFloat("Fuel");
-		state = State.valueOf(compound.getString("State"));
+		String stateString = compound.getString("State");
+		state = stateString.isEmpty() ? State.STOPPED : State.valueOf(compound.getString("State"));
 		blocksPlaced = compound.getInt("AmountPlaced");
 		blocksToPlace = compound.getInt("AmountToPlace");
 

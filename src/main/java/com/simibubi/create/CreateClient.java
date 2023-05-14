@@ -95,7 +95,6 @@ public class CreateClient implements ClientModInitializer {
 
 		AllKeys.register();
 		AllBlockPartials.init();
-		AllStitchedTextures.init();
 
 		PonderIndex.register();
 		PonderIndex.registerTags();

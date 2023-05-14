@@ -215,7 +215,7 @@ public class EjectorTileEntity extends KineticTileEntity implements ItemTransfer
 					;
 				else if (remainder.isEmpty())
 					depotBehaviour.removeHeldItem();
-				else if (!remainder.sameItem(heldItemStack))
+				else if (remainder.getCount() != heldItemStack.getCount())
 					depotBehaviour.heldItem.stack = remainder;
 			}
 

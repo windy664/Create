@@ -12,8 +12,6 @@ import io.github.fabricators_of_create.porting_lib.entity.RemovalFromWorldListen
 
 import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 
-import com.simibubi.create.foundation.utility.ContraptionData;
-
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -39,6 +37,7 @@ import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.mixin.accessor.ServerLevelAccessor;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.ContraptionData;
 import com.simibubi.create.foundation.utility.VecHelper;
 import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.EntityAccessor;
