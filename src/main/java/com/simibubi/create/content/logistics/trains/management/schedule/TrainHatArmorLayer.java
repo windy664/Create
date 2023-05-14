@@ -96,13 +96,24 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 		else if (entityModel instanceof HierarchicalModel<?> model) {
 			boolean slime = model instanceof SlimeModel || model instanceof LavaSlimeModel;
-			ModelPart head = ((ModelPartAccessor) ((Object) model.root())).porting_lib$children().get(slime ? "cube" : "head");
+			ModelPart root = model.root();
+			String headName = slime ? "cube" : "head";
+			ModelPart head = root.hasChild(headName) ? root.getChild(headName) : null;
 
-			if (head != null && (Object) head instanceof ModelPartAccessor access) {
+			if (model instanceof WardenModel)
+				head = root.getChild("bone").getChild("body").getChild("head");
+
+			if (model instanceof FrogModel) {
+				head = root.getChild("body").getChild("head");
+				scale = .5f;
+			}
+
+			if (head != null) {
 				head.translateAndRotate(ms);
 
 				if (!head.isEmpty()) {
-					Cube cube = access.porting_lib$cubes().get(0);
+					ModelPartAccessor headAccess = (ModelPartAccessor) (Object) head;
+					Cube cube = headAccess.porting_lib$cubes().get(0);
 					ms.translate(offset.x, (cube.minY - cube.maxY + offset.y) / 16f, offset.z / 16f);
 					float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / (slime ? 6.5f : 8f) * scale;
 					ms.scale(max, max, max);
