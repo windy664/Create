@@ -9,9 +9,9 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -94,8 +94,8 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				BoundingBox affectedArea, SortedArraySet<BlockPosEntry> queue) {
 	}
 
-	public FluidDrainingBehaviour(SmartTileEntity te) {
-		super(te);
+	public FluidDrainingBehaviour(SmartBlockEntity be) {
+		super(be);
 		validationVisited = new HashSet<>();
 		validationFrontier = new ArrayList<>();
 		validationSet = new HashSet<>();
@@ -131,10 +131,21 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		if (validationFrontier.isEmpty() && !queue.isEmpty() && revalidateIn == 0)
 			revalidate(root);
 
+		if (infinite) {
+			blockEntity.award(AllAdvancements.HOSE_PULLEY);
+			if (FluidHelper.isLava(fluid))
+				blockEntity.award(AllAdvancements.HOSE_PULLEY_LAVA);
+
+			playEffect(world, root, fluid, true);
+			return true;
+		}
+
 		while (!queue.isEmpty()) {
 			// Dont dequeue here, so we can decide not to dequeue a valid entry when
 			// simulating
-			BlockPos currentPos = queue.first().pos();
+			BlockPos currentPos = queue.first()
+				.pos();
+
 			BlockState blockState = world.getBlockState(currentPos);
 			BlockState emptied = blockState;
 			Fluid fluid = Fluids.EMPTY;
@@ -150,7 +161,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 					fluid = ((LiquidBlockAccessor) flowingFluid).port_lib$getFluid().getSource();
 				else {
 					affectedArea = BBHelper.encapsulate(affectedArea, BoundingBox.fromCorners(currentPos, currentPos));
-					if (!tileEntity.isVirtual())
+					if (!blockEntity.isVirtual())
 						world.setBlock(currentPos, emptied, 2 | 16);
 					dequeue(queue);
 					if (queue.isEmpty()) {
@@ -182,7 +193,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			Fluid finalFluid = fluid;
 			TransactionCallback.onSuccess(ctx, () -> {
 				playEffect(world, currentPos, finalFluid, true);
-				tileEntity.award(AllAdvancements.HOSE_PULLEY);
+				blockEntity.award(AllAdvancements.HOSE_PULLEY);
 				if (infinite && FluidHelper.isLava(finalFluid))
 					tileEntity.award(AllAdvancements.HOSE_PULLEY_LAVA);
 			});
@@ -191,7 +202,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				return true;
 			}
 
-			if (!tileEntity.isVirtual()) {
+			if (!blockEntity.isVirtual()) {
 				world.updateSnapshots(ctx);
 				world.setBlock(currentPos, emptied, 2 | 16);
 			}
@@ -226,12 +237,12 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		infinite = false;
 		setValidationTimer();
 		frontier.add(new BlockPosEntry(root, 0));
-		TransactionCallback.onSuccess(ctx, tileEntity::sendData);
+		TransactionCallback.onSuccess(ctx, blockEntity::sendData);
 	}
 
 	protected boolean checkValid(Level world, BlockPos root) {
 		BlockPos currentPos = root;
-		for (int timeout = 1000; timeout > 0 && !root.equals(tileEntity.getBlockPos()); timeout--) {
+		for (int timeout = 1000; timeout > 0 && !root.equals(blockEntity.getBlockPos()); timeout--) {
 			FluidBlockType canPullFluidsFrom = canPullFluidsFrom(world.getBlockState(currentPos), currentPos);
 			if (canPullFluidsFrom == FluidBlockType.FLOWING) {
 				for (Direction d : Iterate.directions) {
@@ -319,42 +330,28 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				validationSet.add(e);
 			}, false);
 		} catch (ChunkNotLoadedException e) {
-			tileEntity.sendData();
+			blockEntity.sendData();
 			frontier.clear();
 			visited.clear();
 		}
 
-		Level world = getWorld();
 		int maxBlocks = maxBlocks();
 		if (visited.size() > maxBlocks && canDrainInfinitely(fluid) && !queue.isEmpty()) {
 			infinite = true;
-			// Find first block with valid fluid
-			while (true) {
-				// fabric: temp fix for #875
-				if (queue.isEmpty()) {
-					infinite = false;
-					return;
-				}
-				BlockPos first = queue.first().pos();
-				if (canPullFluidsFrom(world.getBlockState(first), first) != FluidBlockType.SOURCE) {
-					dequeue(queue);
-					continue;
-				}
-				break;
-			}
-			BlockPos firstValid = queue.first().pos();
+			BlockPos firstValid = queue.first()
+				.pos();
 			frontier.clear();
 			visited.clear();
 			queue.clear();
 			queue.add(new BlockPosEntry(firstValid, 0));
-			tileEntity.sendData();
+			blockEntity.sendData();
 			return;
 		}
 
 		if (!frontier.isEmpty())
 			return;
 
-		tileEntity.sendData();
+		blockEntity.sendData();
 		visited.clear();
 	}
 
@@ -400,8 +397,8 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		newValidationSet.clear();
 		validationFrontier.clear();
 		validationVisited.clear();
-		if (ctx != null) TransactionCallback.onSuccess(ctx, tileEntity::sendData);
-		else tileEntity.sendData();
+		if (ctx != null) TransactionCallback.onSuccess(ctx, blockEntity::sendData);
+		else blockEntity.sendData();
 	}
 
 	@Override

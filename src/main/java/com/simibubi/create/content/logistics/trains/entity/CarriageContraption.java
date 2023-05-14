@@ -28,7 +28,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.components.structureMovement.train.TrainCargoManager;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -127,7 +127,7 @@ public class CarriageContraption extends Contraption {
 		if (!blocks.containsKey(controlsPos))
 			return false;
 		StructureBlockInfo info = blocks.get(controlsPos);
-		if (!AllBlocks.CONTROLS.has(info.state))
+		if (!AllBlocks.TRAIN_CONTROLS.has(info.state))
 			return false;
 		return info.state.getValue(ControlsBlock.FACING) == direction.getOpposite();
 	}
@@ -163,18 +163,20 @@ public class CarriageContraption extends Contraption {
 				.getStep(), toLocalPos(pos));
 		}
 
-		if (blockState.getBlock() instanceof IBogeyBlock) {
+		if (blockState.getBlock() instanceof AbstractBogeyBlock<?> bogey) {
+			boolean captureTE = bogey.captureTileEntityForTrain();
 			bogeys++;
 			if (bogeys == 2)
 				secondBogeyPos = pos;
-			return Pair.of(new StructureBlockInfo(pos, blockState, null), null);
+			return Pair.of(new StructureBlockInfo(pos, blockState, captureTE ? getBlockEntityNBT(world, pos) : null),
+				captureTE ? world.getBlockEntity(pos) : null);
 		}
 
 		if (AllBlocks.BLAZE_BURNER.has(blockState)
 			&& blockState.getValue(BlazeBurnerBlock.HEAT_LEVEL) != HeatLevel.NONE)
 			assembledBlazeBurners.add(toLocalPos(pos));
 
-		if (AllBlocks.CONTROLS.has(blockState)) {
+		if (AllBlocks.TRAIN_CONTROLS.has(blockState)) {
 			Direction facing = blockState.getValue(ControlsBlock.FACING);
 			if (facing.getAxis() != assemblyDirection.getAxis())
 				sidewaysControls = true;
@@ -264,17 +266,17 @@ public class CarriageContraption extends Contraption {
 		return secondBogeyPos;
 	}
 
-	private Collection<BlockEntity> specialRenderedTEsOutsidePortal = new ArrayList<>();
+	private Collection<BlockEntity> specialRenderedBEsOutsidePortal = new ArrayList<>();
 
 	@Override
 	public Collection<StructureBlockInfo> getRenderedBlocks() {
 		if (notInPortal())
 			return super.getRenderedBlocks();
 
-		specialRenderedTEsOutsidePortal = new ArrayList<>();
-		specialRenderedTileEntities.stream()
-			.filter(te -> !isHiddenInPortal(te.getBlockPos()))
-			.forEach(specialRenderedTEsOutsidePortal::add);
+		specialRenderedBEsOutsidePortal = new ArrayList<>();
+		specialRenderedBlockEntities.stream()
+			.filter(be -> !isHiddenInPortal(be.getBlockPos()))
+			.forEach(specialRenderedBEsOutsidePortal::add);
 
 		Collection<StructureBlockInfo> values = new ArrayList<>();
 		for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
@@ -291,7 +293,7 @@ public class CarriageContraption extends Contraption {
 	public Collection<BlockEntity> getSpecialRenderedTEs() {
 		if (notInPortal())
 			return super.getSpecialRenderedTEs();
-		return specialRenderedTEsOutsidePortal;
+		return specialRenderedBEsOutsidePortal;
 	}
 
 	@Override

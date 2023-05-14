@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.station;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
@@ -41,10 +40,9 @@ public class TrainEditPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer sender = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
 			Level level = sender == null ? null : sender.level;
 			Train train = Create.RAILWAYS.sided(level).trains.get(id);
 			if (train == null)
@@ -53,10 +51,10 @@ public class TrainEditPacket extends SimplePacketBase {
 				train.name = Components.literal(name);
 			train.icon = TrainIconType.byId(iconType);
 			if (sender != null)
-				AllPackets.channel.sendToClientsInServer(new TrainEditReturnPacket(id, name, iconType),
+				AllPackets.getChannel().sendToClientsInServer(new TrainEditReturnPacket(id, name, iconType),
 						level.getServer());
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 	public static class TrainEditReturnPacket extends TrainEditPacket {

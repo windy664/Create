@@ -5,13 +5,12 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.EncasedBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
@@ -32,7 +31,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class EncasedShaftBlock extends AbstractEncasedShaftBlock
-	implements ITE<KineticTileEntity>, ISpecialBlockItemRequirement, BlockPickInteractionAware, EncasedBlock {
+	implements IBE<KineticBlockEntity>, ISpecialBlockItemRequirement, BlockPickInteractionAware, EncasedBlock {
 
 	private final Supplier<Block> casing;
 
@@ -50,7 +49,7 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 			return InteractionResult.SUCCESS;
 		context.getLevel()
 			.levelEvent(2001, context.getClickedPos(), Block.getId(state));
-		KineticTileEntity.switchToBlockState(context.getLevel(), context.getClickedPos(),
+		KineticBlockEntity.switchToBlockState(context.getLevel(), context.getClickedPos(),
 			AllBlocks.SHAFT.getDefaultState()
 				.setValue(AXIS, state.getValue(AXIS)));
 		return InteractionResult.SUCCESS;
@@ -65,18 +64,18 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), te);
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
+		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), be);
 	}
 
 	@Override
-	public Class<KineticTileEntity> getTileEntityClass() {
-		return KineticTileEntity.class;
+	public Class<KineticBlockEntity> getBlockEntityClass() {
+		return KineticBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
-		return AllTileEntities.ENCASED_SHAFT.get();
+	public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ENCASED_SHAFT.get();
 	}
 
 	@Override
@@ -87,7 +86,7 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 	@Override
 	public void handleEncasing(BlockState state, Level level, BlockPos pos, ItemStack heldItem, Player player, InteractionHand hand,
 	    BlockHitResult ray) {
-		KineticTileEntity.switchToBlockState(level, pos, defaultBlockState()
+		KineticBlockEntity.switchToBlockState(level, pos, defaultBlockState()
 				.setValue(RotatedPillarKineticBlock.AXIS, state.getValue(RotatedPillarKineticBlock.AXIS)));
 	}
 }

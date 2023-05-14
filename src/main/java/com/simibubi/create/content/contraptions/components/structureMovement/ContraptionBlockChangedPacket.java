@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import com.tterrag.registrate.fabric.EnvExecutor;
@@ -38,12 +36,10 @@ public class ContraptionBlockChangedPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
-				() -> () -> AbstractContraptionEntity.handleBlockChangedPacket(this)));
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
+			() -> () -> AbstractContraptionEntity.handleBlockChangedPacket(this)));
+		return true;
 	}
 
 }

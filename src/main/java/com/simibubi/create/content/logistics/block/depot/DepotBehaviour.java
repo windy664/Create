@@ -12,15 +12,15 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.funnel.AbstractFunnelBlock;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.BeltProcessingBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -45,7 +45,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class DepotBehaviour extends TileEntityBehaviour {
+public class DepotBehaviour extends BlockEntityBehaviour {
 
 	public static final BehaviourType<DepotBehaviour> TYPE = new BehaviourType<>();
 
@@ -83,8 +83,8 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	record Data(List<TransportedItemStack> incoming, TransportedItemStack held) {
 	}
 
-	public DepotBehaviour(SmartTileEntity te) {
-		super(te);
+	public DepotBehaviour(SmartBlockEntity be) {
+		super(be);
 		maxStackSize = () -> 64;
 		canAcceptItems = () -> true;
 		canFunnelsPullFrom = $ -> true;
@@ -95,7 +95,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 		itemHandler = new DepotItemHandler(this);
 		processingOutputBuffer = new ItemStackHandler(8) {
 			protected void onContentsChanged(int slot) {
-				te.notifyUpdate();
+				be.notifyUpdate();
 			};
 		};
 	}
@@ -118,26 +118,26 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	public void tick() {
 		super.tick();
 
-		Level world = tileEntity.getLevel();
+		Level world = blockEntity.getLevel();
 
 		for (Iterator<TransportedItemStack> iterator = incoming.iterator(); iterator.hasNext();) {
 			TransportedItemStack ts = iterator.next();
 			if (!tick(ts))
 				continue;
-			if (world.isClientSide && !tileEntity.isVirtual())
+			if (world.isClientSide && !blockEntity.isVirtual())
 				continue;
 			if (heldItem == null) {
 				heldItem = ts;
 			} else {
 				if (!ItemHelper.canItemStackAmountsStack(heldItem.stack, ts.stack)) {
-					Vec3 vec = VecHelper.getCenterOf(tileEntity.getBlockPos());
-					Containers.dropItemStack(tileEntity.getLevel(), vec.x, vec.y + .5f, vec.z, ts.stack);
+					Vec3 vec = VecHelper.getCenterOf(blockEntity.getBlockPos());
+					Containers.dropItemStack(blockEntity.getLevel(), vec.x, vec.y + .5f, vec.z, ts.stack);
 				} else {
 					heldItem.stack.grow(ts.stack.getCount());
 				}
 			}
 			iterator.remove();
-			tileEntity.notifyUpdate();
+			blockEntity.notifyUpdate();
 		}
 
 		if (heldItem == null)
@@ -145,7 +145,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 		if (!tick(heldItem))
 			return;
 
-		BlockPos pos = tileEntity.getBlockPos();
+		BlockPos pos = blockEntity.getBlockPos();
 
 		if (world.isClientSide)
 			return;
@@ -153,7 +153,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			return;
 
 		BeltProcessingBehaviour processingBehaviour =
-			TileEntityBehaviour.get(world, pos.above(2), BeltProcessingBehaviour.TYPE);
+			BlockEntityBehaviour.get(world, pos.above(2), BeltProcessingBehaviour.TYPE);
 		if (processingBehaviour == null)
 			return;
 		if (!heldItem.locked && BeltProcessingBehaviour.isBlocked(world, pos))
@@ -165,7 +165,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			: processingBehaviour.handleReceivedItem(heldItem, transportedHandler);
 		if (result == ProcessingResult.REMOVE) {
 			heldItem = null;
-			tileEntity.sendData();
+			blockEntity.sendData();
 			return;
 		}
 
@@ -177,7 +177,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 
 		heldItem.locked = result == ProcessingResult.HOLD;
 		if (heldItem.locked != wasLocked || !ItemStackUtil.equals(previousItem, heldItem.stack, false))
-			tileEntity.sendData();
+			blockEntity.sendData();
 	}
 
 	protected boolean tick(TransportedItemStack heldItem) {
@@ -202,13 +202,13 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			ItemStack previousItem = processingOutputBuffer.getStackInSlot(slot);
 			if (previousItem.isEmpty())
 				continue;
-			ItemStack afterInsert = tileEntity.getBehaviour(DirectBeltInputBehaviour.TYPE)
+			ItemStack afterInsert = blockEntity.getBehaviour(DirectBeltInputBehaviour.TYPE)
 				.tryExportingToBeltFunnel(previousItem, null, false);
 			if (afterInsert == null)
 				return false;
 			if (previousItem.getCount() != afterInsert.getCount()) {
 				processingOutputBuffer.setStackInSlot(slot, afterInsert);
-				tileEntity.notifyUpdate();
+				blockEntity.notifyUpdate();
 				return true;
 			}
 		}
@@ -217,7 +217,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 		if (previousItem.isEmpty()) { // fabric: this is not allowed
 			return false;
 		}
-		ItemStack afterInsert = tileEntity.getBehaviour(DirectBeltInputBehaviour.TYPE)
+		ItemStack afterInsert = blockEntity.getBehaviour(DirectBeltInputBehaviour.TYPE)
 			.tryExportingToBeltFunnel(previousItem, null, false);
 		if (afterInsert == null)
 			return false;
@@ -226,7 +226,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 				heldItem = null;
 			else
 				heldItem.stack = afterInsert;
-			tileEntity.notifyUpdate();
+			blockEntity.notifyUpdate();
 			return true;
 		}
 
@@ -271,10 +271,10 @@ public class DepotBehaviour extends TileEntityBehaviour {
 		}
 	}
 
-	public void addSubBehaviours(List<TileEntityBehaviour> behaviours) {
-		behaviours.add(new DirectBeltInputBehaviour(tileEntity).allowingBeltFunnels()
+	public void addSubBehaviours(List<BlockEntityBehaviour> behaviours) {
+		behaviours.add(new DirectBeltInputBehaviour(blockEntity).allowingBeltFunnels()
 			.setInsertionHandler(this::tryInsertingFromSide));
-		transportedHandler = new TransportedItemStackHandlerBehaviour(tileEntity, this::applyToAllItems)
+		transportedHandler = new TransportedItemStackHandlerBehaviour(blockEntity, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf);
 		behaviours.add(transportedHandler);
 	}
@@ -389,7 +389,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			snapshotParticipant.updateSnapshots(t);
 			ItemStack remainder = insert(transportedStack, t);
 			if (remainder.getCount() != size)
-				tileEntity.notifyUpdate();
+				blockEntity.notifyUpdate();
 			if (!simulate)
 				t.commit();
 
@@ -426,13 +426,13 @@ public class DepotBehaviour extends TileEntityBehaviour {
 				t.commit();
 				ItemStack remainder = added.stack.copy();
 				remainder.setCount(ItemHelper.truncateLong(added.stack.getCount() - inserted));
-				Vec3 vec = VecHelper.getCenterOf(tileEntity.getBlockPos());
-				Containers.dropItemStack(tileEntity.getLevel(), vec.x, vec.y + .5f, vec.z, remainder);
+				Vec3 vec = VecHelper.getCenterOf(blockEntity.getBlockPos());
+				Containers.dropItemStack(blockEntity.getLevel(), vec.x, vec.y + .5f, vec.z, remainder);
 			}
 		}
 
 		if (dirty)
-			tileEntity.notifyUpdate();
+			blockEntity.notifyUpdate();
 	}
 
 	public boolean isEmpty() {
@@ -448,7 +448,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	}
 
 	private Vec3 getWorldPositionOf(TransportedItemStack transported) {
-		return VecHelper.getCenterOf(tileEntity.getBlockPos());
+		return VecHelper.getCenterOf(blockEntity.getBlockPos());
 	}
 
 	@Override

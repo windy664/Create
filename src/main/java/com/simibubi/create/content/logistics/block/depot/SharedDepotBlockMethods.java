@@ -5,8 +5,8 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.DirectBeltInputBehaviour;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
@@ -32,7 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class SharedDepotBlockMethods {
 
 	protected static DepotBehaviour get(BlockGetter worldIn, BlockPos pos) {
-		return TileEntityBehaviour.get(worldIn, pos, DepotBehaviour.TYPE);
+		return BlockEntityBehaviour.get(worldIn, pos, DepotBehaviour.TYPE);
 	}
 
 	public static InteractionResult onUse(BlockState state, Level world, BlockPos pos, Player player,
@@ -81,7 +81,7 @@ public class SharedDepotBlockMethods {
 			AllSoundEvents.DEPOT_SLIDE.playOnServer(world, pos);
 		}
 
-		behaviour.tileEntity.notifyUpdate();
+		behaviour.blockEntity.notifyUpdate();
 		return InteractionResult.SUCCESS;
 	}
 
@@ -95,7 +95,7 @@ public class SharedDepotBlockMethods {
 
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 		DirectBeltInputBehaviour inputBehaviour =
-			TileEntityBehaviour.get(worldIn, entityIn.blockPosition(), DirectBeltInputBehaviour.TYPE);
+			BlockEntityBehaviour.get(worldIn, entityIn.blockPosition(), DirectBeltInputBehaviour.TYPE);
 		if (inputBehaviour == null)
 			return;
 		ItemStack remainder = inputBehaviour.handleInsertion(itemEntity.getItem(), Direction.DOWN, false);

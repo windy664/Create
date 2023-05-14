@@ -13,9 +13,7 @@ import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
-import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.fan.AirCurrent;
-import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
@@ -29,7 +27,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.armor.BacktankArmorLayer;
+import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
+import com.simibubi.create.content.curiosities.armor.NetheriteBacktankFirstPersonRenderer;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardValueSettingsHandler;
 import com.simibubi.create.content.curiosities.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryHandler;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
@@ -51,24 +52,22 @@ import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction
 import com.simibubi.create.content.logistics.trains.track.TrackBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
+import com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer;
+import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkRenderer;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueHandler;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.OpenCreateMenuButton;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.item.ItemDescription;
-import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.sound.SoundScapes;
-import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
-import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
@@ -111,14 +110,14 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -127,9 +126,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 
 public class ClientEvents {
-
-	private static final String ITEM_PREFIX = "item." + Create.ID;
-	private static final String BLOCK_PREFIX = "block." + Create.ID;
 
 	public static void onTickStart(Minecraft client) {
 		LinkedControllerClientHandler.tick();
@@ -145,7 +141,6 @@ public class ClientEvents {
 
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
-		ScrollValueHandler.tick();
 
 		CreateClient.SCHEMATIC_SENDER.tick();
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.tick();
@@ -193,6 +188,10 @@ public class ClientEvents {
 		CameraDistanceModifier.tick();
 		CameraAngleAnimationService.tick();
 		TrainHUD.tick();
+		ClipboardValueSettingsHandler.clientTick();
+		CreateClient.VALUE_SETTINGS_HANDLER.tick();
+		ScrollValueHandler.tick();
+		NetheriteBacktankFirstPersonRenderer.clientTick();
 		// fabric: see comment
 		AllKeys.fixBinds();
 	}
@@ -223,26 +222,23 @@ public class ClientEvents {
 	}
 
 	public static void onRenderWorld(WorldRenderContext event) {
-		Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera()
-			.getPosition();
-		float pt = AnimationTickHolder.getPartialTicks();
-
 		PoseStack ms = event.matrixStack();
 		ms.pushPose();
-		ms.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
+		float partialTicks = AnimationTickHolder.getPartialTicks();
+		Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera()
+			.getPosition();
 
-		TrackBlockOutline.drawCurveSelection(ms, buffer);
-		TrackTargetingClient.render(ms, buffer);
-		CouplingRenderer.renderAll(ms, buffer);
-		CarriageCouplingRenderer.renderAll(ms, buffer);
-		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);
-		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer);
+		TrackBlockOutline.drawCurveSelection(ms, buffer, camera);
+		TrackTargetingClient.render(ms, buffer, camera);
+		CouplingRenderer.renderAll(ms, buffer, camera);
+		CarriageCouplingRenderer.renderAll(ms, buffer, camera);
+		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer, camera);
+		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer, camera);
+		CreateClient.OUTLINER.renderOutlines(ms, buffer, camera, partialTicks);
 
-		CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
 		buffer.draw();
 		RenderSystem.enableCull();
-
 		ms.popPose();
 	}
 
@@ -262,38 +258,19 @@ public class ClientEvents {
 	}
 
 	public static void addToItemTooltip(ItemStack stack, TooltipFlag iTooltipFlag, List<Component> itemTooltip) {
-		if (!AllConfigs.CLIENT.tooltips.get())
+		if (!AllConfigs.client().tooltips.get())
 			return;
 		if (Minecraft.getInstance().player == null)
 			return;
 
-		String translationKey = stack.getItem()
-			.getDescriptionId(stack);
-
-		if (translationKey.startsWith(ITEM_PREFIX) || translationKey.startsWith(BLOCK_PREFIX))
-			if (TooltipHelper.hasTooltip(stack, Minecraft.getInstance().player)) {
-				List<Component> toolTip = new ArrayList<>();
-				toolTip.add(itemTooltip.remove(0));
-				TooltipHelper.getTooltip(stack)
-					.addInformation(toolTip);
-				itemTooltip.addAll(0, toolTip);
-			}
-
-		if (stack.getItem() instanceof BlockItem) {
-			BlockItem item = (BlockItem) stack.getItem();
-			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof SteamEngineBlock) {
-				List<Component> kineticStats = ItemDescription.getKineticStats(item.getBlock());
-				if (!kineticStats.isEmpty()) {
-					itemTooltip
-						.add(Components.immutableEmpty());
-					itemTooltip
-						.addAll(kineticStats);
-				}
-			}
+		Item item = event.getItemStack().getItem();
+		TooltipModifier modifier = TooltipModifier.REGISTRY.get(item);
+		if (modifier != null && modifier != TooltipModifier.EMPTY) {
+			modifier.modify(event);
 		}
 
-		PonderTooltipHandler.addToTooltip(itemTooltip, stack);
-		SequencedAssemblyRecipe.addToTooltip(itemTooltip, stack);
+		PonderTooltipHandler.addToTooltip(event);
+		SequencedAssemblyRecipe.addToTooltip(event);
 	}
 
 	public static void onRenderTick() {
@@ -323,33 +300,44 @@ public class ClientEvents {
 		return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
 	}
 
-	public static float getFogDensity(Camera info, float currentDensity) {
+	public static float getFogDensity(Camera camera, float currentDensity) {
 		Level level = Minecraft.getInstance().level;
-		BlockPos blockPos = info.getBlockPosition();
+		BlockPos blockPos = camera.getBlockPosition();
 		FluidState fluidState = level.getFluidState(blockPos);
-		if (info.getPosition().y > blockPos.getY() + fluidState.getHeight(level, blockPos))
+		if (camera.getPosition().y >= blockPos.getY() + fluidState.getHeight(level, blockPos))
 			return currentDensity;
 		Fluid fluid = fluidState.getType();
+		Entity entity = camera.getEntity();
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
-//			event.scaleFarPlaneDistance(1f/32f);
+//			event.scaleFarPlaneDistance(1f / 32f * AllConfigs.client().chocolateTransparencyMultiplier.getF());
 //			event.setCanceled(true);
 			return 5f;
 		}
 
 		if (AllFluids.HONEY.get()
 			.isSame(fluid)) {
-//			event.scaleFarPlaneDistance(1f/8f);
+//			event.scaleFarPlaneDistance(1f / 8f * AllConfigs.client().honeyTransparencyMultiplier.getF());
 //			event.setCanceled(true);
 			return 1.5f;
 		}
 
-		if (FluidHelper.isWater(fluid) && AllItems.DIVING_HELMET.get()
-			.isWornBy(Minecraft.getInstance().cameraEntity)) {
-//			event.scaleFarPlaneDistance(6.25f);
-//			event.setCanceled(true);
+		if (entity.isSpectator())
+			return;
+
+		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
+		if (divingHelmet != null) {
+			if (FluidHelper.isWater(fluid)) {
+	//			event.scaleFarPlaneDistance(6.25f);
+	//			event.setCanceled(true);
 			return 300f;
+			} else if (FluidHelper.isLava(fluid) && AllItems.NETHERITE_DIVING_HELMET.isIn(divingHelmet)) {
+				event.setNearPlaneDistance(-4.0f);
+				event.setFarPlaneDistance(20.0f);
+				event.setCanceled(true);
+				return;
+			}
 		}
 		return currentDensity;
 	}
@@ -384,7 +372,7 @@ public class ClientEvents {
 	public static void leftClickEmpty(LocalPlayer player) {
 		ItemStack stack = player.getMainHandItem();
 		if (stack.getItem() instanceof ZapperItem) {
-			AllPackets.channel.sendToServer(new LeftClickPacket());
+			AllPackets.getChannel().sendToServer(new LeftClickPacket());
 		}
 	}
 
@@ -394,26 +382,9 @@ public class ClientEvents {
 			ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
 		}
 
-//		@SubscribeEvent
-//		public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
-//			EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-//			CopperBacktankArmorLayer.registerOnAll(dispatcher);
-//		}
-
-//		@SubscribeEvent
-//		public static void loadCompleted(FMLLoadCompleteEvent event) {
-//			ModContainer createContainer = ModList.get()
-//				.getModContainerById(Create.ID)
-//				.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
-//			createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-//				() -> new ConfigGuiHandler.ConfigGuiFactory((mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
-//		}
-
-	}
-
 	public static void addEntityRendererLayers(EntityType<? extends LivingEntity> entityType, LivingEntityRenderer<?, ?> entityRenderer,
 											   RegistrationHelper registrationHelper, EntityRendererProvider.Context context) {
-		CopperBacktankArmorLayer.registerOn(entityRenderer, registrationHelper);
+		BacktankArmorLayer.registerOn(entityRenderer, registrationHelper);
 		TrainHatArmorLayer.registerOn(entityRenderer, registrationHelper);
 	}
 

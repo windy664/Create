@@ -13,13 +13,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllItemTags;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerBlockEntity.Mode;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import io.github.fabricators_of_create.porting_lib.extensions.EntityExtensions;
@@ -122,7 +122,7 @@ public class DeployerHandler {
 		}
 
 		if (!held.isEmpty() && facing == Direction.DOWN
-			&& TileEntityBehaviour.get(world, targetPos, TransportedItemStackHandlerBehaviour.TYPE) != null)
+			&& BlockEntityBehaviour.get(world, targetPos, TransportedItemStackHandlerBehaviour.TYPE) != null)
 			return false;
 
 		return true;
@@ -364,7 +364,7 @@ public class DeployerHandler {
 		if (!PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, pos, world.getBlockState(pos), world.getBlockEntity(pos)))
 			return false;
 
-		BlockEntity tileentity = world.getBlockEntity(pos);
+		BlockEntity blockEntity = world.getBlockEntity(pos);
 //		if (player.getMainHandItem()
 //			.onBlockStartBreak(pos, player))
 //			return false;
@@ -399,7 +399,7 @@ public class DeployerHandler {
 		if (!canHarvest)
 			return true;
 
-		Block.getDrops(blockstate, world, pos, tileentity, player, prevHeldItem)
+		Block.getDrops(blockstate, world, pos, blockEntity, player, prevHeldItem)
 			.forEach(item -> player.getInventory().placeItemBackInInventory(item));
 		blockstate.spawnAfterBreak(world, pos, prevHeldItem);
 		return true;

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.bell;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -34,11 +32,11 @@ public class SoulPulseEffectPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
 			CreateClient.SOUL_PULSE_EFFECT_HANDLER.addPulse(new SoulPulseEffect(pos, distance, canOverlap));
 		});
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 }

@@ -296,5 +296,4 @@ public class CommonEvents {
 		MinecartEvents.REMOVE.register(AbstractMinecartExtensions::minecartRemove);
 		PlayerBlockBreakEvents.BEFORE.register(SymmetryHandler::onBlockDestroyed);
 	}
-
 }

@@ -39,26 +39,23 @@ public class ClientMotionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer sender = context.get()
-					.getSender();
-				if (sender == null)
-					return;
-				sender.setDeltaMovement(motion);
-				sender.setOnGround(onGround);
-				if (onGround) {
-					sender.causeFallDamage(sender.fallDistance, 1, DamageSource.FALL);
-					sender.fallDistance = 0;
-					ServerGamePacketListenerImplAccessor access = (ServerGamePacketListenerImplAccessor) sender.connection;
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
+			if (sender == null)
+				return;
+			sender.setDeltaMovement(motion);
+			sender.setOnGround(onGround);
+			if (onGround) {
+				sender.causeFallDamage(sender.fallDistance, 1, DamageSource.FALL);
+				sender.fallDistance = 0;
+				ServerGamePacketListenerImplAccessor access = (ServerGamePacketListenerImplAccessor) sender.connection;
 					access.create$setAboveGroundTickCount(0);
-					access.create$setAboveGroundVehicleTickCount(0);
-				}
-				AllPackets.channel.sendToClientsTracking(new LimbSwingUpdatePacket(sender.getId(), sender.position(), limbSwing), sender);
-			});
-		context.get()
-			.setPacketHandled(true);
+				access.create$setAboveGroundVehicleTickCount(0);
+			}
+			AllPackets.getChannel().sendToClientsTracking(new LimbSwingUpdatePacket(sender.getId(), sender.position(), limbSwing), sender);
+		});
+		return true;
 	}
 
 }

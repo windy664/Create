@@ -1,13 +1,13 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.station;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.depot.SharedDepotBlockMethods;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
@@ -44,7 +44,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public class StationBlock extends Block implements ITE<StationTileEntity>, IWrenchable, ProperWaterloggedBlock {
+public class StationBlock extends Block implements IBE<StationBlockEntity>, IWrenchable, ProperWaterloggedBlock {
 
 	public static final BooleanProperty ASSEMBLING = BooleanProperty.create("assembling");
 
@@ -70,7 +70,7 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
@@ -89,7 +89,7 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 
 	@Override
 	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
-		return getTileEntityOptional(pLevel, pPos).map(ste -> ste.trainPresent ? 15 : 0)
+		return getBlockEntityOptional(pLevel, pPos).map(ste -> ste.trainPresent ? 15 : 0)
 			.orElse(0);
 	}
 
@@ -101,7 +101,7 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		ITE.onRemove(state, worldIn, pos, newState);
+		IBE.onRemove(state, worldIn, pos, newState);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 			return InteractionResult.PASS;
 
 		if (itemInHand.getItem() == Items.FILLED_MAP) {
-			return onTileEntityUse(pLevel, pPos, station -> {
+			return onBlockEntityUse(pLevel, pPos, station -> {
 				if (pLevel.isClientSide)
 					return InteractionResult.SUCCESS;
 
@@ -139,7 +139,7 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 			});
 		}
 
-		InteractionResult result = onTileEntityUse(pLevel, pPos, station -> {
+		InteractionResult result = onBlockEntityUse(pLevel, pPos, station -> {
 			ItemStack autoSchedule = station.getAutoSchedule();
 			if (autoSchedule.isEmpty())
 				return InteractionResult.PASS;
@@ -155,20 +155,20 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 
 		if (result == InteractionResult.PASS)
 			EnvExecutor.runWhenOn(EnvType.CLIENT,
-				() -> () -> withTileEntityDo(pLevel, pPos, te -> this.displayScreen(te, pPlayer)));
+				() -> () -> withBlockEntityDo(pLevel, pPos, be -> this.displayScreen(be, pPlayer)));
 		return InteractionResult.SUCCESS;
 	}
 
 	@Environment(value = EnvType.CLIENT)
-	protected void displayScreen(StationTileEntity te, Player player) {
+	protected void displayScreen(StationBlockEntity be, Player player) {
 		if (!(player instanceof LocalPlayer))
 			return;
-		GlobalStation station = te.getStation();
-		BlockState blockState = te.getBlockState();
+		GlobalStation station = be.getStation();
+		BlockState blockState = be.getBlockState();
 		if (station == null || blockState == null)
 			return;
 		boolean assembling = blockState.getBlock() == this && blockState.getValue(ASSEMBLING);
-		ScreenOpener.open(assembling ? new AssemblyScreen(te, station) : new StationScreen(te, station));
+		ScreenOpener.open(assembling ? new AssemblyScreen(be, station) : new StationScreen(be, station));
 	}
 
 	@Override
@@ -177,13 +177,13 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 	}
 
 	@Override
-	public Class<StationTileEntity> getTileEntityClass() {
-		return StationTileEntity.class;
+	public Class<StationBlockEntity> getBlockEntityClass() {
+		return StationBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends StationTileEntity> getTileEntityType() {
-		return AllTileEntities.TRACK_STATION.get();
+	public BlockEntityType<? extends StationBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.TRACK_STATION.get();
 	}
 
 	@Override

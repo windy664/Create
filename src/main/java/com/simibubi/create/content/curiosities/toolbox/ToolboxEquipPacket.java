@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -46,10 +44,9 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer player = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			Level world = player.level;
 
 			if (toolboxPos == null) {
@@ -64,7 +61,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			if (player.distanceToSqr(toolboxPos.getX() + 0.5, toolboxPos.getY(), toolboxPos.getZ() + 0.5) > maxRange
 				* maxRange)
 				return;
-			if (!(blockEntity instanceof ToolboxTileEntity))
+			if (!(blockEntity instanceof ToolboxBlockEntity))
 				return;
 
 			ToolboxHandler.unequip(player, hotbarSlot, false);
@@ -74,12 +71,12 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 				return;
 			}
 
-			ToolboxTileEntity toolboxTileEntity = (ToolboxTileEntity) blockEntity;
+			ToolboxBlockEntity toolboxBlockEntity = (ToolboxBlockEntity) blockEntity;
 
 			ItemStack playerStack = player.getInventory().getItem(hotbarSlot);
 			if (!playerStack.isEmpty() && !ToolboxInventory.canItemsShareCompartment(playerStack,
-				toolboxTileEntity.inventory.filters.get(slot))) {
-				toolboxTileEntity.inventory.inLimitedMode(inventory -> {
+				toolboxBlockEntity.inventory.filters.get(slot))) {
+				toolboxBlockEntity.inventory.inLimitedMode(inventory -> {
 					try (Transaction t = TransferUtil.getTransaction()) {
 						ItemVariant stack = ItemVariant.of(playerStack);
 						long count = playerStack.getCount();
@@ -109,10 +106,10 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			player.getExtraCustomData()
 				.put("CreateToolboxData", compound);
 
-			toolboxTileEntity.connectPlayer(slot, player, hotbarSlot);
+			toolboxBlockEntity.connectPlayer(slot, player, hotbarSlot);
 			ToolboxHandler.syncData(player);
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

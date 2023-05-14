@@ -1,22 +1,19 @@
 package com.simibubi.create.content.logistics.trains.track;
 
-import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_BOTTOM;
-import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_MIDDLE;
-import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_TOP;
-import static com.simibubi.create.AllBlockPartials.TRACK_SEGMENT_LEFT;
-import static com.simibubi.create.AllBlockPartials.TRACK_SEGMENT_RIGHT;
-import static com.simibubi.create.AllBlockPartials.TRACK_TIE;
+import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_BOTTOM;
+import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_MIDDLE;
+import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_TOP;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
 import com.simibubi.create.content.logistics.trains.BezierConnection.SegmentAngles;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -33,18 +30,18 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
+public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 
 	public TrackRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(TrackTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
+	protected void renderSafe(TrackBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
-		Level level = te.getLevel();
+		Level level = be.getLevel();
 		if (Backend.canUseInstancing(level))
 			return;
 		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
-		te.connections.values()
+		be.connections.values()
 			.forEach(bc -> renderBezierTurn(level, bc, ms, vb));
 	}
 
@@ -57,16 +54,15 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 		BlockState air = Blocks.AIR.defaultBlockState();
 		SegmentAngles[] segments = bc.getBakedSegments();
 
-		TransformStack.cast(ms)
-			.nudge((int) tePosition.asLong());
-
 		renderGirder(level, bc, ms, vb, tePosition);
 
 		for (int i = 1; i < segments.length; i++) {
 			SegmentAngles segment = segments[i];
 			int light = LevelRenderer.getLightColor(level, segment.lightPosition.offset(tePosition));
 
-			CachedBufferer.partial(TRACK_TIE, air)
+			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
+
+			CachedBufferer.partial(modelHolder.tie(), air)
 				.mulPose(segment.tieTransform.pose())
 				.mulNormal(segment.tieTransform.normal())
 				.light(light)
@@ -74,7 +70,7 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 
 			for (boolean first : Iterate.trueAndFalse) {
 				Pose transform = segment.railTransforms.get(first);
-				CachedBufferer.partial(first ? TRACK_SEGMENT_LEFT : TRACK_SEGMENT_RIGHT, air)
+				CachedBufferer.partial(first ? modelHolder.segment_left() : modelHolder.segment_right(), air)
 					.mulPose(transform.pose())
 					.mulNormal(transform.normal())
 					.light(light)
@@ -140,7 +136,7 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(TrackTileEntity pBlockEntity) {
+	public boolean shouldRenderOffScreen(TrackBlockEntity pBlockEntity) {
 		return true;
 	}
 

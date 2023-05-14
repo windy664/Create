@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains.track;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -64,6 +65,13 @@ public class TrackBlockItem extends BlockItem {
 				return InteractionResult.SUCCESS;
 			}
 
+			if (level.getBlockEntity(pos) instanceof TrackBlockEntity tbe && tbe.isTilted()) {
+				if (!level.isClientSide)
+					player.displayClientMessage(Lang.translateDirect("track.turn_start")
+						.withStyle(ChatFormatting.RED), true);
+				return InteractionResult.SUCCESS;
+			}
+
 			if (select(level, pos, lookAngle, stack)) {
 				level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
 				return InteractionResult.SUCCESS;
@@ -108,7 +116,7 @@ public class TrackBlockItem extends BlockItem {
 			return InteractionResult.SUCCESS;
 
 		stack = player.getMainHandItem();
-		if (AllBlocks.TRACK.isIn(stack)) {
+		if (AllTags.AllBlockTags.TRACKS.matches(stack)) {
 			stack.setTag(null);
 			player.setItemInHand(pContext.getHand(), stack);
 		}
@@ -150,10 +158,10 @@ public class TrackBlockItem extends BlockItem {
 	@Environment(EnvType.CLIENT)
 	public static InteractionResult sendExtenderPacket(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
 		ItemStack stack = player.getItemInHand(hand);
-		if (!AllBlocks.TRACK.isIn(stack) || !stack.hasTag())
+		if (!AllTags.AllBlockTags.TRACKS.matches(stack) || !stack.hasTag())
 			return InteractionResult.PASS;
 		if (Minecraft.getInstance().options.keySprint.isDown())
-			AllPackets.channel
+			AllPackets.getChannel()
 				.sendToServer(new PlaceExtendedCurvePacket(hand == InteractionHand.MAIN_HAND, true));
 		return InteractionResult.PASS;
 	}

@@ -19,7 +19,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 /*
-* Implement this Interface in the TileEntity class that wants to add info to the screen
+* Implement this Interface in the BlockEntity class that wants to add info to the screen
 * */
 public interface IHaveGoggleInformation {
 
@@ -35,7 +35,7 @@ public interface IHaveGoggleInformation {
 	Component componentSpacing = Components.literal(spacing);
 
 	/**
-	 * this method will be called when looking at a TileEntity that implemented this
+	 * this method will be called when looking at a BlockEntity that implemented this
 	 * interface
 	 *
 	 * @return {@code true} if the tooltip creation was successful and should be

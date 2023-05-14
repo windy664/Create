@@ -4,11 +4,11 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import io.github.fabricators_of_create.porting_lib.block.CustomSoundTypeBlock;
@@ -36,7 +36,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 
-public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultTileEntity>, CustomSoundTypeBlock {
+public class ItemVaultBlock extends Block implements IWrenchable, IBE<ItemVaultBlockEntity>, CustomSoundTypeBlock {
 
 	public static final Property<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	public static final BooleanProperty LARGE = BooleanProperty.create("large");
@@ -77,10 +77,10 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 		if (pIsMoving)
 			return;
 		// fabric: see comment in FluidTankItem
-		Consumer<ItemVaultTileEntity> consumer = ItemVaultItem.IS_PLACING_NBT
-				? ItemVaultTileEntity::queueConnectivityUpdate
-				: ItemVaultTileEntity::updateConnectivity;
-		withTileEntityDo(pLevel, pPos, consumer);
+		Consumer<ItemVaultBlockEntity> consumer = ItemVaultItem.IS_PLACING_NBT
+				? ItemVaultBlockEntity::queueConnectivityUpdate
+				: ItemVaultBlockEntity::updateConnectivity;
+		withBlockEntityDo(pLevel, pPos, consumer);
 	}
 
 	@Override
@@ -88,10 +88,10 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 		if (context.getClickedFace()
 			.getAxis()
 			.isVertical()) {
-			BlockEntity te = context.getLevel()
+			BlockEntity be = context.getLevel()
 				.getBlockEntity(context.getClickedPos());
-			if (te instanceof ItemVaultTileEntity) {
-				ItemVaultTileEntity vault = (ItemVaultTileEntity) te;
+			if (be instanceof ItemVaultBlockEntity) {
+				ItemVaultBlockEntity vault = (ItemVaultBlockEntity) be;
 				ConnectivityHandler.splitMulti(vault);
 				vault.removeController(true);
 			}
@@ -104,13 +104,13 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean pIsMoving) {
 		if (state.hasBlockEntity() && (state.getBlock() != newState.getBlock() || !newState.hasBlockEntity())) {
-			BlockEntity te = world.getBlockEntity(pos);
-			if (!(te instanceof ItemVaultTileEntity))
+			BlockEntity be = world.getBlockEntity(pos);
+			if (!(be instanceof ItemVaultBlockEntity))
 				return;
-			ItemVaultTileEntity vaultTE = (ItemVaultTileEntity) te;
-			ItemHelper.dropContents(world, pos, vaultTE.inventory);
+			ItemVaultBlockEntity vaultBE = (ItemVaultBlockEntity) be;
+			ItemHelper.dropContents(world, pos, vaultBE.inventory);
 			world.removeBlockEntity(pos);
-			ConnectivityHandler.splitMulti(vaultTE);
+			ConnectivityHandler.splitMulti(vaultBE);
 		}
 	}
 
@@ -165,7 +165,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 
 	@Override
 	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
-		return getTileEntityOptional(pLevel, pPos)
+		return getBlockEntityOptional(pLevel, pPos)
 			.filter(vte -> !Transaction.isOpen()) // fabric: hack fix for comparators updating when they shouldn't
 			.map(vte -> vte.getItemStorage(null))
 			.map(ItemHelper::calcRedstoneFromInventory)
@@ -173,12 +173,12 @@ public class ItemVaultBlock extends Block implements IWrenchable, ITE<ItemVaultT
 	}
 
 	@Override
-	public BlockEntityType<? extends ItemVaultTileEntity> getTileEntityType() {
-		return AllTileEntities.ITEM_VAULT.get();
+	public BlockEntityType<? extends ItemVaultBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ITEM_VAULT.get();
 	}
 
 	@Override
-	public Class<ItemVaultTileEntity> getTileEntityClass() {
-		return ItemVaultTileEntity.class;
+	public Class<ItemVaultBlockEntity> getBlockEntityClass() {
+		return ItemVaultBlockEntity.class;
 	}
 }

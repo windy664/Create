@@ -32,7 +32,7 @@ public class CClient extends ConfigBase {
 	public final ConfigInt ingameMenuConfigButtonOffsetX = i(-4, Integer.MIN_VALUE, Integer.MAX_VALUE, "ingameMenuConfigButtonOffsetX",
 			Comments.ingameMenuConfigButtonOffsetX);
 	public final ConfigBool ignoreFabulousWarning = b(false, "ignoreFabulousWarning",
-			Comments.ignoreFabulousWarning);
+		Comments.ignoreFabulousWarning);
 	// Fabric
 	public final ConfigEnum<FluidUnit> fluidUnitType = e(FluidUnit.MILIBUCKETS, "fluidUnitType",
 			Comments.fluidUnit);
@@ -40,6 +40,13 @@ public class CClient extends ConfigBase {
 			Comments.simplifyFluidUnit);
 	public final ConfigInt toolboxHotbarOverlayOffset = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "toolboxHotbarOverlayOffset",
 			Comments.toolboxHotbarOverlayOffset);
+
+	// custom fluid fog
+	public final ConfigGroup fluidFogSettings = group(1, "fluidFogSettings", Comments.fluidFogSettings);
+	public final ConfigFloat honeyTransparencyMultiplier =
+		f(1, .125f, 256, "honey", Comments.honeyTransparencyMultiplier);
+	public final ConfigFloat chocolateTransparencyMultiplier =
+		f(1, .125f, 256, "chocolate", Comments.chocolateTransparencyMultiplier);
 
 	//overlay group
 	public final ConfigGroup overlay = group(1, "goggleOverlay",
@@ -85,6 +92,7 @@ public class CClient extends ConfigBase {
 	public final ConfigGroup trains = group(1, "trains", Comments.trains);
 	public final ConfigFloat mountedZoomMultiplier = f(3, 0, "mountedZoomMultiplier", Comments.mountedZoomMultiplier);
 	public final ConfigBool showTrackGraphOnF3 = b(false, "showTrackGraphOnF3", Comments.showTrackGraphOnF3);
+	public final ConfigBool showExtendedTrackGraphOnF3 = b(false, "showExtendedTrackGraphOnF3", Comments.showExtendedTrackGraphOnF3);
 
 	@Override
 	public String getName() {
@@ -163,6 +171,10 @@ public class CClient extends ConfigBase {
 		static String trains = "Railway related settings";
 		static String mountedZoomMultiplier = "How far away the Camera should zoom when seated on a train";
 		static String showTrackGraphOnF3 = "Display nodes and edges of a Railway Network while f3 debug mode is active";
+		static String showExtendedTrackGraphOnF3 = "Additionally display materials of a Rail Network while f3 debug mode is active";
+		static String fluidFogSettings = "Configure your vision range when submerged in Create's custom fluids";
+		static String honeyTransparencyMultiplier = "The vision range through honey will be multiplied by this factor";
+		static String chocolateTransparencyMultiplier = "The vision range though chocolate will be multiplied by this factor";
 	}
 
 }

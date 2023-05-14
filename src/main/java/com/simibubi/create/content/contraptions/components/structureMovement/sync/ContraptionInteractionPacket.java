@@ -45,9 +45,9 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer sender = context.get().getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
 			if (sender == null)
 				return;
 			Entity entityByID = sender.getLevel().getEntity(target);
@@ -65,7 +65,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 			if (contraptionEntity.handlePlayerInteraction(sender, localPos, face, interactionHand))
 				sender.swing(interactionHand, true);
 		});
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 }

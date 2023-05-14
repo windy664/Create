@@ -40,9 +40,10 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime.State;
+import com.simibubi.create.content.logistics.trains.track.AbstractBogeyBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
@@ -75,6 +76,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class Train {
@@ -88,6 +90,7 @@ public class Train {
 	public boolean honk = false;
 
 	public UUID id;
+	@Nullable
 	public UUID owner;
 	public TrackGraph graph;
 	public Navigation navigation;
@@ -298,7 +301,13 @@ public class Train {
 						if (leadingAnchor == null || trailingAnchor == null)
 							continue;
 
-						total += leadingAnchor.distanceTo(trailingAnchor);
+						double distanceTo = leadingAnchor.distanceToSqr(trailingAnchor);
+						if (carriage.leadingBogey().isUpsideDown() != previousCarriage.trailingBogey().isUpsideDown()) {
+							distanceTo = Math.sqrt(distanceTo - 4);
+						} else {
+							distanceTo = Math.sqrt(distanceTo);
+						}
+						total += distanceTo;
 						entries++;
 					}
 				}
@@ -360,7 +369,7 @@ public class Train {
 			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;
 			double actualDistance =
 				carriage.travel(level, graph, distance + totalStress, toFollowForward, toFollowBackward, carriageType);
-			blocked |= carriage.blocked;
+			blocked |= carriage.blocked || carriage.isOnIncompatibleTrack();
 
 			boolean onTwoBogeys = carriage.isOnTwoBogeys();
 			maxStress = Math.max(maxStress, onTwoBogeys ? carriage.bogeySpacing - carriage.getAnchorDiff() : 0);
@@ -574,8 +583,8 @@ public class Train {
 		if (!dimension.equals(trailingPoint.node1.getLocation().dimension))
 			return;
 
-		Vec3 start = (speed < 0 ? trailingPoint : leadingPoint).getPosition();
-		Vec3 end = (speed < 0 ? leadingPoint : trailingPoint).getPosition();
+		Vec3 start = (speed < 0 ? trailingPoint : leadingPoint).getPosition(graph);
+		Vec3 end = (speed < 0 ? leadingPoint : trailingPoint).getPosition(graph);
 
 		Pair<Train, Vec3> collision = findCollidingTrain(level, start, end, this, dimension);
 		if (collision == null)
@@ -617,8 +626,8 @@ public class Train {
 					if (!otherDimension.equals(dimension))
 						continue;
 
-					Vec3 start2 = otherLeading.getPosition();
-					Vec3 end2 = otherTrailing.getPosition();
+					Vec3 start2 = otherLeading.getPosition(train.graph);
+					Vec3 end2 = otherTrailing.getPosition(train.graph);
 					if (betweenBits) {
 						end2 = start2;
 						start2 = lastPoint;
@@ -707,8 +716,19 @@ public class Train {
 			if (entity.getContraption()instanceof CarriageContraption cc)
 				cc.returnStorageForDisassembly(carriage.storage);
 			entity.setPos(Vec3
-				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset)));
+				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset).below(carriage.leadingBogey().isUpsideDown() ? 2 : 0)));
 			entity.disassemble();
+
+			for (CarriageBogey bogey : carriage.bogeys) {
+				if (bogey == null)
+					continue;
+				Vec3 bogeyPosition = bogey.getAnchorPosition();
+				if (bogeyPosition == null) continue;
+				BlockEntity be = level.getBlockEntity(new BlockPos(bogeyPosition));
+				if (!(be instanceof AbstractBogeyBlockEntity sbte))
+					continue;
+				sbte.setBogeyData(bogey.bogeyData);
+			}
 
 			offset += carriage.bogeySpacing;
 
@@ -719,13 +739,13 @@ public class Train {
 		GlobalStation currentStation = getCurrentStation();
 		if (currentStation != null) {
 			currentStation.cancelReservation(this);
-			BlockPos tilePos = currentStation.getTilePos();
-			if (level.getBlockEntity(tilePos)instanceof StationTileEntity ste)
+			BlockPos blockEntityPos = currentStation.getBlockEntityPos();
+			if (level.getBlockEntity(blockEntityPos) instanceof StationBlockEntity ste)
 				ste.lastDisassembledTrainName = name.copy();
 		}
 
 		Create.RAILWAYS.removeTrain(id);
-		AllPackets.channel.sendToClientsInCurrentServer(new TrainPacket(this, false));
+		AllPackets.getChannel().sendToClientsInCurrentServer(new TrainPacket(this, false));
 		return true;
 	}
 
@@ -929,7 +949,7 @@ public class Train {
 		occupiedObservers.clear();
 		cachedObserverFiltering.clear();
 
-		TravellingPoint signalScout = new TravellingPoint(node1, node2, edge, position);
+		TravellingPoint signalScout = new TravellingPoint(node1, node2, edge, position, false);
 		Map<UUID, SignalEdgeGroup> allGroups = Create.RAILWAYS.signalEdgeGroups;
 		MutableObject<UUID> prevGroup = new MutableObject<>(null);
 
@@ -1058,24 +1078,25 @@ public class Train {
 	}
 
 	public float maxSpeed() {
-		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainTopSpeed.getF()
-			: AllConfigs.SERVER.trains.trainTopSpeed.getF()) / 20;
+		return (fuelTicks > 0 ? AllConfigs.server().trains.poweredTrainTopSpeed.getF()
+			: AllConfigs.server().trains.trainTopSpeed.getF()) / 20;
 	}
 
 	public float maxTurnSpeed() {
-		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainTurningTopSpeed.getF()
-			: AllConfigs.SERVER.trains.trainTurningTopSpeed.getF()) / 20;
+		return (fuelTicks > 0 ? AllConfigs.server().trains.poweredTrainTurningTopSpeed.getF()
+			: AllConfigs.server().trains.trainTurningTopSpeed.getF()) / 20;
 	}
 
 	public float acceleration() {
-		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainAcceleration.getF()
-			: AllConfigs.SERVER.trains.trainAcceleration.getF()) / 400;
+		return (fuelTicks > 0 ? AllConfigs.server().trains.poweredTrainAcceleration.getF()
+			: AllConfigs.server().trains.trainAcceleration.getF()) / 400;
 	}
 
 	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		tag.putUUID("Id", id);
-		tag.putUUID("Owner", owner);
+		if (owner != null)
+			tag.putUUID("Owner", owner);
 		if (graph != null)
 			tag.putUUID("Graph", graph.id);
 		tag.put("Carriages", NBTHelper.writeCompoundList(carriages, c -> c.write(dimensions)));
@@ -1121,7 +1142,7 @@ public class Train {
 
 	public static Train read(CompoundTag tag, Map<UUID, TrackGraph> trackNetworks, DimensionPalette dimensions) {
 		UUID id = tag.getUUID("Id");
-		UUID owner = tag.getUUID("Owner");
+		UUID owner = tag.contains("Owner") ? tag.getUUID("Owner") : null;
 		UUID graphId = tag.contains("Graph") ? tag.getUUID("Graph") : null;
 		TrackGraph graph = graphId == null ? null : trackNetworks.get(graphId);
 		List<Carriage> carriages = new ArrayList<>();

@@ -45,7 +45,7 @@ public class PonderCommand {
 			if (player.isFake())
 				continue;
 
-			AllPackets.channel.sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.openPonder.name(), sceneId), player);
+			AllPackets.getChannel().sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.openPonder.name(), sceneId), player);
 		}
 		return Command.SINGLE_SUCCESS;
 	}

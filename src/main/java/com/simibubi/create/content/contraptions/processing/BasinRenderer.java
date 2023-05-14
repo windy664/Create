@@ -5,10 +5,10 @@ import java.util.Random;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
+import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.LongAttached;
@@ -32,14 +32,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
+public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 
 	public BasinRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(BasinTileEntity basin, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(BasinBlockEntity basin, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(basin, partialTicks, ms, buffer, light, overlay);
 
@@ -117,7 +117,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 			.getBlock() instanceof BasinBlock;
 
 		for (LongAttached<ItemStack> LongAttached : basin.visualizedOutputItems) {
-			float progress = 1 - (LongAttached.getFirst() - partialTicks) / BasinTileEntity.OUTPUT_ANIMATION_TIME;
+			float progress = 1 - (LongAttached.getFirst() - partialTicks) / BasinBlockEntity.OUTPUT_ANIMATION_TIME;
 
 			if (!outToBasin && progress > .35f)
 				continue;
@@ -140,7 +140,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 			.renderStatic(stack, TransformType.GROUND, light, overlay, ms, buffer, 0);
 	}
 
-	protected float renderFluids(BasinTileEntity basin, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected float renderFluids(BasinBlockEntity basin, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		SmartFluidTankBehaviour inputFluids = basin.getBehaviour(SmartFluidTankBehaviour.INPUT);
 		SmartFluidTankBehaviour outputFluids = basin.getBehaviour(SmartFluidTankBehaviour.OUTPUT);

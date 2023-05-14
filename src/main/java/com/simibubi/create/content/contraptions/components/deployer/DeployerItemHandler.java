@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -19,12 +19,12 @@ import java.util.function.Supplier;
 
 public class DeployerItemHandler extends SnapshotParticipant<Unit> implements Storage<ItemVariant> {
 
-	private DeployerTileEntity te;
+	private DeployerBlockEntity be;
 	private DeployerFakePlayer player;
 
-	public DeployerItemHandler(DeployerTileEntity te) {
-		this.te = te;
-		this.player = te.player;
+	public DeployerItemHandler(DeployerBlockEntity be) {
+		this.be = be;
+		this.player = be.player;
 	}
 
 	public ItemStack getHeld() {
@@ -36,7 +36,7 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 	public void set(ItemStack stack) {
 		if (player == null)
 			return;
-		if (te.getLevel().isClientSide)
+		if (be.getLevel().isClientSide)
 			return;
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 	}
@@ -108,7 +108,7 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 		ItemStack held = getHeld();
 		if (held.isEmpty() || !resource.matches(held))
 			return 0;
-		if (!te.filtering.getFilter().isEmpty() && te.filtering.test(held))
+		if (!be.filtering.getFilter().isEmpty() && be.filtering.test(held))
 			return 0;
 		int toExtract = (int) Math.min(maxAmount, held.getCount());
 		te.snapshotParticipant.updateSnapshots(transaction);
@@ -116,11 +116,6 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 		newStack.shrink(toExtract);
 		set(newStack);
 		return toExtract;
-	}
-
-	public boolean isItemValid(ItemStack stack) {
-		FilteringBehaviour filteringBehaviour = te.getBehaviour(FilteringBehaviour.TYPE);
-		return filteringBehaviour == null || filteringBehaviour.test(stack);
 	}
 
 	@Override
@@ -135,13 +130,18 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 	@Override
 	protected void onFinalCommit() {
 		super.onFinalCommit();
-		te.setChanged();
-		te.sendData();
+		be.setChanged();
+		be.sendData();
 	}
 
 	@Override
 	public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
 		return new DeployerItemHandlerIterator(transaction);
+	}
+
+	public boolean isItemValid(ItemStack stack) {
+		FilteringBehaviour filteringBehaviour = te.getBehaviour(FilteringBehaviour.TYPE);
+		return filteringBehaviour == null || filteringBehaviour.test(stack);
 	}
 
 	public class DeployerItemHandlerIterator implements Iterator<StorageView<ItemVariant>> {

@@ -4,9 +4,8 @@ import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
@@ -35,16 +34,16 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<PulleyTileEntity> {
+public class PulleyBlock extends HorizontalAxisKineticBlock implements IBE<PulleyBlockEntity> {
 
     public PulleyBlock(Properties properties) {
         super(properties);
     }
 
     private static void onRopeBroken(Level world, BlockPos pulleyPos) {
-		BlockEntity te = world.getBlockEntity(pulleyPos);
-		if (te instanceof PulleyTileEntity) {
-			PulleyTileEntity pulley = (PulleyTileEntity) te;
+		BlockEntity be = world.getBlockEntity(pulleyPos);
+		if (be instanceof PulleyBlockEntity) {
+			PulleyBlockEntity pulley = (PulleyBlockEntity) be;
 			pulley.initialOffset = 0;
 			pulley.onLengthBroken();
 		}
@@ -70,7 +69,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
             return InteractionResult.PASS;
         if (player.getItemInHand(handIn)
                 .isEmpty()) {
-            withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);
+            withBlockEntityDo(worldIn, pos, be -> be.assembleNextTick = true);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
@@ -82,13 +81,13 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
     }
 
     @Override
-    public Class<PulleyTileEntity> getTileEntityClass() {
-        return PulleyTileEntity.class;
+    public Class<PulleyBlockEntity> getBlockEntityClass() {
+        return PulleyBlockEntity.class;
     }
 
     @Override
-    public BlockEntityType<? extends PulleyTileEntity> getTileEntityType() {
-    	return AllTileEntities.ROPE_PULLEY.get();
+    public BlockEntityType<? extends PulleyBlockEntity> getBlockEntityType() {
+    	return AllBlockEntityTypes.ROPE_PULLEY.get();
     }
 
 	private static class RopeBlockBase extends Block implements SimpleWaterloggedBlock, BlockPickInteractionAware {

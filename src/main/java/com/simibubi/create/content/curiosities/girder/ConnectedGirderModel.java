@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -22,6 +22,7 @@ public class ConnectedGirderModel extends CTModel {
 		super(originalModel, new GirderCTBehaviour());
 	}
 
+	// TODO PORT 0.5.1
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		ConnectionData data = new ConnectionData();
@@ -32,12 +33,12 @@ public class ConnectedGirderModel extends CTModel {
 
 		for (Direction d : Iterate.horizontalDirections)
 			if (data.isConnected(d))
-				((FabricBakedModel) AllBlockPartials.METAL_GIRDER_BRACKETS.get(d)
+				((FabricBakedModel) AllPartialModels.METAL_GIRDER_BRACKETS.get(d)
 					.get())
 					.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 	}
 
-	private class ConnectionData {
+	private static class ConnectionData {
 		boolean[] connectedFaces;
 
 		public ConnectionData() {

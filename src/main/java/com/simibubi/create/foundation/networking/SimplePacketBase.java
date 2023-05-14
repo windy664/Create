@@ -1,18 +1,5 @@
 package com.simibubi.create.foundation.networking;
 
-import java.util.concurrent.Executor;
-import java.util.function.Supplier;
-
-import me.pepperbell.simplenetworking.SimpleChannel;
-
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-
-import org.jetbrains.annotations.Nullable;
-
-import me.pepperbell.simplenetworking.C2SPacket;
-import me.pepperbell.simplenetworking.S2CPacket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketListener;
 import net.minecraft.server.MinecraftServer;
@@ -23,7 +10,7 @@ public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 
 	public abstract void write(FriendlyByteBuf buffer);
 
-	public abstract void handle(Supplier<Context> context);
+	public abstract boolean handle(Context context);
 
 	@Override
 	public final void encode(FriendlyByteBuf buffer) {

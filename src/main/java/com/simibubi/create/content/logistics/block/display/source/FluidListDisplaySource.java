@@ -9,7 +9,8 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.SmartObserverBlockEntity;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
@@ -37,12 +38,12 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 
 	@Override
 	protected Stream<LongAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
-		BlockEntity sourceTE = context.getSourceTE();
-		if (!(sourceTE instanceof ContentObserverTileEntity cote))
+		BlockEntity sourceBE = context.getSourceBlockEntity();
+		if (!(sourceBE instanceof SmartObserverBlockEntity cobe))
 			return Stream.empty();
 
-		TankManipulationBehaviour tankManipulationBehaviour = cote.getBehaviour(TankManipulationBehaviour.OBSERVE);
-		FilteringBehaviour filteringBehaviour = cote.getBehaviour(FilteringBehaviour.TYPE);
+		TankManipulationBehaviour tankManipulationBehaviour = cobe.getBehaviour(TankManipulationBehaviour.OBSERVE);
+		FilteringBehaviour filteringBehaviour = cobe.getBehaviour(FilteringBehaviour.TYPE);
 		Storage<FluidVariant> handler = tankManipulationBehaviour.getInventory();
 
 		if (handler == null)
@@ -84,7 +85,7 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 	}
 
 	@Override
-	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay, FlapDisplayLayout layout) {
+	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayBlockEntity flapDisplay, FlapDisplayLayout layout) {
 		Integer max = ((MutableInt) context.flapDisplayContext).getValue();
 		boolean shorten = shortenNumbers(context);
 		FluidUnit fluidUnit = getUnit(context);

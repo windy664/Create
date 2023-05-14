@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.content.logistics.trains.BogeySizes;
+
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -19,7 +21,6 @@ import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
 import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
-import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.events.CommonEvents;
@@ -37,8 +38,12 @@ import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
+import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.KineticStats;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
+import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.CreateRegistry;
+import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.foundation.worldgen.AllFeatures;
 import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
 import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
@@ -49,7 +54,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
@@ -57,7 +61,7 @@ public class Create implements ModInitializer {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5j";
+	public static final String VERSION = "0.5.1a";
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -71,8 +75,12 @@ public class Create implements ModInitializer {
 
 	public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID);
 
-	public static final CreativeModeTab BASE_CREATIVE_TAB = new CreateItemGroup();
-	public static final CreativeModeTab PALETTES_CREATIVE_TAB = new PalettesItemGroup();
+	static {
+		REGISTRATE.setTooltipModifierFactory(item -> {
+			return new ItemDescription.Modifier(item, Palette.STANDARD_CREATE)
+				.andThen(TooltipModifier.mapNull(KineticStats.create(item)));
+		});
+	}
 
 	public static final ServerSchematicLoader SCHEMATIC_RECEIVER = new ServerSchematicLoader();
 	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();
@@ -84,13 +92,14 @@ public class Create implements ModInitializer {
 	public void onInitialize() { // onCtor
 		AllSoundEvents.prepare();
 		AllTags.init();
+		AllCreativeModeTabs.init();
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();
 		AllPaletteBlocks.register();
-		AllContainerTypes.register();
+		AllMenuTypes.register();
 		AllEntityTypes.register();
-		AllTileEntities.register();
+		AllBlockEntityTypes.register();
 		AllEnchantments.register();
 		AllRecipeTypes.register();
 
@@ -104,6 +113,8 @@ public class Create implements ModInitializer {
 		AllFeatures.register();
 		AllPlacementModifiers.register();
 		BuiltinRegistration.register();
+		BogeySizes.init();
+		AllBogeyStyles.register();
 
 		AllConfigs.register();
 
@@ -113,6 +124,7 @@ public class Create implements ModInitializer {
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
 		BlockSpoutingBehaviour.registerDefaults();
+		ComputerCraftProxy.register();
 
 		Milk.enableMilkFluid();
 		CopperRegistries.inject();
@@ -133,12 +145,12 @@ public class Create implements ModInitializer {
 	}
 
 	public static void init() {
-		CreateRegistry.unwrapAll();
 		AllPackets.registerPackets();
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();
 
 //		event.enqueueWork(() -> {
+			AttachedRegistry.unwrapAll();
 			AllAdvancements.register();
 			AllTriggers.register();
 			BoilerHeaters.registerDefaults();
@@ -147,7 +159,7 @@ public class Create implements ModInitializer {
 
 	public static void gatherData(FabricDataGenerator gen, ExistingFileHelper helper) {
 		TagGen.datagen();
-		gen.addProvider(new LangMerger(gen, ID, "Create", AllLangPartials.values()));
+		gen.addProvider(new LangMerger(gen, ID, NAME, AllLangPartials.values()));
 		gen.addProvider(AllSoundEvents.provider(gen));
 		gen.addProvider(new AllAdvancements(gen));
 		gen.addProvider(new StandardRecipeGen(gen));

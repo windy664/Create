@@ -2,17 +2,17 @@ package com.simibubi.create.content.contraptions.fluids.tank;
 
 import java.util.function.Consumer;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
-import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankBlockEntity.CreativeSmartFluidTank;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidHelper.FluidExchange;
-import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.Lang;
 
 import io.github.fabricators_of_create.porting_lib.block.CustomSoundTypeBlock;
@@ -59,7 +59,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, CustomSoundTypeBlock {
+public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankBlockEntity>, CustomSoundTypeBlock {
 
 	public static final BooleanProperty TOP = BooleanProperty.create("top");
 	public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
@@ -106,10 +106,10 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		if (moved)
 			return;
 		// fabric: see comment in FluidTankItem
-		Consumer<FluidTankTileEntity> consumer = FluidTankItem.IS_PLACING_NBT
-				? FluidTankTileEntity::queueConnectivityUpdate
-				: FluidTankTileEntity::updateConnectivity;
-		withTileEntityDo(world, pos, consumer);
+		Consumer<FluidTankBlockEntity> consumer = FluidTankItem.IS_PLACING_NBT
+				? FluidTankBlockEntity::queueConnectivityUpdate
+				: FluidTankBlockEntity::updateConnectivity;
+		withBlockEntityDo(world, pos, consumer);
 	}
 
 	@Override
@@ -120,18 +120,18 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	// Handled via LIGHT_LEVEL state property
 //	@Override
 //	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-//		FluidTankTileEntity tankAt = ConnectivityHandler.partAt(getTileEntityType(), world, pos);
+//		FluidTankBlockEntity tankAt = ConnectivityHandler.partAt(getBlockEntityType(), world, pos);
 //		if (tankAt == null)
 //			return 0;
-//		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
-//		if (controllerTE == null || !controllerTE.window)
+//		FluidTankBlockEntity controllerBE = tankAt.getControllerBE();
+//		if (controllerBE == null || !controllerBE.window)
 //			return 0;
 //		return tankAt.luminosity;
 //	}
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
-		withTileEntityDo(context.getLevel(), context.getClickedPos(), FluidTankTileEntity::toggleWindows);
+		withBlockEntityDo(context.getLevel(), context.getClickedPos(), FluidTankBlockEntity::toggleWindows);
 		return InteractionResult.SUCCESS;
 	}
 
@@ -154,7 +154,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
 		if (pDirection == Direction.DOWN && pNeighborState.getBlock() != this)
-			withTileEntityDo(pLevel, pCurrentPos, FluidTankTileEntity::updateBoilerTemperature);
+			withBlockEntityDo(pLevel, pCurrentPos, FluidTankBlockEntity::updateBoilerTemperature);
 		return pState;
 	}
 
@@ -170,20 +170,20 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			return InteractionResult.PASS;
 
 		FluidExchange exchange = null;
-		FluidTankTileEntity te = ConnectivityHandler.partAt(getTileEntityType(), world, pos);
-		if (te == null)
+		FluidTankBlockEntity be = ConnectivityHandler.partAt(getBlockEntityType(), world, pos);
+		if (be == null)
 			return InteractionResult.FAIL;
 
 		Direction direction = ray.getDirection();
-		Storage<FluidVariant> fluidTank = te.getFluidStorage(direction);
+		Storage<FluidVariant> fluidTank = be.getFluidStorage(direction);
 		if (fluidTank == null)
 			return InteractionResult.PASS;
 
 		FluidStack prevFluidInTank = TransferUtil.firstCopyOrEmpty(fluidTank);
 
-		if (FluidHelper.tryEmptyItemIntoTE(world, player, hand, heldItem, te, direction))
+		if (FluidHelper.tryEmptyItemIntoTE(world, player, hand, heldItem, be, direction))
 			exchange = FluidExchange.ITEM_TO_TANK;
-		else if (FluidHelper.tryFillItemFromTE(world, player, hand, heldItem, te, direction))
+		else if (FluidHelper.tryFillItemFromTE(world, player, hand, heldItem, be, direction))
 			exchange = FluidExchange.TANK_TO_ITEM;
 
 		if (exchange == null) {
@@ -224,7 +224,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 		if (soundevent != null && !onClient) {
 			float pitch = Mth
-				.clamp(1 - (1f * fluidInTank.getAmount() / (FluidTankTileEntity.getCapacityMultiplier() * 16)), 0, 1);
+				.clamp(1 - (1f * fluidInTank.getAmount() / (FluidTankBlockEntity.getCapacityMultiplier() * 16)), 0, 1);
 			pitch /= 1.5f;
 			pitch += .5f;
 			pitch += (world.random.nextFloat() - .5f) / 4f;
@@ -232,9 +232,9 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		}
 
 		if (!fluidInTank.isFluidEqual(prevFluidInTank)) {
-			if (te instanceof FluidTankTileEntity) {
-				FluidTankTileEntity controllerTE = ((FluidTankTileEntity) te).getControllerTE();
-				if (controllerTE != null) {
+			if (be instanceof FluidTankBlockEntity) {
+				FluidTankBlockEntity controllerBE = ((FluidTankBlockEntity) be).getControllerBE();
+				if (controllerBE != null) {
 					if (fluidState != null && onClient) {
 						BlockParticleOption blockParticleData =
 							new BlockParticleOption(ParticleTypes.BLOCK, fluidState);
@@ -245,8 +245,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 							level = 1 - level;
 
 						Vec3 vec = ray.getLocation();
-						vec = new Vec3(vec.x, controllerTE.getBlockPos()
-							.getY() + level * (controllerTE.height - .5f) + .25f, vec.z);
+						vec = new Vec3(vec.x, controllerBE.getBlockPos()
+							.getY() + level * (controllerBE.height - .5f) + .25f, vec.z);
 						Vec3 motion = player.position()
 							.subtract(vec)
 							.scale(1 / 20f);
@@ -255,8 +255,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 						return InteractionResult.SUCCESS;
 					}
 
-					controllerTE.sendDataImmediately();
-					controllerTE.setChanged();
+					controllerBE.sendDataImmediately();
+					controllerBE.setChanged();
 				}
 			}
 		}
@@ -267,23 +267,23 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.hasBlockEntity() && (state.getBlock() != newState.getBlock() || !newState.hasBlockEntity())) {
-			BlockEntity te = world.getBlockEntity(pos);
-			if (!(te instanceof FluidTankTileEntity))
+			BlockEntity be = world.getBlockEntity(pos);
+			if (!(be instanceof FluidTankBlockEntity))
 				return;
-			FluidTankTileEntity tankTE = (FluidTankTileEntity) te;
+			FluidTankBlockEntity tankBE = (FluidTankBlockEntity) be;
 			world.removeBlockEntity(pos);
-			ConnectivityHandler.splitMulti(tankTE);
+			ConnectivityHandler.splitMulti(tankBE);
 		}
 	}
 
 	@Override
-	public Class<FluidTankTileEntity> getTileEntityClass() {
-		return FluidTankTileEntity.class;
+	public Class<FluidTankBlockEntity> getBlockEntityClass() {
+		return FluidTankBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends FluidTankTileEntity> getTileEntityType() {
-		return creative ? AllTileEntities.CREATIVE_FLUID_TANK.get() : AllTileEntities.FLUID_TANK.get();
+	public BlockEntityType<? extends FluidTankBlockEntity> getBlockEntityType() {
+		return creative ? AllBlockEntityTypes.CREATIVE_FLUID_TANK.get() : AllBlockEntityTypes.FLUID_TANK.get();
 	}
 
 	@Override
@@ -357,8 +357,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-		return getTileEntityOptional(worldIn, pos).map(FluidTankTileEntity::getControllerTE)
-			.map(te -> ComparatorUtil.fractionToRedstoneLevel(te.getFillState()))
+		return getBlockEntityOptional(worldIn, pos).map(FluidTankBlockEntity::getControllerBE)
+			.map(be -> ComparatorUtil.fractionToRedstoneLevel(be.getFillState()))
 			.orElse(0);
 	}
 
@@ -366,13 +366,13 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		BlockState tankState = pLevel.getBlockState(tankPos);
 		if (!(tankState.getBlock()instanceof FluidTankBlock tank))
 			return;
-		FluidTankTileEntity tankTE = tank.getTileEntity(pLevel, tankPos);
-		if (tankTE == null)
+		FluidTankBlockEntity tankBE = tank.getBlockEntity(pLevel, tankPos);
+		if (tankBE == null)
 			return;
-		FluidTankTileEntity controllerTE = tankTE.getControllerTE();
-		if (controllerTE == null)
+		FluidTankBlockEntity controllerBE = tankBE.getControllerBE();
+		if (controllerBE == null)
 			return;
-		controllerTE.updateBoilerState();
+		controllerBE.updateBoilerState();
 	}
 
 }

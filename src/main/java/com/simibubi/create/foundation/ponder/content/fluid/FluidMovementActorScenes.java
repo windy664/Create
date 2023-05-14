@@ -1,8 +1,9 @@
 package com.simibubi.create.foundation.ponder.content.fluid;
 
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceTileEntity;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceBlockEntity;
+import com.simibubi.create.content.contraptions.fluids.PumpBlock;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -40,11 +41,13 @@ public class FluidMovementActorScenes {
 		BlockPos ct1 = util.grid.at(5, 3, 2);
 		BlockPos ct2 = util.grid.at(6, 3, 2);
 		BlockPos st = util.grid.at(0, 1, 5);
-		Class<FluidTankTileEntity> type = FluidTankTileEntity.class;
+		Class<FluidTankBlockEntity> type = FluidTankBlockEntity.class;
 		ItemStack bucket = AllFluids.CHOCOLATE.get().getBucket().getDefaultInstance();
 
-		scene.world.modifyTileEntity(st, type, te ->
-				TransferUtil.insert(te.getFluidStorage(null), chocolate.getType(), FluidConstants.BUCKET * 10));
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.NORTH), false);
+
+		scene.world.modifyBlockEntity(st, type, be ->
+				TransferUtil.insert(be.getFluidStorage(null), chocolate.getType(), FluidConstants.BUCKET * 10));
 
 		BlockPos bearing = util.grid.at(5, 1, 2);
 		scene.world.showSection(util.select.position(bearing), Direction.DOWN);
@@ -93,17 +96,17 @@ public class FluidMovementActorScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.of(3, 3, 2.5))
 			.text("Whenever they pass by each other, they will engage in a connection");
-		scene.idle(35);
+		scene.idle(38);
 
 		Selection both = util.select.fromTo(2, 2, 2, 4, 2, 2);
-		Class<PortableFluidInterfaceTileEntity> psiClass = PortableFluidInterfaceTileEntity.class;
+		Class<PortableFluidInterfaceBlockEntity> psiClass = PortableFluidInterfaceBlockEntity.class;
 
-		scene.world.modifyTileNBT(both, psiClass, nbt -> {
+		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> {
 			nbt.putFloat("Distance", 1);
-			nbt.putFloat("Timer", 40);
+			nbt.putFloat("Timer", 14);
 		});
 
-		scene.idle(20);
+		scene.idle(17);
 		scene.overlay.showOutline(PonderPalette.GREEN, psi, util.select.fromTo(5, 3, 2, 6, 4, 2), 80);
 		scene.idle(10);
 
@@ -135,13 +138,13 @@ public class FluidMovementActorScenes {
 				scene.overlay
 					.showControls(new InputWindowElement(util.vector.blockSurface(util.grid.at(5, 3, 2), Direction.WEST)
 						.add(0, 0.5, 0), Pointing.LEFT).withItem(bucket), 30);
-			scene.world.modifyTileEntity(st, type, te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET));
-			scene.world.modifyTileEntity(ct1, type, te -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
+			scene.world.modifyBlockEntity(st, type, be -> TransferUtil.extractAnyFluid(be.getFluidStorage(null), FluidConstants.BUCKET));
+			scene.world.modifyBlockEntity(ct1, type, be -> TransferUtil.insertFluid(be.getFluidStorage(null), chocolate));
 			scene.idle(2);
 		}
 		for (int i = 0; i < 8; i++) {
-			scene.world.modifyTileEntity(st, type, te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET));
-			scene.world.modifyTileEntity(ct2, type, te -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
+			scene.world.modifyBlockEntity(st, type, be -> TransferUtil.extractAnyFluid(be.getFluidStorage(null), FluidConstants.BUCKET));
+			scene.world.modifyBlockEntity(ct2, type, be -> TransferUtil.insertFluid(be.getFluidStorage(null), chocolate));
 			scene.idle(2);
 		}
 
@@ -151,22 +154,22 @@ public class FluidMovementActorScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(pumpPos))
 			.text("...or extracted from the contraption");
-		scene.world.multiplyKineticSpeed(util.select.everywhere(), -1);
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.SOUTH), true);
 		scene.world.propagatePipeChange(pumpPos);
 		scene.idle(30);
 
 		for (int i = 0; i < 8; i++) {
-			scene.world.modifyTileEntity(ct2, type, te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET));
-			scene.world.modifyTileEntity(st, type, te -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
+			scene.world.modifyBlockEntity(ct2, type, be -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET));
+			scene.world.modifyBlockEntity(st, type, be -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
 			scene.idle(2);
 		}
 		for (int i = 0; i < 16; i++) {
-			scene.world.modifyTileEntity(ct1, type, te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET));
-			scene.world.modifyTileEntity(st, type, te -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
+			scene.world.modifyBlockEntity(ct1, type, be -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET));
+			scene.world.modifyBlockEntity(st, type, be -> TransferUtil.insertFluid(te.getFluidStorage(null), chocolate));
 			scene.idle(2);
 		}
 
-		scene.world.modifyTileEntity(util.grid.at(2, 2, 3), type, te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET * 8));
+		scene.world.modifyBlockEntity(util.grid.at(2, 2, 3), type, be -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET * 8));
 		scene.idle(50);
 
 		scene.overlay.showText(120)
@@ -174,12 +177,12 @@ public class FluidMovementActorScenes {
 			.attachKeyFrame()
 			.pointAt(util.vector.topOf(psi2))
 			.text("After no contents have been exchanged for a while, the contraption will continue on its way");
-		scene.world.modifyTileNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 9));
+		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 2));
 
 		scene.idle(15);
 		scene.world.rotateBearing(bearing, 270, 120);
 		scene.world.rotateSection(contraption, 0, 270, 0, 120);
-		
+
 		scene.idle(100);
 		scene.markAsFinished();
 	}

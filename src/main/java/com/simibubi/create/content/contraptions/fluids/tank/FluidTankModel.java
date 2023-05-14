@@ -52,7 +52,7 @@ public class FluidTankModel extends CTModel {
 		context.popTransform();
 	}
 
-	private class CullData {
+	private static class CullData {
 		boolean[] culledFaces;
 
 		public CullData() {

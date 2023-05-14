@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.jozufozu.flywheel.util.Color;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
-import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -48,6 +48,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
@@ -58,6 +59,11 @@ import net.fabricmc.api.Environment;
 public class TrackPlacement {
 
 	public static class PlacementInfo {
+
+		public PlacementInfo(TrackMaterial material) {
+			this.trackMaterial = material;
+		}
+
 		BezierConnection curve = null;
 		boolean valid = false;
 		int end1Extent = 0;
@@ -69,6 +75,7 @@ public class TrackPlacement {
 
 		public int requiredPavement = 0;
 		public boolean hasRequiredPavement = false;
+		public final TrackMaterial trackMaterial;
 
 		// for visualisation
 		Vec3 end1;
@@ -98,17 +105,19 @@ public class TrackPlacement {
 	static int hoveringAngle;
 	static ItemStack lastItem;
 
+	static int extraTipWarmup;
+
 	public static PlacementInfo tryConnect(Level level, Player player, BlockPos pos2, BlockState state2,
 		ItemStack stack, boolean girder, boolean maximiseTurn) {
 		Vec3 lookVec = player.getLookAngle();
 		int lookAngle = (int) (22.5 + AngleHelper.deg(Mth.atan2(lookVec.z, lookVec.x)) % 360) / 8;
-		int maxLength = AllConfigs.SERVER.trains.maxTrackPlacementLength.get();
+		int maxLength = AllConfigs.server().trains.maxTrackPlacementLength.get();
 
 		if (level.isClientSide && cached != null && pos2.equals(hoveringPos) && stack.equals(lastItem)
 			&& hoveringMaxed == maximiseTurn && lookAngle == hoveringAngle)
 			return cached;
 
-		PlacementInfo info = new PlacementInfo();
+		PlacementInfo info = new PlacementInfo(TrackMaterial.fromItem(stack.getItem()));
 		hoveringMaxed = maximiseTurn;
 		hoveringAngle = lookAngle;
 		hoveringPos = pos2;
@@ -148,8 +157,10 @@ public class TrackPlacement {
 		if (pos1.distSqr(pos2) > maxLength * maxLength)
 			return info.withMessage("too_far")
 				.tooJumbly();
-		if (!state1.hasProperty(TrackBlock.HAS_TE))
+		if (!state1.hasProperty(TrackBlock.HAS_BE))
 			return info.withMessage("original_missing");
+		if (level.getBlockEntity(pos2) instanceof TrackBlockEntity tbe && tbe.isTilted())
+			return info.withMessage("turn_start");
 
 		if (axis1.dot(end2.subtract(end1)) < 0) {
 			axis1 = axis1.scale(-1);
@@ -192,7 +203,7 @@ public class TrackPlacement {
 			BlockPos targetPos2 = pos2.offset(offset2.x, offset2.y, offset2.z);
 			info.curve = new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
-				Couple.create(normal1, normal2), true, girder);
+				Couple.create(normal1, normal2), true, girder, TrackMaterial.fromItem(stack.getItem()));
 		}
 
 		// S curve or Straight
@@ -217,7 +228,7 @@ public class TrackPlacement {
 					info.end1Extent = (int) Math.round((dist + 1) / axis1.length());
 
 				} else {
-					if (!Mth.equal(ascend, 0))
+					if (!Mth.equal(ascend, 0) || normedAxis1.y != 0)
 						return info.withMessage("ascending_s_curve");
 
 					double targetT = u <= 1 ? 3 : u * 2;
@@ -281,10 +292,10 @@ public class TrackPlacement {
 		if (skipCurve && !Mth.equal(ascend, 0)) {
 			int hDistance = info.end1Extent;
 			if (axis1.y == 0 || !Mth.equal(absAscend + 1, dist / axis1.length())) {
-				
+
 				if (axis1.y != 0 && axis1.y == -axis2.y)
 					return info.withMessage("ascending_s_curve");
-				
+
 				info.end1Extent = 0;
 				double minHDistance = Math.max(absAscend < 4 ? absAscend * 4 : absAscend * 3, 6) / axis1.length();
 				if (hDistance < minHDistance)
@@ -352,7 +363,7 @@ public class TrackPlacement {
 		info.curve = skipCurve ? null
 			: new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
-				Couple.create(normal1, normal2), true, girder);
+				Couple.create(normal1, normal2), true, girder, TrackMaterial.fromItem(stack.getItem()));
 
 		info.valid = true;
 
@@ -397,7 +408,7 @@ public class TrackPlacement {
 						continue;
 
 					ItemStack stackInSlot = (offhand ? inv.offhand : inv.items).get(i);
-					boolean isTrack = AllBlocks.TRACK.isIn(stackInSlot);
+					boolean isTrack = AllTags.AllBlockTags.TRACKS.matches(stackInSlot) && stackInSlot.is(stack.getItem());
 					if (!isTrack && (!shouldPave || offhandItem.getItem() != stackInSlot.getItem()))
 						continue;
 					if (isTrack ? foundTracks >= tracks : foundPavement >= pavement)
@@ -445,10 +456,6 @@ public class TrackPlacement {
 			BlockItem paveItem = (BlockItem) offhandItem.getItem();
 			paveTracks(level, info, paveItem, false);
 		}
-		
-		if (info.curve != null && info.curve.getLength() > 29)
-			AllAdvancements.LONG_BEND.awardTo(player);
-		
 		return placeTracks(level, info, state1, state2, targetPos1, targetPos2, false);
 	}
 
@@ -474,6 +481,18 @@ public class TrackPlacement {
 			info.requiredPavement += TrackPaver.paveCurve(level, info.curve, block, simulate, visited);
 	}
 
+	private static BlockState copyProperties(BlockState from, BlockState onto) {
+		for (Property property : onto.getProperties()) {
+			if (from.hasProperty(property))
+				onto = onto.setValue(property, from.getValue(property));
+		}
+		return onto;
+	}
+
+	private static BlockState copyProperties(BlockState from, BlockState onto, boolean keepFrom) {
+		return keepFrom ? from : copyProperties(from, onto);
+	}
+
 	private static PlacementInfo placeTracks(Level level, PlacementInfo info, BlockState state1, BlockState state2,
 		BlockPos targetPos1, BlockPos targetPos2, boolean simulate) {
 		info.requiredTracks = 0;
@@ -483,8 +502,8 @@ public class TrackPlacement {
 			Vec3 axis = first ? info.axis1 : info.axis2;
 			BlockPos pos = first ? info.pos1 : info.pos2;
 			BlockState state = first ? state1 : state2;
-			if (state.hasProperty(TrackBlock.HAS_TE) && !simulate)
-				state = state.setValue(TrackBlock.HAS_TE, false);
+			if (state.hasProperty(TrackBlock.HAS_BE) && !simulate)
+				state = state.setValue(TrackBlock.HAS_BE, false);
 
 			switch (state.getValue(TrackBlock.SHAPE)) {
 			case TE, TW:
@@ -501,7 +520,8 @@ public class TrackPlacement {
 				Vec3 offset = axis.scale(i);
 				BlockPos offsetPos = pos.offset(offset.x, offset.y, offset.z);
 				BlockState stateAtPos = level.getBlockState(offsetPos);
-				BlockState toPlace = state;
+				// copy over all shared properties from the shaped state to the correct track material block
+				BlockState toPlace = copyProperties(state, info.trackMaterial.getBlock().defaultBlockState());
 
 				boolean canPlace = stateAtPos.getMaterial()
 					.isReplaceable();
@@ -524,28 +544,29 @@ public class TrackPlacement {
 			return info;
 
 		if (!simulate) {
+			BlockState onto = info.trackMaterial.getBlock().defaultBlockState();
 			BlockState stateAtPos = level.getBlockState(targetPos1);
 			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
-				(stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1).setValue(TrackBlock.HAS_TE, true),
-				targetPos1), 3);
+					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : copyProperties(state1, onto))
+							.setValue(TrackBlock.HAS_BE, true), targetPos1), 3);
 
 			stateAtPos = level.getBlockState(targetPos2);
 			level.setBlock(targetPos2, ProperWaterloggedBlock.withWater(level,
-				(stateAtPos.getBlock() == state2.getBlock() ? stateAtPos : state2).setValue(TrackBlock.HAS_TE, true),
-				targetPos2), 3);
+					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : copyProperties(state2, onto))
+							.setValue(TrackBlock.HAS_BE, true), targetPos2), 3);
 		}
 
 		BlockEntity te1 = level.getBlockEntity(targetPos1);
 		BlockEntity te2 = level.getBlockEntity(targetPos2);
 		int requiredTracksForTurn = (info.curve.getSegmentCount() + 1) / 2;
 
-		if (!(te1 instanceof TrackTileEntity) || !(te2 instanceof TrackTileEntity)) {
+		if (!(te1 instanceof TrackBlockEntity) || !(te2 instanceof TrackBlockEntity)) {
 			info.requiredTracks += requiredTracksForTurn;
 			return info;
 		}
 
-		TrackTileEntity tte1 = (TrackTileEntity) te1;
-		TrackTileEntity tte2 = (TrackTileEntity) te2;
+		TrackBlockEntity tte1 = (TrackBlockEntity) te1;
+		TrackBlockEntity tte2 = (TrackBlockEntity) te2;
 
 		if (!tte1.getConnections()
 			.containsKey(tte2.getBlockPos()))
@@ -556,6 +577,8 @@ public class TrackPlacement {
 
 		tte1.addConnection(info.curve);
 		tte2.addConnection(info.curve.secondary());
+		tte1.tilt.tryApplySmoothing();
+		tte2.tilt.tryApplySmoothing();
 		return info;
 	}
 
@@ -572,6 +595,8 @@ public class TrackPlacement {
 		LocalPlayer player = Minecraft.getInstance().player;
 		ItemStack stack = player.getMainHandItem();
 		HitResult hitResult = Minecraft.getInstance().hitResult;
+		int restoreWarmup = extraTipWarmup;
+		extraTipWarmup = 0;
 
 		if (hitResult == null)
 			return;
@@ -579,10 +604,10 @@ public class TrackPlacement {
 			return;
 
 		InteractionHand hand = InteractionHand.MAIN_HAND;
-		if (!AllBlocks.TRACK.isIn(stack)) {
+		if (!AllTags.AllBlockTags.TRACKS.matches(stack)) {
 			stack = player.getOffhandItem();
 			hand = InteractionHand.OFF_HAND;
-			if (!AllBlocks.TRACK.isIn(stack))
+			if (!AllTags.AllBlockTags.TRACKS.matches(stack))
 				return;
 		}
 
@@ -605,8 +630,14 @@ public class TrackPlacement {
 		if (!(hitState.getBlock() instanceof TrackBlock))
 			return;
 
+		extraTipWarmup = restoreWarmup;
 		boolean maxTurns = Minecraft.getInstance().options.keySprint.isDown();
 		PlacementInfo info = tryConnect(level, player, pos, hitState, stack, false, maxTurns);
+		if (extraTipWarmup < 20)
+			extraTipWarmup++;
+		if (!info.valid || !hoveringMaxed && (info.end1Extent == 0 || info.end2Extent == 0))
+			extraTipWarmup = 0;
+
 		if (!player.isCreative() && (info.valid || !info.hasRequiredTracks || !info.hasRequiredPavement))
 			BlueprintOverlayRenderer.displayTrackRequirements(info, player.getOffhandItem());
 
@@ -621,7 +652,7 @@ public class TrackPlacement {
 		if (bhr.getDirection() == Direction.UP) {
 			Vec3 lookVec = player.getLookAngle();
 			int lookAngle = (int) (22.5 + AngleHelper.deg(Mth.atan2(lookVec.z, lookVec.x)) % 360) / 8;
-			
+
 			if (!pos.equals(hintPos) || lookAngle != hintAngle) {
 				hints = Couple.create(ArrayList::new);
 				hintAngle = lookAngle;

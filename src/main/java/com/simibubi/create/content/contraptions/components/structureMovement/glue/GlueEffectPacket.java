@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.fabricmc.api.EnvType;
@@ -29,21 +27,21 @@ public class GlueEffectPacket extends SimplePacketBase {
 		fullBlock = buffer.readBoolean();
 	}
 
+	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 		buffer.writeByte(direction.get3DDataValue());
 		buffer.writeBoolean(fullBlock);
 	}
 
-	@Environment(EnvType.CLIENT)
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(this::exec);
-		context.get().setPacketHandled(true);
+	@Override
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::handleClient));
+		return true;
 	}
 
-	// fabric: lambda funk
-	@Environment(EnvType.CLIENT)
-	private void exec() {
+	@OnlyIn(Dist.CLIENT)
+	public void handleClient() {
 		Minecraft mc = Minecraft.getInstance();
 		if (!mc.player.blockPosition().closerThan(pos, 100))
 			return;

@@ -96,11 +96,11 @@ public class PotatoProjectileTypeManager {
 	}
 
 	public static void syncTo(ServerPlayer player) {
-		AllPackets.channel.sendToClient(new SyncPacket(), player);
+		AllPackets.getChannel().sendToClient(new SyncPacket(), player);
 	}
 
 	public static void syncToAll(List<ServerPlayer> players) {
-		AllPackets.channel.sendToClients(new SyncPacket(), players);
+		AllPackets.getChannel().sendToClients(new SyncPacket(), players);
 	}
 
 	public static class ReloadListener extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
@@ -153,9 +153,11 @@ public class PotatoProjectileTypeManager {
 		}
 
 		@Override
-		public void handle(Supplier<Context> context) {
-			fromBuffer(buffer);
-			context.get().setPacketHandled(true);
+		public boolean handle(Context context) {
+			context.enqueueWork(() -> {
+				fromBuffer(buffer);
+			});
+			return true;
 		}
 
 	}

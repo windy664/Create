@@ -28,8 +28,8 @@ public class ShootableGadgetItemMethods {
 	public static void sendPackets(Player player, Function<Boolean, ? extends ShootGadgetPacket> factory) {
 		if (!(player instanceof ServerPlayer))
 			return;
-		AllPackets.channel.sendToClientsTracking(factory.apply(false), player);
-		AllPackets.channel.sendToClient(factory.apply(true), (ServerPlayer) player);
+		AllPackets.getChannel().sendToClientsTracking(factory.apply(false), player);
+		AllPackets.getChannel().sendToClient(factory.apply(true), (ServerPlayer) player);
 	}
 
 	public static boolean shouldSwap(Player player, ItemStack item, InteractionHand hand, Predicate<ItemStack> predicate) {

@@ -1,13 +1,13 @@
 package com.simibubi.create.foundation.ponder.content.fluid;
 
-import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.Pointing;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
@@ -57,10 +57,10 @@ public class DrainScenes {
 				.withItem(lavaBucket),
 			40);
 		scene.idle(7);
-		scene.world.modifyTileEntity(drainPos, ItemDrainTileEntity.class, te -> {
-			te.getBehaviour(SmartFluidTankBehaviour.TYPE)
+		scene.world.modifyBlockEntity(drainPos, ItemDrainBlockEntity.class, be -> {
+			be.getBehaviour(SmartFluidTankBehaviour.TYPE)
 				.allowInsertion();
-			TransferUtil.insert(te.getFluidStorage(null), FluidVariant.of(Fluids.LAVA), FluidConstants.BUCKET);
+			TransferUtil.insert(be.getFluidStorage(null), FluidVariant.of(Fluids.LAVA), FluidConstants.BUCKET);
 		});
 		scene.idle(10);
 
@@ -71,8 +71,8 @@ public class DrainScenes {
 			.pointAt(util.vector.blockSurface(drainPos.west(), Direction.WEST));
 		scene.idle(60);
 
-		scene.world.modifyTileEntity(drainPos, ItemDrainTileEntity.class,
-			te -> TransferUtil.extractAnyFluid(te.getFluidStorage(null), FluidConstants.BUCKET / 2));
+		scene.world.modifyBlockEntity(drainPos, ItemDrainBlockEntity.class,
+			be -> TransferUtil.extractAnyFluid(be.getFluidStorage(null), FluidConstants.BUCKET / 2));
 
 		scene.world.moveSection(drainLink, util.vector.of(1, 0, 0), 7);
 		scene.world.showSection(largeCog, Direction.UP);

@@ -16,7 +16,7 @@ public class CameraDistanceCommand {
 				.then(Commands.literal("reset")
 						.executes(ctx -> {
 							ServerPlayer player = ctx.getSource().getPlayerOrException();
-							AllPackets.channel.sendToClient(
+							AllPackets.getChannel().sendToClient(
 									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.zoomMultiplier.name(), "1"),
 									player
 							);
@@ -27,7 +27,7 @@ public class CameraDistanceCommand {
 						.executes(ctx -> {
 							float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
 							ServerPlayer player = ctx.getSource().getPlayerOrException();
-							AllPackets.channel.sendToClient(
+							AllPackets.getChannel().sendToClient(
 									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.zoomMultiplier.name(), String.valueOf(multiplier)),
 									player
 							);

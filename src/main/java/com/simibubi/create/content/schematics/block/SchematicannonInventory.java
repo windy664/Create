@@ -1,5 +1,6 @@
 package com.simibubi.create.content.schematics.block;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
@@ -8,19 +9,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class SchematicannonInventory extends ItemStackHandler {
-	/**
-	 *
-	 */
-	private final SchematicannonTileEntity te;
+	private final SchematicannonBlockEntity blockEntity;
 
-	public SchematicannonInventory(SchematicannonTileEntity schematicannonTileEntity) {
+	public SchematicannonInventory(SchematicannonBlockEntity blockEntity) {
 		super(5);
-		te = schematicannonTileEntity;
+		this.blockEntity = blockEntity;
 	}
 
 	@Override
 	protected void onFinalCommit() {
-		te.setChanged();
+		blockEntity.setChanged();
 	}
 
 	@Override
@@ -31,7 +29,7 @@ public class SchematicannonInventory extends ItemStackHandler {
 		case 1: // Blueprint output
 			return false;
 		case 2: // Book input
-			return stack.isOf(Items.BOOK) || stack.isOf(Items.WRITTEN_BOOK);
+			return AllBlocks.CLIPBOARD.isIn(stack) || stack.isOf(Items.BOOK) || stack.isOf(Items.WRITTEN_BOOK);
 		case 3: // Material List output
 			return false;
 		case 4: // Gunpowder

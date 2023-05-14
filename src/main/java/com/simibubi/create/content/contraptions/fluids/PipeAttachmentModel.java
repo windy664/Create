@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes.ComponentPartials;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
@@ -65,14 +65,14 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 		for (Direction d : Iterate.directions) {
 			AttachmentTypes type = pipeData.getAttachment(d);
 			for (ComponentPartials partial : type.partials) {
-				((FabricBakedModel) AllBlockPartials.PIPE_ATTACHMENTS.get(partial)
+				((FabricBakedModel) AllPartialModels.PIPE_ATTACHMENTS.get(partial)
 					.get(d)
 					.get())
 					.emitBlockQuads(world, state, pos, randomSupplier, context);
 			}
 		}
 		if (pipeData.isEncased())
-			((FabricBakedModel) AllBlockPartials.FLUID_PIPE_CASING.get())
+			((FabricBakedModel) AllPartialModels.FLUID_PIPE_CASING.get())
 				.emitBlockQuads(world, state, pos, randomSupplier, context);
 	}
 

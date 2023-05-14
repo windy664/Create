@@ -50,8 +50,8 @@ public class LinkedControllerItem extends Item implements MenuProvider, UseFirst
 			if (player.isShiftKeyDown()) {
 				if (AllBlocks.LECTERN_CONTROLLER.has(hitState)) {
 					if (!world.isClientSide)
-						AllBlocks.LECTERN_CONTROLLER.get().withTileEntityDo(world, pos, te ->
-								te.swapControllers(stack, player, ctx.getHand(), hitState));
+						AllBlocks.LECTERN_CONTROLLER.get().withBlockEntityDo(world, pos, be ->
+								be.swapControllers(stack, player, ctx.getHand(), hitState));
 					return InteractionResult.SUCCESS;
 				}
 			} else {
@@ -130,7 +130,7 @@ public class LinkedControllerItem extends Item implements MenuProvider, UseFirst
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
 		ItemStack heldItem = player.getMainHandItem();
-		return LinkedControllerContainer.create(id, inv, heldItem);
+		return LinkedControllerMenu.create(id, inv, heldItem);
 	}
 
 	@Override

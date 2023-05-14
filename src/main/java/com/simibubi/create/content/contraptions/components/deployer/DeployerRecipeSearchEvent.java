@@ -13,7 +13,7 @@ import net.minecraft.world.item.crafting.Recipe;
 
 public class DeployerRecipeSearchEvent {
 	private boolean canceled = false;
-	private final DeployerTileEntity tileEntity;
+	private final DeployerBlockEntity blockEntity;
 	private final ItemStackHandlerContainer inventory;
 	@Nullable
 	Recipe<? extends Container> recipe = null;
@@ -30,8 +30,8 @@ public class DeployerRecipeSearchEvent {
 		void handle(DeployerRecipeSearchEvent event);
 	}
 
-	public DeployerRecipeSearchEvent(DeployerTileEntity tileEntity, ItemStackHandlerContainer inventory) {
-		this.tileEntity = tileEntity;
+	public DeployerRecipeSearchEvent(DeployerBlockEntity blockEntity, ItemStackHandlerContainer inventory) {
+		this.blockEntity = blockEntity;
 		this.inventory = inventory;
 	}
 
@@ -44,8 +44,8 @@ public class DeployerRecipeSearchEvent {
 		canceled = true;
 	}
 
-	public DeployerTileEntity getTileEntity() {
-		return tileEntity;
+	public DeployerBlockEntity getBlockEntity() {
+		return blockEntity;
 	}
 
 	public ItemStackHandlerContainer getInventory() {

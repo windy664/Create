@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.config.ui;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -37,10 +36,10 @@ public class CConfigureConfigPacket<T> extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
+	public boolean handle(NetworkEvent.Context context) {
+		context.enqueueWork(() -> {
 			try {
-				ServerPlayer sender = context.get().getSender();
+				ServerPlayer sender = context.getSender();
 				if (sender == null || !sender.hasPermissions(2))
 					return;
 
@@ -59,8 +58,7 @@ public class CConfigureConfigPacket<T> extends SimplePacketBase {
 				Create.LOGGER.warn("Unable to handle ConfigureConfig Packet. ", e);
 			}
 		});
-
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 	public String serialize(T value) {

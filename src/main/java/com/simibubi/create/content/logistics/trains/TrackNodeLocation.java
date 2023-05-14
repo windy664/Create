@@ -19,13 +19,14 @@ import net.minecraft.world.phys.Vec3;
 public class TrackNodeLocation extends Vec3i {
 
 	public ResourceKey<Level> dimension;
+	public int yOffsetPixels;
 
 	public TrackNodeLocation(Vec3 vec) {
 		this(vec.x, vec.y, vec.z);
 	}
 
-	public TrackNodeLocation(double p_121865_, double p_121866_, double p_121867_) {
-		super(Math.round(p_121865_ * 2), Math.floor(p_121866_ * 2), Math.round(p_121867_ * 2));
+	public TrackNodeLocation(double x, double y, double z) {
+		super(Math.round(x * 2), Math.floor(y) * 2, Math.round(z * 2));
 	}
 
 	public TrackNodeLocation in(Level level) {
@@ -46,7 +47,7 @@ public class TrackNodeLocation extends Vec3i {
 	}
 
 	public Vec3 getLocation() {
-		return new Vec3(getX() / 2.0, getY() / 2.0, getZ() / 2.0);
+		return new Vec3(getX() / 2.0, getY() / 2.0 + yOffsetPixels / 16.0, getZ() / 2.0);
 	}
 
 	public ResourceKey<Level> getDimension() {
@@ -60,18 +61,20 @@ public class TrackNodeLocation extends Vec3i {
 	}
 
 	public boolean equalsIgnoreDim(Object pOther) {
-		return super.equals(pOther);
+		return super.equals(pOther) && pOther instanceof TrackNodeLocation tnl && tnl.yOffsetPixels == yOffsetPixels;
 	}
 
 	@Override
 	public int hashCode() {
-		return (this.getY() + (this.getZ() * 31 + dimension.hashCode()) * 31) * 31 + this.getX();
+		return (getY() + ((getZ() + yOffsetPixels * 31) * 31 + dimension.hashCode()) * 31) * 31 + getX();
 	}
 
 	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag c = NbtUtils.writeBlockPos(new BlockPos(this));
 		if (dimensions != null)
 			c.putInt("D", dimensions.encode(dimension));
+		if (yOffsetPixels != 0)
+			c.putInt("YO", yOffsetPixels);
 		return c;
 	}
 
@@ -79,13 +82,15 @@ public class TrackNodeLocation extends Vec3i {
 		TrackNodeLocation location = fromPackedPos(NbtUtils.readBlockPos(tag));
 		if (dimensions != null)
 			location.dimension = dimensions.decode(tag.getInt("D"));
+		location.yOffsetPixels = tag.getInt("YO");
 		return location;
 	}
 
 	public void send(FriendlyByteBuf buffer, DimensionPalette dimensions) {
-		buffer.writeVarInt(this.getX());
-		buffer.writeShort(this.getY());
-		buffer.writeVarInt(this.getZ());
+		buffer.writeVarInt(getX());
+		buffer.writeShort(getY());
+		buffer.writeVarInt(getZ());
+		buffer.writeVarInt(yOffsetPixels);
 		buffer.writeVarInt(dimensions.encode(dimension));
 	}
 
@@ -95,13 +100,14 @@ public class TrackNodeLocation extends Vec3i {
 				buffer.readShort(),
 				buffer.readVarInt()
 		));
+		location.yOffsetPixels = buffer.readVarInt();
 		location.dimension = dimensions.decode(buffer.readVarInt());
 		return location;
 	}
 
 	public Collection<BlockPos> allAdjacent() {
 		Set<BlockPos> set = new HashSet<>();
-		Vec3 vec3 = getLocation();
+		Vec3 vec3 = getLocation().subtract(0, yOffsetPixels / 16.0, 0);
 		double step = 1 / 8f;
 		for (int x : Iterate.positiveAndNegative)
 			for (int y : Iterate.positiveAndNegative)
@@ -116,9 +122,11 @@ public class TrackNodeLocation extends Vec3i {
 		boolean forceNode = false;
 		Vec3 direction;
 		Vec3 normal;
+		TrackMaterial materialA;
+		TrackMaterial materialB;
 
-		public DiscoveredLocation(Level level, double p_121865_, double p_121866_, double p_121867_) {
-			super(p_121865_, p_121866_, p_121867_);
+		public DiscoveredLocation(Level level, double x, double y, double z) {
+			super(x, y, z);
 			in(level);
 		}
 
@@ -129,6 +137,22 @@ public class TrackNodeLocation extends Vec3i {
 
 		public DiscoveredLocation(Level level, Vec3 vec) {
 			this(level.dimension(), vec);
+		}
+
+		public DiscoveredLocation materialA(TrackMaterial material) {
+			this.materialA = material;
+			return this;
+		}
+
+		public DiscoveredLocation materialB(TrackMaterial material) {
+			this.materialB = material;
+			return this;
+		}
+
+		public DiscoveredLocation materials(TrackMaterial materialA, TrackMaterial materialB) {
+			this.materialA = materialA;
+			this.materialB = materialB;
+			return this;
 		}
 
 		public DiscoveredLocation viaTurn(BezierConnection turn) {
@@ -147,6 +171,11 @@ public class TrackNodeLocation extends Vec3i {
 			this.normal = normal;
 			return this;
 		}
+		
+		public DiscoveredLocation withYOffset(int yOffsetPixels) {
+			this.yOffsetPixels = yOffsetPixels;
+			return this;
+		}
 
 		public DiscoveredLocation withDirection(Vec3 direction) {
 			this.direction = direction == null ? null : direction.normalize();
@@ -163,6 +192,10 @@ public class TrackNodeLocation extends Vec3i {
 
 		public boolean shouldForceNode() {
 			return forceNode;
+		}
+
+		public boolean differentMaterials() {
+			return materialA != materialB;
 		}
 
 		public boolean notInLineWith(Vec3 direction) {

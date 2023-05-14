@@ -198,7 +198,7 @@ public class SymmetryWandItem extends Item {
 			.getCompound(SYMMETRY));
 
 		Vec3 mirrorPos = symmetry.getPosition();
-		if (mirrorPos.distanceTo(Vec3.atLowerCornerOf(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
+		if (mirrorPos.distanceTo(Vec3.atLowerCornerOf(pos)) > AllConfigs.server().curiosities.maxSymmetryWandRange.get())
 			return;
 		if (!player.isCreative() && isHoldingBlock(player, block)
 			&& BlockHelper.simulateFindAndRemoveInInventory(block, player, 1) == 0) // fabric: simulate since the first block will already be removed
@@ -263,7 +263,7 @@ public class SymmetryWandItem extends Item {
 			}
 		}
 
-		AllPackets.channel.sendToClientsTrackingAndSelf(new SymmetryEffectPacket(to, targets), player);
+		AllPackets.getChannel().sendToClientsTrackingAndSelf(new SymmetryEffectPacket(to, targets), player);
 	}
 
 	private static boolean isHoldingBlock(Player player, BlockState block) {
@@ -286,7 +286,7 @@ public class SymmetryWandItem extends Item {
 			.getCompound(SYMMETRY));
 
 		Vec3 mirrorPos = symmetry.getPosition();
-		if (mirrorPos.distanceTo(Vec3.atLowerCornerOf(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
+		if (mirrorPos.distanceTo(Vec3.atLowerCornerOf(pos)) > AllConfigs.server().curiosities.maxSymmetryWandRange.get())
 			return;
 
 		symmetry.process(blockSet);
@@ -316,14 +316,15 @@ public class SymmetryWandItem extends Item {
 						.isEmpty())
 						player.getMainHandItem()
 							.mineBlock(world, blockstate, position, player);
-					BlockEntity tileentity = blockstate.hasBlockEntity() ? world.getBlockEntity(position) : null;
-					Block.dropResources(blockstate, world, pos, tileentity, player, player.getMainHandItem()); // Add fortune, silk touch and other loot modifiers
+					BlockEntity blockEntity = blockstate.hasBlockEntity() ? world.getBlockEntity(position) : null;
+					Block.dropResources(blockstate, world, pos, blockEntity, player, player.getMainHandItem()); // Add fortune, silk touch and other loot modifiers
 				}
 				handlePostEvent(world, player, position, blockstate, be);
 			}
 		}
 
-		AllPackets.channel.sendToClientsTrackingAndSelf(new SymmetryEffectPacket(to, targets), player);
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+				new SymmetryEffectPacket(to, targets));
 	}
 
 	/**

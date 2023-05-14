@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.item;
 
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkBehaviour;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 
 import net.minecraft.core.BlockPos;
@@ -39,7 +39,7 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 			return;
 
 		ItemStackHandler frequencyItems = LinkedControllerItem.getFrequencyItems(heldItem);
-		LinkBehaviour linkBehaviour = TileEntityBehaviour.get(player.level, linkLocation, LinkBehaviour.TYPE);
+		LinkBehaviour linkBehaviour = BlockEntityBehaviour.get(player.level, linkLocation, LinkBehaviour.TYPE);
 		if (linkBehaviour == null)
 			return;
 
@@ -52,6 +52,6 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 	}
 
 	@Override
-	protected void handleLectern(ServerPlayer player, LecternControllerTileEntity lectern) {}
+	protected void handleLectern(ServerPlayer player, LecternControllerBlockEntity lectern) {}
 
 }

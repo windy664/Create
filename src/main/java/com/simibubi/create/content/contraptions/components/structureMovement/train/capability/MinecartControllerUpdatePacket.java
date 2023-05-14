@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train.capability;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
@@ -39,11 +37,9 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-				.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleCL));
-		context.get()
-				.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleCL));
+		return true;
 	}
 
 	@Environment(EnvType.CLIENT)

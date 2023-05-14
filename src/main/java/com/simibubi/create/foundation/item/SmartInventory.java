@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.item;
 
-import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
+import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandlerContainer;
 
 import io.github.fabricators_of_create.porting_lib.util.INBTSerializable;
@@ -16,11 +16,11 @@ public class SmartInventory extends ItemStackHandlerContainer implements INBTSer
 	protected boolean stackNonStackables;
 	protected int stackSize;
 
-	public SmartInventory(int slots, SyncedTileEntity te) {
-		this(slots, te, 64, false);
+	public SmartInventory(int slots, SyncedBlockEntity be) {
+		this(slots, be, 64, false);
 	}
 
-	public SmartInventory(int slots, SyncedTileEntity te, int stackSize, boolean stackNonStackables) {
+	public SmartInventory(int slots, SyncedBlockEntity be, int stackSize, boolean stackNonStackables) {
 		super(slots);
 		this.stackNonStackables = stackNonStackables;
 		insertionAllowed = true;
@@ -90,7 +90,7 @@ public class SmartInventory extends ItemStackHandlerContainer implements INBTSer
 	protected void onFinalCommit() {
 		if (updateCallback != null)
 			updateCallback.run();
-		te.notifyUpdate();
+		blockEntity.notifyUpdate();
 	}
 
 	@Override

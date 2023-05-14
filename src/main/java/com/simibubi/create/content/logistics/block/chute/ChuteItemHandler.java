@@ -8,10 +8,10 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 public class ChuteItemHandler extends SingleVariantStorage<ItemVariant> {
 
-	private ChuteTileEntity te;
+	private ChuteBlockEntity blockEntity;
 
-	public ChuteItemHandler(ChuteTileEntity te) {
-		this.te = te;
+	public ChuteItemHandler(ChuteBlockEntity be) {
+		this.blockEntity = be;
 		update();
 	}
 
@@ -22,14 +22,14 @@ public class ChuteItemHandler extends SingleVariantStorage<ItemVariant> {
 
 	@Override
 	public long insert(ItemVariant insertedVariant, long maxAmount, TransactionContext transaction) {
-		if (!te.canAcceptItem(insertedVariant.toStack()))
+		if (!blockEntity.canAcceptItem(insertedVariant.toStack()))
 			return 0;
 		return super.insert(insertedVariant, maxAmount, transaction);
 	}
 
 	@Override
 	protected void onFinalCommit() {
-		te.setItem(variant.toStack(ItemHelper.truncateLong(amount)));
+		blockEntity.setItem(variant.toStack(ItemHelper.truncateLong(amount)));
 	}
 
 	@Override

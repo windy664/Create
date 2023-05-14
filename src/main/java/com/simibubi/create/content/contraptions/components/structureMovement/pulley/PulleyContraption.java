@@ -16,7 +16,7 @@ import net.fabricmc.api.Environment;
 public class PulleyContraption extends TranslatingContraption {
 
 	int initialOffset;
-
+	
 	@Override
 	protected ContraptionType getType() {
 		return ContraptionType.PULLEY;
@@ -63,5 +63,9 @@ public class PulleyContraption extends TranslatingContraption {
 	@Environment(EnvType.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new PulleyLighter(this);
+	}
+
+	public int getInitialOffset() {
+		return initialOffset;
 	}
 }

@@ -86,6 +86,11 @@ public class Carriage {
 			bogey2.carriage = this;
 	}
 
+	public boolean isOnIncompatibleTrack() {
+		return leadingBogey().type.isOnIncompatibleTrack(this, true)
+				|| trailingBogey().type.isOnIncompatibleTrack(this, false);
+	}
+
 	public void setTrain(Train train) {
 		this.train = train;
 	}
@@ -104,7 +109,7 @@ public class Carriage {
 
 		DimensionalCarriageEntity dimensional = getDimensional(level);
 		dimensional.alignEntity(entity);
-		dimensional.removeAndSaveEntity(entity, false);
+		dimensional.removeAndSaveEntity(entity, true);
 	}
 
 	public DimensionalCarriageEntity getDimensional(Level level) {
@@ -307,6 +312,9 @@ public class Carriage {
 		double leadingWheelSpacing = leadingBogey.type.getWheelPointSpacing();
 		double trailingWheelSpacing = trailingBogey.type.getWheelPointSpacing();
 
+		boolean leadingUpsideDown = leadingBogey.isUpsideDown();
+		boolean trailingUpsideDown = trailingBogey.isUpsideDown();
+
 		for (boolean leading : Iterate.trueAndFalse) {
 			TravellingPoint point = leading ? getLeadingPoint() : getTrailingPoint();
 			TravellingPoint otherPoint = !leading ? getLeadingPoint() : getTrailingPoint();
@@ -322,24 +330,31 @@ public class Carriage {
 
 			dce.positionAnchor = dimension.equals(leadingBogeyDim) ? leadingBogey.getAnchorPosition()
 				: pivoted(dce, dimension, point,
-					leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2);
+					leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2,
+					leadingUpsideDown, trailingUpsideDown);
+
+			boolean backAnchorFlip = trailingBogey.isUpsideDown() ^ leadingBogey.isUpsideDown();
 
 			if (isOnTwoBogeys()) {
 				dce.rotationAnchors.setFirst(dimension.equals(leadingBogeyDim) ? leadingBogey.getAnchorPosition()
 					: pivoted(dce, dimension, point,
-						leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2));
-				dce.rotationAnchors.setSecond(dimension.equals(trailingBogeyDim) ? trailingBogey.getAnchorPosition()
+						leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2,
+						leadingUpsideDown, trailingUpsideDown));
+				dce.rotationAnchors.setSecond(dimension.equals(trailingBogeyDim) ? trailingBogey.getAnchorPosition(backAnchorFlip)
 					: pivoted(dce, dimension, point,
-						leading ? leadingWheelSpacing / 2 + bogeySpacing : trailingWheelSpacing / 2));
+						leading ? leadingWheelSpacing / 2 + bogeySpacing : trailingWheelSpacing / 2,
+						leadingUpsideDown, trailingUpsideDown));
 
 			} else {
 				if (dimension.equals(otherDimension)) {
-					dce.rotationAnchors = leadingBogey.points.map(TravellingPoint::getPosition);
+					dce.rotationAnchors = leadingBogey.points.map(tp -> tp.getPosition(train.graph));
 				} else {
-					dce.rotationAnchors.setFirst(leadingBogey.points.getFirst() == point ? point.getPosition()
-						: pivoted(dce, dimension, point, leadingWheelSpacing));
-					dce.rotationAnchors.setSecond(leadingBogey.points.getSecond() == point ? point.getPosition()
-						: pivoted(dce, dimension, point, leadingWheelSpacing));
+					dce.rotationAnchors.setFirst(leadingBogey.points.getFirst() == point
+						? point.getPosition(train.graph)
+						: pivoted(dce, dimension, point, leadingWheelSpacing, leadingUpsideDown, trailingUpsideDown));
+					dce.rotationAnchors.setSecond(leadingBogey.points.getSecond() == point
+						? point.getPosition(train.graph)
+						: pivoted(dce, dimension, point, leadingWheelSpacing, leadingUpsideDown, trailingUpsideDown));
 				}
 			}
 
@@ -357,15 +372,16 @@ public class Carriage {
 	}
 
 	private Vec3 pivoted(DimensionalCarriageEntity dce, ResourceKey<Level> dimension, TravellingPoint start,
-		double offset) {
+		double offset, boolean leadingUpsideDown, boolean trailingUpsideDown) {
 		if (train.graph == null)
 			return dce.pivot == null ? null : dce.pivot.getLocation();
 		TrackNodeLocation pivot = dce.findPivot(dimension, start == getLeadingPoint());
 		if (pivot == null)
 			return null;
-		Vec3 startVec = start.getPosition();
+		boolean flipped = start != getLeadingPoint() && (leadingUpsideDown != trailingUpsideDown);
+		Vec3 startVec = start.getPosition(train.graph, flipped);
 		Vec3 portalVec = pivot.getLocation()
-			.add(0, 1, 0);
+			.add(0, leadingUpsideDown ? -1.0 : 1.0, 0);
 		return VecHelper.lerp((float) (offset / startVec.distanceTo(portalVec)), startVec, portalVec);
 	}
 
@@ -724,8 +740,8 @@ public class Carriage {
 
 		}
 
-		private void dismountPlayer(ServerLevel sLevel, ServerPlayer sp, Integer seat, boolean portal) {
-			if (!portal) {
+		private void dismountPlayer(ServerLevel sLevel, ServerPlayer sp, Integer seat, boolean capture) {
+			if (!capture) {
 				sp.stopRiding();
 				return;
 			}

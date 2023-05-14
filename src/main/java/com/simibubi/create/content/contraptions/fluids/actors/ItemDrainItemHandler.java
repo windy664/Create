@@ -13,11 +13,11 @@ import net.minecraft.world.item.ItemStack;
 
 public class ItemDrainItemHandler extends SnapshotParticipant<Unit> implements SingleSlotStorage<ItemVariant> {
 
-	private ItemDrainTileEntity te;
+	private ItemDrainBlockEntity blockEntity;
 	private Direction side;
 
-	public ItemDrainItemHandler(ItemDrainTileEntity te, Direction side) {
-		this.te = te;
+	public ItemDrainItemHandler(ItemDrainBlockEntity be, Direction side) {
+		this.blockEntity = be;
 		this.side = side;
 	}
 
@@ -40,7 +40,7 @@ public class ItemDrainItemHandler extends SnapshotParticipant<Unit> implements S
 
 	@Override
 	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		TransportedItemStack held = te.heldItem;
+		TransportedItemStack held = blockEntity.heldItem;
 		if (held == null)
 			return 0;
 

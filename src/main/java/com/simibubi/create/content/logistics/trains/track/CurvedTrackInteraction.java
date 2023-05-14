@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.trains.track;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -43,7 +43,7 @@ public class CurvedTrackInteraction {
 			return;
 
 		if (mc.options.keyAttack.isDown() && result != null) {
-			breakPos = result.te()
+			breakPos = result.blockEntity()
 				.getBlockPos();
 			BlockState blockState = level.getBlockState(breakPos);
 			if (blockState.isAir()) {
@@ -73,7 +73,7 @@ public class CurvedTrackInteraction {
 			player.swing(InteractionHand.MAIN_HAND);
 
 			if (breakProgress >= 1) {
-				AllPackets.channel.sendToServer(new CurvedTrackDestroyPacket(breakPos, result.loc()
+				AllPackets.getChannel().sendToServer(new CurvedTrackDestroyPacket(breakPos, result.loc()
 					.curveTarget(), new BlockPos(result.vec()), false));
 				resetBreakProgress();
 			}
@@ -116,7 +116,7 @@ public class CurvedTrackInteraction {
 		if (isUse) {
 			ItemStack heldItem = player.getMainHandItem();
 			Item item = heldItem.getItem();
-			if (AllBlocks.TRACK.isIn(heldItem)) {
+			if (AllTags.AllBlockTags.TRACKS.matches(heldItem)) {
 				player.displayClientMessage(Lang.translateDirect("track.turn_start")
 					.withStyle(ChatFormatting.RED), true);
 				player.swing(InteractionHand.MAIN_HAND);
@@ -127,7 +127,7 @@ public class CurvedTrackInteraction {
 				return true;
 			}
 			if (AllItems.WRENCH.isIn(heldItem) && player.isSteppingCarefully()) {
-				AllPackets.channel.sendToServer(new CurvedTrackDestroyPacket(result.te()
+				AllPackets.getChannel().sendToServer(new CurvedTrackDestroyPacket(result.blockEntity()
 					.getBlockPos(),
 					result.loc()
 						.curveTarget(),

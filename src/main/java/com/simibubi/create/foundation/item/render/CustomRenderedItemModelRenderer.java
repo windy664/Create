@@ -9,15 +9,14 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class CustomRenderedItemModelRenderer<M extends CustomRenderedItemModel> implements DynamicItemRenderer {
+public abstract class CustomRenderedItemModelRenderer implements DynamicItemRenderer {
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void render(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		if(!(Minecraft.getInstance()
 				.getItemRenderer()
 				.getModel(stack, null, null, 0) instanceof CustomRenderedItemModel)) return; // insure we are only casting CustomRenderedItemModel incase another mod's messes with models
-		M mainModel = (M) Minecraft.getInstance()
+		CustomRenderedItemModel mainModel = (CustomRenderedItemModel) Minecraft.getInstance()
 			.getItemRenderer()
 			.getModel(stack, null, null, 0);
 		PartialItemModelRenderer renderer = PartialItemModelRenderer.of(stack, transformType, ms, buffer, overlay);
@@ -28,9 +27,7 @@ public abstract class CustomRenderedItemModelRenderer<M extends CustomRenderedIt
 		ms.popPose();
 	}
 
-	protected abstract void render(ItemStack stack, M model, PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType,
+	protected abstract void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay);
-
-	public abstract M createModel(BakedModel originalModel);
 
 }

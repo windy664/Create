@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
@@ -35,10 +34,9 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer player = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 
 			double range = ReachEntityAttributes.getReachDistance(player, player.isCreative() ? 5 : 4.5) + 2;
 			if (player.distanceToSqr(Vec3.atCenterOf(to)) > range * range)
@@ -62,7 +60,7 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 
 			AllAdvancements.SUPER_GLUE.awardTo(player);
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

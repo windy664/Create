@@ -11,12 +11,12 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllTags.AllFluidTags;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.mixin.fabric.SortedArraySetAccessor;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -41,7 +41,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
+public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 
 	public static record BlockPosEntry(BlockPos pos, int distance) {
 	};
@@ -63,8 +63,8 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	int revalidateIn;
 
-	public FluidManipulationBehaviour(SmartTileEntity te) {
-		super(te);
+	public FluidManipulationBehaviour(SmartBlockEntity be) {
+		super(be);
 		setValidationTimer();
 		infinite = false;
 		visited = new HashSet<>();
@@ -93,15 +93,15 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected int maxRange() {
-		return AllConfigs.SERVER.fluids.hosePulleyRange.get();
+		return AllConfigs.server().fluids.hosePulleyRange.get();
 	}
 
 	protected int maxBlocks() {
-		return AllConfigs.SERVER.fluids.hosePulleyBlockThreshold.get();
+		return AllConfigs.server().fluids.hosePulleyBlockThreshold.get();
 	}
 
 	protected boolean fillInfinite() {
-		return AllConfigs.SERVER.fluids.fillInfinite.get();
+		return AllConfigs.server().fluids.fillInfinite.get();
 	}
 
 	public void reset(@Nullable TransactionContext ctx) {
@@ -217,7 +217,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected void playEffect(Level world, BlockPos pos, Fluid fluid, boolean fillSound) {
-		BlockPos splooshPos = pos == null ? tileEntity.getBlockPos() : pos;
+		BlockPos splooshPos = pos == null ? blockEntity.getBlockPos() : pos;
 
 		FluidVariant variant = FluidVariant.of(fluid);
 		SoundEvent soundevent = fillSound
@@ -232,7 +232,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	protected boolean canDrainInfinitely(Fluid fluid) {
 		if (fluid == null)
 			return false;
-		return maxBlocks() != -1 && AllConfigs.SERVER.fluids.bottomlessFluidMode.get()
+		return maxBlocks() != -1 && AllConfigs.server().fluids.bottomlessFluidMode.get()
 			.test(fluid);
 	}
 

@@ -9,11 +9,11 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 public class BasinInventory extends SmartInventory {
 
-	private BasinTileEntity te;
+	private BasinBlockEntity blockEntity;
 
-	public BasinInventory(int slots, BasinTileEntity te) {
-		super(slots, te, 16, true);
-		this.te = te;
+	public BasinInventory(int slots, BasinBlockEntity be) {
+		super(slots, be, 16, true);
+		this.blockEntity = be;
 		this.whenContentsChanged(te::notifyChangeOfContents);
 	}
 
@@ -52,6 +52,6 @@ public class BasinInventory extends SmartInventory {
 	@Override
 	protected void onFinalCommit() {
 		super.onFinalCommit();
-		te.notifyChangeOfContents();
+		blockEntity.notifyChangeOfContents();
 	}
 }

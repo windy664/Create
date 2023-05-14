@@ -25,32 +25,18 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
-		StructureBlockInfo info = contraptionEntity.getContraption()
-			.getBlocks()
-			.get(localPos);
-		if (info == null)
-			return false;
-		MovementContext ctx = null;
-		int index = -1;
-		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraptionEntity.getContraption()
-			.getActors()) {
-			if (info.equals(pair.left)) {
-				ctx = pair.right;
-				index = contraptionEntity.getContraption()
-					.getActors()
-					.indexOf(pair);
-				break;
-			}
-		}
-		if (ctx == null)
+		MutablePair<StructureBlockInfo, MovementContext> actor = contraptionEntity.getContraption()
+			.getActorAt(localPos);
+		if (actor == null || actor.right == null)
 			return false;
 
+		MovementContext ctx = actor.right;
 		ItemStack heldStack = player.getItemInHand(activeHand);
 		if (heldStack.getItem()
 				.equals(AllItems.WRENCH.get())) {
-			DeployerTileEntity.Mode mode = NBTHelper.readEnum(ctx.tileData, "Mode", DeployerTileEntity.Mode.class);
-			NBTHelper.writeEnum(ctx.tileData, "Mode",
-				mode == DeployerTileEntity.Mode.PUNCH ? DeployerTileEntity.Mode.USE : DeployerTileEntity.Mode.PUNCH);
+			DeployerBlockEntity.Mode mode = NBTHelper.readEnum(ctx.blockEntityData, "Mode", DeployerBlockEntity.Mode.class);
+			NBTHelper.writeEnum(ctx.blockEntityData, "Mode",
+				mode == DeployerBlockEntity.Mode.PUNCH ? DeployerBlockEntity.Mode.USE : DeployerBlockEntity.Mode.PUNCH);
 
 		} else {
 			if (ctx.world.isClientSide)
@@ -58,12 +44,13 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			DeployerFakePlayer fake = null;
 
 			if (!(ctx.temporaryData instanceof DeployerFakePlayer) && ctx.world instanceof ServerLevel) {
-				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) ctx.world);
+				UUID owner = ctx.blockEntityData.contains("Owner") ? ctx.blockEntityData.getUUID("Owner") : null;
+				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) ctx.world, owner);
 				deployerFakePlayer.onMinecartContraption = ctx.contraption instanceof MountedContraption;
 				deployerFakePlayer.getInventory()
-					.load(ctx.tileData.getList("Inventory", Tag.TAG_COMPOUND));
+					.load(ctx.blockEntityData.getList("Inventory", Tag.TAG_COMPOUND));
 				ctx.temporaryData = fake = deployerFakePlayer;
-				ctx.tileData.remove("Inventory");
+				ctx.blockEntityData.remove("Inventory");
 			} else
 				fake = (DeployerFakePlayer) ctx.temporaryData;
 
@@ -73,11 +60,11 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			ItemStack deployerItem = fake.getMainHandItem();
 			player.setItemInHand(activeHand, deployerItem.copy());
 			fake.setItemInHand(InteractionHand.MAIN_HAND, heldStack.copy());
-			ctx.tileData.put("HeldItem", NBTSerializer.serializeNBT(heldStack));
+			ctx.blockEntityData.put("HeldItem", NBTSerializer.serializeNBT(heldStack));
 			ctx.data.put("HeldItem", NBTSerializer.serializeNBT(heldStack));
 		}
-		if (index >= 0)
-			setContraptionActorData(contraptionEntity, index, info, ctx);
+//		if (index >= 0)
+//			setContraptionActorData(contraptionEntity, index, info, ctx);
 		return true;
 	}
 }

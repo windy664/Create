@@ -4,16 +4,17 @@ import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.sodium.SodiumCompat;
 import com.simibubi.create.compat.trinkets.Trinkets;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueSelectionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
+import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelRenderer;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.curiosities.armor.AllArmorMaterials;
 import com.simibubi.create.content.curiosities.armor.CopperArmorItem;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.armor.RemainingAirOverlay;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
@@ -21,12 +22,14 @@ import com.simibubi.create.content.curiosities.weapons.PotatoCannonRenderHandler
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
+import com.simibubi.create.content.logistics.trains.track.TrackPlacementOverlay;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.events.ClientEvents;
 import com.simibubi.create.events.InputEvents;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsClient;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -69,6 +72,7 @@ public class CreateClient implements ClientModInitializer {
 	public static final PotatoCannonRenderHandler POTATO_CANNON_RENDER_HANDLER = new PotatoCannonRenderHandler();
 	public static final SoulPulseEffectHandler SOUL_PULSE_EFFECT_HANDLER = new SoulPulseEffectHandler();
 	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
+	public static final ValueSettingsClient VALUE_SETTINGS_HANDLER = new ValueSettingsClient();
 
 	public static final ClientResourceReloadListener RESOURCE_RELOAD_LISTENER = new ClientResourceReloadListener();
 
@@ -86,15 +90,16 @@ public class CreateClient implements ClientModInitializer {
 
 		// clientInit start
 
-		BUFFER_CACHE.registerCompartment(CachedBufferer.GENERIC_TILE);
+		BUFFER_CACHE.registerCompartment(CachedBufferer.GENERIC_BLOCK);
 		BUFFER_CACHE.registerCompartment(CachedBufferer.PARTIAL);
 		BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
-		BUFFER_CACHE.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
+		BUFFER_CACHE.registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
+		BUFFER_CACHE.registerCompartment(WaterWheelRenderer.WATER_WHEEL);
 		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllKeys.register();
-		AllBlockPartials.init();
+		AllPartialModels.init();
 
 		PonderIndex.register();
 		PonderIndex.registerTags();
@@ -119,6 +124,7 @@ public class CreateClient implements ClientModInitializer {
 	}
 
 	private static void registerOverlays() {
+		// TODO PORT 0.5.1
 		// Register overlays in reverse order
 		OverlayRenderCallback.EVENT.register(((stack, partialTicks, window, type) -> {
 			if (type == OverlayRenderCallback.Types.AIR)
@@ -150,7 +156,7 @@ public class CreateClient implements ClientModInitializer {
 		if (mc.options.graphicsMode != GraphicsStatus.FABULOUS)
 			return;
 
-		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
+		if (AllConfigs.client().ignoreFabulousWarning.get())
 			return;
 
 		MutableComponent text = ComponentUtils.wrapInSquareBrackets(Components.literal("WARN"))

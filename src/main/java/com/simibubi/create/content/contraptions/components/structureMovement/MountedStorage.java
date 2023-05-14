@@ -2,11 +2,12 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
-import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultBlockEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -33,41 +34,62 @@ public class MountedStorage {
 	boolean noFuel;
 	boolean valid;
 
-	private BlockEntity te;
+	private BlockEntity blockEntity;
 
-	public static boolean canUseAsStorage(BlockEntity te) {
-		if (te == null)
+	public static boolean canUseAsStorage(BlockEntity be) {
+		if (be == null)
 			return false;
-		if (te instanceof MechanicalCrafterTileEntity)
+		if (be instanceof MechanicalCrafterBlockEntity)
 			return false;
-		if (AllTileEntities.CREATIVE_CRATE.is(te))
+		if (AllBlockEntityTypes.CREATIVE_CRATE.is(be))
 			return true;
-		if (te instanceof ShulkerBoxBlockEntity)
+		if (be instanceof ShulkerBoxBlockEntity)
 			return true;
-		if (te instanceof ChestBlockEntity)
+		if (be instanceof ChestBlockEntity)
 			return true;
-		if (te instanceof BarrelBlockEntity)
+		if (be instanceof BarrelBlockEntity)
 			return true;
-		if (te instanceof ItemVaultTileEntity)
+		if (be instanceof ItemVaultBlockEntity)
 			return true;
 
-		Storage<ItemVariant> handler = TransferUtil.getItemStorage(te);
-		return handler instanceof ItemStackHandler && !(handler instanceof ProcessingInventory);
+		try {
+			Storage<ItemVariant> handler = TransferUtil.getItemStorage(te);
+			if (handler instanceof ItemStackHandler)
+				return !(handler instanceof ProcessingInventory);
+			return canUseModdedInventory(be, handler);
+
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
-	public MountedStorage(BlockEntity te) {
-		this.te = te;
+	public static boolean canUseModdedInventory(BlockEntity be, IItemHandler handler) {
+		if (!(handler instanceof IItemHandlerModifiable validItemHandler))
+			return false;
+		BlockState blockState = be.getBlockState();
+		if (AllBlockTags.CONTRAPTION_INVENTORY_DENY.matches(blockState))
+			return false;
+
+		// There doesn't appear to be much of a standard for tagging chests/barrels
+		String blockId = blockState.getBlock()
+			.getRegistryName()
+			.getPath();
+		return blockId.endsWith("_chest") || blockId.endsWith("_barrel");
+	}
+
+	public MountedStorage(BlockEntity be) {
+		this.blockEntity = be;
 		handler = dummyHandler;
-		noFuel = te instanceof ItemVaultTileEntity;
+		noFuel = be instanceof ItemVaultBlockEntity;
 	}
 
 	public void removeStorageFromWorld() {
 		valid = false;
-		if (te == null)
+		if (blockEntity == null)
 			return;
 
-		if (te instanceof ChestBlockEntity chest) {
-			CompoundTag tag = te.saveWithFullMetadata();
+		if (blockEntity instanceof ChestBlockEntity chest) {
+			CompoundTag tag = blockEntity.saveWithFullMetadata();
 			if (tag.contains("LootTable", 8))
 				return;
 
@@ -79,26 +101,26 @@ public class MountedStorage {
 			return;
 		}
 
-		Storage<ItemVariant> teHandler = TransferUtil.getItemStorage(te);
-		if (teHandler == null)
+		Storage<ItemVariant> beHandler = TransferUtil.getItemStorage(blockEntity);
+		if (beHandler == null)
 			return;
 
 		// multiblock vaults need to provide individual invs
-		if (te instanceof ItemVaultTileEntity) {
-			handler = ((ItemVaultTileEntity) te).getInventoryOfBlock();
+		if (blockEntity instanceof ItemVaultBlockEntity) {
+			handler = ((ItemVaultBlockEntity) blockEntity).getInventoryOfBlock();
 			valid = true;
 			return;
 		}
 
-		// te uses ItemStackHandler
-		if (teHandler instanceof ItemStackHandler) {
-			handler = (ItemStackHandler) teHandler;
+		// be uses ItemStackHandler
+		if (beHandler instanceof ItemStackHandler) {
+			handler = (ItemStackHandler) beHandler;
 			valid = true;
 			return;
 		}
 
 		// serialization not accessible -> fill into a serializable handler
-		if (teHandler instanceof InventoryStorage inv && teHandler.supportsInsertion() && teHandler.supportsExtraction()) {
+		if (beHandler instanceof InventoryStorage inv && teHandler.supportsInsertion() && teHandler.supportsExtraction()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
 				List<SingleSlotStorage<ItemVariant>> slots = inv.getSlots();
 				ItemStack[] stacks = new ItemStack[slots.size()];
@@ -120,7 +142,7 @@ public class MountedStorage {
 		}
 	}
 
-	public void addStorageToWorld(BlockEntity te) {
+	public void addStorageToWorld(BlockEntity be) {
 		// FIXME: More dynamic mounted storage in .4
 		if (handler instanceof BottomlessItemHandler)
 			return;
@@ -133,12 +155,12 @@ public class MountedStorage {
 			return;
 		}
 
-		if (te instanceof ItemVaultTileEntity) {
-			((ItemVaultTileEntity) te).applyInventoryToBlock(handler);
+		if (be instanceof ItemVaultBlockEntity) {
+			((ItemVaultBlockEntity) be).applyInventoryToBlock(handler);
 			return;
 		}
 
-		Storage<ItemVariant> teHandler = TransferUtil.getItemStorage(te);
+		Storage<ItemVariant> teHandler = TransferUtil.getItemStorage(be);
 		if (teHandler != null && teHandler.supportsInsertion()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
 				// we need to remove whatever is in there to fill with our modified contents

@@ -52,7 +52,7 @@ public class CameraAngleCommand {
 		String optionName = (yaw ? SConfigureConfigPacket.Actions.camAngleYawTarget : SConfigureConfigPacket.Actions.camAnglePitchTarget).name();
 
 		getPlayersFromContext(ctx).forEach(player -> {
-			AllPackets.channel.sendToClient(
+			AllPackets.getChannel().sendToClient(
 					new SConfigureConfigPacket(optionName, String.valueOf(angleTarget)), player
 			);
 			targets.incrementAndGet();
@@ -65,7 +65,7 @@ public class CameraAngleCommand {
 		AtomicInteger targets = new AtomicInteger(0);
 
 		getPlayersFromContext(ctx).forEach(player -> {
-			AllPackets.channel.sendToClient(
+			AllPackets.getChannel().sendToClient(
 					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.camAngleFunction.name(), value), player
 			);
 			targets.incrementAndGet();
@@ -78,7 +78,7 @@ public class CameraAngleCommand {
 		AtomicInteger targets = new AtomicInteger(0);
 
 		getPlayersFromContext(ctx).forEach(player -> {
-			AllPackets.channel.sendToClient(
+			AllPackets.getChannel().sendToClient(
 					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.camAngleFunction.name(), value + ":" + speed), player
 			);
 			targets.incrementAndGet();

@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractSelectionListAccessor;
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractWidgetAccessor;
 
@@ -120,7 +121,7 @@ public class ConfigModListScreen extends ConfigScreen {
 				button.updateColorsFromState();
 				button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BaseConfigScreen.DISABLED_RENDERER));
 				labelTooltip.add(Components.literal(toHumanReadable(id)));
-				labelTooltip.addAll(TooltipHelper.cutTextComponent(Components.literal("This Mod does not have any configs registered or is not using a compatible config system"), ChatFormatting.GRAY, ChatFormatting.GRAY));
+				labelTooltip.addAll(TooltipHelper.cutStringTextComponent("This Mod does not have any configs registered or is not using a compatible config system", Palette.ALL_GRAY));
 			}
 
 			listeners.add(button);

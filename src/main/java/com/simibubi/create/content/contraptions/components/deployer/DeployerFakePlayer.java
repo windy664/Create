@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.OptionalInt;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.authlib.GameProfile;
@@ -22,6 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -36,25 +39,22 @@ import net.minecraft.world.phys.Vec3;
 public class DeployerFakePlayer extends FakePlayer {
 
 	private static final Connection NETWORK_MANAGER = new Connection(PacketFlow.CLIENTBOUND);
-	public static final GameProfile DEPLOYER_PROFILE =
-		new GameProfile(UUID.fromString("9e2faded-cafe-4ec2-c314-dad129ae971d"), "Deployer");
+	public static final UUID fallbackID = UUID.fromString("9e2faded-cafe-4ec2-c314-dad129ae971d");
 	Pair<BlockPos, Float> blockBreakingProgress;
 	ItemStack spawnedItemEffects;
 	public boolean placedTracks;
 	public boolean onMinecartContraption;
+	private UUID owner;
 
-	public DeployerFakePlayer(ServerLevel world) {
-		super(world, DEPLOYER_PROFILE);
+	public DeployerFakePlayer(ServerLevel world, @Nullable UUID owner) {
+		super(world, new DeployerGameProfile(fallbackID, "Deployer", owner));
 		// fabric: use the default FakePacketListener
 //		connection = new FakePlayNetHandler(world.getServer(), this);
-	}
-
-	public void setSpawnedItemEffects(ItemStack spawnedItemEffects) {
-		this.spawnedItemEffects = spawnedItemEffects;
+		this.owner = owner;
 	}
 
 	@Override
-	public OptionalInt openMenu(MenuProvider container) {
+	public OptionalInt openMenu(MenuProvider menuProvider) {
 		return OptionalInt.empty();
 	}
 
@@ -88,6 +88,16 @@ public class DeployerFakePlayer extends FakePlayer {
 	public ItemStack eat(Level world, ItemStack stack) {
 		stack.shrink(1);
 		return stack;
+	}
+
+	@Override
+	public boolean canBeAffected(MobEffectInstance pEffectInstance) {
+		return false;
+	}
+
+	@Override
+	public UUID getUUID() {
+		return owner == null ? super.getUUID() : owner;
 	}
 
 	public static float deployerHasEyesOnHisFeet(Entity entity, float height) {
@@ -134,7 +144,7 @@ public class DeployerFakePlayer extends FakePlayer {
 			return;
 		Mob mob = (Mob) entityLiving;
 
-		CKinetics.DeployerAggroSetting setting = AllConfigs.SERVER.kinetics.ignoreDeployerAttacks.get();
+		CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
 
 		switch (setting) {
 		case ALL:
@@ -149,16 +159,49 @@ public class DeployerFakePlayer extends FakePlayer {
 		}
 	}
 
-//	private static class FakePlayNetHandler extends ServerGamePacketListenerImpl {
-//		public FakePlayNetHandler(MinecraftServer server, ServerPlayer playerIn) {
-//			super(server, NETWORK_MANAGER, playerIn);
-//		}
-//
-//		@Override
-//		public void send(Packet<?> packetIn) {}
-//
-//		@Override
-//		public void send(Packet<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) {}
-//	}
+	// Credit to Mekanism for this approach. Helps fake players get past claims and
+	// protection by other mods
+	private static class DeployerGameProfile extends GameProfile {
+
+		private UUID owner;
+
+		public DeployerGameProfile(UUID id, String name, UUID owner) {
+			super(id, name);
+			this.owner = owner;
+		}
+
+		@Override
+		public UUID getId() {
+			return owner == null ? super.getId() : owner;
+		}
+
+		@Override
+		public String getName() {
+			if (owner == null)
+				return super.getName();
+			String lastKnownUsername = UsernameCache.getLastKnownUsername(owner);
+			return lastKnownUsername == null ? super.getName() : lastKnownUsername;
+		}
+
+		@Override
+		public boolean equals(final Object o) {
+			if (this == o)
+				return true;
+			if (!(o instanceof GameProfile otherProfile))
+				return false;
+			return Objects.equals(getId(), otherProfile.getId()) && Objects.equals(getName(), otherProfile.getName());
+		}
+
+		@Override
+		public int hashCode() {
+			UUID id = getId();
+			String name = getName();
+			int result = id == null ? 0 : id.hashCode();
+			result = 31 * result + (name == null ? 0 : name.hashCode());
+			return result;
+		}
+	}
+
+	// fabric: FakePlayNetHandler removed, unused
 
 }

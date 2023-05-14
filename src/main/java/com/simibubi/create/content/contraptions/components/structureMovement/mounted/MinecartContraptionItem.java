@@ -66,10 +66,10 @@ public class MinecartContraptionItem extends Item {
 	public static MinecartContraptionItem chest(Properties builder) {
 		return new MinecartContraptionItem(Type.CHEST, builder);
 	}
-	
+
 	@Override
 	public boolean canFitInsideContainerItems() {
-		return AllConfigs.SERVER.kinetics.minecartContraptionInContainers.get();
+		return AllConfigs.server().kinetics.minecartContraptionInContainers.get();
 	}
 
 	private MinecartContraptionItem(Type minecartTypeIn, Properties builder) {
@@ -205,7 +205,7 @@ public class MinecartContraptionItem extends Item {
 	public static InteractionResult wrenchCanBeUsedToPickUpMinecartContraptions(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
 		if (player == null || entity == null)
 			return InteractionResult.PASS;
-		if (!AllConfigs.SERVER.kinetics.survivalContraptionPickup.get() && !player.isCreative())
+		if (!AllConfigs.server().kinetics.survivalContraptionPickup.get() && !player.isCreative())
 			return InteractionResult.PASS;
 
 		if (player.isSpectator()) // forge checks this, fabric does not

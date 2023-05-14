@@ -4,7 +4,7 @@ import static com.simibubi.create.AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT;
 import static com.simibubi.create.AllBlocks.ANDESITE_ENCASED_SHAFT;
 import static com.simibubi.create.AllBlocks.BRASS_BELT_FUNNEL;
 import static com.simibubi.create.AllBlocks.BRASS_TUNNEL;
-import static com.simibubi.create.AllBlocks.CONTENT_OBSERVER;
+import static com.simibubi.create.AllBlocks.SMART_OBSERVER;
 import static com.simibubi.create.AllBlocks.ENCASED_CHAIN_DRIVE;
 import static com.simibubi.create.AllBlocks.LINEAR_CHASSIS;
 import static com.simibubi.create.AllBlocks.MECHANICAL_DRILL;
@@ -21,9 +21,11 @@ import static com.simibubi.create.AllBlocks.REDSTONE_CONTACT;
 import static com.simibubi.create.AllBlocks.REDSTONE_LINK;
 import static com.simibubi.create.AllBlocks.SECONDARY_LINEAR_CHASSIS;
 import static com.simibubi.create.AllBlocks.SPEEDOMETER;
-import static com.simibubi.create.AllBlocks.STOCKPILE_SWITCH;
+import static com.simibubi.create.AllBlocks.THRESHOLD_SWITCH;
 import static com.simibubi.create.AllBlocks.STRESSOMETER;
 import static com.simibubi.create.AllItems.ATTRIBUTE_FILTER;
+import static com.simibubi.create.AllItems.COPPER_DIVING_BOOTS;
+import static com.simibubi.create.AllItems.COPPER_DIVING_HELMET;
 import static com.simibubi.create.AllItems.CRAFTER_SLOT_COVER;
 import static com.simibubi.create.AllItems.GOLDEN_SHEET;
 import static com.simibubi.create.AllItems.POWDERED_OBSIDIAN;
@@ -51,12 +53,14 @@ import static com.simibubi.create.content.palettes.AllPaletteBlocks.SPRUCE_WINDO
 import java.util.HashMap;
 import java.util.Map;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.Create;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.RegistryEvent;
@@ -74,11 +78,11 @@ public class RemapHelper {
 		reMap.put("encased_shaft", ANDESITE_ENCASED_SHAFT.getId());
 		reMap.put("encased_belt", ENCASED_CHAIN_DRIVE.getId());
 		reMap.put("adjustable_pulley", ADJUSTABLE_CHAIN_GEARSHIFT.getId());
-		reMap.put("stockswitch", STOCKPILE_SWITCH.getId());
+		reMap.put("stockswitch", THRESHOLD_SWITCH.getId());
 		reMap.put("redstone_latch", POWERED_LATCH.getId());
 		reMap.put("contact", REDSTONE_CONTACT.getId());
 		reMap.put("belt_funnel", BRASS_BELT_FUNNEL.getId());
-		reMap.put("entity_detector", CONTENT_OBSERVER.getId());
+		reMap.put("entity_detector", SMART_OBSERVER.getId());
 		reMap.put("saw", MECHANICAL_SAW.getId());
 		reMap.put("flexpulsepeater", PULSE_REPEATER.getId());
 		reMap.put("stress_gauge", STRESSOMETER.getId());
@@ -179,6 +183,8 @@ public class RemapHelper {
 		reMap.put("terrain_zapper", WORLDSHAPER.getId());
 		reMap.put("property_filter", ATTRIBUTE_FILTER.getId());
 		reMap.put("obsidian_dust", POWDERED_OBSIDIAN.getId());
+		reMap.put("diving_helmet", COPPER_DIVING_HELMET.getId());
+		reMap.put("diving_boots", COPPER_DIVING_BOOTS.getId());
 	}
 
 	private static void remapPaletteBlock(String type, String newType, boolean vanilla) {
@@ -271,6 +277,18 @@ public class RemapHelper {
 				mapping.remap(ForgeMod.MILK.get());
 			else if (path.equals("flowing_milk"))
 				mapping.remap(ForgeMod.FLOWING_MILK.get());
+		}
+	}
+
+	@SubscribeEvent
+	public static void remapBlockEntities(RegistryEvent.MissingMappings<BlockEntityType<?>> event) {
+		for (Mapping<BlockEntityType<?>> mapping : event.getMappings(Create.ID)) {
+			ResourceLocation key = mapping.key;
+			String path = key.getPath();
+
+			if (path.equals("copper_backtank")) {
+				mapping.remap(AllBlockEntityTypes.BACKTANK.get());
+			}
 		}
 	}
 

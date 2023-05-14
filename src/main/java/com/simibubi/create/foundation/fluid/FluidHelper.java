@@ -6,9 +6,9 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
-import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankBlockEntity;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
@@ -125,13 +125,13 @@ public class FluidHelper {
 	}
 
 	public static boolean tryEmptyItemIntoTE(Level worldIn, Player player, InteractionHand handIn, ItemStack heldItem,
-		SmartTileEntity te, Direction side) {
+		SmartBlockEntity be, Direction side) {
 		if (!EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))
 			return false;
 
 		Pair<FluidStack, ItemStack> emptyingResult = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
 
-		Storage<FluidVariant> tank = TransferUtil.getFluidStorage(worldIn, te.getBlockPos(), te, side);
+		Storage<FluidVariant> tank = TransferUtil.getFluidStorage(worldIn, be.getBlockPos(), be, side);
 		FluidStack fluidStack = emptyingResult.getFirst();
 
 		if (tank == null)
@@ -148,7 +148,7 @@ public class FluidHelper {
 			emptyingResult = EmptyingByBasin.emptyItem(worldIn, copyOfHeld, false);
 			t.commit();
 
-			if (!player.isCreative() && !(te instanceof CreativeFluidTankTileEntity)) {
+			if (!player.isCreative() && !(be instanceof CreativeFluidTankBlockEntity)) {
 				if (copyOfHeld.isEmpty())
 					player.setItemInHand(handIn, emptyingResult.getSecond());
 				else {
@@ -161,11 +161,11 @@ public class FluidHelper {
 	}
 
 	public static boolean tryFillItemFromTE(Level world, Player player, InteractionHand handIn, ItemStack heldItem,
-		SmartTileEntity te, Direction side) {
+		SmartBlockEntity be, Direction side) {
 		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
 			return false;
 
-		Storage<FluidVariant> tank = TransferUtil.getFluidStorage(world, te.getBlockPos(), te, side);
+		Storage<FluidVariant> tank = TransferUtil.getFluidStorage(world, be.getBlockPos(), be, side);
 
 		if (tank == null)
 			return false;
@@ -183,7 +183,7 @@ public class FluidHelper {
 				if (world.isClientSide)
 					return true;
 
-				if (player.isCreative() || te instanceof CreativeFluidTankTileEntity)
+				if (player.isCreative() || be instanceof CreativeFluidTankBlockEntity)
 					heldItem = heldItem.copy();
 				ItemStack out = GenericItemFilling.fillItem(world, requiredAmountForItem, heldItem, fluid.copy());
 
@@ -194,7 +194,7 @@ public class FluidHelper {
 
 				if (!player.isCreative())
 					player.getInventory().placeItemBackInInventory(out);
-				te.notifyUpdate();
+				be.notifyUpdate();
 				return true;
 			}
 		}

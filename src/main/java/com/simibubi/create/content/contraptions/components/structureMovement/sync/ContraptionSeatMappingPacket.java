@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.sy
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -51,9 +50,8 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
 				Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
 				if (!(entityByID instanceof AbstractContraptionEntity))
 					return;
@@ -72,8 +70,7 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 				contraptionEntity.getContraption()
 					.setSeatMapping(mapping);
 			});
-		context.get()
-			.setPacketHandled(true);
+		return true;
 	}
 
 }

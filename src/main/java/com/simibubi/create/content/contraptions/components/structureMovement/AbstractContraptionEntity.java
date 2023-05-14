@@ -23,6 +23,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsStopControllingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
@@ -131,7 +132,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	}
 
 	public boolean supportsTerrainCollision() {
-		return contraption instanceof TranslatingContraption;
+		return contraption instanceof TranslatingContraption && !(contraption instanceof ElevatorContraption);
 	}
 
 	protected void contraptionInitialize() {
@@ -166,7 +167,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			return;
 		contraption.getSeatMapping()
 			.put(passenger.getUUID(), seatIndex);
-		AllPackets.channel.sendToClientsTracking(
+		AllPackets.getChannel().sendToClientsTracking(
 			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()), this);
 	}
 
@@ -183,7 +184,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 				.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
 		contraption.getSeatMapping()
 			.remove(passenger.getUUID());
-		AllPackets.channel.sendToClientsTracking(
+		AllPackets.getChannel().sendToClientsTracking(
 			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping(), passenger.getId()), this);
 	}
 
@@ -273,7 +274,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	public void stopControlling(BlockPos controlsLocalPos) {
 		getControllingPlayer().map(level::getPlayerByUUID)
 			.map(p -> (p instanceof ServerPlayer) ? ((ServerPlayer) p) : null)
-			.ifPresent(p -> AllPackets.channel.sendToClient(new ControlsStopControllingPacket(),
+			.ifPresent(p -> AllPackets.getChannel().sendToClient(new ControlsStopControllingPacket(),
 				p));
 		setControllingPlayer(null);
 	}
@@ -282,9 +283,12 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		InteractionHand interactionHand) {
 		int indexOfSeat = contraption.getSeats()
 			.indexOf(localPos);
-		if (indexOfSeat == -1 || AllItems.WRENCH.isIn(player.getItemInHand(interactionHand)))
-			return contraption.interactors.containsKey(localPos) && contraption.interactors.get(localPos)
-				.handlePlayerInteraction(player, interactionHand, localPos, this);
+		if (indexOfSeat == -1 || AllItems.WRENCH.isIn(player.getItemInHand(interactionHand))) {
+			if (contraption.interactors.containsKey(localPos))
+				return contraption.interactors.get(localPos)
+					.handlePlayerInteraction(player, interactionHand, localPos, this);
+			return contraption.storage.handlePlayerStorageInteraction(contraption, player, localPos);
+		}
 		if (player.isPassenger())
 			return false;
 
@@ -416,7 +420,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
 		contraption.blocks.put(localPos, newInfo);
-		AllPackets.channel.sendToClientsTracking(new ContraptionBlockChangedPacket(getId(), localPos, newInfo.state), this);
+		AllPackets.getChannel().sendToClientsTracking(new ContraptionBlockChangedPacket(getId(), localPos, newInfo.state), this);
 	}
 
 	protected abstract void tickContraption();
@@ -449,7 +453,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 			context.rotation = v -> applyRotation(v, 1);
 			context.position = actorPosition;
-			if (!isActorActive(context, actor))
+			if (!isActorActive(context, actor) && !actor.mustTickWhileDisabled())
 				continue;
 			if (newPosVisited && !context.stall) {
 				actor.visitNewPosition(context, gridPosition);
@@ -511,7 +515,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	}
 
 	protected void onContraptionStalled() {
-		AllPackets.channel.sendToClientsTracking(
+		AllPackets.getChannel().sendToClientsTracking(
 			new ContraptionStallPacket(getId(), getX(), getY(), getZ(), getStalledAngle()), this);
 	}
 
@@ -652,7 +656,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		StructureTransform transform = makeStructureTransform();
 
 		contraption.stop(level);
-		AllPackets.channel.sendToClientsTracking(
+		AllPackets.getChannel().sendToClientsTracking(
 			new ContraptionDisassemblyPacket(this.getId(), transform), this);
 
 		contraption.addBlocksToWorld(level, transform);

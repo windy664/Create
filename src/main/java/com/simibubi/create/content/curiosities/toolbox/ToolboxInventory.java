@@ -25,13 +25,13 @@ public class ToolboxInventory extends ItemStackHandler {
 	public static final int STACKS_PER_COMPARTMENT = 4;
 	List<ItemStack> filters;
 	boolean settling;
-	private ToolboxTileEntity te;
+	private ToolboxBlockEntity blockEntity;
 
 	private boolean limitedMode;
 
-	public ToolboxInventory(ToolboxTileEntity te) {
+	public ToolboxInventory(ToolboxBlockEntity be) {
 		super(8 * STACKS_PER_COMPARTMENT);
-		this.te = te;
+		this.blockEntity = be;
 		limitedMode = false;
 		filters = new ArrayList<>();
 		settling = false;
@@ -88,7 +88,7 @@ public class ToolboxInventory extends ItemStackHandler {
 			}
 		}
 		settling = false;
-		te.sendData();
+		blockEntity.sendData();
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class ToolboxInventory extends ItemStackHandler {
 		if (!stack.isEmpty() && filters.get(compartment)
 				.isEmpty()) {
 			filters.set(compartment, ItemHandlerHelper.copyStackWithSize(stack, 1));
-			if (ctx != null) TransactionCallback.onSuccess(ctx, te::sendData);
+			if (ctx != null) TransactionCallback.onSuccess(ctx, blockEntity::sendData);
 			else te.sendData();
 		}
 	}
@@ -145,10 +145,10 @@ public class ToolboxInventory extends ItemStackHandler {
 
 	@Override
 	protected void onContentsChanged(int slot) {
-		if (!settling && !te.getLevel().isClientSide)
+		if (!settling && !blockEntity.getLevel().isClientSide)
 			settle(slot / STACKS_PER_COMPARTMENT);
-		te.sendData();
-		te.setChanged();
+		blockEntity.sendData();
+		blockEntity.setChanged();
 		super.onContentsChanged(slot);
 	}
 

@@ -20,7 +20,7 @@ public class OverlayConfigCommand {
 						EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayReset.performAction(""));
 
 						EnvExecutor.runWhenOn(EnvType.SERVER, () -> () ->
-								AllPackets.channel.sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), ""),
+								AllPackets.getChannel().sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), ""),
 										(ServerPlayer) ctx.getSource().getEntity()));
 
 					ctx.getSource()
@@ -33,7 +33,7 @@ public class OverlayConfigCommand {
 					EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayScreen.performAction(""));
 
 					EnvExecutor.runWhenOn(EnvType.SERVER, () -> () ->
-							AllPackets.channel.sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), ""),
+							AllPackets.getChannel().sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), ""),
 									(ServerPlayer) ctx.getSource().getEntity()));
 
 					ctx.getSource()

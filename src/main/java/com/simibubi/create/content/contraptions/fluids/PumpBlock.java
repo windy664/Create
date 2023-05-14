@@ -2,12 +2,12 @@ package com.simibubi.create.content.contraptions.fluids;
 
 import java.util.Random;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -32,12 +32,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
 public class PumpBlock extends DirectionalKineticBlock
-	implements SimpleWaterloggedBlock, ICogWheel, ITE<PumpTileEntity> {
+	implements SimpleWaterloggedBlock, ICogWheel, IBE<PumpBlockEntity> {
 
 	public PumpBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
@@ -107,20 +108,33 @@ public class PumpBlock extends DirectionalKineticBlock
 		Player player = context.getPlayer();
 		toPlace = ProperWaterloggedBlock.withWater(level, toPlace, pos);
 
-		if (player != null && player.isSteppingCarefully())
-			return toPlace;
+		Direction nearestLookingDirection = context.getNearestLookingDirection();
+		Direction targetDirection = context.getPlayer() != null && context.getPlayer()
+			.isShiftKeyDown() ? nearestLookingDirection : nearestLookingDirection.getOpposite();
+		Direction bestConnectedDirection = null;
+		double bestDistance = Double.MAX_VALUE;
 
 		for (Direction d : Iterate.directions) {
 			BlockPos adjPos = pos.relative(d);
 			BlockState adjState = level.getBlockState(adjPos);
 			if (!FluidPipeBlock.canConnectTo(level, adjPos, adjState, d))
 				continue;
-			toPlace = toPlace.setValue(FACING, d);
-			if (context.getClickedFace() == d.getOpposite())
-				break;
+			double distance = Vec3.atLowerCornerOf(d.getNormal())
+				.distanceTo(Vec3.atLowerCornerOf(targetDirection.getNormal()));
+			if (distance > bestDistance)
+				continue;
+			bestDistance = distance;
+			bestConnectedDirection = d;
 		}
 
-		return toPlace;
+		if (bestConnectedDirection == null)
+			return toPlace;
+		if (bestConnectedDirection.getAxis() == targetDirection.getAxis())
+			return toPlace;
+		if (player.isSteppingCarefully() && bestConnectedDirection.getAxis() != targetDirection.getAxis())
+			return toPlace;
+
+		return toPlace.setValue(FACING, bestConnectedDirection);
 	}
 
 	public static boolean isPump(BlockState state) {
@@ -137,10 +151,10 @@ public class PumpBlock extends DirectionalKineticBlock
 
 		if (isPump(state) && isPump(oldState) && state.getValue(FACING) == oldState.getValue(FACING)
 			.getOpposite()) {
-			BlockEntity tileEntity = world.getBlockEntity(pos);
-			if (!(tileEntity instanceof PumpTileEntity))
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			if (!(blockEntity instanceof PumpBlockEntity))
 				return;
-			PumpTileEntity pump = (PumpTileEntity) tileEntity;
+			PumpBlockEntity pump = (PumpBlockEntity) blockEntity;
 			pump.pressureUpdate = true;
 		}
 	}
@@ -169,13 +183,13 @@ public class PumpBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public Class<PumpTileEntity> getTileEntityClass() {
-		return PumpTileEntity.class;
+	public Class<PumpBlockEntity> getBlockEntityClass() {
+		return PumpBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends PumpTileEntity> getTileEntityType() {
-		return AllTileEntities.MECHANICAL_PUMP.get();
+	public BlockEntityType<? extends PumpBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.MECHANICAL_PUMP.get();
 	}
 
 }

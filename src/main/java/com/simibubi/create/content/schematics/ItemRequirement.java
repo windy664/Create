@@ -1,7 +1,6 @@
 package com.simibubi.create.content.schematics;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,26 +50,28 @@ public class ItemRequirement {
 	}
 
 	public ItemRequirement(ItemUseType usage, List<ItemStack> requiredItems) {
-		this(requiredItems.stream().map(req -> new StackRequirement(req, usage)).collect(Collectors.toList()));
+		this(requiredItems.stream()
+			.map(req -> new StackRequirement(req, usage))
+			.collect(Collectors.toList()));
 	}
 
-	public static ItemRequirement of(BlockState state, BlockEntity te) {
+	public static ItemRequirement of(BlockState state, BlockEntity be) {
 		Block block = state.getBlock();
 
 		ItemRequirement requirement;
 		if (block instanceof ISpecialBlockItemRequirement specialBlock) {
-			requirement = specialBlock.getRequiredItems(state, te);
+			requirement = specialBlock.getRequiredItems(state, be);
 		} else {
-			requirement = defaultOf(state, te);
+			requirement = defaultOf(state, be);
 		}
 
-		if (te instanceof ISpecialBlockEntityItemRequirement specialBE)
+		if (be instanceof ISpecialBlockEntityItemRequirement specialBE)
 			requirement = requirement.union(specialBE.getRequiredItems(state));
 
 		return requirement;
 	}
 
-	private static ItemRequirement defaultOf(BlockState state, BlockEntity te) {
+	private static ItemRequirement defaultOf(BlockState state, BlockEntity be) {
 		Block block = state.getBlock();
 		if (block == Blocks.AIR)
 			return NONE;
@@ -80,17 +81,21 @@ public class ItemRequirement {
 			return INVALID;
 
 		// double slab needs two items
-		if (state.hasProperty(BlockStateProperties.SLAB_TYPE) && state.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE)
+		if (state.hasProperty(BlockStateProperties.SLAB_TYPE)
+			&& state.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE)
 			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, 2));
 		if (block instanceof TurtleEggBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, state.getValue(TurtleEggBlock.EGGS).intValue()));
+			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, state.getValue(TurtleEggBlock.EGGS)
+				.intValue()));
 		if (block instanceof SeaPickleBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, state.getValue(SeaPickleBlock.PICKLES).intValue()));
+			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, state.getValue(SeaPickleBlock.PICKLES)
+				.intValue()));
 		if (block instanceof SnowLayerBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, state.getValue(SnowLayerBlock.LAYERS).intValue()));
+			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, state.getValue(SnowLayerBlock.LAYERS)
+				.intValue()));
 		if (block instanceof FarmBlock || block instanceof DirtPathBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, Items.DIRT);
-		if (block instanceof AbstractBannerBlock && te instanceof BannerBlockEntity bannerBE)
+		if (block instanceof AbstractBannerBlock && be instanceof BannerBlockEntity bannerBE)
 			return new ItemRequirement(new StrictNbtStackRequirement(bannerBE.getItem(), ItemUseType.CONSUME));
 
 		return new ItemRequirement(ItemUseType.CONSUME, item);
@@ -102,22 +107,20 @@ public class ItemRequirement {
 
 		if (entity instanceof ItemFrame itemFrame) {
 			ItemStack frame = new ItemStack(Items.ITEM_FRAME);
-			ItemStack displayedItem = itemFrame.getItem();
+			ItemStack displayedItem = NBTProcessors.withUnsafeNBTDiscarded(itemFrame.getItem());
 			if (displayedItem.isEmpty())
 				return new ItemRequirement(ItemUseType.CONSUME, Items.ITEM_FRAME);
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(frame, displayedItem));
+			return new ItemRequirement(List.of(new ItemRequirement.StackRequirement(frame, ItemUseType.CONSUME),
+				new ItemRequirement.StrictNbtStackRequirement(displayedItem, ItemUseType.CONSUME)));
 		}
 
 		if (entity instanceof ArmorStand armorStand) {
-			List<ItemStack> requirements = new ArrayList<>();
-			requirements.add(new ItemStack(Items.ARMOR_STAND));
-			armorStand.getAllSlots().forEach(requirements::add);
-			return new ItemRequirement(ItemUseType.CONSUME, requirements);
-		}
-
-		ItemStack pickedStack = entity.getPickResult();
-		if (pickedStack != null) {
-			return new ItemRequirement(ItemUseType.CONSUME, pickedStack);
+			List<StackRequirement> requirements = new ArrayList<>();
+			requirements.add(new StackRequirement(new ItemStack(Items.ARMOR_STAND), ItemUseType.CONSUME));
+			armorStand.getAllSlots()
+				.forEach(s -> requirements
+					.add(new StrictNbtStackRequirement(NBTProcessors.withUnsafeNBTDiscarded(s), ItemUseType.CONSUME)));
+			return new ItemRequirement(requirements);
 		}
 
 		return INVALID;
@@ -143,9 +146,8 @@ public class ItemRequirement {
 		if (other.isEmpty())
 			return this;
 
-		return new ItemRequirement(
-				Stream.concat(requiredItems.stream(), other.requiredItems.stream()).collect(Collectors.toList())
-		);
+		return new ItemRequirement(Stream.concat(requiredItems.stream(), other.requiredItems.stream())
+			.collect(Collectors.toList()));
 	}
 
 	public enum ItemUseType {

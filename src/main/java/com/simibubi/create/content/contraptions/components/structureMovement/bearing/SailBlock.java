@@ -88,9 +88,13 @@ public class SailBlock extends WrenchableDirectionalBlock implements BlockPickIn
 		ItemStack heldItem = player.getItemInHand(hand);
 
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
-		if (placementHelper.matchesItem(heldItem))
-			return placementHelper.getOffset(player, world, state, pos, ray)
-				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+		if (!player.isShiftKeyDown() && player.mayBuild()) {
+			if (placementHelper.matchesItem(heldItem)) {
+				placementHelper.getOffset(player, world, state, pos, ray)
+					.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+				return InteractionResult.SUCCESS;
+			}
+		}
 
 		if (heldItem.getItem() instanceof ShearsItem) {
 			if (!world.isClientSide)
@@ -126,7 +130,8 @@ public class SailBlock extends WrenchableDirectionalBlock implements BlockPickIn
 		}
 
 		// Dye all adjacent
-		List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, hit, state.getValue(FACING).getAxis());
+		List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, hit, state.getValue(FACING)
+			.getAxis());
 		for (Direction d : directions) {
 			BlockPos offset = pos.relative(d);
 			BlockState adjacentState = world.getBlockState(offset);
@@ -189,7 +194,8 @@ public class SailBlock extends WrenchableDirectionalBlock implements BlockPickIn
 	}
 
 	@Override
-	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
+	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos,
+		@Nullable Player player, @Nullable HitResult result) {
 		ItemStack pickBlock = new ItemStack(this);
 		if (pickBlock.isEmpty())
 			return AllBlocks.SAIL.get()

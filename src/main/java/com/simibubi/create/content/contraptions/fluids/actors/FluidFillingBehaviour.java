@@ -9,10 +9,10 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -77,8 +77,8 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 	record Data(Set<BlockPos> visited, SortedArraySet<BlockPosEntry> queue, boolean counterpartActed) {
 	}
 
-	public FluidFillingBehaviour(SmartTileEntity te) {
-		super(te);
+	public FluidFillingBehaviour(SmartBlockEntity be) {
+		super(be);
 		queue = SortedArraySet.create((p, p2) -> -comparePositions(p, p2));
 		revalidateIn = 1;
 		infinityCheckFrontier = new ArrayList<>();
@@ -115,7 +115,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 			if (!infinite) {
 				reset(null);
 				infinite = true;
-				tileEntity.sendData();
+				blockEntity.sendData();
 			}
 			infinityCheckFrontier.clear();
 			setLongValidationTimer();
@@ -166,7 +166,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		int maxBlocks = maxBlocks();
 		boolean evaporate = world.dimensionType()
 			.ultraWarm() && FluidHelper.isTag(fluid, FluidTags.WATER);
-		boolean canPlaceSources = AllConfigs.SERVER.fluids.placeFluidSourceBlocks.get();
+		boolean canPlaceSources = AllConfigs.server().fluids.placeFluidSourceBlocks.get();
 
 		if ((!fillInfinite() && infinite) || evaporate || !canPlaceSources) {
 			FluidState fluidState = world.getFluidState(rootPos);
@@ -184,7 +184,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 					world.playSound(null, i, j, k, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
 							2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 				} else if (!canPlaceSources)
-					tileEntity.award(AllAdvancements.HOSE_PULLEY);
+					blockEntity.award(AllAdvancements.HOSE_PULLEY);
 			});
 			return true;
 		}
@@ -237,13 +237,13 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				}.updateSnapshots(ctx);
 
 				if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && fluid.isSame(Fluids.WATER)) {
-					if (!tileEntity.isVirtual())
+					if (!blockEntity.isVirtual())
 						world.setBlock(currentPos,
 								updatePostWaterlogging(blockState.setValue(BlockStateProperties.WATERLOGGED, true)),
 								2 | 16);
 				} else {
 					replaceBlock(world, currentPos, blockState, blockState.hasBlockEntity() ? world.getBlockEntity(currentPos) : null, ctx);
-					if (!tileEntity.isVirtual())
+					if (!blockEntity.isVirtual())
 						world.setBlock(currentPos, FluidHelper.convertToStill(fluid)
 								.defaultFluidState()
 								.createLegacyBlock(), 2 | 16);
@@ -270,7 +270,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		if (success)
-			TransactionCallback.onSuccess(ctx, () -> tileEntity.award(AllAdvancements.HOSE_PULLEY));
+			TransactionCallback.onSuccess(ctx, () -> blockEntity.award(AllAdvancements.HOSE_PULLEY));
 		return success;
 	}
 
@@ -280,7 +280,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		queue.add(new BlockPosEntry(root, 0));
 		infinite = false;
 		setValidationTimer();
-		tileEntity.sendData();
+		blockEntity.sendData();
 	}
 
 	enum SpaceType {
@@ -309,9 +309,10 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		return canBeReplacedByFluid(world, pos, blockState) ? SpaceType.FILLABLE : SpaceType.BLOCKING;
 	}
 
-	protected void replaceBlock(Level world, BlockPos pos, BlockState state, BlockEntity tileentity, TransactionContext ctx) {
+	protected void replaceBlock(Level world, BlockPos pos, BlockState state, TransactionContext ctx) {
+		BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
 		TransactionCallback.onSuccess(ctx, () -> {
-			Block.dropResources(state, world, pos, tileentity);
+			Block.dropResources(state, world, pos, blockEntity);
 		});
 	}
 

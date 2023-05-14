@@ -32,7 +32,7 @@ public class TrackGraphSync {
 			for (TrackGraphPacket packet : queuedPackets) {
 				if (!packet.packetDeletesGraph && !Create.RAILWAYS.trackNetworks.containsKey(packet.graphId))
 					continue;
-				AllPackets.channel.sendToClientsInCurrentServer(packet);
+				AllPackets.getChannel().sendToClientsInCurrentServer(packet);
 				rollCallIn = 3;
 			}
 
@@ -59,7 +59,7 @@ public class TrackGraphSync {
 	public void edgeAdded(TrackGraph graph, TrackNode node1, TrackNode node2, TrackEdge edge) {
 		flushGraphPacket(graph);
 		currentGraphSyncPacket.addedEdges
-			.add(Pair.of(Couple.create(node1.getNetId(), node2.getNetId()), edge.getTurn()));
+			.add(Pair.of(Pair.of(Couple.create(node1.getNetId(), node2.getNetId()), edge.getTrackMaterial()), edge.getTurn()));
 		currentPayload++;
 	}
 
@@ -81,7 +81,7 @@ public class TrackGraphSync {
 		if (currentGraphSyncPacket.addedNodes.remove(nodeId) == null)
 			currentGraphSyncPacket.removedNodes.add(nodeId);
 		currentGraphSyncPacket.addedEdges.removeIf(pair -> {
-			Couple<Integer> ids = pair.getFirst();
+			Couple<Integer> ids = pair.getFirst().getFirst();
 			return ids.getFirst()
 				.intValue() == nodeId
 				|| ids.getSecond()
@@ -105,15 +105,15 @@ public class TrackGraphSync {
 	//
 
 	public void sendEdgeGroups(List<UUID> ids, List<EdgeGroupColor> colors, ServerPlayer player) {
-		AllPackets.channel.sendToClient(new SignalEdgeGroupPacket(ids, colors, true), player);
+		AllPackets.getChannel().sendToClient(new SignalEdgeGroupPacket(ids, colors, true), player);
 	}
 
 	public void edgeGroupCreated(UUID id, EdgeGroupColor color) {
-		AllPackets.channel.sendToClientsInCurrentServer(new SignalEdgeGroupPacket(id, color));
+		AllPackets.getChannel().sendToClientsInCurrentServer(new SignalEdgeGroupPacket(id, color));
 	}
 
 	public void edgeGroupRemoved(UUID id) {
-		AllPackets.channel.sendToClientsInCurrentServer(
+		AllPackets.getChannel().sendToClientsInCurrentServer(
 			new SignalEdgeGroupPacket(ImmutableList.of(id), Collections.emptyList(), false));
 	}
 
@@ -154,7 +154,7 @@ public class TrackGraphSync {
 			graph.connectionsByNode.get(node)
 				.forEach((node2, edge) -> {
 					Couple<Integer> key = Couple.create(node.getNetId(), node2.getNetId());
-					currentPacket.addedEdges.add(Pair.of(key, edge.getTurn()));
+					currentPacket.addedEdges.add(Pair.of(Pair.of(key, edge.getTrackMaterial()), edge.getTurn()));
 					currentPacket.syncEdgeData(node, node2, edge);
 				});
 
@@ -182,11 +182,11 @@ public class TrackGraphSync {
 	}
 
 	private void sendRollCall() {
-		AllPackets.channel.sendToClientsInCurrentServer(new TrackGraphRollCallPacket());
+		AllPackets.getChannel().sendToClientsInCurrentServer(new TrackGraphRollCallPacket());
 	}
 
 	private TrackGraphSyncPacket flushAndCreateNew(TrackGraph graph, ServerPlayer player, TrackGraphSyncPacket packet) {
-		AllPackets.channel.sendToClient(packet, player);
+		AllPackets.getChannel().sendToClient(packet, player);
 		packet = new TrackGraphSyncPacket(graph.id, graph.netId);
 		return packet;
 	}

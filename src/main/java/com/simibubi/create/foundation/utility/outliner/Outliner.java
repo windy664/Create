@@ -7,13 +7,14 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.outliner.LineOutline.EndChasingLineOutline;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -81,6 +82,13 @@ public class Outliner {
 
 	//
 
+	public OutlineParams showItem(Object slot, Vec3 pos, ItemStack stack) {
+		ItemOutline outline = new ItemOutline(pos, stack);
+		OutlineEntry entry = new OutlineEntry(outline);
+		outlines.put(slot, entry);
+		return entry.getOutline().getParams();
+	}
+
 	public void keep(Object slot) {
 		if (outlines.containsKey(slot))
 			outlines.get(slot).ticksTillRemoval = 1;
@@ -139,7 +147,7 @@ public class Outliner {
 		}
 	}
 
-	public void renderOutlines(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
+	public void renderOutlines(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, float pt) {
 		outlines.forEach((key, entry) -> {
 			Outline outline = entry.getOutline();
 			OutlineParams params = outline.getParams();
@@ -155,7 +163,7 @@ public class Outliner {
 				if (params.alpha < 1 / 8f)
 					return;
 			}
-			outline.render(ms, buffer, pt);
+			outline.render(ms, buffer, camera, pt);
 		});
 	}
 

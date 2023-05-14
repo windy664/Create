@@ -34,6 +34,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -58,6 +59,7 @@ public class OpenEndedPipe extends FlowSource {
 		registerEffectHandler(new MilkEffectHandler());
 		registerEffectHandler(new WaterEffectHandler());
 		registerEffectHandler(new LavaEffectHandler());
+		registerEffectHandler(new TeaEffectHandler());
 	}
 
 	private Level world;
@@ -124,9 +126,9 @@ public class OpenEndedPipe extends FlowSource {
 		return compound;
 	}
 
-	public static OpenEndedPipe fromNBT(CompoundTag compound, BlockPos tilePos) {
+	public static OpenEndedPipe fromNBT(CompoundTag compound, BlockPos blockEntityPos) {
 		BlockFace fromNBT = BlockFace.fromNBT(compound.getCompound("Location"));
-		OpenEndedPipe oep = new OpenEndedPipe(new BlockFace(tilePos, fromNBT.getFace()));
+		OpenEndedPipe oep = new OpenEndedPipe(new BlockFace(blockEntityPos, fromNBT.getFace()));
 		oep.fluidHandler.readFromNBT(compound);
 		oep.wasPulling = compound.getBoolean("Pulling");
 		return oep;
@@ -220,7 +222,7 @@ public class OpenEndedPipe extends FlowSource {
 			return true;
 		}
 
-		if (!AllConfigs.SERVER.fluids.placeFluidSourceBlocks.get())
+		if (!AllConfigs.server().fluids.placeFluidSourceBlocks.get())
 			return true;
 
 		world.setBlock(outputPos, fluid.getFluid()
@@ -454,6 +456,25 @@ public class OpenEndedPipe extends FlowSource {
 			List<Entity> entities = world.getEntities((Entity) null, pipe.getAOE(), entity -> !entity.fireImmune());
 			for (Entity entity : entities)
 				entity.setSecondsOnFire(3);
+		}
+	}
+
+	public static class TeaEffectHandler implements IEffectHandler {
+		@Override
+		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
+			return fluid.getFluid().isSame(AllFluids.TEA.get());
+		}
+
+		@Override
+		public void applyEffects(OpenEndedPipe pipe, FluidStack fluid) {
+			Level world = pipe.getWorld();
+			if (world.getGameTime() % 5 != 0)
+				return;
+			List<LivingEntity> entities = world
+					.getEntitiesOfClass(LivingEntity.class, pipe.getAOE(), LivingEntity::isAffectedByPotions);
+			for (LivingEntity entity : entities) {
+					entity.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 21, 0, false, false, false));
+			}
 		}
 	}
 

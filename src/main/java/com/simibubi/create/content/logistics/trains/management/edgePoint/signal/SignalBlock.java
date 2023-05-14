@@ -4,9 +4,9 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Lang;
 
 import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
-public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrenchable, WeakPowerCheckingBlock {
+public class SignalBlock extends Block implements IBE<SignalBlockEntity>, IWrenchable, WeakPowerCheckingBlock {
 
 	public static final EnumProperty<SignalType> TYPE = EnumProperty.create("type", SignalType.class);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -50,8 +50,8 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 	}
 
 	@Override
-	public Class<SignalTileEntity> getTileEntityClass() {
-		return SignalTileEntity.class;
+	public Class<SignalBlockEntity> getBlockEntityClass() {
+		return SignalBlockEntity.class;
 	}
 
 	@Override
@@ -92,15 +92,15 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 		if (pState.getValue(POWERED) && !pLevel.hasNeighborSignal(pPos))
 			pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
 	}
-	
+
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		ITE.onRemove(state, worldIn, pos, newState);
+		IBE.onRemove(state, worldIn, pos, newState);
 	}
 
 	@Override
-	public BlockEntityType<? extends SignalTileEntity> getTileEntityType() {
-		return AllTileEntities.TRACK_SIGNAL.get();
+	public BlockEntityType<? extends SignalBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.TRACK_SIGNAL.get();
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 		BlockPos pos = context.getClickedPos();
 		if (level.isClientSide)
 			return InteractionResult.SUCCESS;
-		withTileEntityDo(level, pos, ste -> {
+		withBlockEntityDo(level, pos, ste -> {
 			SignalBoundary signal = ste.getSignal();
 			Player player = context.getPlayer();
 			if (signal != null) {
@@ -130,7 +130,7 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 
 	@Override
 	public int getAnalogOutputSignal(BlockState pState, Level blockAccess, BlockPos pPos) {
-		return getTileEntityOptional(blockAccess, pPos).filter(SignalTileEntity::isPowered)
+		return getBlockEntityOptional(blockAccess, pPos).filter(SignalBlockEntity::isPowered)
 			.map($ -> 15)
 			.orElse(0);
 	}

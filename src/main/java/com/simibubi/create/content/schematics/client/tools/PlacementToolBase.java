@@ -16,8 +16,8 @@ public abstract class PlacementToolBase extends SchematicToolBase {
 	}
 
 	@Override
-	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer) {
-		super.renderTool(ms, buffer);
+	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {
+		super.renderTool(ms, buffer, camera);
 	}
 
 	@Override

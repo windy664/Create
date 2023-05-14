@@ -206,7 +206,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		carriage.forEachPresentEntity(cce -> {
 			cce.contraption.getBlocks()
 				.put(localPos, newInfo);
-			AllPackets.channel.sendToClientsTracking(
+			AllPackets.getChannel().sendToClientsTracking(
 				new ContraptionBlockChangedPacket(cce.getId(), localPos, newInfo.state), cce);
 		});
 	}
@@ -568,7 +568,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 				.equals(initialOrientation);
 
 		if (hudPacketCooldown-- <= 0 && player instanceof ServerPlayer sp) {
-			AllPackets.channel.sendToClient(new TrainHUDUpdatePacket(carriage.train), sp);
+			AllPackets.getChannel().sendToClient(new TrainHUDUpdatePacket(carriage.train), sp);
 			hudPacketCooldown = 5;
 		}
 
@@ -659,7 +659,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		carriage.train.manualSteer =
 			targetSteer < 0 ? SteerDirection.RIGHT : targetSteer > 0 ? SteerDirection.LEFT : SteerDirection.NONE;
 
-		double topSpeed = carriage.train.maxSpeed() * AllConfigs.SERVER.trains.manualTrainSpeedModifier.getF();
+		double topSpeed = carriage.train.maxSpeed() * AllConfigs.server().trains.manualTrainSpeedModifier.getF();
 		double cappedTopSpeed = topSpeed * carriage.train.throttle;
 
 		if (carriage.getLeadingPoint().edge != null && carriage.getLeadingPoint().edge.isTurn()
@@ -682,7 +682,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	private void sendPrompt(Player player, MutableComponent component, boolean shadow) {
 		if (player instanceof ServerPlayer sp)
-			AllPackets.channel.sendToClient(new TrainPromptPacket(component, shadow), sp);
+			AllPackets.getChannel().sendToClient(new TrainPromptPacket(component, shadow), sp);
 	}
 
 	boolean stationMessage = false;

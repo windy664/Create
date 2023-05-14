@@ -36,9 +36,9 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ModularGuiLine;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
-import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.gui.widget.Indicator.State;
@@ -67,7 +67,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
-public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContainer> {
+public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 
 	private static final int CARD_HEADER = 22;
 	private static final int CARD_WIDTH = 195;
@@ -97,14 +97,14 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 	private DestinationSuggestions destinationSuggestions;
 
-	public ScheduleScreen(ScheduleContainer container, Inventory inv, Component title) {
-		super(container, inv, title);
+	public ScheduleScreen(ScheduleMenu menu, Inventory inv, Component title) {
+		super(menu, inv, title);
 		schedule = new Schedule();
-		CompoundTag tag = container.contentHolder.getOrCreateTag()
+		CompoundTag tag = menu.contentHolder.getOrCreateTag()
 			.getCompound("Schedule");
 		if (!tag.isEmpty())
 			schedule = Schedule.fromTag(tag);
-		container.slotsActive = false;
+		menu.slotsActive = false;
 		editorSubWidgets = new ModularGuiLine();
 	}
 
@@ -184,7 +184,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		for (int i = 0; i < field.slotsTargeted(); i++) {
 			ItemStack item = field.getItem(i);
 			menu.ghostInventory.setStackInSlot(i, item);
-			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(item, i));
+			AllPackets.getChannel().sendToServer(new GhostItemSubmitPacket(item, i));
 		}
 
 		if (field instanceof ScheduleInstruction instruction) {
@@ -269,7 +269,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		IScheduleInput editing = editingCondition == null ? editingDestination : editingCondition;
 		for (int i = 0; i < editing.slotsTargeted(); i++) {
 			editing.setItem(i, menu.ghostInventory.getStackInSlot(i));
-			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(ItemStack.EMPTY, i));
+			AllPackets.getChannel().sendToServer(new GhostItemSubmitPacket(ItemStack.EMPTY, i));
 		}
 
 		editorSubWidgets.saveValues(editing.getData());
@@ -339,9 +339,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		return viableGraphs.stream()
 			.flatMap(g -> g.getPoints(EdgePointType.STATION)
 				.stream())
-			.filter(station -> station.tilePos != null)
+			.filter(station -> station.blockEntityPos != null)
 			.filter(station -> visited.add(station.name))
-			.map(station -> LongAttached.with((long) Vec3.atBottomCenterOf(station.tilePos)
+			.map(station -> LongAttached.with((long) Vec3.atBottomCenterOf(station.blockEntityPos)
 				.distanceTo(position), station.name))
 			.toList();
 	}
@@ -1073,7 +1073,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 	@Override
 	public void removed() {
 		super.removed();
-		AllPackets.channel.sendToServer(new ScheduleEditPacket(schedule));
+		AllPackets.getChannel().sendToServer(new ScheduleEditPacket(schedule));
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.command;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -32,14 +30,11 @@ public class HighlightPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> ctx) {
-		ctx.get()
-			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
-				performHighlight(pos);
-			}));
-
-		ctx.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			performHighlight(pos);
+		}));
+		return true;
 	}
 
 	@Environment(EnvType.CLIENT)

@@ -18,29 +18,29 @@ import java.util.Iterator;
 public class DepotItemHandler extends SnapshotParticipant<Unit> implements Storage<ItemVariant> {
 
 	private static final int MAIN_SLOT = 0;
-	private DepotBehaviour te;
+	private DepotBehaviour behaviour;
 
-	public DepotItemHandler(DepotBehaviour te) {
-		this.te = te;
+	public DepotItemHandler(DepotBehaviour behaviour) {
+		this.behaviour = behaviour;
 	}
 
 	@Override
 	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		if (!te.getHeldItemStack().isEmpty() && !te.canMergeItems())
+		if (!behaviour.getHeldItemStack().isEmpty() && !behaviour.canMergeItems())
 			return 0;
-		if (!te.isOutputEmpty() && !te.canMergeItems())
+		if (!behaviour.isOutputEmpty() && !behaviour.canMergeItems())
 			return 0;
 		int toInsert = Math.min(ItemHelper.truncateLong(maxAmount), resource.getItem().getMaxStackSize());
 		ItemStack stack = resource.toStack(toInsert);
-		if (!te.isItemValid(stack))
+		if (!behaviour.isItemValid(stack))
 			return 0;
-		ItemStack remainder = te.insert(new TransportedItemStack(stack), transaction);
+		ItemStack remainder = behaviour.insert(new TransportedItemStack(stack), transaction);
 		return stack.getCount() - remainder.getCount();
 	}
 
 	@Override
 	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		long extracted = te.processingOutputBuffer.extract(resource, maxAmount, transaction);
+		long extracted = behaviour.processingOutputBuffer.extract(resource, maxAmount, transaction);
 		if (extracted == maxAmount)
 			return extracted;
 		extracted += extractFromMain(resource, maxAmount - extracted, transaction);
@@ -48,7 +48,7 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 	}
 
 	public long extractFromMain(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		TransportedItemStack held = te.heldItem;
+		TransportedItemStack held = behaviour.heldItem;
 		if (held == null)
 			return 0;
 		ItemStack stack = held.stack;
@@ -59,10 +59,10 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 		stack.shrink(toExtract);
 		if (stack.isEmpty())
 			stack = ItemStack.EMPTY;
-		te.snapshotParticipant.updateSnapshots(transaction);
-		te.heldItem.stack = stack;
+		behaviour.snapshotParticipant.updateSnapshots(transaction);
+		behaviour.heldItem.stack = stack;
 		if (stack.isEmpty())
-			te.heldItem = null;
+			behaviour.heldItem = null;
 		return toExtract;
 	}
 
@@ -112,7 +112,7 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 		@Override
 		public long getCapacity() {
 			ItemStack stack = getStack();
-			return stack.isEmpty() ? te.maxStackSize.get() : Math.min(stack.getMaxStackSize(), te.maxStackSize.get());
+			return stack.isEmpty() ? behaviour.maxStackSize.get() : Math.min(stack.getMaxStackSize(), behaviour.maxStackSize.get());
 		}
 
 		public ItemStack getStack() {

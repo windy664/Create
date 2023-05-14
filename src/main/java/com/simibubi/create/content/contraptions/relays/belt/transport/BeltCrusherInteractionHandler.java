@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
-import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerTileEntity;
+import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -51,15 +51,15 @@ public class BeltCrusherInteractionHandler {
                 return false;
             currentItem.beltPosition = crusherEntry;
 
-            BlockEntity te = world.getBlockEntity(crusherPos);
-            if (!(te instanceof CrushingWheelControllerTileEntity))
+            BlockEntity be = world.getBlockEntity(crusherPos);
+            if (!(be instanceof CrushingWheelControllerBlockEntity))
                 return true;
 
-            CrushingWheelControllerTileEntity crusherTE = (CrushingWheelControllerTileEntity) te;
+            CrushingWheelControllerBlockEntity crusherBE = (CrushingWheelControllerBlockEntity) be;
 
             ItemStack toInsert = currentItem.stack.copy();
 			try (Transaction t = TransferUtil.getTransaction()) {
-				long inserted = crusherTE.inventory.insert(ItemVariant.of(toInsert), toInsert.getCount(), t);
+				long inserted = crusherBE.inventory.insert(ItemVariant.of(toInsert), toInsert.getCount(), t);
 				t.commit();
 				ItemStack remainder = ItemHandlerHelper.copyStackWithSize(toInsert, toInsert.getCount() - (int) inserted);
 				if (ItemStackUtil.equals(toInsert, remainder, false))

@@ -25,6 +25,8 @@ public interface IScheduleInput {
 
 	public abstract CompoundTag getData();
 
+	public abstract void setData(CompoundTag data);
+
 	public default int slotsTargeted() {
 		return 0;
 	}

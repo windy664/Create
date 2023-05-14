@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.symmetry;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -32,9 +30,9 @@ public class ConfigureSymmetryWandPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer player = context.get().getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			if (player == null) {
 				return;
 			}
@@ -43,7 +41,7 @@ public class ConfigureSymmetryWandPacket extends SimplePacketBase {
 				SymmetryWandItem.configureSettings(stack, mirror);
 			}
 		});
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 }

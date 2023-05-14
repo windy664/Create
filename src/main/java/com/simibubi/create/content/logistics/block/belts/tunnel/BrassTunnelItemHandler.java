@@ -10,10 +10,10 @@ import net.minecraft.world.item.ItemStack;
 
 public class BrassTunnelItemHandler implements SingleSlotStorage<ItemVariant> {
 
-	private BrassTunnelTileEntity te;
+	private BrassTunnelBlockEntity blockEntity;
 
-	public BrassTunnelItemHandler(BrassTunnelTileEntity te) {
-		this.te = te;
+	public BrassTunnelItemHandler(BrassTunnelBlockEntity be) {
+		this.blockEntity = be;
 	}
 
 	@Override
@@ -25,11 +25,11 @@ public class BrassTunnelItemHandler implements SingleSlotStorage<ItemVariant> {
 			return beltCapability.insert(resource, maxAmount, transaction);
 		}
 
-		if (!te.canTakeItems())
+		if (!blockEntity.canTakeItems())
 			return 0;
 		int toInsert = Math.min(ItemHelper.truncateLong(maxAmount), resource.getItem().getMaxStackSize());
 
-		te.setStackToDistribute(resource.toStack(toInsert), null, transaction);
+		blockEntity.setStackToDistribute(resource.toStack(toInsert), null, transaction);
 		return toInsert;
 	}
 

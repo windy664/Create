@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.chassis;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
 import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
 
-public class StickerBlock extends WrenchableDirectionalBlock implements ITE<StickerTileEntity>, CustomRunningEffectsBlock,
+public class StickerBlock extends WrenchableDirectionalBlock implements IBE<StickerBlockEntity>, CustomRunningEffectsBlock,
 		CustomLandingEffectsBlock, WeakPowerCheckingBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -79,13 +79,13 @@ public class StickerBlock extends WrenchableDirectionalBlock implements ITE<Stic
 	}
 
 	@Override
-	public Class<StickerTileEntity> getTileEntityClass() {
-		return StickerTileEntity.class;
+	public Class<StickerBlockEntity> getBlockEntityClass() {
+		return StickerBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends StickerTileEntity> getTileEntityType() {
-		return AllTileEntities.STICKER.get();
+	public BlockEntityType<? extends StickerBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.STICKER.get();
 	}
 
 	// Slime block stuff

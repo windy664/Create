@@ -34,12 +34,12 @@ public abstract class GhostBlockRenderer {
 		return TRANSPARENT;
 	}
 
-	public abstract void render(PoseStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params);
+	public abstract void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, GhostBlockParams params);
 
 	private static class DefaultGhostBlockRenderer extends GhostBlockRenderer {
 
 		@Override
-		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params) {
+		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, GhostBlockParams params) {
 			ms.pushPose();
 
 			BlockRenderDispatcher dispatcher = Minecraft.getInstance()
@@ -51,7 +51,7 @@ public abstract class GhostBlockRenderer {
 			VertexConsumer vb = buffer.getEarlyBuffer(layer);
 
 			BlockPos pos = params.pos;
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			ms.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
 
 			model = DefaultLayerFilteringBakedModel.wrap(model);
 			dispatcher.getModelRenderer()
@@ -65,7 +65,7 @@ public abstract class GhostBlockRenderer {
 	private static class TransparentGhostBlockRenderer extends GhostBlockRenderer {
 
 		@Override
-		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params) {
+		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, GhostBlockParams params) {
 			ms.pushPose();
 
 			Minecraft mc = Minecraft.getInstance();
@@ -77,7 +77,7 @@ public abstract class GhostBlockRenderer {
 			VertexConsumer vb = buffer.getEarlyBuffer(layer);
 
 			BlockPos pos = params.pos;
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			ms.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
 
 			ms.translate(.5, .5, .5);
 			ms.scale(.85f, .85f, .85f);

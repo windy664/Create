@@ -16,21 +16,22 @@ import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
 import com.simibubi.create.content.logistics.trains.BezierConnection.SegmentAngles;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 
-public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
+public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 
 	private List<BezierTrackInstance> instances;
 
-	public TrackInstance(MaterialManager materialManager, TrackTileEntity track) {
+	public TrackInstance(MaterialManager materialManager, TrackBlockEntity track) {
 		super(materialManager, track);
 
 		update();
@@ -38,7 +39,7 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 
 	@Override
 	public void update() {
-		if (blockEntity.connections.isEmpty()) 
+		if (blockEntity.connections.isEmpty())
 			return;
 
 		remove();
@@ -97,9 +98,7 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 
 			PoseStack pose = new PoseStack();
 			TransformStack.cast(pose)
-				.translate(getInstancePosition())
-				.nudge((int) bc.tePositions.getFirst()
-					.asLong());
+				.translate(getInstancePosition());
 
 			var mat = materialManager.cutout(RenderType.cutoutMipped())
 				.material(Materials.TRANSFORMED);
@@ -112,11 +111,13 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 			leftLightPos = new BlockPos[segCount];
 			rightLightPos = new BlockPos[segCount];
 
-			mat.getModel(AllBlockPartials.TRACK_TIE)
+			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
+
+			mat.getModel(modelHolder.tie())
 				.createInstances(ties);
-			mat.getModel(AllBlockPartials.TRACK_SEGMENT_LEFT)
+			mat.getModel(modelHolder.segment_left())
 				.createInstances(left);
-			mat.getModel(AllBlockPartials.TRACK_SEGMENT_RIGHT)
+			mat.getModel(modelHolder.segment_right())
 				.createInstances(right);
 
 			SegmentAngles[] segments = bc.getBakedSegments();
@@ -184,9 +185,9 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 				beams = Couple.create(() -> new ModelData[segCount]);
 				beamCaps = Couple.create(() -> Couple.create(() -> new ModelData[segCount]));
 				lightPos = new BlockPos[segCount];
-				beams.forEach(mat.getModel(AllBlockPartials.GIRDER_SEGMENT_MIDDLE)::createInstances);
-				beamCaps.forEachWithContext((c, top) -> c.forEach(mat.getModel(top ? AllBlockPartials.GIRDER_SEGMENT_TOP
-					: AllBlockPartials.GIRDER_SEGMENT_BOTTOM)::createInstances));
+				beams.forEach(mat.getModel(AllPartialModels.GIRDER_SEGMENT_MIDDLE)::createInstances);
+				beamCaps.forEachWithContext((c, top) -> c.forEach(mat.getModel(top ? AllPartialModels.GIRDER_SEGMENT_TOP
+					: AllPartialModels.GIRDER_SEGMENT_BOTTOM)::createInstances));
 
 				GirderAngles[] bakedGirders = bc.getBakedGirders();
 				for (int i = 1; i < bakedGirders.length; i++) {

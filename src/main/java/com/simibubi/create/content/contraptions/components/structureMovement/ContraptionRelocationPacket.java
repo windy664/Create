@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
@@ -26,12 +24,10 @@ public class ContraptionRelocationPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
-				() -> () -> OrientedContraptionEntity.handleRelocationPacket(this)));
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
+			() -> () -> OrientedContraptionEntity.handleRelocationPacket(this)));
+		return true;
 	}
 
 }

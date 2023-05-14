@@ -293,7 +293,7 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 	public void sendData() {
 		if (getWorld().isClientSide)
 			return;
-		AllPackets.channel.sendToClientsTracking(
+		AllPackets.getChannel().sendToClientsTracking(
 				new MinecartControllerUpdatePacket(this), this.cart());
 	}
 
@@ -404,7 +404,7 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 		}
 
 		void tick(AbstractMinecart entity) {
-			entity.setPos(position.x, position.y, position.z);
+//			entity.setPos(position.x, position.y, position.z);
 			entity.setDeltaMovement(Vec3.ZERO);
 			entity.setYRot(yaw);
 			entity.setXRot(pitch);

@@ -58,24 +58,21 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> ctx) {
-		ctx.get()
-			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
-				if (option.startsWith("SET")) {
-					trySetConfig(option.substring(3), value);
-					return;
-				}
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			if (option.startsWith("SET")) {
+				trySetConfig(option.substring(3), value);
+				return;
+			}
 
-				try {
-					Actions.valueOf(option)
-						.performAction(value);
-				} catch (IllegalArgumentException e) {
-					LOGGER.warn("Received ConfigureConfigPacket with invalid Option: " + option);
-				}
-			}));
-
-		ctx.get()
-			.setPacketHandled(true);
+			try {
+				Actions.valueOf(option)
+					.performAction(value);
+			} catch (IllegalArgumentException e) {
+				LOGGER.warn("Received ConfigureConfigPacket with invalid Option: " + option);
+			}
+		}));
+		return true;
 	}
 
 	private static void trySetConfig(String option, String value) {
@@ -165,21 +162,21 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 			if (value.equals("info")) {
 				Component text = Components.literal("Rainbow Debug Utility is currently: ")
-					.append(boolToText(AllConfigs.CLIENT.rainbowDebug.get()));
+					.append(boolToText(AllConfigs.client().rainbowDebug.get()));
 				player.displayClientMessage(text, false);
 				return;
 			}
 
-			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
-			Component text = boolToText(AllConfigs.CLIENT.rainbowDebug.get())
+			AllConfigs.client().rainbowDebug.set(Boolean.parseBoolean(value));
+			Component text = boolToText(AllConfigs.client().rainbowDebug.get())
 				.append(Components.literal(" Rainbow Debug Utility").withStyle(ChatFormatting.WHITE));
 			player.displayClientMessage(text, false);
 		}
 
 		@Environment(EnvType.CLIENT)
 		private static void overlayReset(String value) {
-			AllConfigs.CLIENT.overlayOffsetX.set(0);
-			AllConfigs.CLIENT.overlayOffsetY.set(0);
+			AllConfigs.client().overlayOffsetX.set(0);
+			AllConfigs.client().overlayOffsetY.set(0);
 		}
 
 		@Environment(EnvType.CLIENT)
@@ -212,7 +209,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 		@Environment(EnvType.CLIENT)
 		private static void fabulousWarning(String value) {
-			AllConfigs.CLIENT.ignoreFabulousWarning.set(true);
+			AllConfigs.client().ignoreFabulousWarning.set(true);
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
 				player.displayClientMessage(

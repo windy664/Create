@@ -5,13 +5,13 @@ import java.util.Random;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
+import com.simibubi.create.content.contraptions.processing.BasinBlockEntity;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -61,7 +61,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<BlazeBurnerTileEntity>, IWrenchable {
+public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<BlazeBurnerBlockEntity>, IWrenchable {
 
 	public static final EnumProperty<HeatLevel> HEAT_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
 
@@ -80,10 +80,10 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
 		if (world.isClientSide)
 			return;
-		BlockEntity tileEntity = world.getBlockEntity(pos.above());
-		if (!(tileEntity instanceof BasinTileEntity))
+		BlockEntity blockEntity = world.getBlockEntity(pos.above());
+		if (!(blockEntity instanceof BasinBlockEntity))
 			return;
-		BasinTileEntity basin = (BasinTileEntity) tileEntity;
+		BasinBlockEntity basin = (BasinBlockEntity) blockEntity;
 		basin.notifyChangeOfContents();
 	}
 
@@ -94,13 +94,13 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<
 	}
 
 	@Override
-	public Class<BlazeBurnerTileEntity> getTileEntityClass() {
-		return BlazeBurnerTileEntity.class;
+	public Class<BlazeBurnerBlockEntity> getBlockEntityClass() {
+		return BlazeBurnerBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends BlazeBurnerTileEntity> getTileEntityType() {
-		return AllTileEntities.HEATER.get();
+	public BlockEntityType<? extends BlazeBurnerBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.HEATER.get();
 	}
 
 	@Nullable
@@ -108,7 +108,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		if (state.getValue(HEAT_LEVEL) == HeatLevel.NONE)
 			return null;
-		return ITE.super.newBlockEntity(pos, state);
+		return IBE.super.newBlockEntity(pos, state);
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<
 		HeatLevel heat = state.getValue(HEAT_LEVEL);
 
 		if (AllItems.GOGGLES.isIn(heldItem) && heat != HeatLevel.NONE)
-			return onTileEntityUse(world, pos, bbte -> {
+			return onBlockEntityUse(world, pos, bbte -> {
 				if (bbte.goggles)
 					return InteractionResult.PASS;
 				bbte.goggles = true;
@@ -130,7 +130,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<
 			return InteractionResult.PASS;
 
 		if (heldItem.isEmpty() && heat != HeatLevel.NONE)
-			return onTileEntityUse(world, pos, bbte -> {
+			return onBlockEntityUse(world, pos, bbte -> {
 				if (!bbte.goggles)
 					return InteractionResult.PASS;
 				bbte.goggles = false;
@@ -176,16 +176,16 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<
 		if (!state.hasBlockEntity())
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 
-		BlockEntity te = world.getBlockEntity(pos);
-		if (!(te instanceof BlazeBurnerTileEntity))
+		BlockEntity be = world.getBlockEntity(pos);
+		if (!(be instanceof BlazeBurnerBlockEntity))
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
-		BlazeBurnerTileEntity burnerTE = (BlazeBurnerTileEntity) te;
+		BlazeBurnerBlockEntity burnerBE = (BlazeBurnerBlockEntity) be;
 
-		if (burnerTE.isCreativeFuel(stack)) {
-			TransactionCallback.onSuccess(ctx, burnerTE::applyCreativeFuel);
+		if (burnerBE.isCreativeFuel(stack)) {
+			TransactionCallback.onSuccess(ctx, burnerBE::applyCreativeFuel);
 			return InteractionResultHolder.success(ItemStack.EMPTY);
 		}
-		if (!burnerTE.tryUpdateFuel(stack, forceOverflow, ctx))
+		if (!burnerBE.tryUpdateFuel(stack, forceOverflow, ctx))
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 
 		if (!doNotConsume) {

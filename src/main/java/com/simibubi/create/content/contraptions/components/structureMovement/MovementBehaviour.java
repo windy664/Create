@@ -19,12 +19,13 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 
 public interface MovementBehaviour {
 
 	default boolean isActive(MovementContext context) {
-		return true;
+		return !context.disabled;
 	}
 
 	default void tick(MovementContext context) {}
@@ -37,9 +38,25 @@ public interface MovementBehaviour {
 		return Vec3.ZERO;
 	}
 
+	@Nullable
+	default ItemStack canBeDisabledVia(MovementContext context) {
+		Block block = context.state.getBlock();
+		if (block == null)
+			return null;
+		return new ItemStack(block);
+	}
+
+	default void onDisabledByControls(MovementContext context) {
+		cancelStall(context);
+	}
+
+	default boolean mustTickWhileDisabled() {
+		return false;
+	}
+
 	default void dropItem(MovementContext context, ItemStack stack) {
 		ItemStack remainder;
-		if (AllConfigs.SERVER.kinetics.moveItemsToStorage.get()) {
+		if (AllConfigs.server().kinetics.moveItemsToStorage.get()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
 				long inserted = context.contraption.getSharedInventory().insert(ItemVariant.of(stack), stack.getCount(), t);
 				remainder = stack.copy();
@@ -62,14 +79,14 @@ public interface MovementBehaviour {
 	default void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {}
 
 	default void stopMoving(MovementContext context) {}
-	
+
 	default void cancelStall(MovementContext context) {
 		context.stall = false;
 	}
 
 	default void writeExtraData(MovementContext context) {}
 
-	default boolean renderAsNormalTileEntity() {
+	default boolean renderAsNormalBlockEntity() {
 		return false;
 	}
 

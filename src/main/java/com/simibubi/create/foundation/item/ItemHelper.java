@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Pair;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -157,8 +156,7 @@ public class ItemHelper {
 	}
 
 	public static ItemStack extract(Storage<ItemVariant> inv, Predicate<ItemStack> test, boolean simulate) {
-		return extract(inv, test, ExtractionCountMode.UPTO, AllConfigs.SERVER.logistics.defaultExtractionLimit.get(),
-			simulate);
+		return extract(inv, test, ExtractionCountMode.UPTO, 64, simulate);
 	}
 
 	public static ItemStack extract(Storage<ItemVariant> inv, Predicate<ItemStack> test, int exactAmount, boolean simulate) {
@@ -237,7 +235,7 @@ public class ItemHelper {
 	public static ItemStack extract(Storage<ItemVariant> inv, Predicate<ItemStack> test,
 		Function<ItemStack, Integer> amountFunction, boolean simulate) {
 		ItemStack extracting = ItemStack.EMPTY;
-		int maxExtractionCount = AllConfigs.SERVER.logistics.defaultExtractionLimit.get();
+		int maxExtractionCount = 64;
 
 		try (Transaction t = TransferUtil.getTransaction()) {
 			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(inv, t)) {

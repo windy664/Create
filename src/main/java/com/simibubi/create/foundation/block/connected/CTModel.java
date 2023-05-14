@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.curiosities.frames.CopycatBlock;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -34,10 +35,13 @@ public class CTModel extends ForwardingBakedModel {
 		CTData data = new CTData();
 		MutableBlockPos mutablePos = new MutableBlockPos();
 		for (Direction face : Iterate.directions) {
+			BlockState actualState = world.getBlockState(pos);
 			if (!behaviour.buildContextForOccludedDirections()
-				&& !Block.shouldRenderFace(state, world, pos, face, mutablePos.setWithOffset(pos, face)))
+				&& !Block.shouldRenderFace(state, world, pos, face, mutablePos.setWithOffset(pos, face))
+				&& !(actualState.getBlock()instanceof CopycatBlock ufb
+					&& !ufb.canFaceBeOccluded(actualState, face)))
 				continue;
-			CTType dataType = behaviour.getDataType(state, face);
+			CTType dataType = behaviour.getDataType(world, pos, state, face);
 			if (dataType == null)
 				continue;
 			CTContext context = behaviour.buildContext(world, pos, state, face, dataType.getContextRequirement());
@@ -55,29 +59,21 @@ public class CTModel extends ForwardingBakedModel {
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		CTData data = createCTData(blockView, pos, state);
 
-		SpriteFinder spriteFinder = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS));
-		context.pushTransform(quad -> {
-			int index = data.get(quad.lightFace());
-			if (index != -1) {
-				TextureAtlasSprite sprite = spriteFinder.find(quad, 0);
-				CTSpriteShiftEntry spriteShift = behaviour.getShift(state, quad.lightFace(), sprite);
-				if (spriteShift != null) {
-					if (sprite == spriteShift.getOriginal()) {
-						for (int vertex = 0; vertex < 4; vertex++) {
-							float u = quad.spriteU(vertex, 0);
-							float v = quad.spriteV(vertex, 0);
-							quad.sprite(vertex, 0,
-									spriteShift.getTargetU(u, index),
-									spriteShift.getTargetV(v, index)
-							);
-						}
-					}
-				}
+		// TODO PORT 0.5.1
+			BakedQuad newQuad = BakedQuadHelper.clone(quad);
+			int[] vertexData = newQuad.getVertices();
+
+			for (int vertex = 0; vertex < 4; vertex++) {
+				float u = BakedQuadHelper.getU(vertexData, vertex);
+				float v = BakedQuadHelper.getV(vertexData, vertex);
+				BakedQuadHelper.setU(vertexData, vertex, spriteShift.getTargetU(u, index));
+				BakedQuadHelper.setV(vertexData, vertex, spriteShift.getTargetV(v, index));
 			}
-			return true;
-		});
-		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-		context.popTransform();
+
+			quads.set(i, newQuad);
+		}
+
+		return quads;
 	}
 
 	private static class CTData {

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.zapper;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -31,9 +29,9 @@ public abstract class ConfigureZapperPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer player = context.get().getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			if (player == null) {
 				return;
 			}
@@ -42,7 +40,7 @@ public abstract class ConfigureZapperPacket extends SimplePacketBase {
 				configureZapper(stack);
 			}
 		});
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 	public abstract void configureZapper(ItemStack stack);

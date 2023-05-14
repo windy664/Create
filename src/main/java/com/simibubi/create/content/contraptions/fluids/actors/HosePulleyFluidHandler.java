@@ -123,4 +123,8 @@ public class HosePulleyFluidHandler implements SingleSlotStorage<FluidVariant> {
 		this.rootPosGetter = rootPosGetter;
 		this.predicate = predicate;
 	}
+
+	public SmartFluidTank getInternalTank() {
+		return internalTank;
+	}
 }
