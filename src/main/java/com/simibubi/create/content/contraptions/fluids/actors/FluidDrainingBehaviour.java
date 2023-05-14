@@ -315,7 +315,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		try {
 			fluid = search(fluid, frontier, visited, (e, d) -> {
 				BlockPosEntry entry = new BlockPosEntry(e, d);
-			queue.add(entry);
+				queue.add(entry);
 				validationSet.add(e);
 			}, false);
 		} catch (ChunkNotLoadedException e) {
@@ -330,6 +330,11 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			infinite = true;
 			// Find first block with valid fluid
 			while (true) {
+				// fabric: temp fix for #875
+				if (queue.isEmpty()) {
+					infinite = false;
+					return;
+				}
 				BlockPos first = queue.first().pos();
 				if (canPullFluidsFrom(world.getBlockState(first), first) != FluidBlockType.SOURCE) {
 					dequeue(queue);

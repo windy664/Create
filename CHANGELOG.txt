@@ -5,4 +5,11 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- fix Lithium class analysis failing on train carriage entities (#883)
+- fix pipes trying to extract the first thing, even if not extractable (#909)
+- fix belt processing easily causing dupes (#903)
+- fix Mechanical Arms interfering with other processing (#897)
+- fix funnels flapping unnecessarily when arms target them
+- fix pipes not fully connecting to things (#885)
+- fix checking uses for potion fluid in EMI ignoring the potion (#884)
+- fix crashing when pumping fluid from an entirely flowing body (#875)
+- fix Weighted Ejectors causing a crash when yeeting items into a funnel (#923)

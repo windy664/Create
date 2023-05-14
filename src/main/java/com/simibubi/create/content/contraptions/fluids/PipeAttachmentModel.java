@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -36,12 +37,16 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
 		PipeModelData data = new PipeModelData();
-		FluidTransportBehaviour transport = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
 		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 
-		if (transport != null)
-			for (Direction d : Iterate.directions)
-				data.putAttachment(d, transport.getRenderedRimAttachment(world, pos, state, d));
+		RenderAttachedBlockView attachmentView = (RenderAttachedBlockView) world;
+		Object attachment = attachmentView.getBlockEntityRenderAttachment(pos);
+		if (attachment instanceof AttachmentTypes[] attachments) {
+			for (int i = 0; i < attachments.length; i++) {
+				data.putAttachment(Iterate.directions[i], attachments[i]);
+			}
+		}
+
 		if (bracket != null)
 			data.putBracket(bracket.getBracket());
 

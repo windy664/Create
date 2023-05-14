@@ -107,4 +107,25 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 		return stack;
 	}
 
+	// fabric: a proper equals() is required for correct functionality with transfer snapshots. (#903)
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		TransportedItemStack that = (TransportedItemStack) o;
+
+		if (Float.compare(that.beltPosition, beltPosition) != 0) return false;
+		if (Float.compare(that.sideOffset, sideOffset) != 0) return false;
+		if (angle != that.angle) return false;
+		if (insertedAt != that.insertedAt) return false;
+		if (locked != that.locked) return false;
+		if (lockedExternally != that.lockedExternally) return false;
+		if (Float.compare(that.prevBeltPosition, prevBeltPosition) != 0) return false;
+		if (Float.compare(that.prevSideOffset, prevSideOffset) != 0) return false;
+		if (processingTime != that.processingTime) return false;
+		if (!ItemStack.matches(stack, that.stack)) return false;
+		if (insertedFrom != that.insertedFrom) return false;
+		return processedBy == that.processedBy;
+	}
 }

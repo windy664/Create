@@ -3,16 +3,6 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
-import io.github.fabricators_of_create.porting_lib.extensions.LevelExtensions;
-import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
-
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-
-import net.minecraft.core.Vec3i;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -40,13 +30,15 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -55,7 +47,6 @@ import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
-import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -535,14 +526,17 @@ public class AllArmInteractionPointTypes {
 			if (filtering != null && !filtering.test(stack))
 				return stack;
 
+			// fabric: this is already wrapped in a transaction, no need to simulate
 			ItemStack insert = inserter.insert(stack);
 			if (insert.getCount() != stack.getCount()) {
 				BlockEntity tileEntity = level.getBlockEntity(pos);
 				if (tileEntity instanceof FunnelTileEntity) {
 					FunnelTileEntity funnelTileEntity = (FunnelTileEntity) tileEntity;
-					funnelTileEntity.onTransfer(stack);
-					if (funnelTileEntity.hasFlap())
-						funnelTileEntity.flap(true);
+					TransactionCallback.onSuccess(ctx, () -> {
+						funnelTileEntity.onTransfer(stack);
+						if (funnelTileEntity.hasFlap())
+							funnelTileEntity.flap(true);
+					});
 				}
 			}
 			return insert;
@@ -571,10 +565,9 @@ public class AllArmInteractionPointTypes {
 			}
 			if (!hasSpace)
 				return stack;
+			ItemStack inserted = ItemHandlerHelper.copyStackWithSize(stack, 1);
+			TransactionCallback.onSuccess(ctx, () -> campfireBE.placeFood(null, inserted, recipe.get().getCookingTime()));
 			ItemStack remainder = stack.copy();
-			TransactionCallback.onSuccess(ctx, () ->
-					campfireBE.placeFood(null, remainder.copy(), recipe.get()
-				.getCookingTime()));
 			remainder.shrink(1);
 			return remainder;
 		}

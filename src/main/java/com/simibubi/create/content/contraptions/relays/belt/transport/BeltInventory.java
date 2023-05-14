@@ -20,8 +20,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 
+import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,33 +42,8 @@ public class BeltInventory {
 	boolean beltMovementPositive;
 	final float SEGMENT_WINDOW = .75f;
 
-	public final SnapshotParticipant<Data> snapshotParticipant = new SnapshotParticipant<>() {
-
-		@Override
-		protected Data createSnapshot() {
-			List<TransportedItemStack> items = new LinkedList<>();
-			BeltInventory.this.items.forEach(transported -> items.add(transported.fullCopy()));
-			List<TransportedItemStack> toInsert = new LinkedList<>();
-			BeltInventory.this.toInsert.forEach(transported -> toInsert.add(transported.fullCopy()));
-			List<TransportedItemStack> toRemove = new LinkedList<>();
-			BeltInventory.this.toRemove.forEach(transported -> toRemove.add(transported.fullCopy()));
-			return new Data(items, toInsert, toRemove);
-		}
-
-		@Override
-		protected void readSnapshot(Data snapshot) {
-			BeltInventory.this.items = snapshot.items;
-			BeltInventory.this.toInsert = snapshot.toInsert;
-			BeltInventory.this.toRemove = snapshot.toRemove;
-		}
-
-		@Override
-		protected void onFinalCommit() {
-			super.onFinalCommit();
-			belt.setChanged();
-			belt.sendData();
-		}
-	};
+	public final ToInsertSnapshotParticipant toInsertSnapshotParticipant = new ToInsertSnapshotParticipant();
+	public final ItemsSnapshotParticipant itemsSnapshotParticipant = new ItemsSnapshotParticipant();
 
 	public BeltInventory(BeltTileEntity te) {
 		this.belt = te;
@@ -77,13 +52,7 @@ public class BeltInventory {
 		toRemove = new LinkedList<>();
 	}
 
-	public record Data(List<TransportedItemStack> items,
-					   List<TransportedItemStack> toInsert,
-					   List<TransportedItemStack> toRemove) {
-	}
-
 	public void tick() {
-
 		// Added/Removed items from previous cycle
 		if (!toInsert.isEmpty() || !toRemove.isEmpty()) {
 			toInsert.forEach(this::insert);
@@ -400,6 +369,9 @@ public class BeltInventory {
 	}
 
 	private void insert(TransportedItemStack newStack) {
+		// fabric: avoid unnecessary adding
+		if (newStack.stack.isEmpty())
+			return;
 		if (items.isEmpty())
 			items.add(newStack);
 		else {
@@ -495,4 +467,43 @@ public class BeltInventory {
 		return items;
 	}
 
+	public class ToInsertSnapshotParticipant extends SnapshotParticipant<List<TransportedItemStack>> {
+		@Override
+		protected List<TransportedItemStack> createSnapshot() {
+			List<TransportedItemStack> snapshot = new LinkedList<>();
+			toInsert.forEach(stack -> snapshot.add(stack.fullCopy()));
+			return snapshot;
+		}
+
+		@Override
+		protected void readSnapshot(List<TransportedItemStack> snapshot) {
+			toInsert = snapshot;
+		}
+
+		@Override
+		protected void onFinalCommit() {
+			belt.setChanged();
+			belt.sendData();
+		}
+	}
+
+	public class ItemsSnapshotParticipant extends SnapshotParticipant<List<TransportedItemStack>> {
+		@Override
+		protected List<TransportedItemStack> createSnapshot() {
+			List<TransportedItemStack> snapshot = new LinkedList<>();
+			items.forEach(stack -> snapshot.add(stack.fullCopy()));
+			return snapshot;
+		}
+
+		@Override
+		protected void readSnapshot(List<TransportedItemStack> snapshot) {
+			items = snapshot;
+		}
+
+		@Override
+		protected void onFinalCommit() {
+			belt.setChanged();
+			belt.sendData();
+		}
+	}
 }

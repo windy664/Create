@@ -34,7 +34,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class PumpTileEntity extends KineticTileEntity {
+public class PumpTileEntity extends KineticTileEntity implements PipeAttachmentBlockEntity {
 
 	LerpedFloat arrowDirection;
 	Couple<MutableBoolean> sidesToUpdate;
@@ -354,6 +354,12 @@ public class PumpTileEntity extends KineticTileEntity {
 
 	public boolean isPullingOnSide(boolean front) {
 		return front == reversed;
+	}
+
+	@Override
+	@Nullable
+	public Object getRenderAttachmentData() {
+		return PipeAttachmentBlockEntity.getAttachments(this);
 	}
 
 	class PumpFluidTransferBehaviour extends FluidTransportBehaviour {

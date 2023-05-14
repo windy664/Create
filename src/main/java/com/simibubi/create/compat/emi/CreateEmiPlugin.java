@@ -160,7 +160,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 
 		registerGeneratedRecipes(registry);
 
-		registry.setDefaultComparison(AllFluids.POTION.get(), c -> c.copy().nbt(true).build());
+		registry.setDefaultComparison(AllFluids.POTION.get().getSource(), c -> c.copy().nbt(true).build());
 
 		ALL.forEach((id, category) -> registry.addCategory(category));
 

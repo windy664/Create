@@ -64,7 +64,8 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	SnapshotParticipant<Data> snapshotParticipant = new SnapshotParticipant<>() {
 		@Override
 		protected Data createSnapshot() {
-			return new Data(new ArrayList<>(incoming), heldItem == null ? null : heldItem.copy());
+			// incoming stacks are not mutated during transfer, no need to deep copy
+			return new Data(new ArrayList<>(incoming), heldItem == null ? null : heldItem.fullCopy());
 		}
 
 		@Override
