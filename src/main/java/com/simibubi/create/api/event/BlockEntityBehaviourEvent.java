@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.eventbus.api.GenericEvent;
 
 /**
  * Event that is fired just before a SmartBlockEntity is being deserialized<br>

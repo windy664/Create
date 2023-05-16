@@ -53,7 +53,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, IBE<ItemDrainB
 		return onBlockEntityUse(worldIn, pos, be -> {
 			if (!heldItem.isEmpty()) {
 				be.internalTank.allowInsertion();
-				InteractionResult tryExchange = tryExchange(worldIn, player, handIn, heldItem, te, Direction.DOWN); // up prohibits insertion
+				InteractionResult tryExchange = tryExchange(worldIn, player, handIn, heldItem, be, Direction.DOWN); // up prohibits insertion
 				be.internalTank.forbidInsertion();
 				if (tryExchange.consumesAction())
 					return tryExchange;
@@ -96,7 +96,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, IBE<ItemDrainB
 	}
 
 	protected InteractionResult tryExchange(Level worldIn, Player player, InteractionHand handIn, ItemStack heldItem,
-		ItemDrainTileEntity be, Direction side) {
+		ItemDrainBlockEntity be, Direction side) {
 		if (FluidHelper.tryEmptyItemIntoTE(worldIn, player, handIn, heldItem, be, side))
 			return InteractionResult.SUCCESS;
 		if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))

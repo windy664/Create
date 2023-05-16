@@ -17,10 +17,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.items.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class ClipboardBlockItem extends BlockItem {
 
@@ -60,7 +60,7 @@ public class ClipboardBlockItem extends BlockItem {
 		player.getCooldowns()
 			.addCooldown(heldItem.getItem(), 10);
 		if (world.isClientSide)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(player, heldItem));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> openScreen(player, heldItem));
 		CompoundTag tag = heldItem.getOrCreateTag();
 		tag.putInt("Type", ClipboardOverrides.ClipboardType.EDITING.ordinal());
 		heldItem.setTag(tag);
@@ -68,14 +68,14 @@ public class ClipboardBlockItem extends BlockItem {
 		return InteractionResultHolder.success(heldItem);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void openScreen(Player player, ItemStack stack) {
 		if (Minecraft.getInstance().player == player)
 			ScreenOpener.open(new ClipboardScreen(player.getInventory().selected, stack, null));
 	}
 
 	public void registerModelOverrides() {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClipboardOverrides.registerModelOverridesClient(this));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> ClipboardOverrides.registerModelOverridesClient(this));
 	}
 
 }

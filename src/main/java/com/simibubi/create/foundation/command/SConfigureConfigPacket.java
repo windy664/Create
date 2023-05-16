@@ -59,7 +59,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(Context context) {
-		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			if (option.startsWith("SET")) {
 				trySetConfig(option.substring(3), value);
 				return;

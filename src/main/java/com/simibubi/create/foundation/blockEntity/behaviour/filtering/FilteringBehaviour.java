@@ -22,6 +22,10 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,9 +43,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSettingsBehaviour {
 
@@ -96,13 +97,13 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		filter = ItemStack.of(nbt.getCompound("Filter"));
 		count = nbt.getInt("FilterAmount");
 		upTo = nbt.getBoolean("UpTo");
-		
+
 		// Migrate from previous behaviour
 		if (count == 0) {
 			upTo = true;
 			count = filter.getMaxStackSize();
 		}
-		
+
 		super.read(nbt, clientPacket);
 	}
 
@@ -293,7 +294,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 		if (getFilter().getItem() instanceof FilterItem) {
 			if (!player.isCreative() || ItemHelper
-				.extract(new InvWrapper(player.getInventory()),
+				.extract(PlayerInventoryStorage.of(player),
 					stack -> ItemHandlerHelper.canItemStacksStack(stack, getFilter()), true)
 				.isEmpty())
 				player.getInventory()
@@ -349,7 +350,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		ItemStack copied = ItemStack.of(tag.getCompound("Filter"));
 
 		if (copied.getItem() instanceof FilterItem filterType && !player.isCreative()) {
-			InvWrapper inv = new InvWrapper(player.getInventory());
+			PlayerInventoryStorage inv = PlayerInventoryStorage.of(player);
 
 			for (boolean preferStacksWithoutData : Iterate.trueAndFalse) {
 				if (refund.getItem() != filterType && ItemHelper

@@ -2,6 +2,7 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.logistics.trains.BogeySizes;
 
 import org.slf4j.Logger;
@@ -12,7 +13,6 @@ import com.mojang.logging.LogUtils;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.trinkets.Trinkets;
-import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
@@ -133,7 +133,7 @@ public class Create implements ModInitializer {
 //		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData); // CreateData entrypoint
 		AllSoundEvents.register();
 
-//		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus)); // CreateClient entrypoint
+//		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus)); // CreateClient entrypoint
 
 		// causes class loading issues or something
 		// noinspection Convert2MethodRef
@@ -141,7 +141,7 @@ public class Create implements ModInitializer {
 
 		// fabric exclusive
 		CommonEvents.register();
-		AllPackets.channel.initServerListener();
+		AllPackets.getChannel().initServerListener();
 	}
 
 	public static void init() {

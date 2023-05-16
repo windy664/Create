@@ -93,7 +93,7 @@ public class HandCrankBlockEntity extends GeneratingKineticBlockEntity {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public SuperByteBuffer getRenderedHandle() {
 		BlockState blockState = getBlockState();
 		Direction facing = blockState.getOptionalValue(HandCrankBlock.FACING)
@@ -101,7 +101,7 @@ public class HandCrankBlockEntity extends GeneratingKineticBlockEntity {
 		return CachedBufferer.partialFacing(AllPartialModels.HAND_CRANK_HANDLE, blockState, facing.getOpposite());
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public Instancer<ModelData> getRenderedHandleInstance(Material<ModelData> material) {
 		BlockState blockState = getBlockState();
 		Direction facing = blockState.getOptionalValue(HandCrankBlock.FACING)
@@ -109,7 +109,7 @@ public class HandCrankBlockEntity extends GeneratingKineticBlockEntity {
 		return material.getModel(AllPartialModels.HAND_CRANK_HANDLE, blockState, facing.getOpposite());
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public boolean shouldRenderShaft() {
 		return true;
 	}

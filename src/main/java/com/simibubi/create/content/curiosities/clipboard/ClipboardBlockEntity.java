@@ -14,9 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 
 public class ClipboardBlockEntity extends SmartBlockEntity {
 
@@ -70,10 +67,10 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 		dataContainer = ItemStack.of(tag.getCompound("Item"));
 
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> readClientSide(tag));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> readClientSide(tag));
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void readClientSide(CompoundTag tag) {
 		Minecraft mc = Minecraft.getInstance();
 		if (!(mc.screen instanceof ClipboardScreen cs))

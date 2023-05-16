@@ -7,6 +7,10 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.jozufozu.flywheel.api.MaterialManager;
@@ -16,20 +20,17 @@ import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer.CommonRenderer;
 import com.simibubi.create.content.logistics.trains.BogeySizes;
 
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.registries.ForgeRegistries;
 
 
 public class BogeyStyle {
-	
+
 	public final ResourceLocation name;
 	public final ResourceLocation cycleGroup;
 	public final Component displayName;
@@ -37,13 +38,13 @@ public class BogeyStyle {
 	public final ParticleOptions contactParticle;
 	public final ParticleOptions smokeParticle;
 	public final CompoundTag defaultData;
-	
+
 	private Optional<Supplier<? extends CommonRenderer>> commonRendererFactory;
-	
-	@OnlyIn(Dist.CLIENT)
+
+	@Environment(EnvType.CLIENT)
 	private Map<BogeySizes.BogeySize, SizeData> sizes;
-	
-	@OnlyIn(Dist.CLIENT)
+
+	@Environment(EnvType.CLIENT)
 	private Optional<CommonRenderer> commonRenderer;
 
 	public BogeyStyle(ResourceLocation name, ResourceLocation cycleGroup, Component displayName, ResourceLocation soundType, ParticleOptions contactParticle, ParticleOptions smokeParticle,
@@ -56,10 +57,10 @@ public class BogeyStyle {
 		this.smokeParticle = smokeParticle;
 		this.defaultData = defaultData;
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			this.sizes = new HashMap<>();
 			sizes.forEach((k, v) -> this.sizes.put(k, v.get()));
-			
+
 			this.commonRendererFactory = commonRenderer;
 			this.commonRenderer = commonRenderer.map(Supplier::get);
 		});
@@ -73,12 +74,12 @@ public class BogeyStyle {
 		return Stream.iterate(currentSize.increment(), BogeySizes.BogeySize::increment)
 				.filter(sizes::containsKey)
 				.findFirst()
-				.map(size -> ForgeRegistries.BLOCKS.getValue(sizes.get(size).block()))
-				.orElse(ForgeRegistries.BLOCKS.getValue(sizes.get(currentSize).block()));
+				.map(size -> Registry.BLOCK.get(sizes.get(size).block()))
+				.orElse(Registry.BLOCK.get(sizes.get(currentSize).block()));
 	}
 
 	public Block getBlockOfSize(BogeySizes.BogeySize size) {
-		return ForgeRegistries.BLOCKS.getValue(sizes.get(size).block());
+		return Registry.BLOCK.get(sizes.get(size).block());
 	}
 
 	public Set<BogeySizes.BogeySize> validSizes() {
@@ -92,12 +93,12 @@ public class BogeyStyle {
 		return entry.getMainEvent();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public BogeyRenderer createRendererInstance(BogeySizes.BogeySize size) {
 		return this.sizes.get(size).createRenderInstance();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public BogeyRenderer getInWorldRenderInstance(BogeySizes.BogeySize size) {
 		SizeData sizeData = this.sizes.get(size);
 		return sizeData != null ? sizeData.getInWorldInstance() : BackupBogeyRenderer.INSTANCE;
@@ -115,7 +116,7 @@ public class BogeyStyle {
 		return new BogeyInstance(bogey, this, size, materialManager);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public record SizeData(ResourceLocation block, Supplier<? extends BogeyRenderer> rendererFactory, BogeyRenderer instance) {
 		public BogeyRenderer createRenderInstance() {
 			return rendererFactory.get();

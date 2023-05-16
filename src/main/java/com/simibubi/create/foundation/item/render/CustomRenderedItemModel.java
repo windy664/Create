@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 public class CustomRenderedItemModel extends ForwardingBakedModel {
 
 	public CustomRenderedItemModel(BakedModel originalModel) {
-		super(originalModel);
+		this.wrapped = originalModel;
 	}
 
 	@Override

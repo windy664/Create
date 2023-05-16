@@ -46,8 +46,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEntity>, IWrenchable {
 
@@ -249,7 +249,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	 * The wrapped blockstate at toPos. Wrapper guaranteed to be a block of this
 	 * type <br>
 	 * Return null if the 'from' state shouldn't connect to this block/face
-	 * 
+	 *
 	 * @param from
 	 * @param reader
 	 * @param targetPos
@@ -278,7 +278,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	public boolean canFaceBeOccluded(BlockState state, Direction face) {
 		return false;
 	}
-	
+
 	public boolean shouldFaceAlwaysRender(BlockState state, Direction face) {
 		return false;
 	}
@@ -360,12 +360,12 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 	//
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static BlockColor wrappedColor() {
 		return new WrappedBlockColor();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static class WrappedBlockColor implements BlockColor {
 
 		@Override

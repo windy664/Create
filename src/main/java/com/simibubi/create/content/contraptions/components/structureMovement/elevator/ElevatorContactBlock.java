@@ -42,12 +42,14 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
+import io.github.fabricators_of_create.porting_lib.block.WeakPowerCheckingBlock;
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class ElevatorContactBlock extends WrenchableDirectionalBlock
-	implements IBE<ElevatorContactBlockEntity>, ISpecialBlockItemRequirement {
+	implements IBE<ElevatorContactBlockEntity>, ISpecialBlockItemRequirement, WeakPowerCheckingBlock, ConnectableRedstoneBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty CALLING = BooleanProperty.create("calling");
@@ -87,7 +89,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 
 		return onWrenched;
 	}
-	
+
 	@Nullable
 	public static ColumnCoords getColumnCoords(LevelAccessor level, BlockPos pos) {
 		BlockState blockState = level.getBlockState(pos);
@@ -235,12 +237,12 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 		BlockHitResult hit) {
 		if (player != null && AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
 			return InteractionResult.PASS;
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+		EnvExecutor.runWhenOn(EnvType.CLIENT,
 			() -> () -> withBlockEntityDo(worldIn, pos, be -> this.displayScreen(be, player)));
 		return InteractionResult.SUCCESS;
 	}
 
-	@OnlyIn(value = Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected void displayScreen(ElevatorContactBlockEntity be, Player player) {
 		if (player instanceof LocalPlayer)
 			ScreenOpener

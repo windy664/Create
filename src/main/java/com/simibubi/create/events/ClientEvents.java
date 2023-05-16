@@ -110,6 +110,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -263,14 +264,14 @@ public class ClientEvents {
 		if (Minecraft.getInstance().player == null)
 			return;
 
-		Item item = event.getItemStack().getItem();
+		Item item = stack.getItem();
 		TooltipModifier modifier = TooltipModifier.REGISTRY.get(item);
 		if (modifier != null && modifier != TooltipModifier.EMPTY) {
-			modifier.modify(event);
+			modifier.modify(stack, iTooltipFlag, itemTooltip);
 		}
 
-		PonderTooltipHandler.addToTooltip(event);
-		SequencedAssemblyRecipe.addToTooltip(event);
+		PonderTooltipHandler.addToTooltip(stack, itemTooltip);
+		SequencedAssemblyRecipe.addToTooltip(stack, itemTooltip);
 	}
 
 	public static void onRenderTick() {
@@ -324,7 +325,7 @@ public class ClientEvents {
 		}
 
 		if (entity.isSpectator())
-			return;
+			return currentDensity;
 
 		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
 		if (divingHelmet != null) {
@@ -381,6 +382,7 @@ public class ClientEvents {
 		public static void registerClientReloadListeners() {
 			ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
 		}
+	}
 
 	public static void addEntityRendererLayers(EntityType<? extends LivingEntity> entityType, LivingEntityRenderer<?, ?> entityRenderer,
 											   RegistrationHelper registrationHelper, EntityRendererProvider.Context context) {

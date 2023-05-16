@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -34,8 +36,7 @@ public class CustomRenderedItems {
 			Iterator<Item> iterator = ITEMS.iterator();
 			while (iterator.hasNext()) {
 				Item item = iterator.next();
-				if (!ForgeRegistries.ITEMS.containsValue(item) ||
-						!(RenderProperties.get(item).getItemStackRenderer() instanceof CustomRenderedItemModelRenderer)) {
+				if (!(RenderProperties.get(item).getItemStackRenderer() instanceof CustomRenderedItemModelRenderer)) {
 					iterator.remove();
 				}
 			}

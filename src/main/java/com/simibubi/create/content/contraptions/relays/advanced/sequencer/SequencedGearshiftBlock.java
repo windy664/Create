@@ -4,8 +4,6 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
@@ -13,7 +11,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ITr
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import io.github.fabricators_of_create.porting_lib.block.WeakPowerCheckingBlock;
 import com.tterrag.registrate.fabric.EnvExecutor;

@@ -26,7 +26,7 @@ public class SmartInventory extends ItemStackHandlerContainer implements INBTSer
 		insertionAllowed = true;
 		extractionAllowed = true;
 		this.stackSize = stackSize;
-		this.te = te;
+		this.blockEntity = be;
 	}
 
 	public SmartInventory withMaxStackSize(int maxStackSize) {
@@ -83,7 +83,7 @@ public class SmartInventory extends ItemStackHandlerContainer implements INBTSer
 
 	// fabric: merge SyncedStackHandler, it exists only to be wrapped, and removing it allows avoiding extending RecipeWrapper
 
-	private SyncedTileEntity te;
+	private SyncedBlockEntity blockEntity;
 	private Runnable updateCallback;
 
 	@Override

@@ -19,7 +19,7 @@ public class ScrollValueHandler {
 		return wrenchCog.getValue(partialTicks) + Mth.lerp(partialTicks, lastPassiveScroll, passiveScroll);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void tick() {
 		if (!Minecraft.getInstance()
 			.isPaused()) {

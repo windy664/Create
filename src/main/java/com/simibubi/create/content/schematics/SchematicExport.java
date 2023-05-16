@@ -5,6 +5,8 @@ import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.fabricmc.loader.api.FabricLoader;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
@@ -13,8 +15,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.FMLPaths;
 
 import javax.annotation.Nullable;
 
@@ -25,7 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 public class SchematicExport {
-	public static final Path SCHEMATICS = FMLPaths.GAMEDIR.get().resolve("schematics");
+	public static final Path SCHEMATICS = FabricLoader.getInstance().getGameDir().resolve("schematics");
 
 	/**
 	 * Save a schematic to a file from a world.

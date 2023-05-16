@@ -265,7 +265,7 @@ public class ChassisBlockEntity extends SmartBlockEntity {
 		}
 
 		@Override
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		public void newSettingHovered(ValueSettings valueSetting) {
 			if (!level.isClientSide)
 				return;

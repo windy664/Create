@@ -227,8 +227,7 @@ public class SequencedAssemblyRecipe implements Recipe<Container> {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void addToTooltip(ItemTooltipEvent event) {
-		ItemStack stack = event.getItemStack();
+	public static void addToTooltip(ItemStack stack, List<Component> tooltip) {
 		if (!stack.hasTag() || !stack.getTag()
 			.contains("SequencedAssembly"))
 			return;
@@ -247,7 +246,6 @@ public class SequencedAssemblyRecipe implements Recipe<Container> {
 		int length = sequencedAssemblyRecipe.sequence.size();
 		int step = sequencedAssemblyRecipe.getStep(stack);
 		int total = length * sequencedAssemblyRecipe.loops;
-		List<Component> tooltip = event.getToolTip();
 		tooltip.add(Components.immutableEmpty());
 		tooltip.add(Lang.translateDirect("recipe.sequenced_assembly")
 			.withStyle(ChatFormatting.GRAY));

@@ -23,6 +23,9 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,8 +39,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 
@@ -142,19 +143,19 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 	protected void copySequenceContextFrom(KineticBlockEntity sourceBE) {}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public SuperByteBuffer getRenderedHandle() {
 		return CachedBufferer.block(getBlockState());
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public Instancer<ModelData> getRenderedHandleInstance(Material<ModelData> material) {
 		return material.getModel(getBlockState());
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public boolean shouldRenderShaft() {
 		return false;
 	}
@@ -215,7 +216,7 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 		protected Vec3 getSouthLocation() {
 			return VecHelper.voxelSpace(8, 8, 4.5);
 		}
-		
+
 		@Override
 		public boolean testHit(BlockState state, Vec3 localHit) {
 			Vec3 offset = getLocalOffset(state);

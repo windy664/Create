@@ -27,8 +27,6 @@ import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CSchematics;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -705,7 +703,9 @@ if (printer.isErrored())
 				updateChecklist();
 
 			dontUpdateChecklist = true;
-			ItemStack extractItem = inventory.extractItem(BookInput, 1, false);
+			ItemStack extractItem = inventory.getStackInSlot(BookInput);
+			// non-empty, would early exit above
+			TransferUtil.extract(inventory, ItemVariant.of(extractItem), 1);
 			ItemStack stack = AllBlocks.CLIPBOARD.isIn(extractItem) ? checklist.createWrittenClipboard()
 				: checklist.createWrittenBook();
 			stack.setCount(inventory.getStackInSlot(BookOutput)

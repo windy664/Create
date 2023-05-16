@@ -39,7 +39,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class ClipboardValueSettingsHandler {
 
 	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void drawCustomBlockSelection(DrawSelectionEvent.HighlightBlock event) {
 		Minecraft mc = Minecraft.getInstance();
 		BlockHitResult target = event.getTarget();
@@ -80,7 +80,7 @@ public class ClipboardValueSettingsHandler {
 		ms.popPose();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void clientTick() {
 		Minecraft mc = Minecraft.getInstance();
 		if (!(mc.hitResult instanceof BlockHitResult target))

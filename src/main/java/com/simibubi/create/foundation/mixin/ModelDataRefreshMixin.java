@@ -14,7 +14,7 @@
 //import net.minecraftforge.api.distmarker.OnlyIn;
 //import net.minecraftforge.client.model.ModelDataManager;
 //
-//@OnlyIn(Dist.CLIENT) // fabric: forge mixin, unneeded
+//@Environment(EnvType.CLIENT) // fabric: forge mixin, unneeded
 //@Mixin(ModelDataManager.class)
 //public class ModelDataRefreshMixin {
 //

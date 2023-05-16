@@ -17,7 +17,7 @@ public class SpriteShifter {
 			return ENTRY_CACHE.get(key);
 
 		SpriteShiftEntry entry = new SpriteShiftEntry();
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> entry.set(originalLocation, targetLocation));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> entry.set(originalLocation, targetLocation));
 		ENTRY_CACHE.put(key, entry);
 		return entry;
 	}

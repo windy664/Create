@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,13 +22,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 
 	public AbstractComputerBehaviour computerBehaviour;
-	
+
 	public SpeedGaugeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}

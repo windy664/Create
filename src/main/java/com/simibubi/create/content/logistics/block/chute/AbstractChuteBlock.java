@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.chute;
 
+import java.util.Random;
+
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;

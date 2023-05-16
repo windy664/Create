@@ -5,6 +5,8 @@ import java.util.Vector;
 
 import javax.annotation.Nullable;
 
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
@@ -20,8 +22,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 
@@ -31,7 +31,7 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 	float currentInstructionProgress;
 	int timer;
 	boolean poweredPreviously;
-	
+
 	public AbstractComputerBehaviour computerBehaviour;
 
 	public record SequenceContext(SequencerInstructions instruction, double relativeValue) {
@@ -190,7 +190,7 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 
 	@Override
 	protected void copySequenceContextFrom(KineticBlockEntity sourceBE) {}
-	
+
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("InstructionIndex", currentInstruction);

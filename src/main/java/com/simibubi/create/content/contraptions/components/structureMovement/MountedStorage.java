@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class MountedStorage {
 
@@ -63,7 +64,7 @@ public class MountedStorage {
 		}
 	}
 
-	public static boolean canUseModdedInventory(BlockEntity be, IItemHandler handler) {
+	public static boolean canUseModdedInventory(BlockEntity be, Storage<ItemVariant> handler) {
 		if (!(handler instanceof IItemHandlerModifiable validItemHandler))
 			return false;
 		BlockState blockState = be.getBlockState();

@@ -7,11 +7,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent;
 
 /**
  * A server to client version of {@link BlockEntityConfigurationPacket}
- * 
+ *
  * @param <BE>
  */
 public abstract class BlockEntityDataPacket<BE extends SyncedBlockEntity> extends SimplePacketBase {
@@ -33,7 +32,7 @@ public abstract class BlockEntityDataPacket<BE extends SyncedBlockEntity> extend
 	}
 
 	@Override
-	public boolean handle(NetworkEvent.Context context) {
+	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			ClientLevel world = Minecraft.getInstance().level;
 

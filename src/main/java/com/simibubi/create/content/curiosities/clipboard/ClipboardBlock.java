@@ -36,10 +36,10 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.DistExecutor;
+import io.github.fabricators_of_create.porting_lib.fake_players.FakePlayer;
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements IBE<ClipboardBlockEntity>, IWrenchable, ProperWaterloggedBlock {
@@ -89,15 +89,15 @@ public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 			breakAndCollect(pState, pLevel, pPos, pPlayer);
 			return InteractionResult.SUCCESS;
 		}
-		
+
 		return onBlockEntityUse(pLevel, pPos, cbe -> {
 			if (pLevel.isClientSide())
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(pPlayer, cbe.dataContainer, pPos));
+				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> openScreen(pPlayer, cbe.dataContainer, pPos));
 			return InteractionResult.SUCCESS;
 		});
 	}
-	
-	@OnlyIn(Dist.CLIENT)
+
+	@Environment(EnvType.CLIENT)
 	private void openScreen(Player player, ItemStack stack, BlockPos pos) {
 		if (Minecraft.getInstance().player == player)
 			ScreenOpener.open(new ClipboardScreen(player.getInventory().selected, stack, pos));

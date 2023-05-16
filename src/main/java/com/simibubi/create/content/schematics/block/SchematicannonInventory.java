@@ -29,7 +29,7 @@ public class SchematicannonInventory extends ItemStackHandler {
 		case 1: // Blueprint output
 			return false;
 		case 2: // Book input
-			return AllBlocks.CLIPBOARD.isIn(stack) || stack.isOf(Items.BOOK) || stack.isOf(Items.WRITTEN_BOOK);
+			return stack.isOf(AllBlocks.CLIPBOARD.get().asItem()) || stack.isOf(Items.BOOK) || stack.isOf(Items.WRITTEN_BOOK);
 		case 3: // Material List output
 			return false;
 		case 4: // Gunpowder

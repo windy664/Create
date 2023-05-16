@@ -87,7 +87,7 @@ public class PonderIndex {
 			PonderTag.KINETIC_SOURCES);
 		HELPER.addStoryBoard(AllBlocks.LARGE_WATER_WHEEL, "large_water_wheel", KineticsScenes::largeWaterWheel,
 			PonderTag.KINETIC_SOURCES);
-		
+
 		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank, PonderTag.KINETIC_SOURCES);
 
 		HELPER.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
@@ -600,7 +600,7 @@ public class PonderIndex {
 			.add(Blocks.TARGET);
 
 		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
-			Block computer = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
+			Block computer = Registry.BLOCK.get(new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
 			if (computer != null)
 				PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(computer);
 		});

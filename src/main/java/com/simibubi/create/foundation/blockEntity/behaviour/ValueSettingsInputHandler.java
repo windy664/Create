@@ -40,7 +40,7 @@ public class ValueSettingsInputHandler {
 			return;
 
 		if (event.getSide() == LogicalSide.CLIENT)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			EnvExecutor.runWhenOn(EnvType.CLIENT,
 				() -> () -> CreateClient.VALUE_SETTINGS_HANDLER.cancelIfWarmupAlreadyStarted(event));
 
 		if (event.isCanceled())
@@ -84,7 +84,7 @@ public class ValueSettingsInputHandler {
 
 			if (event.getSide() == LogicalSide.CLIENT) {
 				BehaviourType<?> type = behaviour.getType();
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.VALUE_SETTINGS_HANDLER
+				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> CreateClient.VALUE_SETTINGS_HANDLER
 					.startInteractionWith(pos, type, hand, ray.getDirection()));
 			}
 

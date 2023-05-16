@@ -5,6 +5,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -35,9 +38,6 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IBlockRenderProperties;
 
 public class WaterWheelStructuralBlock extends DirectionalBlock implements IWrenchable, IProxyHoveringInformation {
 
@@ -159,7 +159,7 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 			pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
 		consumer.accept(new RenderProperties());
 	}

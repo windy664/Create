@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import java.util.Iterator;
+
 import io.github.fabricators_of_create.porting_lib.transfer.WrappedStorage;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 
@@ -20,9 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class PortableFluidInterfaceBlockEntity extends PortableStorageInterfaceBlockEntity {
-
-public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTileEntity implements FluidTransferable {
+public class PortableFluidInterfaceBlockEntity extends PortableStorageInterfaceBlockEntity implements FluidTransferable {
 
 	protected InterfaceFluidHandler capability;
 

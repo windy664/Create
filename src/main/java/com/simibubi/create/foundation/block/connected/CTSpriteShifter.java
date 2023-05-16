@@ -19,7 +19,7 @@ public class CTSpriteShifter {
 			return (CTSpriteShiftEntry) ENTRY_CACHE.get(key);
 
 		CTSpriteShiftEntry entry = new CTSpriteShiftEntry(type);
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> entry.set(blockTexture, connectedTexture));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> entry.set(blockTexture, connectedTexture));
 		ENTRY_CACHE.put(key, entry);
 		return entry;
 	}

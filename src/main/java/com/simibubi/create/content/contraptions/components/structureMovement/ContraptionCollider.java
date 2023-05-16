@@ -88,7 +88,7 @@ public class ContraptionCollider {
 		ContraptionRotationState rotation = null;
 
 		if (world.isClientSide() && safetyLock.left != null && safetyLock.left.get() == contraptionEntity)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			EnvExecutor.runWhenOn(EnvType.CLIENT,
 				() -> () -> saveClientPlayerFromClipping(contraptionEntity, contraptionMotion));
 
 		// After death, multiple refs to the client player may show up in the area
@@ -104,7 +104,7 @@ public class ContraptionCollider {
 			if (playerType == PlayerType.REMOTE) {
 				if (!(contraption instanceof TranslatingContraption))
 					continue;
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+				EnvExecutor.runWhenOn(EnvType.CLIENT,
 					() -> () -> saveRemotePlayerFromClipping((Player) entity, contraptionEntity, contraptionMotion));
 				continue;
 			}
@@ -402,7 +402,7 @@ public class ContraptionCollider {
 
 	private static int packetCooldown = 0;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private static void saveClientPlayerFromClipping(AbstractContraptionEntity contraptionEntity,
 		Vec3 contraptionMotion) {
 		LocalPlayer entity = Minecraft.getInstance().player;
@@ -442,7 +442,7 @@ public class ContraptionCollider {
 			safetyLock.setLeft(null);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void lockPacketReceived(int contraptionId, int remotePlayerId, double suggestedOffset) {
 		ClientLevel level = Minecraft.getInstance().level;
 		if (!(level.getEntity(contraptionId) instanceof ControlledContraptionEntity contraptionEntity))
@@ -453,7 +453,7 @@ public class ContraptionCollider {
 			.put(player, suggestedOffset);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private static void saveRemotePlayerFromClipping(Player entity, AbstractContraptionEntity contraptionEntity,
 		Vec3 contraptionMotion) {
 		if (entity.isPassenger())
@@ -467,7 +467,7 @@ public class ContraptionCollider {
 				locksOnThisContraption.remove(entity);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private static boolean savePlayerFromClipping(Player entity, AbstractContraptionEntity contraptionEntity,
 		Vec3 contraptionMotion, double yStartOffset) {
 		AABB bb = entity.getBoundingBox()

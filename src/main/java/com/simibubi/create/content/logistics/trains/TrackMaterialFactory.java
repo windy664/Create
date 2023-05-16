@@ -3,6 +3,10 @@ package com.simibubi.create.content.logistics.trains;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.core.PartialModel;
@@ -13,9 +17,6 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 
 public class TrackMaterialFactory {
 	private final ResourceLocation id;
@@ -29,13 +30,13 @@ public class TrackMaterialFactory {
 	@Nullable
 	private TrackMaterial.TrackType.TrackBlockFactory customFactory = null;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private TrackMaterial.TrackModelHolder modelHolder;
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private PartialModel tieModel;
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private PartialModel leftSegmentModel;
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private PartialModel rightSegmentModel;
 
 	public TrackMaterialFactory(ResourceLocation id) {
@@ -57,7 +58,7 @@ public class TrackMaterialFactory {
 	}
 
 	public TrackMaterialFactory defaultModels() { // was setBuiltin
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.modelHolder = TrackMaterial.TrackModelHolder.DEFAULT);
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> this.modelHolder = TrackMaterial.TrackModelHolder.DEFAULT);
 		return this;
 	}
 
@@ -98,7 +99,7 @@ public class TrackMaterialFactory {
 	}
 
 	public TrackMaterialFactory standardModels() { // was defaultModels
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			String namespace = id.getNamespace();
 			String prefix = "block/track/" + id.getPath() + "/";
 			tieModel = new PartialModel(new ResourceLocation(namespace, prefix + "tie"));
@@ -109,7 +110,7 @@ public class TrackMaterialFactory {
 	}
 
 	public TrackMaterialFactory customModels(Supplier<Supplier<PartialModel>> tieModel, Supplier<Supplier<PartialModel>> leftSegmentModel, Supplier<Supplier<PartialModel>> rightSegmentModel) {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			this.tieModel = tieModel.get().get();
 			this.leftSegmentModel = leftSegmentModel.get().get();
 			this.rightSegmentModel = rightSegmentModel.get().get();
@@ -130,7 +131,7 @@ public class TrackMaterialFactory {
 		assert sleeperIngredient != null;
 		assert railsIngredient != null;
 		assert id != null;
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			assert modelHolder != null;
 			if (tieModel != null || leftSegmentModel != null || rightSegmentModel != null) {
 				assert tieModel != null && leftSegmentModel != null && rightSegmentModel != null;

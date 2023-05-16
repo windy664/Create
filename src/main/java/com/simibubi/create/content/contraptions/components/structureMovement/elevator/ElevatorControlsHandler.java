@@ -46,7 +46,7 @@ public class ElevatorControlsHandler {
 
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static boolean onScroll(double delta) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;

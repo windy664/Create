@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.LivingEntityAccessor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;

@@ -18,8 +18,8 @@ import net.minecraft.world.level.block.Blocks;
 
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -68,7 +68,7 @@ public abstract class BogeyRenderer {
 	 * @param light (Optional) Light used for in-world rendering
 	 * @param vb (Optional) Vertex Consumer used for in-world rendering
 	 */
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public abstract void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption);
 
 	/**
@@ -78,7 +78,7 @@ public abstract class BogeyRenderer {
 	 * @param wheelAngle The angle of the wheel
 	 * @param ms The posestack to render to
 	 */
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms) {
 		this.render(bogeyData, wheelAngle, ms, 0, null, true);
 	}
@@ -174,7 +174,7 @@ public abstract class BogeyRenderer {
 	 *
 	 * @param materialManager The material manager
 	 */
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public abstract void initialiseContraptionModelData(MaterialManager materialManager);
 
 	/**

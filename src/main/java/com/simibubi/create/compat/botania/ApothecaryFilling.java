@@ -2,7 +2,7 @@ package com.simibubi.create.compat.botania;
 
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.compat.Mods;
-import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlockEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import vazkii.botania.api.block.IPetalApothecary;
-import vazkii.botania.common.block.tile.TileAltar;
 
 public class ApothecaryFilling extends BlockSpoutingBehaviour {
 
@@ -24,7 +23,7 @@ public class ApothecaryFilling extends BlockSpoutingBehaviour {
 	private final ResourceLocation APOTHECARY = new ResourceLocation("botania", "altar");
 
 	@Override
-	public long fillBlock(Level level, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
+	public long fillBlock(Level level, BlockPos pos, SpoutBlockEntity spout, FluidStack availableFluid,
 		boolean simulate) {
 		if (!enabled())
 			return 0;
@@ -74,7 +73,7 @@ public class ApothecaryFilling extends BlockSpoutingBehaviour {
 			BOTANIA_PRESENT = Mods.BOTANIA.isLoaded();
 		if (!BOTANIA_PRESENT)
 			return false;
-		return AllConfigs.SERVER.recipes.allowFillingBySpout.get();
+		return AllConfigs.server().recipes.allowFillingBySpout.get();
 	}
 
 }

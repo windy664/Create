@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+
+import net.fabricmc.api.Environment;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.core.PartialModel;
@@ -24,9 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 
 public class TrackMaterial {
 	public static final Map<ResourceLocation, TrackMaterial> ALL = new HashMap<>();
@@ -49,10 +51,10 @@ public class TrackMaterial {
 	@Nullable
 	private final TrackMaterial.TrackType.TrackBlockFactory customFactory;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected TrackModelHolder modelHolder;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public TrackModelHolder getModelHolder() {
 		return modelHolder;
 	}
@@ -75,7 +77,7 @@ public class TrackMaterial {
 		this.particle = particle;
 		this.trackType = trackType;
 		this.customFactory = customFactory;
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.modelHolder = modelHolder.get().get());
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> this.modelHolder = modelHolder.get().get());
 		ALL.put(this.id, this);
 	}
 
@@ -163,7 +165,7 @@ public class TrackMaterial {
 		return TrackMaterial.ANDESITE;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public record TrackModelHolder(PartialModel tie, PartialModel segment_left, PartialModel segment_right) {
 		static final TrackModelHolder DEFAULT = new TrackModelHolder(AllPartialModels.TRACK_TIE,
 			AllPartialModels.TRACK_SEGMENT_LEFT, AllPartialModels.TRACK_SEGMENT_RIGHT);

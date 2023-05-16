@@ -74,11 +74,9 @@ public class PonderTooltipHandler {
 		hoveredStack = ItemStack.EMPTY;
 	}
 
-	public static void addToTooltip(ItemTooltipEvent event) {
+	public static void addToTooltip(ItemStack stack, List<Component> tooltip) {
 		if (!enable)
 			return;
-
-		ItemStack stack = event.getItemStack();
 
 		updateHovered(stack);
 
@@ -93,7 +91,6 @@ public class PonderTooltipHandler {
 		Component component = subject ? Lang.translateDirect(SUBJECT)
 			.withStyle(ChatFormatting.GREEN)
 			: makeProgressBar(Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f));
-		List<Component> tooltip = event.getToolTip();
 		if (tooltip.size() < 2)
 			tooltip.add(component);
 		else

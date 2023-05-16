@@ -5,8 +5,6 @@ import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 import java.util.function.Predicate;
 
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-
 import net.minecraft.world.entity.player.Player;
 
 import org.apache.commons.lang3.tuple.Pair;

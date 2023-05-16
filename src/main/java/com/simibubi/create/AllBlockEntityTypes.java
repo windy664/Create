@@ -1,6 +1,8 @@
 package com.simibubi.create;
 
 import static com.simibubi.create.Create.REGISTRATE;
+import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviourBE;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -216,8 +218,6 @@ import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
-
-import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviourTE;
 
 public class AllBlockEntityTypes {
 

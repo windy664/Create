@@ -7,6 +7,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.item.TooltipModifier;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
@@ -73,7 +75,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@Override
-	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name, ResourceKey<? extends Registry<R>> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator, NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
+	protected <R , T extends R> RegistryEntry<T> accept(String name, ResourceKey<? extends Registry<R>> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator, NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
 		RegistryEntry<T> entry = super.accept(name, type, builder, creator, entryFactory);
 		if (type.equals(Registry.ITEM_REGISTRY)) {
 			if (currentTooltipModifierFactory != null) {
@@ -202,7 +204,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
-			Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
+			Supplier<Supplier<CustomRenderedItemModelRenderer>> supplier) {
 		return b -> {
 			onClient(() -> () -> customRenderedItem(b, supplier));
 			return b;
@@ -244,12 +246,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	@Environment(EnvType.CLIENT)
 	private static <T extends Item, P> void customRenderedItem(ItemBuilder<T, P> b,
-															   Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
+															   Supplier<Supplier<CustomRenderedItemModelRenderer>> supplier) {
 		b.onRegister(new CustomRendererRegistrationHelper(supplier));
 	}
 
 	@Environment(EnvType.CLIENT)
-	private static void registerCustomRenderedItem(Item entry, CustomRenderedItemModelRenderer<?> renderer) {
+	private static void registerCustomRenderedItem(Item entry, CustomRenderedItemModelRenderer renderer) {
 		CreateClient.MODEL_SWAPPER.getCustomRenderedItems()
 				.register(RegisteredObjects.getKeyOrThrow(entry), renderer::createModel);
 	}
@@ -264,10 +266,10 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@Environment(EnvType.CLIENT)
-	private record CustomRendererRegistrationHelper(Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) implements NonNullConsumer<Item> {
+	private record CustomRendererRegistrationHelper(Supplier<Supplier<CustomRenderedItemModelRenderer>> supplier) implements NonNullConsumer<Item> {
 		@Override
 		public void accept(Item entry) {
-			CustomRenderedItemModelRenderer<?> renderer = supplier.get().get();
+			CustomRenderedItemModelRenderer renderer = supplier.get().get();
 			BuiltinItemRendererRegistry.INSTANCE.register(entry, renderer);
 			registerCustomRenderedItem(entry, renderer);
 		}

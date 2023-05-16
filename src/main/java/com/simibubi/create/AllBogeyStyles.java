@@ -23,8 +23,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
 
 public class AllBogeyStyles {
 	public static final Map<ResourceLocation, BogeyStyle> BOGEY_STYLES = new HashMap<>();
@@ -94,7 +94,7 @@ public class AllBogeyStyles {
 
 		public BogeyStyleBuilder size(BogeySizes.BogeySize size, Supplier<Supplier<? extends BogeyRenderer>> renderer,
 			ResourceLocation location) {
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 				this.sizes.put(size, () -> new BogeyStyle.SizeData(location, renderer.get(), renderer.get()
 					.get()));
 			});
@@ -112,7 +112,7 @@ public class AllBogeyStyles {
 		}
 
 		public BogeyStyleBuilder commonRenderer(Supplier<Supplier<? extends CommonRenderer>> commonRenderer) {
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 				this.commonRenderer = Optional.of(commonRenderer.get());
 			});
 			return this;

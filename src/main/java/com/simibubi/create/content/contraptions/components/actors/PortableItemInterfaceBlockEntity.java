@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import java.util.Iterator;
+
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -19,9 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class PortableItemInterfaceBlockEntity extends PortableStorageInterfaceBlockEntity {
-
-public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTileEntity implements ItemTransferable {
+public class PortableItemInterfaceBlockEntity extends PortableStorageInterfaceBlockEntity implements ItemTransferable {
 
 	protected InterfaceItemHandler capability;
 

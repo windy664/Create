@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -27,9 +28,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.phys.Vec3;
 
 public class MountedStorageManager {
 
@@ -217,7 +224,7 @@ public class MountedStorageManager {
 		MountedStorage storage = storageManager.storage.get(localPos);
 		if (storage == null || storage.getItemHandler() == null)
 			return false;
-		IItemHandlerModifiable handler = storage.getItemHandler();
+		Storage<ItemVariant> handler = storage.getItemHandler();
 
 		StructureBlockInfo info = contraption.getBlocks()
 			.get(localPos);

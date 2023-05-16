@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
@@ -199,7 +200,7 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity implements ItemTrans
 	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
 		if (belowProvider == null)
 			return null;
-		if (belowProvider.findBlockEntity() instanceof BeltTileEntity)
+		if (belowProvider.findBlockEntity() instanceof BeltBlockEntity)
 			return belowProvider.get(Direction.UP);
 		return null;
 	}

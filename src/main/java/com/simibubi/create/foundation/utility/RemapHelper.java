@@ -235,7 +235,7 @@ public class RemapHelper {
 			String path = key.getPath();
 			ResourceLocation remappedId = reMap.get(path);
 			if (remappedId != null) {
-				Block remapped = ForgeRegistries.BLOCKS.getValue(remappedId);
+				Block remapped = Registry.BLOCK.get(remappedId);
 				if (remapped != null) {
 					Create.LOGGER.warn("Remapping block '{}' to '{}'", key, remappedId);
 					try {

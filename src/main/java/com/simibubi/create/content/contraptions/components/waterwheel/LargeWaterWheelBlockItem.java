@@ -36,11 +36,11 @@ public class LargeWaterWheelBlockItem extends BlockItem {
 				.relative(clickedFace), clickedFace));
 		if (result == InteractionResult.FAIL && ctx.getLevel()
 			.isClientSide())
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> showBounds(ctx));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> showBounds(ctx));
 		return result;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void showBounds(BlockPlaceContext context) {
 		BlockPos pos = context.getClickedPos();
 		Axis axis = ((LargeWaterWheelBlock) getBlock()).getAxisForPlacement(context);

@@ -17,7 +17,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
@@ -28,7 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import net.minecraftforge.network.PacketDistributor;
 
 public class ElevatorContraption extends PulleyContraption {
 
@@ -39,7 +37,7 @@ public class ElevatorContraption extends PulleyContraption {
 	private int namesListVersion = -1;
 	public List<IntAttached<Couple<String>>> namesList = ImmutableList.of();
 	public int clientYTarget;
-	
+
 	public int maxContactY;
 	public int minContactY;
 
@@ -92,7 +90,7 @@ public class ElevatorContraption extends PulleyContraption {
 			return null;
 		return targetedYLevel;
 	}
-	
+
 	public boolean isTargetUnreachable(int contactY) {
 		return contactY < minContactY || contactY > maxContactY;
 	}
@@ -107,11 +105,11 @@ public class ElevatorContraption extends PulleyContraption {
 			throw new AssemblyException(Lang.translateDirect("gui.assembly.exception.no_contacts"));
 		if (contacts > 1)
 			throw new AssemblyException(Lang.translateDirect("gui.assembly.exception.too_many_contacts"));
-		
+
 		ElevatorColumn column = ElevatorColumn.get(world, getGlobalColumn());
 		if (column != null && column.isActive())
 			throw new AssemblyException(Lang.translateDirect("gui.assembly.exception.column_conflict"));
-		
+
 		startMoving(world);
 		return true;
 	}

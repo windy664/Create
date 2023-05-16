@@ -4,9 +4,9 @@ import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class AbstractComputerBehaviour extends BlockEntityBehaviour {
 

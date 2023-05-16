@@ -17,7 +17,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface LayeredArmorItem extends CustomRenderedArmorItem {
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	default void renderArmorPiece(HumanoidArmorLayer<?, ?, ?> layer, PoseStack poseStack,

@@ -36,7 +36,7 @@ public class ContraptionColliderLockPacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(Context context) {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+		EnvExecutor.runWhenOn(EnvType.CLIENT,
 			() -> () -> ContraptionCollider.lockPacketReceived(contraption, sender, offset));
 		return true;
 	}
@@ -45,7 +45,7 @@ public class ContraptionColliderLockPacket extends SimplePacketBase {
 
 		protected int contraption;
 		protected double offset;
-		
+
 		public ContraptionColliderLockPacketRequest(int contraption, double offset) {
 			this.contraption = contraption;
 			this.offset = offset;

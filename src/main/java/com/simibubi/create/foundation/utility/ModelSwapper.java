@@ -37,8 +37,6 @@ public class ModelSwapper {
 	}
 
 	public void onModelBake(ModelManager manager, Map<ResourceLocation, BakedModel> modelRegistry, ModelBakery loader) {
-		Map<ResourceLocation, BakedModel> modelRegistry = event.getModelRegistry();
-
 		customBlockModels.forEach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
 		customItemModels.forEach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
 		CustomRenderedItems.forEach(item -> swapModels(modelRegistry, getItemModelLocation(item), CustomRenderedItemModel::new));

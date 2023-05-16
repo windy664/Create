@@ -14,9 +14,6 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
-import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import io.github.fabricators_of_create.porting_lib.util.DamageSourceHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;

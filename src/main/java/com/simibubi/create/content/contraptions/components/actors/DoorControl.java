@@ -13,8 +13,8 @@ import com.simibubi.create.foundation.utility.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public enum DoorControl {
 
@@ -39,7 +39,7 @@ public enum DoorControl {
 		};
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static Pair<ScrollInput, Label> createWidget(int x, int y, Consumer<DoorControl> callback,
 		DoorControl initial) {
 
