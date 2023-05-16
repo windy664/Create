@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
@@ -69,11 +70,11 @@ public class ElevatorColumn {
 
 	public int namesListVersion;
 
-	public List<LongAttached<Couple<String>>> compileNamesList() {
+	public List<IntAttached<Couple<String>>> compileNamesList() {
 		return getContacts().stream()
 			.map(p -> {
 				if (level.getBlockEntity(p)instanceof ElevatorContactBlockEntity ecte)
-					return LongAttached.with(p.getY(), ecte.getNames());
+					return IntAttached.with(p.getY(), ecte.getNames());
 				return null;
 			})
 			.filter(Objects::nonNull)

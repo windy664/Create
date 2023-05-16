@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import com.simibubi.create.foundation.utility.IntAttached;
+
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
 import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 import io.github.fabricators_of_create.porting_lib.util.client.GuiUtils;
@@ -308,7 +310,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		});
 	}
 
-	private List<LongAttached<String>> getViableStations(IScheduleInput field) {
+	private List<IntAttached<String>> getViableStations(IScheduleInput field) {
 		GlobalRailwayManager railwayManager = Create.RAILWAYS.sided(null);
 		Set<TrackGraph> viableGraphs = new HashSet<>(railwayManager.trackNetworks.values());
 
@@ -341,7 +343,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 				.stream())
 			.filter(station -> station.blockEntityPos != null)
 			.filter(station -> visited.add(station.name))
-			.map(station -> LongAttached.with((long) Vec3.atBottomCenterOf(station.blockEntityPos)
+			.map(station -> IntAttached.with((int) Vec3.atBottomCenterOf(station.blockEntityPos)
 				.distanceTo(position), station.name))
 			.toList();
 	}

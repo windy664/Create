@@ -15,6 +15,7 @@ import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequenc
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
@@ -25,7 +26,7 @@ public class LinkedControllerServerHandler {
 
 	public static WorldAttached<Map<UUID, Collection<ManualFrequencyEntry>>> receivedInputs =
 		new WorldAttached<>($ -> new HashMap<>());
-	static final long TIMEOUT = 30;
+	static final int TIMEOUT = 30;
 
 	public static void tick(LevelAccessor world) {
 		Map<UUID, Collection<ManualFrequencyEntry>> map = receivedInputs.get(world);
@@ -73,14 +74,14 @@ public class LinkedControllerServerHandler {
 			ManualFrequencyEntry entry = new ManualFrequencyEntry(pos, activated);
 			Create.REDSTONE_LINK_NETWORK_HANDLER.addToNetwork(world, entry);
 			list.add(entry);
-			
-			for (IRedstoneLinkable linkable : Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(world, entry)) 
+
+			for (IRedstoneLinkable linkable : Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(world, entry))
 				if (linkable instanceof LinkBehaviour lb && lb.isListening())
 					AllAdvancements.LINKED_CONTROLLER.awardTo(world.getPlayerByUUID(uniqueID));
 		}
 	}
 
-	static class ManualFrequencyEntry extends LongAttached<Couple<Frequency>> implements IRedstoneLinkable {
+	static class ManualFrequencyEntry extends IntAttached<Couple<Frequency>> implements IRedstoneLinkable {
 
 		private BlockPos pos;
 

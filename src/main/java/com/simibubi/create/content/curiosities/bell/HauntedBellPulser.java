@@ -8,6 +8,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.LongAttached;
 
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -24,7 +25,7 @@ public class HauntedBellPulser {
 	public static final int RECHARGE_TICKS = 8;
 	public static final int WARMUP_TICKS = 10;
 
-	public static final Cache<UUID, LongAttached<Entity>> WARMUP = CacheBuilder.newBuilder()
+	public static final Cache<UUID, IntAttached<Entity>> WARMUP = CacheBuilder.newBuilder()
 		.expireAfterAccess(250, TimeUnit.MILLISECONDS)
 		.build();
 
@@ -43,7 +44,7 @@ public class HauntedBellPulser {
 			boolean firstPulse = false;
 
 			try {
-				LongAttached<Entity> ticker = WARMUP.get(player.getUUID(), () -> LongAttached.with(WARMUP_TICKS, player));
+				IntAttached<Entity> ticker = WARMUP.get(player.getUUID(), () -> IntAttached.with(WARMUP_TICKS, player));
 				firstPulse = ticker.getFirst()
 						.intValue() == 1;
 				ticker.decrement();

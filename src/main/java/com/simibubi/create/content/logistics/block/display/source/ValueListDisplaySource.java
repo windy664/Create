@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.entity.LecternBlockEntity;
 
 public abstract class ValueListDisplaySource extends DisplaySource {
 
+	// fabric: use longs instead to accommodate for transfer
 	protected abstract Stream<LongAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows);
 
 	protected abstract boolean valueFirst();

@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.el
 
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.IntAttached;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 

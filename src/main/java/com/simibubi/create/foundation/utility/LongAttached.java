@@ -5,6 +5,9 @@ import java.util.function.Function;
 
 import net.minecraft.nbt.CompoundTag;
 
+/**
+ * Fabric: {@link IntAttached} but elongated, for use with transfer and related things.
+ */
 public class LongAttached<V> extends Pair<Long, V> {
 
 	protected LongAttached(Long first, V second) {
