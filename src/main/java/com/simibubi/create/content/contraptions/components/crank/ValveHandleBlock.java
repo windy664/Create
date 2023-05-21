@@ -53,22 +53,19 @@ public class ValveHandleBlock extends HandCrankBlock {
 		return AllShapes.VALVE_HANDLE.get(pState.getValue(FACING));
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOW)
-	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
-		BlockPos pos = event.getPos();
-		Level level = event.getWorld();
-		Player player = event.getPlayer();
+	public static InteractionResult onBlockActivated(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
+		BlockPos pos = hit.getBlockPos();
 		BlockState blockState = level.getBlockState(pos);
 
 		if (!(blockState.getBlock() instanceof ValveHandleBlock vhb))
-			return;
-		if (AllItems.WRENCH.isIn(player.getItemInHand(event.getHand())) && player.isSteppingCarefully())
-			return;
+			return InteractionResult.PASS;
+		if (AllItems.WRENCH.isIn(player.getItemInHand(hand)) && player.isSteppingCarefully())
+			return InteractionResult.PASS;
 
-		if (vhb.clicked(level, pos, blockState, player, event.getHand())) {
-			event.setCanceled(true);
-			event.setCancellationResult(InteractionResult.SUCCESS);
+		if (vhb.clicked(level, pos, blockState, player, hand)) {
+			return InteractionResult.SUCCESS;
 		}
+		return InteractionResult.PASS;
 	}
 
 	@Override

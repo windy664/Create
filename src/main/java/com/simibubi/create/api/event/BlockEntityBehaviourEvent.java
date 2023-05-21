@@ -1,11 +1,13 @@
 package com.simibubi.create.api.event;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
+
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
 
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -23,19 +25,18 @@ import net.minecraft.world.level.block.state.BlockState;
  * to the initial NBT read (unless the BE was placed, not loaded), thereby
  * allowing block entities to store and retrieve data for injected behaviours.
  */
-public class BlockEntityBehaviourEvent<T extends SmartBlockEntity> extends GenericEvent<T> {
+public class BlockEntityBehaviourEvent {
+	public static final Event<Callback> EVENT = EventFactory.createArrayBacked(Callback.class, callbacks -> event -> {
+		for (Callback callback : callbacks)
+			callback.manageBehaviors(event);
+	});
 
-	private T smartBlockEntity;
+	private SmartBlockEntity smartBlockEntity;
 	private Map<BehaviourType<?>, BlockEntityBehaviour> behaviours;
 
-	public BlockEntityBehaviourEvent(T blockEntity, Map<BehaviourType<?>, BlockEntityBehaviour> behaviours) {
+	public BlockEntityBehaviourEvent(SmartBlockEntity blockEntity, Map<BehaviourType<?>, BlockEntityBehaviour> behaviours) {
 		smartBlockEntity = blockEntity;
 		this.behaviours = behaviours;
-	}
-
-	@Override
-	public Type getGenericType() {
-		return smartBlockEntity.getClass();
 	}
 
 	public void attach(BlockEntityBehaviour behaviour) {
@@ -46,7 +47,7 @@ public class BlockEntityBehaviourEvent<T extends SmartBlockEntity> extends Gener
 		return behaviours.remove(type);
 	}
 
-	public T getBlockEntity() {
+	public SmartBlockEntity getBlockEntity() {
 		return smartBlockEntity;
 	}
 
@@ -54,4 +55,7 @@ public class BlockEntityBehaviourEvent<T extends SmartBlockEntity> extends Gener
 		return smartBlockEntity.getBlockState();
 	}
 
+	public interface Callback {
+		void manageBehaviors(BlockEntityBehaviourEvent event);
+	}
 }

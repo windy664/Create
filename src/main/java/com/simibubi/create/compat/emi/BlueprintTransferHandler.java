@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
-import com.simibubi.create.content.curiosities.tools.BlueprintContainer;
+import com.simibubi.create.content.curiosities.tools.BlueprintMenu;
 import com.simibubi.create.foundation.networking.AllPackets;
 
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
@@ -19,11 +19,11 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class BlueprintTransferHandler implements EmiRecipeHandler<BlueprintContainer> {
+public class BlueprintTransferHandler implements EmiRecipeHandler<BlueprintMenu> {
 	private static final EmiPlayerInventory empty = new EmiPlayerInventory(List.of());
 
 	@Override
-	public EmiPlayerInventory getInventory(AbstractContainerScreen<BlueprintContainer> screen) {
+	public EmiPlayerInventory getInventory(AbstractContainerScreen<BlueprintMenu> screen) {
 		return empty;
 	}
 
@@ -33,15 +33,15 @@ public class BlueprintTransferHandler implements EmiRecipeHandler<BlueprintConta
 	}
 
 	@Override
-	public boolean canCraft(EmiRecipe recipe, EmiCraftContext<BlueprintContainer> context) {
+	public boolean canCraft(EmiRecipe recipe, EmiCraftContext<BlueprintMenu> context) {
 		return true;
 	}
 
 	@Override
-	public boolean craft(EmiRecipe recipe, EmiCraftContext<BlueprintContainer> context) {
+	public boolean craft(EmiRecipe recipe, EmiCraftContext<BlueprintMenu> context) {
 		if (recipe instanceof EmiCraftingRecipe craftingRecipe) {
 			Minecraft.getInstance().setScreen(context.getScreen());
-			AllPackets.channel.sendToServer(new BlueprintAssignCompleteRecipePacket(craftingRecipe.getId()));
+			AllPackets.getChannel().sendToServer(new BlueprintAssignCompleteRecipePacket(craftingRecipe.getId()));
 			return true;
 		}
 		return false;
