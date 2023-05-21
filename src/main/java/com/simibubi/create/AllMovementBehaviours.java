@@ -7,11 +7,11 @@ import net.minecraft.core.Registry;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.actors.CampfireMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.actors.dispenser.DispenserMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.actors.dispenser.DropperMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.BellMovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.CampfireMovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.dispenser.DispenserMovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.dispenser.DropperMovementBehaviour;
 import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 

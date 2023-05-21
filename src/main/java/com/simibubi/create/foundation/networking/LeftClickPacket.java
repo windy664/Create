@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.networking;
 
-import com.simibubi.create.events.CommonEvents;
+import com.simibubi.create.foundation.events.CommonEvents;
 
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -8,7 +8,7 @@ public class LeftClickPacket extends SimplePacketBase {
 
 	public LeftClickPacket() {}
 
-	LeftClickPacket(FriendlyByteBuf buffer) {}
+	public LeftClickPacket(FriendlyByteBuf buffer) {}
 
 	@Override
 	public void write(FriendlyByteBuf buffer) {}

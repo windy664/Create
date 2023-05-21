@@ -1,6 +1,6 @@
 package com.simibubi.create.api.event;
 
-import com.simibubi.create.content.logistics.trains.TrackGraph;
+import com.simibubi.create.content.trains.graph.TrackGraph;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

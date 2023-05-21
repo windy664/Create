@@ -5,11 +5,11 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
+import com.simibubi.create.AllPackets;
+import com.simibubi.create.content.logistics.filter.AttributeFilterScreen;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
-import com.simibubi.create.foundation.networking.AllPackets;
 
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractContainerScreenAccessor;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
