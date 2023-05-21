@@ -2,7 +2,7 @@ package com.simibubi.create.compat.rei.category.animations;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 
@@ -32,7 +32,7 @@ public class AnimatedSaw extends AnimatedKinetics {
 			.scale(scale)
 			.render(matrixStack);
 
-		blockElement(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE)
+		blockElement(AllPartialModels.SAW_BLADE_VERTICAL_ACTIVE)
 			.rotateBlock(0, -90, -90)
 			.scale(scale)
 			.render(matrixStack);

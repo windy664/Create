@@ -1,7 +1,7 @@
 package com.simibubi.create.compat.rei.category.animations;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.rei.widgets.AnimatedKineticsWidget;
 import com.simibubi.create.foundation.gui.CustomLightingSettings;
@@ -49,7 +49,7 @@ public abstract class AnimatedKinetics extends AnimatedKineticsWidget {
 	}
 
 	protected PartialModel cogwheel() {
-		return AllBlockPartials.SHAFTLESS_COGWHEEL;
+		return AllPartialModels.SHAFTLESS_COGWHEEL;
 	}
 
 	protected GuiGameElement.GuiRenderBuilder blockElement(BlockState state) {

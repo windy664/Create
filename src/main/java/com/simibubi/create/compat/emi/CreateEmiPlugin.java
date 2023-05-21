@@ -8,9 +8,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllMenuTypes;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.emi.recipes.AutomaticPackingEmiRecipe;
@@ -42,8 +42,8 @@ import com.simibubi.create.content.contraptions.components.crafter.MechanicalCra
 import com.simibubi.create.content.contraptions.components.crusher.CrushingRecipe;
 import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
-import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
+import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlockEntity;
+import com.simibubi.create.content.contraptions.components.saw.SawBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
 import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
@@ -59,7 +59,7 @@ import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.FilterScreen;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 
@@ -150,7 +150,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 			}
 		});
 
-		registry.addRecipeHandler(AllContainerTypes.CRAFTING_BLUEPRINT.get(), new BlueprintTransferHandler());
+		registry.addRecipeHandler(AllMenuTypes.CRAFTING_BLUEPRINT.get(), new BlueprintTransferHandler());
 
 		registry.addDragDropHandler(FilterScreen.class, new GhostIngredientHandler());
 		registry.addDragDropHandler(AttributeFilterScreen.class, new GhostIngredientHandler());
@@ -236,7 +236,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 		addAll(registry, AllRecipeTypes.HAUNTING, FanHauntingEmiRecipe::new);
 		addAll(registry, AllRecipeTypes.MIXING, MIXING, MixingEmiRecipe::new);
 		for (CraftingRecipe recipe : manager.getAllRecipesFor(RecipeType.CRAFTING)) {
-			if (recipe instanceof ShapelessRecipe && !MechanicalPressTileEntity.canCompress(recipe)
+			if (recipe instanceof ShapelessRecipe && !MechanicalPressBlockEntity.canCompress(recipe)
 					&& !AllRecipeTypes.shouldIgnoreInAutomation(recipe)) {
 				registry.addRecipe(new ShapelessEmiRecipe(AUTOMATIC_SHAPELESS, BasinRecipe.convertShapeless(recipe)));
 			}
@@ -252,7 +252,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 		}
 		if (FabricLoader.getInstance().isModLoaded("druidcraft")) {
 			for (CondensedBlockCuttingRecipe recipe : CondensedBlockCuttingRecipe
-					.condenseRecipes(manager.getAllRecipesFor((RecipeType<Recipe<Container>>) SawTileEntity.woodcuttingRecipeType.get())
+					.condenseRecipes(manager.getAllRecipesFor((RecipeType<Recipe<Container>>) SawBlockEntity.woodcuttingRecipeType.get())
 					.stream().filter(r -> !AllRecipeTypes.shouldIgnoreInAutomation(r)).toList(), "block_cutting")) {
 				registry.addRecipe(new BlockCuttingEmiRecipe(BLOCK_CUTTING, recipe));
 			}
@@ -260,7 +260,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 		addAll(registry, AllRecipeTypes.COMPACTING, PackingEmiRecipe::new);
 		for (CraftingRecipe recipe : manager.getAllRecipesFor(RecipeType.CRAFTING)) {
 			if (!(recipe instanceof MechanicalCraftingRecipe)
-					&& MechanicalPressTileEntity.canCompress(recipe)
+					&& MechanicalPressBlockEntity.canCompress(recipe)
 					&& !AllRecipeTypes.shouldIgnoreInAutomation(recipe)) {
 				registry.addRecipe(new AutomaticPackingEmiRecipe(BasinRecipe.convertShapeless(recipe)));
 			}

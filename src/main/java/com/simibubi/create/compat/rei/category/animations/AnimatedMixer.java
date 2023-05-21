@@ -2,7 +2,7 @@ package com.simibubi.create.compat.rei.category.animations;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -31,12 +31,12 @@ public class AnimatedMixer extends AnimatedKinetics {
 
 		float animation = ((Mth.sin(AnimationTickHolder.getRenderTime() / 32f) + 1) / 5) + .5f;
 
-		blockElement(AllBlockPartials.MECHANICAL_MIXER_POLE)
+		blockElement(AllPartialModels.MECHANICAL_MIXER_POLE)
 			.atLocal(0, animation, 0)
 			.scale(scale)
 			.render(matrixStack);
 
-		blockElement(AllBlockPartials.MECHANICAL_MIXER_HEAD)
+		blockElement(AllPartialModels.MECHANICAL_MIXER_HEAD)
 			.rotateBlock(0, getCurrentAngle() * 4, 0)
 			.atLocal(0, animation, 0)
 			.scale(scale)

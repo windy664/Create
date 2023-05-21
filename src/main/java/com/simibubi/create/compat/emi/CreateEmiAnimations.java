@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -23,7 +24,6 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
@@ -65,7 +65,7 @@ public class CreateEmiAnimations {
 	}
 
 	public static PartialModel cogwheel() {
-		return AllBlockPartials.SHAFTLESS_COGWHEEL;
+		return AllPartialModels.SHAFTLESS_COGWHEEL;
 	}
 
 	public static GuiGameElement.GuiRenderBuilder blockElement(BlockState state) {
@@ -97,7 +97,7 @@ public class CreateEmiAnimations {
 				.scale(scale)
 				.render(matrices);
 
-		blockElement(AllBlockPartials.MECHANICAL_PRESS_HEAD)
+		blockElement(AllPartialModels.MECHANICAL_PRESS_HEAD)
 				.atLocal(0, -getAnimatedHeadOffset(offset), 0)
 				.scale(scale)
 				.render(matrices);
@@ -137,9 +137,9 @@ public class CreateEmiAnimations {
 					.render(matrixStack);
 
 			PartialModel blaze =
-					heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_SUPER : AllBlockPartials.BLAZE_ACTIVE;
-			PartialModel rods2 = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS_2
-					: AllBlockPartials.BLAZE_BURNER_RODS_2;
+					heatLevel == HeatLevel.SEETHING ? AllPartialModels.BLAZE_SUPER : AllPartialModels.BLAZE_ACTIVE;
+			PartialModel rods2 = heatLevel == HeatLevel.SEETHING ? AllPartialModels.BLAZE_BURNER_SUPER_RODS_2
+					: AllPartialModels.BLAZE_BURNER_RODS_2;
 
 			blockElement(blaze).atLocal(1, 1.8, 1)
 					.rotate(0, 180, 0)
@@ -181,7 +181,7 @@ public class CreateEmiAnimations {
 			MultiBufferSource.BufferSource buffer = mc.renderBuffers()
 					.bufferSource();
 			VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
-			CachedBufferer.partial(AllBlockPartials.BLAZE_BURNER_FLAME, Blocks.AIR.defaultBlockState())
+			CachedBufferer.partial(AllPartialModels.BLAZE_BURNER_FLAME, Blocks.AIR.defaultBlockState())
 					.shiftUVScrolling(spriteShift, (float) uScroll, (float) vScroll)
 					.light(LightTexture.FULL_BRIGHT)
 					.renderInto(matrixStack, vb);
@@ -208,12 +208,12 @@ public class CreateEmiAnimations {
 
 			float animation = ((Mth.sin(AnimationTickHolder.getRenderTime() / 32f) + 1) / 5) + .5f;
 
-			blockElement(AllBlockPartials.MECHANICAL_MIXER_POLE)
+			blockElement(AllPartialModels.MECHANICAL_MIXER_POLE)
 				.atLocal(0, animation, 0)
 				.scale(scale)
 				.render(matrices);
 
-			blockElement(AllBlockPartials.MECHANICAL_MIXER_HEAD)
+			blockElement(AllPartialModels.MECHANICAL_MIXER_HEAD)
 				.rotateBlock(0, getCurrentAngle() * 4, 0)
 				.atLocal(0, animation, 0)
 				.scale(scale)
@@ -250,7 +250,7 @@ public class CreateEmiAnimations {
 			.scale(scale)
 			.render(matrices);
 
-		blockElement(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE)
+		blockElement(AllPartialModels.SAW_BLADE_VERTICAL_ACTIVE)
 			.rotateBlock(0, -90, -90)
 			.scale(scale)
 			.render(matrices);
@@ -260,7 +260,7 @@ public class CreateEmiAnimations {
 		widgets.addDrawable(x, y, 0, 0, (matrices, mouseX, mouseY, delta) -> {
 			int scale = 22;
 
-			blockElement(AllBlockPartials.MILLSTONE_COG)
+			blockElement(AllPartialModels.MILLSTONE_COG)
 				.rotateBlock(22.5, getCurrentAngle() * 2, 0)
 				.scale(scale)
 				.render(matrices);
@@ -298,7 +298,7 @@ public class CreateEmiAnimations {
 			matrices.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 			int scale = 24;
 
-			defaultBlockElement(AllBlockPartials.ENCASED_FAN_INNER)
+			defaultBlockElement(AllPartialModels.ENCASED_FAN_INNER)
 				.rotateBlock(180, 0, getCurrentAngle() * 16)
 				.scale(scale)
 				.render(matrices);
@@ -342,11 +342,11 @@ public class CreateEmiAnimations {
 		matrices.pushPose();
 
 		matrices.translate(0, off * 17, 0);
-		blockElement(AllBlockPartials.DEPLOYER_POLE)
+		blockElement(AllPartialModels.DEPLOYER_POLE)
 			.rotateBlock(90, 0, 0)
 			.scale(scale)
 			.render(matrices);
-		blockElement(AllBlockPartials.DEPLOYER_HAND_HOLDING)
+		blockElement(AllPartialModels.DEPLOYER_HAND_HOLDING)
 			.rotateBlock(90, 0, 0)
 			.scale(scale)
 			.render(matrices);
@@ -381,15 +381,15 @@ public class CreateEmiAnimations {
 
 		matrices.pushPose();
 
-		blockElement(AllBlockPartials.SPOUT_TOP)
+		blockElement(AllPartialModels.SPOUT_TOP)
 			.scale(scale)
 			.render(matrices);
 		matrices.translate(0, -3 * squeeze / 32f, 0);
-		blockElement(AllBlockPartials.SPOUT_MIDDLE)
+		blockElement(AllPartialModels.SPOUT_MIDDLE)
 			.scale(scale)
 			.render(matrices);
 		matrices.translate(0, -3 * squeeze / 32f, 0);
-		blockElement(AllBlockPartials.SPOUT_BOTTOM)
+		blockElement(AllPartialModels.SPOUT_BOTTOM)
 			.scale(scale)
 			.render(matrices);
 		matrices.translate(0, -3 * squeeze / 32f, 0);
