@@ -13,14 +13,9 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
 
-public class RemainingAirOverlay implements IIngameOverlay {
-	public static final RemainingAirOverlay INSTANCE = new RemainingAirOverlay();
-
-	@Override
-	public void render(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int width, int height) {
+public class RemainingAirOverlay {
+	public static void render(PoseStack poseStack, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -30,13 +25,13 @@ public class RemainingAirOverlay implements IIngameOverlay {
 			return;
 		if (player.isCreative())
 			return;
-		if (!player.getPersistentData()
+		if (!player.getExtraCustomData()
 			.contains("VisualBacktankAir"))
 			return;
 		if (!player.isEyeInFluid(FluidTags.WATER) && !player.isEyeInFluid(FluidTags.LAVA))
 			return;
 
-		int timeLeft = player.getPersistentData()
+		int timeLeft = player.getExtraCustomData()
 			.getInt("VisualBacktankAir");
 
 		poseStack.pushPose();

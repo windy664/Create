@@ -18,11 +18,7 @@ import net.minecraft.world.level.GameType;
 public class TrackPlacementOverlay {
 
 	@Environment(EnvType.CLIENT)
-	public static final IIngameOverlay OVERLAY = TrackPlacementOverlay::renderOverlay;
-
-	@Environment(EnvType.CLIENT)
-	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width,
-		int height) {
+	public static void renderOverlay(Gui gui, PoseStack poseStack) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;

@@ -10,8 +10,6 @@ import com.simibubi.create.content.contraptions.render.SBBContraptionManager;
 import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
 import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
 import com.simibubi.create.content.equipment.bell.SoulPulseEffectHandler;
-import com.simibubi.create.content.curiosities.armor.AllArmorMaterials;
-import com.simibubi.create.content.curiosities.armor.CopperArmorItem;
 import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
 import com.simibubi.create.content.equipment.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonRenderHandler;
@@ -28,8 +26,9 @@ import com.simibubi.create.content.trains.TrainHUD;
 import com.simibubi.create.content.trains.track.TrackPlacementOverlay;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsClient;
+import com.simibubi.create.foundation.events.ClientEvents;
+import com.simibubi.create.foundation.events.InputEvents;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.outliner.Outliner;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -44,7 +43,6 @@ import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
 import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
-import io.github.fabricators_of_create.porting_lib.util.ArmorTextureRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
@@ -110,9 +108,8 @@ public class CreateClient implements ClientModInitializer {
 		// fabric exclusive
 		ClientEvents.register();
 		InputEvents.register();
-		AllPackets.channel.initClientListener();
+		AllPackets.getChannel().initClientListener();
 		RenderTypes.init();
-		ArmorTextureRegistry.register(AllArmorMaterials.COPPER, CopperArmorItem.TEXTURE);
 		initCompat();
 	}
 
@@ -123,18 +120,18 @@ public class CreateClient implements ClientModInitializer {
 	}
 
 	private static void registerOverlays() {
-		// TODO PORT 0.5.1
-		// Register overlays in reverse order
 		OverlayRenderCallback.EVENT.register(((stack, partialTicks, window, type) -> {
-			if (type == OverlayRenderCallback.Types.AIR)
-				CopperBacktankArmorLayer.renderRemainingAirOverlay(stack, partialTicks, window);
-			else {
-				TrainHUD.renderOverlay(stack, partialTicks, window);
-				GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window);
-				BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window);
-				LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window);
-				SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window);
-				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window);
+			if (type == OverlayRenderCallback.Types.AIR) {
+				RemainingAirOverlay.render(stack, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Remaining Air
+			} else {
+				TrainHUD.renderOverlay(stack, partialTicks, window); // Create's Train Driver HUD
+				GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window); // Create's Goggle Information
+				BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window); // Create's Blueprints
+				LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window); // Create's Linked Controller
+				SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window); // Create's Schematics
+				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window); // Create's Toolboxes
+				VALUE_SETTINGS_HANDLER.render(stack, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Value Settings
+				TrackPlacementOverlay.renderOverlay(Minecraft.getInstance().gui, stack); // Create's Track Placement
 			}
 			return false;
 		}));

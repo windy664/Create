@@ -17,11 +17,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
-public class ValueSettingsClient implements IIngameOverlay {
+public class ValueSettingsClient {
 
 	private Minecraft mc;
 
@@ -115,8 +112,7 @@ public class ValueSettingsClient implements IIngameOverlay {
 		lastHoverTip = tip;
 	}
 
-	@Override
-	public void render(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public void render(PoseStack poseStack, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || !ValueSettingsInputHandler.canInteract(mc.player))
 			return;
