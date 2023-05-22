@@ -1,15 +1,15 @@
 package com.simibubi.create.compat.trinkets;
 
+import java.util.Optional;
+
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.contraptions.goggles.GogglesItem;
+import com.simibubi.create.content.equipment.goggles.GogglesItem;
 
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import dev.emi.trinkets.api.client.TrinketRendererRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import java.util.Optional;
 
 public class Trinkets {
 	public static void init() {

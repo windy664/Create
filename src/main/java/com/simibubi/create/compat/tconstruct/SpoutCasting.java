@@ -3,7 +3,6 @@ package com.simibubi.create.compat.tconstruct;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
-import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -40,7 +39,7 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 		if (!registryName.equals(TABLE) && !registryName.equals(BASIN))
 			return 0;
 
-		Storage<FluidVariant> handler = TransferUtil.getFluidStorage(level, pos, te, Direction.UP);
+		Storage<FluidVariant> handler = TransferUtil.getFluidStorage(level, pos, blockEntity, Direction.UP);
 		if (handler == null)
 			return 0;
 
