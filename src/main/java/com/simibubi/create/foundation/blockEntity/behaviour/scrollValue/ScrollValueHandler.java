@@ -2,10 +2,10 @@ package com.simibubi.create.foundation.blockEntity.behaviour.scrollValue;
 
 import com.simibubi.create.foundation.utility.animation.PhysicalFloat;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ScrollValueHandler {
 

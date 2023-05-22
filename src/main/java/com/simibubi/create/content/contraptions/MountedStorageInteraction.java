@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.utility.Lang;
 
+import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
@@ -14,8 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class MountedStorageInteraction {
 
@@ -27,7 +26,7 @@ public class MountedStorageInteraction {
 		int rows = Mth.clamp(slotCount / 9, 1, 6);
 		MenuType<?> menuType = menus.get(rows - 1);
 		Component menuName = Lang.translateDirect("contraptions.moving_container", displayName);
-		
+
 		return new MenuProvider() {
 
 			@Override

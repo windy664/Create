@@ -23,7 +23,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
 
 public class ContraptionControlsMovingInteraction extends MovingInteractionBehaviour {
 
@@ -101,8 +100,9 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 	}
 
 	private void send(AbstractContraptionEntity contraptionEntity, ItemStack filter, boolean disable) {
-		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> contraptionEntity),
-			new ContraptionDisableActorPacket(contraptionEntity.getId(), filter, !disable));
+		AllPackets.getChannel().sendToClientsTracking(
+			new ContraptionDisableActorPacket(contraptionEntity.getId(), filter, !disable), contraptionEntity
+		);
 	}
 
 	private boolean elevatorInteraction(BlockPos localPos, AbstractContraptionEntity contraptionEntity,
