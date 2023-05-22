@@ -2,9 +2,9 @@ package com.simibubi.create.compat.rei.category.animations;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.saw.SawBlock;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.kinetics.saw.SawBlock;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.rei.category.CreateRecipeCategory;
-import com.simibubi.create.content.contraptions.processing.BasinRecipe;
+import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;

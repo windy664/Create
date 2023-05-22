@@ -3,7 +3,7 @@ package com.simibubi.create.compat.rei;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZonesProvider;

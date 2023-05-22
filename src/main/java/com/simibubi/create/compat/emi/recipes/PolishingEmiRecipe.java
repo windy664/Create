@@ -2,7 +2,7 @@ package com.simibubi.create.compat.emi.recipes;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.emi.CreateEmiPlugin;
-import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 

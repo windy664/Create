@@ -2,9 +2,9 @@ package com.simibubi.create.compat.emi;
 
 import java.util.List;
 
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.mixin.fabric.ClientTextTooltipAccessor;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;

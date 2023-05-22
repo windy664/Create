@@ -2,11 +2,10 @@ package com.simibubi.create.compat.rei;
 
 import java.util.List;
 
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.BottleType;
+import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;

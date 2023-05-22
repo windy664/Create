@@ -5,10 +5,10 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * For compatibility with and without another mod present, we have to define load conditions of the specific code

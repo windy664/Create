@@ -2,10 +2,8 @@ package com.simibubi.create.compat.emi.recipes;
 
 import com.simibubi.create.compat.emi.CreateEmiPlugin;
 import com.simibubi.create.compat.emi.RenderedBlock;
-import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
-
+import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import com.simibubi.create.foundation.utility.Lang;
 
 import dev.emi.emi.api.stack.EmiIngredient;
