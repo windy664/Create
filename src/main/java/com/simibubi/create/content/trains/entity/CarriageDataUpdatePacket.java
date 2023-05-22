@@ -1,6 +1,4 @@
-package com.simibubi.create.content.logistics.trains.entity;
-
-import java.util.function.Supplier;
+package com.simibubi.create.content.trains.entity;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -32,8 +30,8 @@ public class CarriageDataUpdatePacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
 			Minecraft mc = Minecraft.getInstance();
 			Entity entity = mc.level.getEntity(this.entity);
 			if (entity instanceof CarriageContraptionEntity carriage) {
@@ -42,5 +40,6 @@ public class CarriageDataUpdatePacket extends SimplePacketBase {
 				Create.LOGGER.error("Invalid CarriageDataUpdatePacket for non-carriage entity: " + entity);
 			}
 		});
+		return true;
 	}
 }

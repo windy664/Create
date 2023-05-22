@@ -3,9 +3,7 @@ package com.simibubi.create;
 import static com.simibubi.create.foundation.networking.SimplePacketBase.NetworkDirection.PLAY_TO_CLIENT;
 import static com.simibubi.create.foundation.networking.SimplePacketBase.NetworkDirection.PLAY_TO_SERVER;
 
-import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.simibubi.create.compat.computercraft.AttachedComputerPacket;
 import com.simibubi.create.content.contraptions.ContraptionBlockChangedPacket;
@@ -67,6 +65,7 @@ import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.content.trains.HonkPacket;
 import com.simibubi.create.content.trains.TrainHUDUpdatePacket;
+import com.simibubi.create.content.trains.entity.CarriageDataUpdatePacket;
 import com.simibubi.create.content.trains.entity.TrainPacket;
 import com.simibubi.create.content.trains.entity.TrainPromptPacket;
 import com.simibubi.create.content.trains.entity.TrainRelocationPacket;
@@ -89,6 +88,7 @@ import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.networking.ISyncPersistentData;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.networking.SimplePacketBase.NetworkDirection;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.infrastructure.command.HighlightPacket;
 import com.simibubi.create.infrastructure.command.SConfigureConfigPacket;
@@ -234,32 +234,21 @@ public enum AllPackets {
 	private static class PacketType<T extends SimplePacketBase> {
 		private static int index = 0;
 
-		private BiConsumer<T, FriendlyByteBuf> encoder;
 		private Function<FriendlyByteBuf, T> decoder;
-		private BiConsumer<T, Supplier<SimplePacketBase.Context>> handler;
 		private Class<T> type;
 		private NetworkDirection direction;
 
 		private PacketType(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
-			encoder = T::write;
 			decoder = factory;
-			handler = (packet, contextSupplier) -> {
-				Context context = contextSupplier.get();
-				if (packet.handle(context)) {
-					context.setPacketHandled(true);
-				}
-			};
 			this.type = type;
 			this.direction = direction;
 		}
 
-		// TODO PORT 0.5.1
 		private void register() {
-			getChannel().messageBuilder(type, index++, direction)
-				.encoder(encoder)
-				.decoder(decoder)
-				.consumer(handler)
-				.add();
+			switch (direction) {
+				case PLAY_TO_CLIENT -> getChannel().registerS2CPacket(type, index++, decoder);
+				case PLAY_TO_SERVER -> getChannel().registerC2SPacket(type, index++, decoder);
+			}
 		}
 	}
 

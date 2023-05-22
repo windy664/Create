@@ -11,14 +11,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public class ContraptionDisableActorPacket extends SimplePacketBase {
 
 	private int entityID;
 	private ItemStack filter;
 	private boolean enable;
-	
+
 	public ContraptionDisableActorPacket(int entityID, ItemStack filter, boolean enable) {
 		this.entityID = entityID;
 		this.filter = filter;
@@ -44,12 +43,12 @@ public class ContraptionDisableActorPacket extends SimplePacketBase {
 			Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
 			if (!(entityByID instanceof AbstractContraptionEntity ace))
 				return;
-			
+
 			Contraption contraption = ace.getContraption();
 			List<ItemStack> disabledActors = contraption.getDisabledActors();
 			if (filter.isEmpty())
 				disabledActors.clear();
-			
+
 			if (!enable) {
 				disabledActors.add(filter);
 				contraption.setActorsActive(filter, false);
@@ -61,10 +60,10 @@ public class ContraptionDisableActorPacket extends SimplePacketBase {
 				if (ContraptionControlsMovement.isSameFilter(next, filter) || next.isEmpty())
 					iterator.remove();
 			}
-			
+
 			contraption.setActorsActive(filter, true);
 		});
 		return true;
 	}
-	
+
 }

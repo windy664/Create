@@ -36,7 +36,7 @@ public class CConfigureConfigPacket<T> extends SimplePacketBase {
 	}
 
 	@Override
-	public boolean handle(NetworkEvent.Context context) {
+	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			try {
 				ServerPlayer sender = context.getSender();

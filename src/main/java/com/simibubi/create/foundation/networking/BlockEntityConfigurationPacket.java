@@ -7,7 +7,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent.Context;
 
 public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntity> extends SimplePacketBase {
 
@@ -63,7 +62,7 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 	protected void applySettings(ServerPlayer player, BE be) {
 		applySettings(be);
 	}
-	
+
 	protected boolean causeUpdate() {
 		return true;
 	}
