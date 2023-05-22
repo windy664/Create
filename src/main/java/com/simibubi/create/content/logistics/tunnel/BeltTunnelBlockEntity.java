@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.logistics.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;

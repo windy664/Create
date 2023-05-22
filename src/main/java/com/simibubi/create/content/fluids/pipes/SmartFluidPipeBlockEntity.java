@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.fluids.FluidPropagator;
-import com.simibubi.create.content.contraptions.fluids.PipeAttachmentBlockEntity;
+import com.simibubi.create.content.fluids.PipeAttachmentBlockEntity;
 import com.simibubi.create.content.fluids.pipes.StraightPipeBlockEntity.StraightPipeFluidTransportBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;

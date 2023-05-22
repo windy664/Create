@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.fml.loading.FMLPaths;
 
 public class SchematicExport {
 	public static final Path SCHEMATICS = FabricLoader.getInstance().getGameDir().resolve("schematics");

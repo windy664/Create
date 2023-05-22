@@ -40,8 +40,8 @@ public class CreateSlotWidget extends SlotWidget {
 	}
 
 	private void addCreateAmount(List<ClientTooltipComponent> tooltip, FluidEntry fluid) {
-		FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
-		String amount = FluidTextUtil.getUnicodeMillibuckets(stack.getAmount(), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
+		FluidUnit unit = AllConfigs.client().fluidUnitType.get();
+		String amount = FluidTextUtil.getUnicodeMillibuckets(stack.getAmount(), unit, AllConfigs.client().simplifyFluidUnit.get());
 
 		Component amountComponent = new TextComponent(" " + amount)
 				.append(Lang.translateDirect(unit.getTranslationKey()))

@@ -10,7 +10,6 @@ import com.simibubi.create.content.fluids.FluidTransportBehaviour.AttachmentType
 import com.simibubi.create.content.fluids.FluidTransportBehaviour.AttachmentTypes.ComponentPartials;
 import com.simibubi.create.content.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
@@ -38,7 +37,7 @@ public class PipeAttachmentModel extends ForwardingBakedModel {
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		PipeModelData data = new PipeModelData();
-		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
+		BracketedBlockEntityBehaviour bracket = BlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
 
 		RenderAttachedBlockView attachmentView = (RenderAttachedBlockView) world;
 		Object attachment = attachmentView.getBlockEntityRenderAttachment(pos);

@@ -22,6 +22,7 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionCollider;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
 
+import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -33,14 +34,9 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.CapabilityProvider;
 
 @Mixin(Entity.class)
-public abstract class EntityContraptionInteractionMixin extends CapabilityProvider<Entity> {
-	private EntityContraptionInteractionMixin(Class<Entity> baseClass) {
-		super(baseClass);
-	}
-
+public abstract class EntityContraptionInteractionMixin {
 	@Shadow
 	public Level level;
 
@@ -136,7 +132,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 			if (info == null)
 				return false;
-			
+
 			cEntity.registerColliding(self);
 			return true;
 		});
@@ -145,7 +141,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 			return;
 
 		self.setOnGround(true);
-		self.getPersistentData()
+		self.getExtraCustomData()
 			.putBoolean("ContraptionGrounded", true);
 	}
 
@@ -156,11 +152,15 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		BlockPos particlePos = new BlockPos(worldPos); // pos where particles are spawned
 
 		forCollision(worldPos, (contraption, state, pos) -> {
-			if (!state.addRunningEffects(level, pos, self)
-				&& state.getRenderShape() != RenderShape.INVISIBLE) {
+			boolean particles = state.getRenderShape() != RenderShape.INVISIBLE;
+			if (state.getBlock() instanceof CustomRunningEffectsBlock custom &&
+					custom.addRunningEffects(state, self.level, pos, self)) {
+				particles = false;
+			}
+			if (particles) {
 				Vec3 speed = self.getDeltaMovement();
 				level.addParticle(
-					new BlockParticleOption(ParticleTypes.BLOCK, state).setPos(particlePos),
+					new BlockParticleOption(ParticleTypes.BLOCK, state),
 					self.getX() + ((double) random.nextFloat() - 0.5D) * (double) dimensions.width,
 					self.getY() + 0.1D,
 					self.getZ() + ((double) random.nextFloat() - 0.5D) * (double) dimensions.height,

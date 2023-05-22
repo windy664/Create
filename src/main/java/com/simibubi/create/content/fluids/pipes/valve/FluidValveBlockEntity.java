@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.fluids.FluidPropagator;
-import com.simibubi.create.content.contraptions.fluids.PipeAttachmentBlockEntity;
+import com.simibubi.create.content.fluids.PipeAttachmentBlockEntity;
 import com.simibubi.create.content.fluids.pipes.StraightPipeBlockEntity.StraightPipeFluidTransportBehaviour;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;

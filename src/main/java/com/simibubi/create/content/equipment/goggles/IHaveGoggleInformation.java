@@ -2,10 +2,11 @@ package com.simibubi.create.content.equipment.goggles;
 
 import java.util.List;
 
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
+
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
@@ -48,8 +49,8 @@ public interface IHaveGoggleInformation {
 	default boolean containedFluidTooltip(List<Component> tooltip, boolean isPlayerSneaking, Storage<FluidVariant> handler) {
 		if (handler == null)
 			return false;
-		FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
-		boolean simplify = AllConfigs.CLIENT.simplifyFluidUnit.get();
+		FluidUnit unit = AllConfigs.client().fluidUnitType.get();
+		boolean simplify = AllConfigs.client().simplifyFluidUnit.get();
 		LangBuilder mb = Lang.translate(unit.getTranslationKey());
 		Lang.translate("gui.goggles.fluid_container")
 				.forGoggles(tooltip);

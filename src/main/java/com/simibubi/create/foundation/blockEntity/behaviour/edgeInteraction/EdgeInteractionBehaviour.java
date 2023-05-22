@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction;
 
 import java.util.function.Predicate;
 
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;

@@ -15,6 +15,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.content.fluids.FluidPropagator;
 import com.simibubi.create.content.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.fluids.PipeAttachmentBlockEntity;
 import com.simibubi.create.content.fluids.PipeConnection;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -268,7 +269,7 @@ public class PumpBlockEntity extends KineticBlockEntity implements PipeAttachmen
 	private boolean hasReachedValidEndpoint(Level world, BlockFace blockFace, boolean pull) {
 		BlockPos connectedPos = blockFace.getConnectedPos();
 		BlockEntity blockEntity = world.getBlockEntity(connectedPos);
-		BlockState connectedState = tileEntity != null ? tileEntity.getBlockState() : world.getBlockState(connectedPos);
+		BlockState connectedState = blockEntity != null ? blockEntity.getBlockState() : world.getBlockState(connectedPos);
 		Direction face = blockFace.getFace();
 
 		// facing a pump
@@ -284,7 +285,7 @@ public class PumpBlockEntity extends KineticBlockEntity implements PipeAttachmen
 			return false;
 
 		// fluid handler endpoint
-		if (TransferUtil.getFluidStorage(world, connectedPos, tileEntity, face.getOpposite()) != null)
+		if (TransferUtil.getFluidStorage(world, connectedPos, blockEntity, face.getOpposite()) != null)
 			return true;
 
 		// open endpoint

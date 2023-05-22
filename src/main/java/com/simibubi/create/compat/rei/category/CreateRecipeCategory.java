@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
-import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
+import com.simibubi.create.content.processing.recipe.ProcessingOutput;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
@@ -217,8 +217,8 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 					tooltip.entries().addAll(2, potionEntries.stream().toList());
 				}
 
-				FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
-				String amount = FluidTextUtil.getUnicodeMillibuckets(amounts.get(0), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
+				FluidUnit unit = AllConfigs.client().fluidUnitType.get();
+				String amount = FluidTextUtil.getUnicodeMillibuckets(amounts.get(0), unit, AllConfigs.client().simplifyFluidUnit.get());
 				Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
 				if (tooltip.entries().isEmpty())
 					tooltip.entries().add(0, Tooltip.entry(text));
@@ -252,8 +252,8 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 				tooltip.entries().addAll(1, potionEntries.stream().toList());
 			}
 
-			FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
-			String amount = FluidTextUtil.getUnicodeMillibuckets(fluid.getAmount(), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
+			FluidUnit unit = AllConfigs.client().fluidUnitType.get();
+			String amount = FluidTextUtil.getUnicodeMillibuckets(fluid.getAmount(), unit, AllConfigs.client().simplifyFluidUnit.get());
 			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect("generic.unit.millibuckets")).withStyle(ChatFormatting.GOLD);
 			if (tooltip.entries().isEmpty())
 				tooltip.entries().add(0, Tooltip.entry(text));

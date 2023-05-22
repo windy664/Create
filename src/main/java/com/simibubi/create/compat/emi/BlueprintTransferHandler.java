@@ -4,9 +4,9 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
-import com.simibubi.create.content.curiosities.tools.BlueprintMenu;
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.AllPackets;
+import com.simibubi.create.content.equipment.blueprint.BlueprintAssignCompleteRecipePacket;
+import com.simibubi.create.content.equipment.blueprint.BlueprintMenu;
 
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiPlayerInventory;

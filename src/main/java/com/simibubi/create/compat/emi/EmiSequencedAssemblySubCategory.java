@@ -7,8 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.compat.emi.recipes.CreateEmiRecipe;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
-import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
+import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
+import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
 import com.simibubi.create.foundation.utility.Lang;
 
 import dev.emi.emi.api.stack.EmiIngredient;

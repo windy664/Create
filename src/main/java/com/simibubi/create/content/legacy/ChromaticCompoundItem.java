@@ -2,8 +2,6 @@ package com.simibubi.create.content.legacy;
 
 import java.util.Random;
 
-import io.github.fabricators_of_create.porting_lib.block.LightEmissiveBlock;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllItems;
@@ -16,6 +14,10 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CRecipes;
 
+import io.github.fabricators_of_create.porting_lib.block.LightEmissiveBlock;
+import io.github.fabricators_of_create.porting_lib.item.CustomMaxCountItem;
+import io.github.fabricators_of_create.porting_lib.item.EntityTickListenerItem;
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.BeaconBlockEntityAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;

@@ -306,8 +306,6 @@ import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.ForgeSoundType;
 
 public class AllBlocks {
 

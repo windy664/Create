@@ -3,15 +3,9 @@ package com.simibubi.create.compat.rei.display;
 import java.util.Collections;
 import java.util.List;
 
-import com.simibubi.create.Create;
-
-import com.simibubi.create.compat.rei.category.CreateRecipeCategory;
-import com.simibubi.create.content.contraptions.processing.BasinRecipe;
-
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.crafting.Recipe;
 

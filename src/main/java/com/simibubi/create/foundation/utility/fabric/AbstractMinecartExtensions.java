@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.utility.fabric;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
+import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
+import com.simibubi.create.content.contraptions.minecart.capability.MinecartController;
 
 import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import net.minecraft.nbt.CompoundTag;

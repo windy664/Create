@@ -197,8 +197,8 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 			}
 
 			long amountToUse = mbAmount == -1 ? fluidStack.getAmount() : mbAmount;
-			FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
-			String amount = FluidTextUtil.getUnicodeMillibuckets(amountToUse, unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
+			FluidUnit unit = AllConfigs.client().fluidUnitType.get();
+			String amount = FluidTextUtil.getUnicodeMillibuckets(amountToUse, unit, AllConfigs.client().simplifyFluidUnit.get());
 			Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);

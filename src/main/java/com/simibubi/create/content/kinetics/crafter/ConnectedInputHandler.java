@@ -13,11 +13,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlockEntity.Inventory;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity.Inventory;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;

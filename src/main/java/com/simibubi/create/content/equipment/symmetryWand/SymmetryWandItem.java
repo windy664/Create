@@ -15,7 +15,6 @@ import com.simibubi.create.content.equipment.symmetryWand.mirror.EmptyMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.PlaneMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.infrastructure.config.AllConfigs;

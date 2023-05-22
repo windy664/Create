@@ -2,9 +2,9 @@ package com.simibubi.create.compat.botania;
 
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.compat.Mods;
-import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlockEntity;
-import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -24,7 +24,7 @@ public class ApothecaryFilling extends BlockSpoutingBehaviour {
 
 	@Override
 	public long fillBlock(Level level, BlockPos pos, SpoutBlockEntity spout, FluidStack availableFluid,
-		boolean simulate) {
+						  boolean simulate) {
 		if (!enabled())
 			return 0;
 

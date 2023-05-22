@@ -1,10 +1,9 @@
-package com.simibubi.create.content.contraptions.fluids;
-
-import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+package com.simibubi.create.content.fluids;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
+import com.simibubi.create.content.fluids.FluidTransportBehaviour.AttachmentTypes;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
