@@ -2,11 +2,6 @@ package com.simibubi.create.content.kinetics.gauge;
 
 import java.util.List;
 
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.kinetics.base.IRotate.SpeedLevel;
@@ -17,7 +12,6 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -79,19 +73,4 @@ public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 			.forGoggles(tooltip);
 		return true;
 	}
-
-	@NotNull
-	@Override
-	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (computerBehaviour.isPeripheralCap(cap))
-			return computerBehaviour.getPeripheralCapability();
-		return super.getCapability(cap, side);
-	}
-
-	@Override
-	public void invalidateCaps() {
-		super.invalidateCaps();
-		computerBehaviour.removePeripheral();
-	}
-
 }

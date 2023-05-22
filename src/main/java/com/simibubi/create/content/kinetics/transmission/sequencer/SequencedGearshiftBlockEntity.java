@@ -3,12 +3,6 @@ package com.simibubi.create.content.kinetics.transmission.sequencer;
 import java.util.List;
 import java.util.Vector;
 
-import javax.annotation.Nullable;
-
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
-
-import org.jetbrains.annotations.NotNull;
-
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -211,20 +205,6 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 		timer = compound.getInt("Timer");
 		instructions = Instruction.deserializeAll(compound.getList("Instructions", Tag.TAG_COMPOUND));
 		super.read(compound, clientPacket);
-	}
-
-	@NotNull
-	@Override
-	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (computerBehaviour.isPeripheralCap(cap))
-			return computerBehaviour.getPeripheralCapability();
-		return super.getCapability(cap, side);
-	}
-
-	@Override
-	public void invalidateCaps() {
-		super.invalidateCaps();
-		computerBehaviour.removePeripheral();
 	}
 
 	@Override

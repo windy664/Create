@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 
+import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,13 +25,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class StressGaugeBlockEntity extends GaugeBlockEntity {
 
 	public AbstractComputerBehaviour computerBehaviour;
-	
+
 	static BlockPos lastSent;
 
 	public StressGaugeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -151,19 +150,4 @@ public class StressGaugeBlockEntity extends GaugeBlockEntity {
 		if (Mth.equal(dialTarget, 1))
 			award(AllAdvancements.STRESSOMETER_MAXED);
 	}
-
-	@NotNull
-	@Override
-	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (computerBehaviour.isPeripheralCap(cap))
-			return computerBehaviour.getPeripheralCapability();
-		return super.getCapability(cap, side);
-	}
-
-	@Override
-	public void invalidateCaps() {
-		super.invalidateCaps();
-		computerBehaviour.removePeripheral();
-	}
-
 }

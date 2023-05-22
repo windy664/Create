@@ -28,7 +28,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NumericTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
-import net.minecraftforge.network.PacketDistributor;
 
 public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 

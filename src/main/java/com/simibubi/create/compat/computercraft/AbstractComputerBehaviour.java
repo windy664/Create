@@ -1,10 +1,10 @@
 package com.simibubi.create.compat.computercraft;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.nbt.CompoundTag;
 
@@ -31,15 +31,10 @@ public class AbstractComputerBehaviour extends BlockEntityBehaviour {
 		super.write(nbt, clientPacket);
 	}
 
-	public <T> boolean isPeripheralCap(Capability<T> cap) {
-		return false;
+	@Nullable
+	public <T> T getPeripheral() {
+		return null;
 	}
-
-	public <T> LazyOptional<T> getPeripheralCapability() {
-		return LazyOptional.empty();
-	}
-
-	public void removePeripheral() {}
 
 	public void setHasAttachedComputer(boolean hasAttachedComputer) {
 		this.hasAttachedComputer = hasAttachedComputer;

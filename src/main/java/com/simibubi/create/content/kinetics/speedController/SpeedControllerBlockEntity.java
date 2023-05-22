@@ -2,11 +2,6 @@ package com.simibubi.create.content.kinetics.speedController;
 
 import java.util.List;
 
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.kinetics.RotationPropagator;
@@ -132,20 +127,6 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 		return ICogWheel.isDedicatedCogWheel(stateAbove.getBlock()) && ICogWheel.isLargeCog(stateAbove)
 			&& stateAbove.getValue(CogWheelBlock.AXIS)
 				.isHorizontal();
-	}
-
-	@NotNull
-	@Override
-	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (computerBehaviour.isPeripheralCap(cap))
-			return computerBehaviour.getPeripheralCapability();
-		return super.getCapability(cap, side);
-	}
-
-	@Override
-	public void invalidateCaps() {
-		super.invalidateCaps();
-		computerBehaviour.removePeripheral();
 	}
 
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {

@@ -14,61 +14,48 @@ import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGear
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.common.util.NonNullSupplier;
+import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import net.minecraft.core.Registry;
 
 public class ComputerBehaviour extends AbstractComputerBehaviour {
 
-	protected static final Capability<IPeripheral> PERIPHERAL_CAPABILITY =
-		CapabilityManager.get(new CapabilityToken<>() {
-		});
-	LazyOptional<IPeripheral> peripheral;
-	NonNullSupplier<IPeripheral> peripheralSupplier;
+	public static final IPeripheralProvider PERIPHERAL_PROVIDER = (level, blockPos, direction) -> {
+		AbstractComputerBehaviour behavior = BlockEntityBehaviour.get(level, blockPos, AbstractComputerBehaviour.TYPE);
+		if (behavior instanceof ComputerBehaviour real)
+			return real.peripheral;
+		return null;
+	};
+
+	IPeripheral peripheral;
 
 	public ComputerBehaviour(SmartBlockEntity te) {
 		super(te);
-		this.peripheralSupplier = getPeripheralFor(te);
+		this.peripheral = getPeripheralFor(te);
 	}
 
-	public static NonNullSupplier<IPeripheral> getPeripheralFor(SmartBlockEntity te) {
+	public static IPeripheral getPeripheralFor(SmartBlockEntity te) {
 		if (te instanceof SpeedControllerBlockEntity scte)
-			return () -> new SpeedControllerPeripheral(scte, scte.targetSpeed);
+			return new SpeedControllerPeripheral(scte, scte.targetSpeed);
 		if (te instanceof DisplayLinkBlockEntity dlte)
-			return () -> new DisplayLinkPeripheral(dlte);
+			return new DisplayLinkPeripheral(dlte);
 		if (te instanceof SequencedGearshiftBlockEntity sgte)
-			return () -> new SequencedGearshiftPeripheral(sgte);
+			return new SequencedGearshiftPeripheral(sgte);
 		if (te instanceof SpeedGaugeBlockEntity sgte)
-			return () -> new SpeedGaugePeripheral(sgte);
+			return new SpeedGaugePeripheral(sgte);
 		if (te instanceof StressGaugeBlockEntity sgte)
-			return () -> new StressGaugePeripheral(sgte);
+			return new StressGaugePeripheral(sgte);
 		if (te instanceof StationBlockEntity ste)
-			return () -> new StationPeripheral(ste);
+			return new StationPeripheral(ste);
 
-		throw new IllegalArgumentException("No peripheral available for " + te.getType()
-			.getRegistryName());
+		throw new IllegalArgumentException("No peripheral available for " + Registry.BLOCK_ENTITY_TYPE.getKey(te.getType()));
 	}
 
 	@Override
-	public <T> boolean isPeripheralCap(Capability<T> cap) {
-		return cap == PERIPHERAL_CAPABILITY;
+	public <T> T getPeripheral() {
+		//noinspection unchecked
+		return (T) peripheral;
 	}
-
-	@Override
-	public <T> LazyOptional<T> getPeripheralCapability() {
-		if (peripheral == null || !peripheral.isPresent())
-			peripheral = LazyOptional.of(peripheralSupplier);
-		return peripheral.cast();
-	}
-
-	@Override
-	public void removePeripheral() {
-		if (peripheral != null)
-			peripheral.invalidate();
-	}
-
 }

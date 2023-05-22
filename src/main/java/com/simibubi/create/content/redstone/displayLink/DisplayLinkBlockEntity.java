@@ -2,9 +2,6 @@ package com.simibubi.create.content.redstone.displayLink;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.redstone.displayLink.source.DisplaySource;
@@ -23,8 +20,6 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class DisplayLinkBlockEntity extends SmartBlockEntity {
 
@@ -180,21 +175,6 @@ public class DisplayLinkBlockEntity extends SmartBlockEntity {
 		sourceConfig = new CompoundTag();
 		if (activeSource != null)
 			sourceConfig = data.copy();
-	}
-
-	@NotNull
-	@Override
-	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (computerBehaviour.isPeripheralCap(cap))
-			return computerBehaviour.getPeripheralCapability();
-
-		return super.getCapability(cap, side);
-	}
-
-	@Override
-	public void invalidateCaps() {
-		super.invalidateCaps();
-		computerBehaviour.removePeripheral();
 	}
 
 	public void target(BlockPos targetPosition) {
