@@ -4,7 +4,7 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankItem;
+import com.simibubi.create.content.fluids.tank.FluidTankItem;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;

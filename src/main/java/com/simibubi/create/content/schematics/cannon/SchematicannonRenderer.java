@@ -16,7 +16,6 @@ import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.BlockRenderDispatcherAccessor;
 
 import io.github.fabricators_of_create.porting_lib.render.virtual.FixedLightBakedModel;

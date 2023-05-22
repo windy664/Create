@@ -41,7 +41,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -57,7 +59,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 
@@ -135,7 +136,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 			max = hardness;
 			argMax = toBreak;
 		}
-		
+
 		if (argMax == null) {
 			triggerPaver(context, pos);
 			return;
@@ -194,7 +195,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 				.isEmpty())
 				startingY = 0;
 		}
-		
+
 		// Train
 		PaveTask profileForTracks = createHeightProfileForTracks(context);
 		if (profileForTracks != null) {
@@ -410,7 +411,8 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 			possibleSlabLocations.add(blockName.substring(0, nameLength - 7) + "_slab");
 
 		for (String locationAttempt : possibleSlabLocations) {
-			Optional<Block> result = ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, locationAttempt))
+			ResourceKey<Block> key = ResourceKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(namespace, locationAttempt));
+			Optional<Block> result = Registry.BLOCK.getHolder(key)
 				.map(slabHolder -> slabHolder.value());
 			if (result.isEmpty())
 				continue;

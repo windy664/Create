@@ -9,7 +9,6 @@ import com.simibubi.create.content.contraptions.BlockMovementChecks;
 import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.fabric.ReachUtil;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.RayTraceWorld;
 
 import net.minecraft.core.BlockPos;

@@ -5,19 +5,20 @@ import java.util.Collection;
 import com.simibubi.create.Create;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
+import io.github.fabricators_of_create.porting_lib.util.ItemGroupUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class CreateCreativeModeTab extends CreativeModeTab {
 	public CreateCreativeModeTab(String id) {
-		super(Create.ID + "." + id);
+		super(ItemGroupUtil.expandArrayAndGetId(), Create.ID + "." + id);
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public abstract class CreateCreativeModeTab extends CreativeModeTab {
 	}
 
 	protected Collection<RegistryEntry<Item>> registeredItems() {
-		return Create.REGISTRATE.getAll(ForgeRegistries.ITEMS.getRegistryKey());
+		return Create.REGISTRATE.getAll(Registry.ITEM_REGISTRY);
 	}
 
 	public void addBlocks(NonNullList<ItemStack> items) {

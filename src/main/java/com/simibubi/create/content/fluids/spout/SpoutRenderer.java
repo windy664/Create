@@ -8,11 +8,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -41,9 +39,7 @@ public class SpoutRenderer extends SafeBlockEntityRenderer<SpoutBlockEntity> {
 			.getValue(partialTicks);
 
 		if (!fluidStack.isEmpty() && level != 0) {
-			boolean top = fluidStack.getFluid()
-					.getAttributes()
-					.isLighterThanAir();
+			boolean top = FluidVariantAttributes.isLighterThanAir(fluidStack.getType());
 
 			level = Math.max(level, 0.175f);
 			float min = 2.5f / 16f;

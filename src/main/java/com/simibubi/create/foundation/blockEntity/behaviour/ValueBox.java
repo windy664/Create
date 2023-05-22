@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.outliner.ChasingAABBOutline;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Components;
 
+import io.github.fabricators_of_create.porting_lib.model.ItemMultiLayerBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
 
 public class ValueBox extends ChasingAABBOutline {
 
@@ -31,7 +31,7 @@ public class ValueBox extends ChasingAABBOutline {
 	protected Vec3 labelOffset = Vec3.ZERO;
 
 	public int overrideColor = -1;
-	
+
 	public boolean isPassive;
 
 	protected BlockPos pos;
@@ -65,7 +65,7 @@ public class ValueBox extends ChasingAABBOutline {
 		this.isPassive = passive;
 		return this;
 	}
-	
+
 	public ValueBox withColor(int color) {
 		this.overrideColor = color;
 		return this;
@@ -95,7 +95,7 @@ public class ValueBox extends ChasingAABBOutline {
 		float fontScale = hasTransform ? -transform.getFontScale() : -1 / 64f;
 		ms.scale(fontScale, fontScale, fontScale);
 		renderContents(ms, buffer);
-		
+
 		ms.popPose();
 	}
 
@@ -217,7 +217,7 @@ public class ValueBox extends ChasingAABBOutline {
 			float scale = 2 * 16;
 			ms.scale(scale, scale, scale);
 			ms.translate(-.5f, -.5f, 5 / 32f);
-			
+
 			int overrideColor = transform.getOverrideColor();
 			icon.render(ms, buffer, overrideColor != -1 ? overrideColor : 0xFFFFFF);
 		}
