@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 import com.simibubi.create.content.contraptions.Contraption.ContraptionInvWrapper;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
-import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -73,12 +73,12 @@ public class MountedStorageManager {
 			.collect(Collectors.toList()));
 	}
 
-	protected ContraptionInvWrapper wrapItems(Collection<Storage<ItemVariant>> list, boolean fuel) {
+	protected ContraptionInvWrapper wrapItems(Collection<? extends Storage<ItemVariant>> list, boolean fuel) {
 		return new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), Storage[].class));
 	}
 
-	protected CombinedTankWrapper wrapFluids(Collection<Storage<FluidVariant>> list) {
-		return new CombinedTankWrapper(Arrays.copyOf(list.toArray(), list.size(), SmartFluidTank[].class));
+	protected CombinedTankWrapper wrapFluids(Collection<? extends Storage<FluidVariant>> list) {
+		return new CombinedTankWrapper(Arrays.copyOf(list.toArray(), list.size(), Storage[].class));
 	}
 
 	public void addBlock(BlockPos localPos, BlockEntity be) {
@@ -224,7 +224,8 @@ public class MountedStorageManager {
 		MountedStorage storage = storageManager.storage.get(localPos);
 		if (storage == null || storage.getItemHandler() == null)
 			return false;
-		Storage<ItemVariant> handler = storage.getItemHandler();
+		ItemStackHandler primary = storage.getItemHandler();
+		ItemStackHandler secondary = null;
 
 		StructureBlockInfo info = contraption.getBlocks()
 			.get(localPos);
@@ -237,13 +238,19 @@ public class MountedStorageManager {
 
 			if (chestType != ChestType.SINGLE) {
 				MountedStorage storage2 = storageManager.storage.get(localPos.relative(connectedDirection));
-				if (storage2 != null && storage2.getItemHandler() != null)
-					handler = chestType == ChestType.RIGHT ? new CombinedInvWrapper(handler, storage2.getItemHandler())
-						: new CombinedInvWrapper(storage2.getItemHandler(), handler);
+				if (storage2 != null && storage2.getItemHandler() != null) {
+					secondary = storage2.getItemHandler();
+					if (chestType == ChestType.LEFT) {
+						// switcheroo
+						ItemStackHandler temp = primary;
+						primary = secondary;
+						secondary = temp;
+					}
+				}
 			}
 		}
 
-		int slotCount = handler.getSlots();
+		int slotCount = primary.getSlots() + (secondary == null ? 0 : secondary.getSlots());
 		if (slotCount == 0)
 			return false;
 		if (slotCount % 9 != 0)
@@ -253,7 +260,7 @@ public class MountedStorageManager {
 			&& player.distanceToSqr(contraption.entity.toGlobalVector(Vec3.atCenterOf(localPos), 0)) < 64;
 		Component name = info != null ? info.state.getBlock()
 			.getName() : Components.literal("Container");
-		player.openMenu(MountedStorageInteraction.createMenuProvider(name, handler, slotCount, stillValid));
+		player.openMenu(MountedStorageInteraction.createMenuProvider(name, primary, secondary, slotCount, stillValid));
 
 		Vec3 soundPos = contraption.entity.toGlobalVector(Vec3.atCenterOf(localPos), 0);
 		player.level.playSound(null, new BlockPos(soundPos), SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 0.75f, 1f);

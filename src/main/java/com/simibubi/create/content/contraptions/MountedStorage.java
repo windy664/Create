@@ -29,8 +29,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class MountedStorage {
 
-	private static final ItemStackHandler dummyHandler = new ItemStackHandler();
-
 	ItemStackHandler handler;
 	boolean noFuel;
 	boolean valid;
@@ -54,7 +52,7 @@ public class MountedStorage {
 			return true;
 
 		try {
-			Storage<ItemVariant> handler = TransferUtil.getItemStorage(te);
+			Storage<ItemVariant> handler = TransferUtil.getItemStorage(be);
 			if (handler instanceof ItemStackHandler)
 				return !(handler instanceof ProcessingInventory);
 			return canUseModdedInventory(be, handler);
@@ -65,7 +63,7 @@ public class MountedStorage {
 	}
 
 	public static boolean canUseModdedInventory(BlockEntity be, Storage<ItemVariant> handler) {
-		if (!(handler instanceof IItemHandlerModifiable validItemHandler))
+		if (!handler.supportsExtraction() || !handler.supportsInsertion())
 			return false;
 		BlockState blockState = be.getBlockState();
 		if (AllBlockTags.CONTRAPTION_INVENTORY_DENY.matches(blockState))
@@ -80,7 +78,6 @@ public class MountedStorage {
 
 	public MountedStorage(BlockEntity be) {
 		this.blockEntity = be;
-		handler = dummyHandler;
 		noFuel = be instanceof ItemVaultBlockEntity;
 	}
 
@@ -121,7 +118,8 @@ public class MountedStorage {
 		}
 
 		// serialization not accessible -> fill into a serializable handler
-		if (beHandler instanceof InventoryStorage inv && teHandler.supportsInsertion() && teHandler.supportsExtraction()) {
+		// fabric: only trust Containers, todo: maybe change
+		if (beHandler instanceof InventoryStorage inv && beHandler.supportsInsertion() && beHandler.supportsExtraction()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
 				List<SingleSlotStorage<ItemVariant>> slots = inv.getSlots();
 				ItemStack[] stacks = new ItemStack[slots.size()];
@@ -148,7 +146,7 @@ public class MountedStorage {
 		if (handler instanceof BottomlessItemHandler)
 			return;
 
-		if (te instanceof ChestBlockEntity chest) {
+		if (be instanceof ChestBlockEntity chest) {
 			for (int i = 0; i < chest.getContainerSize(); i++) {
 				ItemStack stack = i < handler.getSlots() ? handler.getStackInSlot(i) : ItemStack.EMPTY;
 				chest.setItem(i, stack);
@@ -174,7 +172,7 @@ public class MountedStorage {
 		}
 	}
 
-	public Storage<ItemVariant> getItemHandler() {
+	public ItemStackHandler getItemHandler() {
 		return handler;
 	}
 
