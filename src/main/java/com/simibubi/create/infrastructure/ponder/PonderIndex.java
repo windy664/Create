@@ -48,10 +48,10 @@ import com.simibubi.create.infrastructure.ponder.scenes.trains.TrackScenes;
 import com.simibubi.create.infrastructure.ponder.scenes.trains.TrainScenes;
 import com.simibubi.create.infrastructure.ponder.scenes.trains.TrainSignalScenes;
 import com.simibubi.create.infrastructure.ponder.scenes.trains.TrainStationScenes;
+import com.tterrag.registrate.fabric.RegistryObject;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.core.Registry;
 
 public class PonderIndex {
 
@@ -355,8 +355,8 @@ public class PonderIndex {
 			.map((trackSupplier) -> new BlockEntry<TrackBlock>(
 				// note: these blocks probably WON'T be in the Create Registrate, but a simple
 				// code trace reveals the Entry's registrate isn't used
-				Create.REGISTRATE, RegistryObject.create(trackSupplier.get()
-					.getRegistryName(), ForgeRegistries.BLOCKS)))
+				Create.REGISTRATE, RegistryObject.of(trackSupplier.get()
+					.getRegistryName(), Registry.BLOCK)))
 			.toList())
 			.addStoryBoard("train_track/placement", TrackScenes::placement)
 			.addStoryBoard("train_track/portal", TrackScenes::portal)

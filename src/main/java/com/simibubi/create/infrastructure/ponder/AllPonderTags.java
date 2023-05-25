@@ -1,5 +1,7 @@
 package com.simibubi.create.infrastructure.ponder;
 
+import java.util.Optional;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
@@ -7,12 +9,12 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderTag;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllPonderTags {
 
@@ -314,9 +316,9 @@ public class AllPonderTags {
 			.add(Blocks.TARGET);
 
 		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
-			Block computer = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
-			if (computer != null)
-				PonderRegistry.TAGS.forTag(DISPLAY_SOURCES).add(computer);
+			Optional<Block> computer = Registry.BLOCK.getOptional(new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
+			if (computer.isPresent())
+				PonderRegistry.TAGS.forTag(DISPLAY_SOURCES).add(computer.get());
 		});
 
 		PonderRegistry.TAGS.forTag(DISPLAY_TARGETS)

@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.utility.AttachedRegistry;
 
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -17,7 +18,7 @@ public interface TooltipModifier {
 
 	TooltipModifier EMPTY = new TooltipModifier() {
 		@Override
-		public void modify(ItemStack stack, TooltipFlag flags, List<Component> tooltip) {
+		public void modify(ItemStack stack, Player player, TooltipFlag flags, List<Component> tooltip) {
 		}
 
 		@Override
@@ -26,15 +27,15 @@ public interface TooltipModifier {
 		}
 	};
 
-	void modify(ItemStack stack, TooltipFlag flags, List<Component> tooltip);
+	void modify(ItemStack stack, Player player, TooltipFlag flags, List<Component> tooltip);
 
 	default TooltipModifier andThen(TooltipModifier after) {
 		if (after == EMPTY) {
 			return this;
 		}
-		return (stack, flags, tooltip) -> {
-			modify(stack, flags, tooltip);
-			after.modify(stack, flags, tooltip);
+		return (stack, player, flags, tooltip) -> {
+			modify(stack, player, flags, tooltip);
+			after.modify(stack, player, flags, tooltip);
 		};
 	}
 

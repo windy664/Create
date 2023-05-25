@@ -1,6 +1,7 @@
 package com.simibubi.create.content.equipment.armor;
 
-import com.simibubi.create.AllItems;
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 

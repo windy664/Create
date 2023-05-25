@@ -2,11 +2,9 @@ package com.simibubi.create.foundation.mixin.client;
 
 import java.util.Iterator;
 
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Group;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -16,11 +14,13 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.foundation.map.CustomRenderedMapDecoration;
 
+import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
-@Mixin(targets = "net.minecraft.client.gui.MapRenderer$MapInstance", priority = 1100) // apply after porting lib's current busted mixin here
+// fabric: we have an AW for it, and compiler complains if specified by string
+@Mixin(value = MapRenderer.MapInstance.class, priority = 1100) // apply after porting lib's current busted mixin here
 public class MapRendererMapInstanceMixin {
 	@Shadow
 	private MapItemSavedData data;

@@ -25,9 +25,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Component> linesOnShift, ImmutableList<Component> linesOnCtrl) {
 	private static final Map<Item, Supplier<String>> CUSTOM_TOOLTIP_KEYS = new IdentityHashMap<>();
@@ -230,14 +232,14 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 		}
 
 		@Override
-		public void modify(ItemTooltipEvent context) {
+		public void modify(ItemStack stack, Player player, TooltipFlag flags, List<Component> tooltip) {
 			if (checkLocale()) {
 				description = create(item, palette);
 			}
 			if (description == null) {
 				return;
 			}
-			context.getToolTip().addAll(1, description.getCurrentLines());
+			tooltip.addAll(1, description.getCurrentLines());
 		}
 
 		protected boolean checkLocale() {

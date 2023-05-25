@@ -116,6 +116,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -259,13 +260,14 @@ public class ClientEvents {
 	public static void addToItemTooltip(ItemStack stack, TooltipFlag iTooltipFlag, List<Component> itemTooltip) {
 		if (!AllConfigs.client().tooltips.get())
 			return;
-		if (Minecraft.getInstance().player == null)
+		Player player = Minecraft.getInstance().player;
+		if (player == null)
 			return;
 
 		Item item = stack.getItem();
 		TooltipModifier modifier = TooltipModifier.REGISTRY.get(item);
 		if (modifier != null && modifier != TooltipModifier.EMPTY) {
-			modifier.modify(stack, iTooltipFlag, itemTooltip);
+			modifier.modify(stack, player, iTooltipFlag, itemTooltip);
 		}
 
 		PonderTooltipHandler.addToTooltip(stack, itemTooltip);
