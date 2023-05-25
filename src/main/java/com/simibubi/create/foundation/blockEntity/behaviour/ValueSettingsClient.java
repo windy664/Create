@@ -1,22 +1,21 @@
 package com.simibubi.create.foundation.blockEntity.behaviour;
 
-import java.util.List;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Color;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
+import java.util.List;
 
 public class ValueSettingsClient {
 
@@ -36,12 +35,9 @@ public class ValueSettingsClient {
 		mc = Minecraft.getInstance();
 	}
 
-	public void cancelIfWarmupAlreadyStarted(PlayerInteractEvent.RightClickBlock event) {
-		if (interactHeldTicks != -1 && event.getPos()
-			.equals(interactHeldPos)) {
-			event.setCanceled(true);
-			event.setCancellationResult(InteractionResult.FAIL);
-		}
+	public void cancelIfWarmupAlreadyStarted(BlockPos interactPos, MutableBoolean cancelled) {
+		if (interactHeldTicks != -1 && interactPos.equals(interactHeldPos))
+			cancelled.setTrue();
 	}
 
 	public void startInteractionWith(BlockPos pos, BehaviourType<?> behaviourType, InteractionHand hand,

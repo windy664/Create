@@ -425,7 +425,6 @@ public class ClientEvents {
 		RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
 		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		PlayerTickEvents.END.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
-		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
 		ClientPlayConnectionEvents.DISCONNECT.register(ClientEvents::onLeave);
 		DrawSelectionEvents.BLOCK.register(TrackBlockOutline::drawCustomBlockSelection);
 		// we need to add our config button after mod menu, so we register our event with a phase that comes later

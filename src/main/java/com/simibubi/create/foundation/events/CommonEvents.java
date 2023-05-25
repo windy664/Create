@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.events;
 
 import java.util.concurrent.Executor;
 
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsInputHandler;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -263,6 +265,7 @@ public class CommonEvents {
 
 		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
 		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
+		UseBlockCallback.EVENT.register(ValueSettingsInputHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(ValveHandleBlock::onBlockActivated);
 		UseBlockCallback.EVENT.register(WrenchEventHandler::useOwnWrenchLogicForCreateBlocks);
 		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);

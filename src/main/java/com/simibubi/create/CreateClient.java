@@ -30,6 +30,7 @@ import com.simibubi.create.foundation.events.ClientEvents;
 import com.simibubi.create.foundation.events.InputEvents;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.outliner.Outliner;
+import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.CreateContexts;
@@ -132,6 +133,8 @@ public class CreateClient implements ClientModInitializer {
 				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window); // Create's Toolboxes
 				VALUE_SETTINGS_HANDLER.render(stack, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Value Settings
 				TrackPlacementOverlay.renderOverlay(Minecraft.getInstance().gui, stack); // Create's Track Placement
+
+				PlacementHelpers.afterRenderOverlayLayer(stack, partialTicks, window, type);
 			}
 			return false;
 		}));
