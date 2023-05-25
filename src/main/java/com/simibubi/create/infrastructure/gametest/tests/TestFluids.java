@@ -4,9 +4,14 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.fluids.hosePulley.HosePulleyFluidHandler;
 import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
+import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
+import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.util.Mth;
@@ -15,10 +20,6 @@ import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RedstoneSide;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 @GameTestGroup(path = "fluids")
 public class TestFluids {
@@ -50,10 +51,10 @@ public class TestFluids {
 					.forEach(pos -> helper.assertBlockPresent(Blocks.AIR, pos));
 			// check nothing left in pulley
 			BlockPos pulleyPos = new BlockPos(8, 7, 4);
-			IFluidHandler storage = helper.fluidStorageAt(pulleyPos);
+			Storage<FluidVariant> storage = helper.fluidStorageAt(pulleyPos);
 			if (storage instanceof HosePulleyFluidHandler hose) {
-				IFluidHandler internalTank = hose.getInternalTank();
-				if (!internalTank.drain(1, FluidAction.SIMULATE).isEmpty())
+				SmartFluidTank internalTank = hose.getInternalTank();
+				if (!internalTank.isEmpty())
 					helper.fail("Pulley not empty");
 			} else {
 				helper.fail("Not a pulley");
@@ -78,7 +79,7 @@ public class TestFluids {
 		BlockPos pumpPos = new BlockPos(3, 2, 2);
 		BlockPos basinPos = pumpPos.east();
 		BlockPos waterPos = pumpPos.west();
-		FluidStack expectedResult = new FluidStack(Fluids.WATER, FluidAttributes.BUCKET_VOLUME);
+		FluidStack expectedResult = new FluidStack(Fluids.WATER, FluidConstants.BUCKET);
 		helper.flipBlock(pumpPos);
 		helper.succeedWhen(() -> {
 			helper.assertBlockPresent(Blocks.AIR, waterPos);

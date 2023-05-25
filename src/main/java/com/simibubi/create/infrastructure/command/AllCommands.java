@@ -8,11 +8,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.loading.FMLLoader;
 
 public class AllCommands {
 
@@ -42,7 +42,8 @@ public class AllCommands {
 				// utility
 				.then(util);
 
-		if (!FMLLoader.isProduction() && FMLLoader.getDist() == Dist.CLIENT)
+		FabricLoader loader = FabricLoader.getInstance();
+		if (loader.isDevelopmentEnvironment() && loader.getEnvironmentType() == EnvType.CLIENT)
 			root.then(CreateTestCommand.register());
 
 		LiteralCommandNode<CommandSourceStack> createRoot = dispatcher.register(root);

@@ -18,7 +18,10 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -32,8 +35,6 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneLampBlock;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 @GameTestGroup(path = "items")
 public class TestItems {
@@ -288,9 +289,10 @@ public class TestItems {
 		BlockPos chest = new BlockPos(1, 2, 1);
 		BlockPos lamp = new BlockPos(2, 3, 1);
 		helper.assertBlockProperty(lamp, RedstoneLampBlock.LIT, false);
-		IItemHandler chestStorage = helper.itemStorageAt(chest);
+		Storage<ItemVariant> chestStorage = helper.itemStorageAt(chest);
+		ItemStack diamondStack = new ItemStack(Items.DIAMOND, 64);
 		for (int i = 0; i < 18; i++) { // insert 18 stacks
-			ItemHandlerHelper.insertItem(chestStorage, new ItemStack(Items.DIAMOND, 64), false);
+			TransferUtil.insertItem(chestStorage, diamondStack);
 		}
 		helper.succeedWhen(() -> helper.assertBlockProperty(lamp, RedstoneLampBlock.LIT, true));
 	}

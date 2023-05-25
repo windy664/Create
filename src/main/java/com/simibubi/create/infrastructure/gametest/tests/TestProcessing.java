@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
@@ -19,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraftforge.items.IItemHandler;
 
 @GameTestGroup(path = "processing")
 public class TestProcessing {
@@ -102,8 +103,8 @@ public class TestProcessing {
 		ItemStack expected = new ItemStack(AllBlocks.TRACK.get(), 6);
 		helper.succeedWhen(() -> {
 			helper.assertContainerContains(output, expected);
-			IItemHandler handler = helper.itemStorageAt(output);
-			ItemHelper.extract(handler, stack -> stack.sameItem(expected), 6, false);
+			Storage<ItemVariant> storage = helper.itemStorageAt(output);
+			ItemHelper.extract(storage, stack -> stack.sameItem(expected), 6, false);
 			helper.assertContainerEmpty(output);
 		});
 	}
