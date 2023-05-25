@@ -6,13 +6,13 @@
   "refmap": "${archivesBaseName}-refmap.json",
   "mixins": [
     "ClientboundMapItemDataPacketMixin",
-    "WaterWheelFluidSpreadMixin",
     "CustomItemUseEffectsMixin",
     "EnchantmentHelperMixin",
     "EntityMixin",
     "LavaSwimmingMixin",
     "MapItemSavedDataMixin",
     "TestCommandMixin",
+    "WaterWheelFluidSpreadMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
@@ -26,6 +26,10 @@
     "fabric.SortedArraySetAccessor"
   ],
   "client": [
+    "accessor.AgeableListModelAccessor",
+    "accessor.GameRendererAccessor",
+    "accessor.HumanoidArmorLayerAccessor",
+    "accessor.ParticleEngineAccessor",
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
     "client.EntityContraptionInteractionMixin",
@@ -37,10 +41,6 @@
     "client.MapRendererMapInstanceMixin",
     "client.PlayerRendererMixin",
     "client.WindowResizeMixin",
-    "accessor.AgeableListModelAccessor",
-    "accessor.GameRendererAccessor",
-    "accessor.HumanoidArmorLayerAccessor",
-    "accessor.ParticleEngineAccessor",
     "fabric.ClientTextTooltipAccessor"
   ],
   "injectors": {

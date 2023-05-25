@@ -3,12 +3,6 @@ package com.simibubi.create.content.kinetics.waterwheel;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import java.util.function.Consumer;
-
-import io.github.fabricators_of_create.porting_lib.block.CustomDestroyEffectsBlock;
-import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +11,11 @@ import com.simibubi.create.content.equipment.goggles.IProxyHoveringInformation;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.render.MultiPosDestructionHandler;
 
+import io.github.fabricators_of_create.porting_lib.block.CustomDestroyEffectsBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomHitEffectsBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
@@ -41,7 +40,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-public class WaterWheelStructuralBlock extends DirectionalBlock implements IWrenchable, IProxyHoveringInformation, MultiPosDestructionHandler, CustomLandingEffectsBlock, CustomDestroyEffectsBlock {
+public class WaterWheelStructuralBlock extends DirectionalBlock implements IWrenchable, IProxyHoveringInformation, MultiPosDestructionHandler, CustomLandingEffectsBlock, CustomDestroyEffectsBlock, CustomHitEffectsBlock {
 
 	public WaterWheelStructuralBlock(Properties p_52591_) {
 		super(p_52591_);
@@ -172,27 +171,22 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 		return true;
 	}
 
-	public static class RenderProperties implements IBlockRenderProperties, MultiPosDestructionHandler {
-
-
-
-		@Override
-		public boolean addHitEffects(BlockState state, Level level, HitResult target, ParticleEngine manager) {
-			if (target instanceof BlockHitResult bhr) {
-				BlockPos targetPos = bhr.getBlockPos();
-				WaterWheelStructuralBlock waterWheelStructuralBlock = AllBlocks.WATER_WHEEL_STRUCTURAL.get();
-				if (waterWheelStructuralBlock.stillValid(level, targetPos, state, false))
-					manager.crack(WaterWheelStructuralBlock.getMaster(level, targetPos, state), bhr.getDirection());
-				return true;
-			}
-			return IBlockRenderProperties.super.addHitEffects(state, level, target, manager);
+	@Override
+	@Environment(EnvType.CLIENT)
+	public boolean applyCustomHitEffects(BlockState state, Level level, HitResult target, ParticleEngine engine) {
+		if (target instanceof BlockHitResult bhr) {
+			BlockPos targetPos = bhr.getBlockPos();
+			WaterWheelStructuralBlock waterWheelStructuralBlock = AllBlocks.WATER_WHEEL_STRUCTURAL.get();
+			if (waterWheelStructuralBlock.stillValid(level, targetPos, state, false))
+				engine.crack(WaterWheelStructuralBlock.getMaster(level, targetPos, state), bhr.getDirection());
+			return true;
 		}
-
-
+		return false;
 	}
 
 	@Override
 	@Nullable
+	@Environment(EnvType.CLIENT)
 	public Set<BlockPos> getExtraPositions(ClientLevel level, BlockPos pos, BlockState blockState, int progress) {
 		WaterWheelStructuralBlock waterWheelStructuralBlock = AllBlocks.WATER_WHEEL_STRUCTURAL.get();
 		if (!waterWheelStructuralBlock.stillValid(level, pos, blockState, false))
