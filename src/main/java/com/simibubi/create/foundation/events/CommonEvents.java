@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.events;
 
 import java.util.concurrent.Executor;
 
+import com.simibubi.create.content.equipment.armor.NetheriteDivingHandler;
+
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsInputHandler;
 
 import org.jetbrains.annotations.Nullable;
@@ -265,7 +267,6 @@ public class CommonEvents {
 
 		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
 		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
-		UseBlockCallback.EVENT.register(ValueSettingsInputHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(ValveHandleBlock::onBlockActivated);
 		UseBlockCallback.EVENT.register(WrenchEventHandler::useOwnWrenchLogicForCreateBlocks);
 		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
@@ -274,6 +275,7 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(FluidBottleItemHook::preventWaterBottlesFromCreatesFluids);
 		UseBlockCallback.EVENT.register(SuperGlueItem::glueItemAlwaysPlacesWhenUsed);
 		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
+		UseBlockCallback.EVENT.register(ValueSettingsInputHandler::onBlockActivated);
 		UseEntityCallback.EVENT.register(ScheduleItemEntityInteraction::interactWithConductor);
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
@@ -288,6 +290,7 @@ public class CommonEvents {
 		LivingEntityEvents.DROPS.register(CrushingWheelBlockEntity::handleCrushedMobDrops);
 		LivingEntityEvents.LOOTING_LEVEL.register(CrushingWheelBlockEntity::crushingIsFortunate);
 		LivingEntityEvents.DROPS.register(DeployerFakePlayer::deployerCollectsDropsFromKilledEntities);
+		LivingEntityEvents.EQUIPMENT_CHANGE.register(NetheriteDivingHandler::onLivingEquipmentChange);
 		EntityEvents.EYE_HEIGHT.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
 		BlockEvents.AFTER_PLACE.register(SymmetryHandler::onBlockPlaced);
 		BlockEvents.AFTER_PLACE.register(SuperGlueHandler::glueListensForBlockPlacement);

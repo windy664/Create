@@ -41,6 +41,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 
+import org.jetbrains.annotations.Nullable;
+
 public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 
 	public static record BlockPosEntry(BlockPos pos, int distance) {

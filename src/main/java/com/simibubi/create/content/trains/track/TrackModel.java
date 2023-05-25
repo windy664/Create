@@ -8,6 +8,7 @@ import java.util.function.UnaryOperator;
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
@@ -19,10 +20,10 @@ import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 
-public class TrackModel extends BakedModelWrapper<BakedModel> {
+public class TrackModel extends ForwardingBakedModel {
 
 	public TrackModel(BakedModel originalModel) {
-		super(originalModel);
+		this.wrapped = originalModel;
 	}
 
 	@Override

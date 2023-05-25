@@ -5,6 +5,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import io.github.fabricators_of_create.porting_lib.block.CustomDestroyEffectsBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -39,7 +41,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-public class WaterWheelStructuralBlock extends DirectionalBlock implements IWrenchable, IProxyHoveringInformation {
+public class WaterWheelStructuralBlock extends DirectionalBlock implements IWrenchable, IProxyHoveringInformation, MultiPosDestructionHandler, CustomLandingEffectsBlock, CustomDestroyEffectsBlock {
 
 	public WaterWheelStructuralBlock(Properties p_52591_) {
 		super(p_52591_);
@@ -159,23 +161,20 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 			pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
 	}
 
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
-		consumer.accept(new RenderProperties());
-	}
-
 	@Override
 	public boolean addLandingEffects(BlockState state1, ServerLevel level, BlockPos pos, BlockState state2,
 		LivingEntity entity, int numberOfParticles) {
 		return true;
 	}
 
+	@Override
+	public boolean applyCustomDestroyEffects(BlockState state, ClientLevel Level, BlockPos pos, ParticleEngine manager) {
+		return true;
+	}
+
 	public static class RenderProperties implements IBlockRenderProperties, MultiPosDestructionHandler {
 
-		@Override
-		public boolean addDestroyEffects(BlockState state, Level Level, BlockPos pos, ParticleEngine manager) {
-			return true;
-		}
+
 
 		@Override
 		public boolean addHitEffects(BlockState state, Level level, HitResult target, ParticleEngine manager) {
@@ -189,16 +188,18 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 			return IBlockRenderProperties.super.addHitEffects(state, level, target, manager);
 		}
 
-		@Override
-		@Nullable
-		public Set<BlockPos> getExtraPositions(ClientLevel level, BlockPos pos, BlockState blockState, int progress) {
-			WaterWheelStructuralBlock waterWheelStructuralBlock = AllBlocks.WATER_WHEEL_STRUCTURAL.get();
-			if (!waterWheelStructuralBlock.stillValid(level, pos, blockState, false))
-				return null;
-			HashSet<BlockPos> set = new HashSet<>();
-			set.add(WaterWheelStructuralBlock.getMaster(level, pos, blockState));
-			return set;
-		}
+
+	}
+
+	@Override
+	@Nullable
+	public Set<BlockPos> getExtraPositions(ClientLevel level, BlockPos pos, BlockState blockState, int progress) {
+		WaterWheelStructuralBlock waterWheelStructuralBlock = AllBlocks.WATER_WHEEL_STRUCTURAL.get();
+		if (!waterWheelStructuralBlock.stillValid(level, pos, blockState, false))
+			return null;
+		HashSet<BlockPos> set = new HashSet<>();
+		set.add(WaterWheelStructuralBlock.getMaster(level, pos, blockState));
+		return set;
 	}
 
 	@Override

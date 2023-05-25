@@ -36,7 +36,7 @@ public class ValueSettingsInputHandler {
 				() -> () -> CreateClient.VALUE_SETTINGS_HANDLER.cancelIfWarmupAlreadyStarted(pos, cancelled));
 
 		if (cancelled.booleanValue())
-			return InteractionResult.PASS;
+			return InteractionResult.FAIL;
 
 		for (BlockEntityBehaviour behaviour : sbe.getAllBehaviours()) {
 			if (!(behaviour instanceof ValueSettingsBehaviour valueSettingsBehaviour))

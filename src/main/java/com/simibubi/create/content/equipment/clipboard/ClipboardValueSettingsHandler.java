@@ -17,7 +17,10 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -28,50 +31,49 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ClipboardValueSettingsHandler {
 
 	@Environment(EnvType.CLIENT)
-	public static void drawCustomBlockSelection(DrawSelectionEvent.HighlightBlock event) {
+	public static boolean drawCustomBlockSelection(LevelRenderer context, Camera camera, HitResult hitResult, float partialTicks, PoseStack ms, MultiBufferSource buffers) {
 		Minecraft mc = Minecraft.getInstance();
-		BlockHitResult target = event.getTarget();
+		BlockHitResult target = (BlockHitResult) hitResult;
 		BlockPos pos = target.getBlockPos();
 		BlockState blockstate = mc.level.getBlockState(pos);
 
 		if (mc.player == null || mc.player.isSpectator())
-			return;
+			return false;
 		if (!mc.level.getWorldBorder()
 			.isWithinBounds(pos))
-			return;
+			return false;
 		if (!AllBlocks.CLIPBOARD.isIn(mc.player.getMainHandItem()))
-			return;
+			return false;
 		if (!(mc.level.getBlockEntity(pos) instanceof SmartBlockEntity smartBE))
-			return;
+			return false;
 		if (!smartBE.getAllBehaviours()
 			.stream()
 			.anyMatch(b -> b instanceof ClipboardCloneable cc
 				&& cc.writeToClipboard(new CompoundTag(), target.getDirection())))
-			return;
+			return false;
 
 		VoxelShape shape = blockstate.getShape(mc.level, pos);
 		if (shape.isEmpty())
-			return;
+			return false;
 
-		VertexConsumer vb = event.getMultiBufferSource()
+		VertexConsumer vb = buffers
 			.getBuffer(RenderType.lines());
-		Vec3 camPos = event.getCamera()
+		Vec3 camPos = camera
 			.getPosition();
-
-		PoseStack ms = event.getPoseStack();
 
 		ms.pushPose();
 		ms.translate(pos.getX() - camPos.x, pos.getY() - camPos.y, pos.getZ() - camPos.z);
 		TrackBlockOutline.renderShape(shape, ms, vb, true);
-		event.setCanceled(true);
 
 		ms.popPose();
+		return true;
 	}
 
 	@Environment(EnvType.CLIENT)

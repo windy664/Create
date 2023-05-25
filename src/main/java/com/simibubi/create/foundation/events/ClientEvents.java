@@ -80,6 +80,7 @@ import io.github.fabricators_of_create.porting_lib.event.client.FogEvents.ColorD
 import io.github.fabricators_of_create.porting_lib.event.client.OnStartUseItemCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.ParticleManagerRegistrationCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.RenderArmCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderHandCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTooltipBorderColorCallback;
@@ -106,6 +107,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.BlockPos;
@@ -301,46 +303,42 @@ public class ClientEvents {
 		return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
 	}
 
-	public static float getFogDensity(Camera camera, float currentDensity) {
+	public static boolean getFogDensity(FogRenderer.FogMode type, Camera camera, FogEvents.FogData fogData) {
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = camera.getBlockPosition();
 		FluidState fluidState = level.getFluidState(blockPos);
 		if (camera.getPosition().y >= blockPos.getY() + fluidState.getHeight(level, blockPos))
-			return currentDensity;
+			return false;
 		Fluid fluid = fluidState.getType();
 		Entity entity = camera.getEntity();
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
-//			event.scaleFarPlaneDistance(1f / 32f * AllConfigs.client().chocolateTransparencyMultiplier.getF());
-//			event.setCanceled(true);
-			return 5f;
+			fogData.scaleFarPlaneDistance(1f / 32f * AllConfigs.client().chocolateTransparencyMultiplier.getF());
+			return true;
 		}
 
 		if (AllFluids.HONEY.get()
 			.isSame(fluid)) {
-//			event.scaleFarPlaneDistance(1f / 8f * AllConfigs.client().honeyTransparencyMultiplier.getF());
-//			event.setCanceled(true);
-			return 1.5f;
+			fogData.scaleFarPlaneDistance(1f / 8f * AllConfigs.client().honeyTransparencyMultiplier.getF());
+			return true;
 		}
 
 		if (entity.isSpectator())
-			return currentDensity;
+			return false;
 
 		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
 		if (divingHelmet != null) {
 			if (FluidHelper.isWater(fluid)) {
-	//			event.scaleFarPlaneDistance(6.25f);
-	//			event.setCanceled(true);
-			return 300f;
+				fogData.scaleFarPlaneDistance(6.25f);
+				return true;
 			} else if (FluidHelper.isLava(fluid) && AllItems.NETHERITE_DIVING_HELMET.isIn(divingHelmet)) {
-				event.setNearPlaneDistance(-4.0f);
-				event.setFarPlaneDistance(20.0f);
-				event.setCanceled(true);
-				return;
+				fogData.setNearPlaneDistance(-4.0f);
+				fogData.setFarPlaneDistance(20.0f);
+				return true;
 			}
 		}
-		return currentDensity;
+		return false;
 	}
 
 	public static void getFogColor(ColorData event, float partialTicks) {
@@ -403,7 +401,7 @@ public class ClientEvents {
 		ClientEntityEvents.ENTITY_LOAD.register(CommonEvents::onEntityAdded);
 		WorldRenderEvents.AFTER_TRANSLUCENT.register(ClientEvents::onRenderWorld);
 		ItemTooltipCallback.EVENT.register(ClientEvents::addToItemTooltip);
-		FogEvents.SET_DENSITY.register(ClientEvents::getFogDensity);
+		FogEvents.ACTUAL_RENDER_FOG.register(ClientEvents::getFogDensity);
 		FogEvents.SET_COLOR.register(ClientEvents::getFogColor);
 		RenderTickStartCallback.EVENT.register(ClientEvents::onRenderTick);
 		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
@@ -412,6 +410,7 @@ public class ClientEvents {
 		MountEntityCallback.EVENT.register(ClientEvents::onMount);
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register(ClientEvents::addEntityRendererLayers);
 		CameraSetupCallback.EVENT.register(ClientEvents::onCameraSetup);
+		DrawSelectionEvents.BLOCK.register(ClipboardValueSettingsHandler::drawCustomBlockSelection);
 
 		// External Events
 
@@ -423,6 +422,7 @@ public class ClientEvents {
 		AttackBlockCallback.EVENT.register(EjectorTargetHandler::leftClickingBlocksDeselectsThem);
 		ParticleManagerRegistrationCallback.EVENT.register(AllParticleTypes::registerFactories);
 		RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
+		RenderArmCallback.EVENT.register(NetheriteBacktankFirstPersonRenderer::onRenderPlayerHand);
 		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		PlayerTickEvents.END.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		ClientPlayConnectionEvents.DISCONNECT.register(ClientEvents::onLeave);
