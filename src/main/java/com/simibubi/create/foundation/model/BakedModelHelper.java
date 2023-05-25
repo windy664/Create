@@ -22,13 +22,12 @@ import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class BakedModelHelper {
-	
+
 	public static int[] cropAndMove(int[] vertexData, TextureAtlasSprite sprite, AABB crop, Vec3 move) {
 		vertexData = Arrays.copyOf(vertexData, vertexData.length);
-		
+
 		Vec3 xyz0 = BakedQuadHelper.getXYZ(vertexData, 0);
 		Vec3 xyz1 = BakedQuadHelper.getXYZ(vertexData, 1);
 		Vec3 xyz2 = BakedQuadHelper.getXYZ(vertexData, 2);
@@ -64,7 +63,7 @@ public class BakedModelHelper {
 				.round((getUnInterpolatedU(sprite, u1) - getUnInterpolatedU(sprite, u0)) / xyz1.distanceTo(xyz0));
 			vScale = (float) Math
 				.round((getUnInterpolatedV(sprite, v3) - getUnInterpolatedV(sprite, v0)) / xyz3.distanceTo(xyz0));
-			
+
 		}
 
 		uAxis = uAxis.subtract(center)
@@ -91,7 +90,7 @@ public class BakedModelHelper {
 
 			BakedQuadHelper.setXYZ(vertexData, vertex, newXyz.add(move));
 		}
-		
+
 		return vertexData;
 	}
 
@@ -101,15 +100,15 @@ public class BakedModelHelper {
 		Map<Direction, List<BakedQuad>> culledFaces = new EnumMap<>(Direction.class);
 		for (Direction cullFace : Iterate.directions) {
 			random.setSeed(42L);
-			List<BakedQuad> quads = template.getQuads(null, cullFace, random, EmptyModelData.INSTANCE);
+			List<BakedQuad> quads = template.getQuads(null, cullFace, random);
 			culledFaces.put(cullFace, swapSprites(quads, spriteSwapper));
 		}
 
 		random.setSeed(42L);
-		List<BakedQuad> quads = template.getQuads(null, null, random, EmptyModelData.INSTANCE);
+		List<BakedQuad> quads = template.getQuads(null, null, random);
 		List<BakedQuad> unculledFaces = swapSprites(quads, spriteSwapper);
 
-		TextureAtlasSprite particleSprite = template.getParticleIcon(EmptyModelData.INSTANCE);
+		TextureAtlasSprite particleSprite = template.getParticleIcon();
 		TextureAtlasSprite swappedParticleSprite = spriteSwapper.apply(particleSprite);
 		if (swappedParticleSprite != null) {
 			particleSprite = swappedParticleSprite;

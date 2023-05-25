@@ -7,7 +7,9 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.SidedFilteringBehaviour;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,27 +17,27 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class ValueSettingsInputHandler {
 
-	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
-		Level world = event.getWorld();
-		BlockPos pos = event.getPos();
-		Player player = event.getPlayer();
-		InteractionHand hand = event.getHand();
+	public static InteractionResult onBlockActivated(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+		BlockPos pos = hitResult.getBlockPos();
 
 		if (!canInteract(player))
-			return;
+			return InteractionResult.PASS;
 		if (AllBlocks.CLIPBOARD.isIn(player.getMainHandItem()))
-			return;
+			return InteractionResult.PASS;
 		if (!(world.getBlockEntity(pos)instanceof SmartBlockEntity sbe))
-			return;
+			return InteractionResult.PASS;
 
-		if (event.getSide() == LogicalSide.CLIENT)
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			AtomicBoolean shouldCancel = new AtomicBoolean(false);
 			EnvExecutor.runWhenOn(EnvType.CLIENT,
-				() -> () -> CreateClient.VALUE_SETTINGS_HANDLER.cancelIfWarmupAlreadyStarted(event));
-
-		if (event.isCanceled())
-			return;
+					() -> () -> CreateClient.VALUE_SETTINGS_HANDLER.cancelIfWarmupAlreadyStarted(pos, shouldCancel));
+			if (shouldCancel.get())
+				return InteractionResult.FAIL;
+		}
 
 		for (BlockEntityBehaviour behaviour : sbe.getAllBehaviours()) {
 			if (!(behaviour instanceof ValueSettingsBehaviour valueSettingsBehaviour))
@@ -43,7 +45,7 @@ public class ValueSettingsInputHandler {
 
 			BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 			if (ray == null)
-				return;
+				return InteractionResult.PASS;
 			if (behaviour instanceof SidedFilteringBehaviour) {
 				behaviour = ((SidedFilteringBehaviour) behaviour).get(ray.getDirection());
 				if (behaviour == null)
@@ -65,22 +67,20 @@ public class ValueSettingsInputHandler {
 			if (!valueSettingsBehaviour.testHit(ray.getLocation()) && !fakePlayer)
 				continue;
 
-			event.setCanceled(true);
-			event.setCancellationResult(InteractionResult.SUCCESS);
-
 			if (!valueSettingsBehaviour.acceptsValueSettings() || fakePlayer) {
 				valueSettingsBehaviour.onShortInteract(player, hand, ray.getDirection());
-				return;
+				return InteractionResult.SUCCESS;
 			}
 
-			if (event.getSide() == LogicalSide.CLIENT) {
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 				BehaviourType<?> type = behaviour.getType();
 				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> CreateClient.VALUE_SETTINGS_HANDLER
 					.startInteractionWith(pos, type, hand, ray.getDirection()));
 			}
 
-			return;
+			return InteractionResult.SUCCESS;
 		}
+		return InteractionResult.PASS;
 	}
 
 	public static boolean canInteract(Player player) {

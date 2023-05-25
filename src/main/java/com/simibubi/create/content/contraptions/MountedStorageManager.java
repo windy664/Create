@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTank;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -224,7 +225,7 @@ public class MountedStorageManager {
 		MountedStorage storage = storageManager.storage.get(localPos);
 		if (storage == null || storage.getItemHandler() == null)
 			return false;
-		Storage<ItemVariant> handler = storage.getItemHandler();
+		ItemStackHandler handler = (ItemStackHandler) storage.getItemHandler();
 
 		StructureBlockInfo info = contraption.getBlocks()
 			.get(localPos);

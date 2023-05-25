@@ -4,6 +4,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
+import io.github.fabricators_of_create.porting_lib.enchant.CustomEnchantingBehaviorItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
@@ -19,7 +20,9 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
-public class DivingHelmetItem extends BaseArmorItem {
+import org.jetbrains.annotations.Nullable;
+
+public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingBehaviorItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.HEAD;
 
 	public DivingHelmetItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
@@ -31,7 +34,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 		if (enchantment == Enchantments.AQUA_AFFINITY) {
 			return false;
 		}
-		return super.canApplyAtEnchantingTable(stack, enchantment);
+		return CustomEnchantingBehaviorItem.super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
 	public static boolean isWornBy(Entity entity, boolean fireproof) {

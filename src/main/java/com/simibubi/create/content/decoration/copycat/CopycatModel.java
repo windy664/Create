@@ -10,6 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -28,14 +29,14 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap.Builder;
 import net.minecraftforge.client.model.data.ModelProperty;
 
-public abstract class CopycatModel extends BakedModelWrapperWithData {
+public abstract class CopycatModel extends ForwardingBakedModel {
 
 	public static final ModelProperty<BlockState> MATERIAL_PROPERTY = new ModelProperty<>();
 	private static final ModelProperty<OcclusionData> OCCLUSION_PROPERTY = new ModelProperty<>();
 	private static final ModelProperty<IModelData> WRAPPED_DATA_PROPERTY = new ModelProperty<>();
 
 	public CopycatModel(BakedModel originalModel) {
-		super(originalModel);
+		wrapped = originalModel;
 	}
 
 	@Override

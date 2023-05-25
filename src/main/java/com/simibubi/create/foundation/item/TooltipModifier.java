@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.item;
 
 import java.util.List;
 
+import net.minecraft.world.entity.player.Player;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.utility.AttachedRegistry;
@@ -17,7 +19,7 @@ public interface TooltipModifier {
 
 	TooltipModifier EMPTY = new TooltipModifier() {
 		@Override
-		public void modify(ItemStack stack, TooltipFlag flags, List<Component> tooltip) {
+		public void modify(ItemStack stack, TooltipFlag flags, List<Component> tooltip, Player player) {
 		}
 
 		@Override
@@ -26,15 +28,15 @@ public interface TooltipModifier {
 		}
 	};
 
-	void modify(ItemStack stack, TooltipFlag flags, List<Component> tooltip);
+	void modify(ItemStack stack, TooltipFlag flags, List<Component> tooltip, Player player);
 
 	default TooltipModifier andThen(TooltipModifier after) {
 		if (after == EMPTY) {
 			return this;
 		}
-		return (stack, flags, tooltip) -> {
-			modify(stack, flags, tooltip);
-			after.modify(stack, flags, tooltip);
+		return (stack, flags, tooltip, player) -> {
+			modify(stack, flags, tooltip, player);
+			after.modify(stack, flags, tooltip, player);
 		};
 	}
 

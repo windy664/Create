@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.blockEntity.behaviour;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
@@ -36,11 +37,10 @@ public class ValueSettingsClient {
 		mc = Minecraft.getInstance();
 	}
 
-	public void cancelIfWarmupAlreadyStarted(PlayerInteractEvent.RightClickBlock event) {
-		if (interactHeldTicks != -1 && event.getPos()
+	public void cancelIfWarmupAlreadyStarted(BlockPos pos, AtomicBoolean cancel) {
+		if (interactHeldTicks != -1 && pos
 			.equals(interactHeldPos)) {
-			event.setCanceled(true);
-			event.setCancellationResult(InteractionResult.FAIL);
+			cancel.set(true);
 		}
 	}
 

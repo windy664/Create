@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.utility.Lang;
 
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -21,7 +22,7 @@ public class MountedStorageInteraction {
 	public static final List<MenuType<?>> menus = ImmutableList.of(MenuType.GENERIC_9x1, MenuType.GENERIC_9x2,
 		MenuType.GENERIC_9x3, MenuType.GENERIC_9x4, MenuType.GENERIC_9x5, MenuType.GENERIC_9x6);
 
-	public static MenuProvider createMenuProvider(Component displayName, IItemHandlerModifiable handler,
+	public static MenuProvider createMenuProvider(Component displayName, ItemStackHandler handler,
 		int slotCount, Supplier<Boolean> stillValid) {
 		int rows = Mth.clamp(slotCount / 9, 1, 6);
 		MenuType<?> menuType = menus.get(rows - 1);
@@ -47,7 +48,7 @@ public class MountedStorageInteraction {
 
 		private Supplier<Boolean> stillValid;
 
-		public StorageInteractionContainer(IItemHandlerModifiable inv, Supplier<Boolean> stillValid) {
+		public StorageInteractionContainer(ItemStackHandler inv, Supplier<Boolean> stillValid) {
 			super(inv);
 			this.stillValid = stillValid;
 		}
