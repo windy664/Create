@@ -13,11 +13,9 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import io.github.fabricators_of_create.porting_lib.model.IModelData;
-import io.github.fabricators_of_create.porting_lib.model.ModelDataMap;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
-
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
+import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class CopycatBlockEntity extends SmartBlockEntity
-	implements ISpecialBlockEntityItemRequirement, ITransformableBlockEntity {
+	implements ISpecialBlockEntityItemRequirement, ITransformableBlockEntity, RenderAttachmentBlockEntity {
 
 	private BlockState material;
 	private ItemStack consumedItem;
@@ -158,9 +156,8 @@ public class CopycatBlockEntity extends SmartBlockEntity
 	}
 
 	@Override
-	public IModelData getModelData() {
-		return new ModelDataMap.Builder().withInitial(CopycatModel.MATERIAL_PROPERTY, material)
-			.build();
+	public BlockState getRenderAttachmentData() {
+		return material;
 	}
 
 }
