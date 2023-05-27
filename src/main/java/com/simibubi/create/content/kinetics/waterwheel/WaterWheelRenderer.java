@@ -17,7 +17,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache.Compartment;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
-import io.github.fabricators_of_create.porting_lib.model.EmptyModelData;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -27,6 +26,8 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -114,7 +115,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 	private static BlockState getLogBlockState(String namespace, String wood) {
 		for (String suffix : LOG_SUFFIXES) {
 			Optional<BlockState> state =
-				ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, wood + suffix))
+				Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(namespace, wood + suffix)))
 					.map(Holder::value)
 					.map(Block::defaultBlockState);
 			if (state.isPresent())
@@ -130,13 +131,13 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 		if (model == null)
 			return null;
 		Random random = new Random(42L);
-		List<BakedQuad> quads = model.getQuads(state, side, random, EmptyModelData.INSTANCE);
+		List<BakedQuad> quads = model.getQuads(state, side, random);
 		if (!quads.isEmpty()) {
 			return quads.get(0)
 				.getSprite();
 		}
 		random.setSeed(42L);
-		quads = model.getQuads(state, null, random, EmptyModelData.INSTANCE);
+		quads = model.getQuads(state, null, random);
 		if (!quads.isEmpty()) {
 			for (BakedQuad quad : quads) {
 				if (quad.getDirection() == side) {
@@ -144,7 +145,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 				}
 			}
 		}
-		return model.getParticleIcon(EmptyModelData.INSTANCE);
+		return model.getParticleIcon();
 	}
 
 }
