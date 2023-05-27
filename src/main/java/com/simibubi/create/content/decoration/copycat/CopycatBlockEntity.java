@@ -17,6 +17,7 @@ import io.github.fabricators_of_create.porting_lib.model.IModelData;
 import io.github.fabricators_of_create.porting_lib.model.ModelDataMap;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -152,7 +153,7 @@ public class CopycatBlockEntity extends SmartBlockEntity
 	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
-		tag.put("Item", consumedItem.serializeNBT());
+		tag.put("Item", NBTSerializer.serializeNBT(consumedItem));
 		tag.put("Material", NbtUtils.writeBlockState(material));
 	}
 

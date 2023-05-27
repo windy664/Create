@@ -1,5 +1,8 @@
 package com.simibubi.create.content.decoration.copycat;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -8,6 +11,17 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 
+import io.github.fabricators_of_create.porting_lib.block.CustomFrictionBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
+import io.github.fabricators_of_create.porting_lib.block.CustomSoundTypeBlock;
+import io.github.fabricators_of_create.porting_lib.block.LightEmissiveBlock;
+import io.github.fabricators_of_create.porting_lib.enchant.EnchantmentBonusBlock;
+import io.github.fabricators_of_create.porting_lib.util.ExplosionResistanceBlock;
+import io.github.fabricators_of_create.porting_lib.util.ValidSpawnBlock;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;
@@ -46,10 +60,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEntity>, IWrenchable {
+public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEntity>, IWrenchable,
+		CustomFrictionBlock, CustomSoundTypeBlock, LightEmissiveBlock, ExplosionResistanceBlock,
+		BlockPickInteractionAware, CustomLandingEffectsBlock, CustomRunningEffectsBlock, EnchantmentBonusBlock,
+		ValidSpawnBlock {
 
 	public CopycatBlock(Properties pProperties) {
 		super(pProperties);
@@ -292,53 +307,76 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 	@Override
 	public float getFriction(BlockState state, LevelReader level, BlockPos pos, Entity entity) {
-		return getMaterial(level, pos).getFriction(level, pos, entity);
+		return maybeMaterialAs(
+				level, pos, CustomFrictionBlock.class,
+				(material, block) -> block.getFriction(material, level, pos, entity),
+				material -> material.getBlock().getFriction()
+		);
 	}
 
 	@Override
 	public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-		return getMaterial(level, pos).getLightEmission(level, pos);
-	}
-
-	@Override
-	public boolean canHarvestBlock(BlockState state, BlockGetter level, BlockPos pos, Player player) {
-		return getMaterial(level, pos).canHarvestBlock(level, pos, player);
+		return maybeMaterialAs(
+				level, pos, LightEmissiveBlock.class,
+				(material, block) -> block.getLightEmission(material, level, pos),
+				BlockStateBase::getLightEmission
+		);
 	}
 
 	@Override
 	public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
-		return getMaterial(level, pos).getExplosionResistance(level, pos, explosion);
+		return maybeMaterialAs(
+				level, pos, ExplosionResistanceBlock.class,
+				(material, block) -> block.getExplosionResistance(material, level, pos, explosion),
+				material -> material.getBlock().getExplosionResistance()
+		);
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos,
-		Player player) {
+	public ItemStack getPickedStack(BlockState state, BlockGetter level, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
 		BlockState material = getMaterial(level, pos);
 		if (AllBlocks.COPYCAT_BASE.has(material))
 			return new ItemStack(this);
-		return material.getCloneItemStack(target, level, pos, player);
+		return maybeMaterialAs(
+				level, pos, BlockPickInteractionAware.class,
+				(mat, block) -> block.getPickedStack(mat, level, pos, player, result),
+				mat -> mat.getBlock().getCloneItemStack(level, pos, mat)
+		);
 	}
 
 	@Override
 	public boolean addLandingEffects(BlockState state1, ServerLevel level, BlockPos pos, BlockState state2,
 		LivingEntity entity, int numberOfParticles) {
-		return getMaterial(level, pos).addLandingEffects(level, pos, state2, entity, numberOfParticles);
+		return maybeMaterialAs(
+				level, pos, CustomLandingEffectsBlock.class, // duplicate material is not a bug
+				(material, block) -> block.addLandingEffects(material, level, pos, material, entity, numberOfParticles),
+				material -> false // default to vanilla, true cancels
+		);
 	}
 
 	@Override
 	public boolean addRunningEffects(BlockState state, Level level, BlockPos pos, Entity entity) {
-		return getMaterial(level, pos).addRunningEffects(level, pos, entity);
+		return maybeMaterialAs(
+				level, pos, CustomRunningEffectsBlock.class,
+				(material, block) -> block.addRunningEffects(material, level, pos, entity),
+				material -> false // default to vanilla, true cancels
+		);
 	}
 
 	@Override
 	public float getEnchantPowerBonus(BlockState state, LevelReader level, BlockPos pos) {
-		return getMaterial(level, pos).getEnchantPowerBonus(level, pos);
+		return maybeMaterialAs(
+				level, pos, EnchantmentBonusBlock.class,
+				(material, block) -> block.getEnchantPowerBonus(material, level, pos),
+				material -> EnchantmentBonusBlock.super.getEnchantPowerBonus(material, level, pos)
+		);
 	}
 
-	@Override
-	public boolean canEntityDestroy(BlockState state, BlockGetter level, BlockPos pos, Entity entity) {
-		return getMaterial(level, pos).canEntityDestroy(level, pos, entity);
-	}
+	// fabric: unsupported
+//	@Override
+//	public boolean canEntityDestroy(BlockState state, BlockGetter level, BlockPos pos, Entity entity) {
+//		return getMaterial(level, pos).canEntityDestroy(level, pos, entity);
+//	}
 
 	@Override
 	public boolean isValidSpawn(BlockState state, BlockGetter level, BlockPos pos, Type type,
@@ -379,5 +417,17 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 		}
 
 	}
+
+
+	// fabric: util
+	private static <T, R> R maybeMaterialAs(BlockGetter level, BlockPos pos, Class<T> clazz,
+											BiFunction<BlockState, T, R> ifType, Function<BlockState, R> ifNot) {
+		BlockState material = getMaterial(level, pos);
+		Block block = material.getBlock();
+		if (clazz.isInstance(block))
+			return ifType.apply(material, clazz.cast(block));
+		return ifNot.apply(material);
+	}
+
 
 }
