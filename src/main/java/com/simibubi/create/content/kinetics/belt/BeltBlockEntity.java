@@ -14,7 +14,6 @@ import java.util.function.Function;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.LightListener;
 import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
@@ -534,8 +533,8 @@ public class BeltBlockEntity extends KineticBlockEntity implements ItemTransfera
 	}
 
 	@Override
-	public CasingType getRenderAttachmentData() {
-		return casing;
+	public RenderData getRenderAttachmentData() {
+		return new RenderData(casing, covered);
 	}
 
 	@Override
@@ -671,5 +670,8 @@ public class BeltBlockEntity extends KineticBlockEntity implements ItemTransfera
 			return;
 		covered = blockCoveringBelt;
 		notifyUpdate();
+	}
+
+	public record RenderData(CasingType casingType, boolean covered) {
 	}
 }

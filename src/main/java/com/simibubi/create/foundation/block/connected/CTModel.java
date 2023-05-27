@@ -6,14 +6,12 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.content.decoration.copycat.CopycatBlock;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
-import com.simibubi.create.foundation.model.BakedQuadHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -61,19 +59,29 @@ public class CTModel extends ForwardingBakedModel {
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		CTData data = createCTData(blockView, pos, state);
 
-			BakedQuad newQuad = BakedQuadHelper.clone(quad);
-			int[] vertexData = newQuad.getVertices();
-
-			for (int vertex = 0; vertex < 4; vertex++) {
-				float u = BakedQuadHelper.getU(vertexData, vertex);
-				float v = BakedQuadHelper.getV(vertexData, vertex);
-				BakedQuadHelper.setU(vertexData, vertex, spriteShift.getTargetU(u, index));
-				BakedQuadHelper.setV(vertexData, vertex, spriteShift.getTargetV(v, index));
+		SpriteFinder spriteFinder = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS));
+		context.pushTransform(quad -> {
+			int index = data.get(quad.lightFace());
+			if (index != -1) {
+				TextureAtlasSprite sprite = spriteFinder.find(quad, 0);
+				CTSpriteShiftEntry spriteShift = behaviour.getShift(state, quad.lightFace(), sprite);
+				if (spriteShift != null) {
+					if (sprite == spriteShift.getOriginal()) {
+						for (int vertex = 0; vertex < 4; vertex++) {
+							float u = quad.spriteU(vertex, 0);
+							float v = quad.spriteV(vertex, 0);
+							quad.sprite(vertex, 0,
+									spriteShift.getTargetU(u, index),
+									spriteShift.getTargetV(v, index)
+							);
+						}
+					}
+				}
 			}
-
-			quads.set(i, newQuad);
-
-		return quads;
+			return true;
+		});
+		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		context.popTransform();
 	}
 
 	private static class CTData {

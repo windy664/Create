@@ -28,11 +28,11 @@ public class BracketedKineticBlockModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-		if (!VirtualEmptyBlockGetter.is(world)) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		if (!VirtualEmptyBlockGetter.is(blockView)) {
 			BracketedModelData data = new BracketedModelData();
 			BracketedBlockEntityBehaviour attachmentBehaviour =
-					BlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
+				BlockEntityBehaviour.get(blockView, pos, BracketedBlockEntityBehaviour.TYPE);
 			if (attachmentBehaviour != null)
 				data.putBracket(attachmentBehaviour.getBracket());
 
