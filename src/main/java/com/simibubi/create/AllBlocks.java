@@ -2306,9 +2306,9 @@ public class AllBlocks {
 		REGISTRATE.block("experience_block", ExperienceBlock::new)
 			.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.color(MaterialColor.PLANT))
-			.properties(p -> p.sound(new ForgeSoundType(1, .5f, () -> SoundEvents.AMETHYST_BLOCK_BREAK,
-				() -> SoundEvents.AMETHYST_BLOCK_STEP, () -> SoundEvents.AMETHYST_BLOCK_PLACE,
-				() -> SoundEvents.AMETHYST_BLOCK_HIT, () -> SoundEvents.AMETHYST_BLOCK_FALL)))
+			.properties(p -> p.sound(new SoundType(1, .5f, SoundEvents.AMETHYST_BLOCK_BREAK,
+				SoundEvents.AMETHYST_BLOCK_STEP, SoundEvents.AMETHYST_BLOCK_PLACE,
+				SoundEvents.AMETHYST_BLOCK_HIT, SoundEvents.AMETHYST_BLOCK_FALL)))
 			.properties(p -> p.requiresCorrectToolForDrops())
 			.properties(p -> p.lightLevel(s -> 15))
 			.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.standardModel(c, p)))

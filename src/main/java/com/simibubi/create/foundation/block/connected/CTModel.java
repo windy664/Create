@@ -61,7 +61,6 @@ public class CTModel extends ForwardingBakedModel {
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		CTData data = createCTData(blockView, pos, state);
 
-		// TODO PORT 0.5.1
 			BakedQuad newQuad = BakedQuadHelper.clone(quad);
 			int[] vertexData = newQuad.getVertices();
 

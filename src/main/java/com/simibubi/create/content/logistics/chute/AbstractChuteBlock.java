@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +22,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -167,9 +165,9 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		if (pos.below()
 			.equals(neighbourPos))
 			withBlockEntityDo(world, pos, ChuteBlockEntity::blockBelowChanged);
-		// TODO PORT 0.5.1
-		//		else if (pos.above()
-//			.equals(neighbourPos))
+		// fabric: unnecessary, not how it works here
+//		else if (pos.above()
+//				.equals(neighbourPos))
 //			withBlockEntityDo(world, pos, chute -> chute.capAbove = LazyOptional.empty());
 	}
 

@@ -535,7 +535,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements ItemTransfera
 
 	@Override
 	public CasingType getRenderAttachmentData() {
-		return casing; // TODO PORT 0.5.1
+		return casing;
 	}
 
 	@Override

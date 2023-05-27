@@ -29,23 +29,29 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 import com.simibubi.create.foundation.utility.LongAttached;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.github.fabricators_of_create.porting_lib.transfer.StorageProvider;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.fluid.FluidTransferable;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
+import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -57,6 +63,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -419,7 +426,6 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			inserter = BlockEntityBehaviour.get(level, be.getBlockPos(), InvManipulationBehaviour.TYPE);
 		}
 
-		// TODO PORT 0.5.1
 		Storage<ItemVariant> targetInv = getItemSpoutputOutput(direction);
 		if (targetInv == null && inserter != null) targetInv = inserter.getInventory();
 
@@ -568,7 +574,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 					.relative(direction));
 
 			InvManipulationBehaviour inserter =
-					be == null ? null : BlockEntityBehaviour.get(level, te.getBlockPos(), InvManipulationBehaviour.TYPE);
+					be == null ? null : BlockEntityBehaviour.get(level, be.getBlockPos(), InvManipulationBehaviour.TYPE);
 			Storage<ItemVariant> targetInv = getItemSpoutputOutput(direction);
 			if (targetInv == null && inserter != null) targetInv = inserter.getInventory();
 			Storage<FluidVariant> targetTank = getFluidSpoutputOutput(direction);
@@ -778,38 +784,44 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		Lang.translate("gui.goggles.basin_contents")
 			.forGoggles(tooltip);
 
-		IItemHandlerModifiable items = itemCapability.orElse(new ItemStackHandler());
-		IFluidHandler fluids = fluidCapability.orElse(new FluidTank(0));
+		Couple<SmartInventory> items = Couple.create(inputInventory, outputInventory);
+		Couple<SmartFluidTankBehaviour> fluids = Couple.create(inputTank, outputTank);
 		boolean isEmpty = true;
 
-		for (int i = 0; i < items.getSlots(); i++) {
-			ItemStack stackInSlot = items.getStackInSlot(i);
-			if (stackInSlot.isEmpty())
-				continue;
-			Lang.text("")
-				.add(Components.translatable(stackInSlot.getDescriptionId())
-					.withStyle(ChatFormatting.GRAY))
-				.add(Lang.text(" x" + stackInSlot.getCount())
-					.style(ChatFormatting.GREEN))
-				.forGoggles(tooltip, 1);
-			isEmpty = false;
+		for (SmartInventory inventory : items) {
+			for (int i = 0; i < inventory.getSlots(); i++) {
+				ItemStack stackInSlot = inventory.getStackInSlot(i);
+				if (stackInSlot.isEmpty())
+					continue;
+				Lang.text("")
+						.add(Components.translatable(stackInSlot.getDescriptionId())
+								.withStyle(ChatFormatting.GRAY))
+						.add(Lang.text(" x" + stackInSlot.getCount())
+								.style(ChatFormatting.GREEN))
+						.forGoggles(tooltip, 1);
+				isEmpty = false;
+			}
 		}
 
-		LangBuilder mb = Lang.translate("generic.unit.millibuckets");
-		for (int i = 0; i < fluids.getTanks(); i++) {
-			FluidStack fluidStack = fluids.getFluidInTank(i);
+		FluidUnit unit = AllConfigs.client().fluidUnitType.get();
+		LangBuilder unitSuffix = Lang.translate(unit.getTranslationKey());
+		boolean simplify = AllConfigs.client().simplifyFluidUnit.get();
+		for (SmartFluidTankBehaviour behaviour : fluids) {
+			SmartFluidTank tank = behaviour.getPrimaryHandler();
+			FluidStack fluidStack = tank.getFluid();
 			if (fluidStack.isEmpty())
 				continue;
 			Lang.text("")
-				.add(Lang.fluidName(fluidStack)
-					.add(Lang.text(" "))
-					.style(ChatFormatting.GRAY)
-					.add(Lang.number(fluidStack.getAmount())
-						.add(mb)
-						.style(ChatFormatting.BLUE)))
-				.forGoggles(tooltip, 1);
+					.add(Lang.fluidName(fluidStack)
+							.add(Lang.text(" "))
+							.style(ChatFormatting.GRAY)
+							.add(Lang.translate(FluidTextUtil.getUnicodeMillibuckets(fluidStack.getAmount(), unit, simplify))
+									.add(unitSuffix)
+									.style(ChatFormatting.BLUE)))
+					.forGoggles(tooltip, 1);
 			isEmpty = false;
 		}
+
 
 		if (isEmpty)
 			tooltip.remove(0);

@@ -22,7 +22,6 @@ public class ConnectedGirderModel extends CTModel {
 		super(originalModel, new GirderCTBehaviour());
 	}
 
-	// TODO PORT 0.5.1
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		ConnectionData data = new ConnectionData();

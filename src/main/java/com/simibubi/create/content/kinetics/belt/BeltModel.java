@@ -48,7 +48,6 @@ public class BeltModel extends ForwardingBakedModel {
 		return false;
 	}
 
-	// TODO PORT 0.5.1
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		boolean applyTransform = false;

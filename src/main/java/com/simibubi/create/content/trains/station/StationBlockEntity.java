@@ -13,8 +13,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
@@ -36,10 +34,10 @@ import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.entity.TrainPacket;
 import com.simibubi.create.content.trains.entity.TravellingPoint;
-import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation.DiscoveredLocation;
@@ -61,9 +59,11 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -87,8 +87,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public class StationBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity, ItemTransferable {
 
@@ -859,13 +857,6 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	@Override
 	public Storage<ItemVariant> getItemStorage(@Nullable Direction face) {
 		return depotBehaviour.itemHandler;
-	}
-	// TODO PORT 0.5.1: computercraft
-
-	@Override
-	public void invalidateCaps() {
-		super.invalidateCaps();
-		computerBehaviour.removePeripheral();
 	}
 
 	private void applyAutoSchedule() {

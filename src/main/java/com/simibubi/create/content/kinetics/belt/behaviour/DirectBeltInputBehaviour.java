@@ -37,7 +37,7 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 	private AvailabilityPredicate canInsert;
 	private Supplier<Boolean> supportsBeltFunnels;
 	// fabric: transfer
-	private StorageProvider<ItemVariant> teItemStorageProvider;
+	private StorageProvider<ItemVariant> targetStorageProvider;
 
 	public DirectBeltInputBehaviour(SmartBlockEntity be) {
 		super(be);
@@ -67,8 +67,7 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 	}
 
 	private ItemStack defaultInsertionCallback(TransportedItemStack inserted, Direction side, boolean simulate) {
-		// TODO PORT 0.5.1
-		Storage<ItemVariant> storage = getTeItemStorage(side);
+		Storage<ItemVariant> storage = getTargetStorage(side);
 		if (storage == null)
 			return inserted.stack;
 
@@ -86,12 +85,12 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 		}
 	}
 
-	public Storage<ItemVariant> getTeItemStorage(Direction side) {
+	public Storage<ItemVariant> getTargetStorage(Direction side) {
 		if (getWorld() == null)
 			return null;
-		if (teItemStorageProvider == null)
-			teItemStorageProvider = StorageProvider.createForItems(getWorld(), getPos());
-		return teItemStorageProvider.get(side);
+		if (targetStorageProvider == null)
+			targetStorageProvider = StorageProvider.createForItems(getWorld(), getPos());
+		return targetStorageProvider.get(side);
 	}
 
 	// TODO: verify that this side is consistent across all calls
