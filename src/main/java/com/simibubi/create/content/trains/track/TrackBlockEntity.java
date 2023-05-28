@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
@@ -46,8 +48,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 
-public class TrackBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity, IMergeableBE {
+public class TrackBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity, IMergeableBE, RenderAttachmentBlockEntity {
 
 	Map<BlockPos, BezierConnection> connections;
 	boolean cancelDrops;
@@ -339,6 +342,14 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 
 	private void removeFromCurveInteraction() {
 		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::removeFromCurveInteractionUnsafe);
+	}
+
+	@Override
+	@Nullable
+	public Double getRenderAttachmentData() {
+		if (!isTilted())
+			return null;
+		return tilt.smoothingAngle.get();
 	}
 
 	@Environment(EnvType.CLIENT)

@@ -1,40 +1,43 @@
 package com.simibubi.create.content.trains.track;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
 
 public class TrackModel extends ForwardingBakedModel {
 
 	public TrackModel(BakedModel originalModel) {
-		this.wrapped = originalModel;
+		wrapped = originalModel;
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData extraData) {
-		List<BakedQuad> templateQuads = super.getQuads(state, side, rand, extraData);
-		if (templateQuads.isEmpty())
-			return templateQuads;
-		if (!(extraData instanceof ModelDataMap mdm) || !mdm.hasProperty(TrackBlockEntityTilt.ASCENDING_PROPERTY))
-			return templateQuads;
+	public boolean isVanillaAdapter() {
+		return false;
+	}
 
-		double angleIn = mdm.getData(TrackBlockEntityTilt.ASCENDING_PROPERTY);
+	@Override
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		if (!(blockView instanceof RenderAttachedBlockView attachmentView
+				&& attachmentView.getBlockEntityRenderAttachment(pos) instanceof Double data)) {
+			super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+			return;
+		}
+
+		double angleIn = data;
 		double angle = Math.abs(angleIn);
 		boolean flip = angleIn < 0;
 
@@ -63,17 +66,14 @@ public class TrackModel extends ForwardingBakedModel {
 			return v;
 		};
 
-		int size = templateQuads.size();
-		List<BakedQuad> quads = new ArrayList<>();
-		for (int i = 0; i < size; i++) {
-			BakedQuad quad = BakedQuadHelper.clone(templateQuads.get(i));
-			int[] vertexData = quad.getVertices();
-			for (int j = 0; j < 4; j++)
-				BakedQuadHelper.setXYZ(vertexData, j, transform.apply(BakedQuadHelper.getXYZ(vertexData, j)));
-			quads.add(quad);
-		}
-
-		return quads;
+		context.pushTransform(quad -> {
+			for (int vertex = 0; vertex < 4; vertex++) {
+				BakedQuadHelper.setXYZ(quad, vertex, transform.apply(BakedQuadHelper.getXYZ(quad, vertex)));
+			}
+			return true;
+		});
+		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		context.popTransform();
 	}
 
 }

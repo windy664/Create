@@ -9,8 +9,6 @@ import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
-import io.github.fabricators_of_create.porting_lib.model.ModelProperty;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -19,8 +17,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class TrackBlockEntityTilt {
-
-	public static final ModelProperty<Double> ASCENDING_PROPERTY = new ModelProperty<>();
 
 	public Optional<Double> smoothingAngle;
 	private Couple<Pair<Vec3, Integer>> previousSmoothingHandles;
