@@ -19,7 +19,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Unit;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class TrainCargoManager extends MountedStorageManager {
@@ -38,14 +37,14 @@ public class TrainCargoManager extends MountedStorageManager {
 	}
 
 	@Override
-	protected ContraptionInvWrapper wrapItems(Collection<Storage<ItemVariant>> list, boolean fuel) {
+	protected ContraptionInvWrapper wrapItems(Collection<? extends Storage<ItemVariant>> list, boolean fuel) {
 		if (fuel)
 			return super.wrapItems(list, fuel);
 		return new CargoInvWrapper(Arrays.copyOf(list.toArray(), list.size(), Storage[].class));
 	}
 
 	@Override
-	protected CombinedTankWrapper wrapFluids(Collection<Storage<FluidVariant>> list) {
+	protected CombinedTankWrapper wrapFluids(Collection<? extends Storage<FluidVariant>> list) {
 		return new CargoTankWrapper(Arrays.copyOf(list.toArray(), list.size(), Storage[].class));
 	}
 

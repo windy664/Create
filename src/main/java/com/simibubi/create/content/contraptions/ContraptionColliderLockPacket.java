@@ -64,9 +64,10 @@ public class ContraptionColliderLockPacket extends SimplePacketBase {
 		public boolean handle(Context context) {
 			context.enqueueWork(() -> {
 				AllPackets.getChannel()
-					.send(PacketDistributor.TRACKING_ENTITY.with(context::getSender),
-						new ContraptionColliderLockPacket(contraption, offset, context.getSender()
-							.getId()));
+					.sendToClientsTracking(
+							new ContraptionColliderLockPacket(contraption, offset, context.getSender().getId()),
+							context.getSender()
+					);
 			});
 			return true;
 		}

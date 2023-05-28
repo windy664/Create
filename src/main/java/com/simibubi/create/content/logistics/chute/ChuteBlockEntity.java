@@ -503,7 +503,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		StorageProvider<ItemVariant> provider = side == Direction.UP ? capAbove : capBelow;
 		BlockEntity be = provider.findBlockEntity();
 		if (be instanceof ChuteBlockEntity) {
-			if (side != Direction.DOWN || !(te instanceof SmartChuteBlockEntity) || getItemMotion() > 0)
+			if (side != Direction.DOWN || !(be instanceof SmartChuteBlockEntity) || getItemMotion() > 0)
 				return null;
 		}
 		return provider.get(side.getOpposite());

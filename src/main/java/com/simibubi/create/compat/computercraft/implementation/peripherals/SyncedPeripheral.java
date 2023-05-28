@@ -38,7 +38,7 @@ public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IP
 		boolean hasAttachedComputer = computers.get() > 0;
 
 		tile.getBehaviour(ComputerBehaviour.TYPE).setHasAttachedComputer(hasAttachedComputer);
-		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new AttachedComputerPacket(tile.getBlockPos(), hasAttachedComputer));
+		AllPackets.getChannel().sendToClientsInCurrentServer(new AttachedComputerPacket(tile.getBlockPos(), hasAttachedComputer));
 	}
 
 	@Override

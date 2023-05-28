@@ -2,15 +2,12 @@ package com.simibubi.create.content.fluids.hosePulley;
 
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
-
 import com.simibubi.create.content.fluids.transfer.FluidDrainingBehaviour;
 import com.simibubi.create.content.fluids.transfer.FluidFillingBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
@@ -93,8 +90,8 @@ public class HosePulleyFluidHandler implements SingleSlotStorage<FluidVariant> {
 
 	@Override
 	public FluidVariant getResource() {
-		if (!internalTank.isResourceBlank() || drainer.tileEntity.getLevel() == null) return internalTank.getResource();
-		FluidState state = drainer.tileEntity.getLevel().getFluidState(rootPosGetter.get());
+		if (!internalTank.isResourceBlank() || drainer.blockEntity.getLevel() == null) return internalTank.getResource();
+		FluidState state = drainer.blockEntity.getLevel().getFluidState(rootPosGetter.get());
 		Fluid f = state.getType();
 		if (f instanceof FlowingFluid flowing) f = flowing.getSource();
 		if (!f.isSource(state)) return FluidVariant.blank();

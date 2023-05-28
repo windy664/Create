@@ -69,7 +69,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 	public void lazyTick() {
 		super.lazyTick();
 		if (targetStorageProvider == null) {
-			BlockFace targetBlockFace = target.getTarget(getWorld(), tileEntity.getBlockPos(), tileEntity.getBlockState())
+			BlockFace targetBlockFace = target.getTarget(getWorld(), blockEntity.getBlockPos(), blockEntity.getBlockState())
 					.getOpposite();
 			BlockPos pos = targetBlockFace.getPos();
 

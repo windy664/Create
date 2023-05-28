@@ -86,18 +86,18 @@ public class DivingBootsItem extends BaseArmorItem {
 		double vMultiplier = yMotion < 0 ? Math.max(0, 2.5 - Math.abs(yMotion) * 2) : 1;
 
 		if (!entity.isOnGround()) {
-			if (entity.jumping && entity.getPersistentData()
+			if (entity.jumping && entity.getExtraCustomData()
 				.contains("LavaGrounded")) {
 				vMultiplier = yMotion == 0 ? 0 : 1 / yMotion;
 			} else if (yMotion > 0)
 				vMultiplier = 1.3;
 
-			entity.getPersistentData()
+			entity.getExtraCustomData()
 				.remove("LavaGrounded");
 			return new Vec3(1.75, vMultiplier, 1.75);
 		}
 
-		entity.getPersistentData()
+		entity.getExtraCustomData()
 			.putBoolean("LavaGrounded", true);
 		double hMultiplier = entity.isSprinting() ? 1.85 : 1.75;
 		return new Vec3(hMultiplier, vMultiplier, hMultiplier);

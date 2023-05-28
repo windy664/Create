@@ -2,22 +2,19 @@ package com.simibubi.create.content.contraptions.actors.psi;
 
 import java.util.Iterator;
 
-import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-
-import net.minecraft.core.Direction;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.item.ItemHandlerWrapper;
 
+import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -69,7 +66,7 @@ public class PortableItemInterfaceBlockEntity extends PortableStorageInterfaceBl
 				return 0;
 			long extracted = super.extract(resource, maxAmount, transaction);
 			if (extracted != 0) {
-				TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
+				TransactionCallback.onSuccess(transaction, PortableItemInterfaceBlockEntity.this::onContentTransferred);
 			}
 			return extracted;
 		}
@@ -80,26 +77,26 @@ public class PortableItemInterfaceBlockEntity extends PortableStorageInterfaceBl
 				return 0;
 			long inserted = super.insert(resource, maxAmount, transaction);
 			if (inserted != 0) {
-				TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
+				TransactionCallback.onSuccess(transaction, PortableItemInterfaceBlockEntity.this::onContentTransferred);
 			}
 			return inserted;
 		}
 
 		@Override
 		public @Nullable StorageView<ItemVariant> exactView(TransactionContext transaction, ItemVariant resource) {
-			TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
+			TransactionCallback.onSuccess(transaction, PortableItemInterfaceBlockEntity.this::onContentTransferred);
 			return super.exactView(transaction, resource);
 		}
 
 		@Override
 		public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-			TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
+			TransactionCallback.onSuccess(transaction, PortableItemInterfaceBlockEntity.this::onContentTransferred);
 			return super.iterator(transaction);
 		}
 
 		@Override
 		public Iterable<? extends StorageView<ItemVariant>> iterable(TransactionContext transaction) {
-			TransactionCallback.onSuccess(transaction, PortableItemInterfaceTileEntity.this::onContentTransferred);
+			TransactionCallback.onSuccess(transaction, PortableItemInterfaceBlockEntity.this::onContentTransferred);
 			return super.iterable(transaction);
 		}
 

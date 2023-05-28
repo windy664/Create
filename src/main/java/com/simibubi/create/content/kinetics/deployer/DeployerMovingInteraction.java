@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.deployer;
 
-import com.simibubi.create.AllTags;
+import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -10,8 +10,8 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.mounted.MountedContraption;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;

@@ -2,8 +2,6 @@ package com.simibubi.create.content.contraptions.elevator;
 
 import java.util.List;
 
-import com.simibubi.create.foundation.utility.IntAttached;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -19,6 +17,7 @@ import com.simibubi.create.content.contraptions.elevator.ElevatorColumn.ColumnCo
 import com.simibubi.create.content.contraptions.pulley.PulleyContraption;
 import com.simibubi.create.content.redstone.contact.RedstoneContactBlock;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
@@ -71,8 +70,7 @@ public class ElevatorContraption extends PulleyContraption {
 
 		namesList = column.compileNamesList();
 		namesListVersion = column.namesListVersion;
-		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
-			new ElevatorFloorListPacket(entity, namesList));
+		AllPackets.getChannel().sendToClientsTracking(new ElevatorFloorListPacket(entity, namesList), entity);
 	}
 
 	@Override

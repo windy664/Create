@@ -14,14 +14,14 @@ public class BasinInventory extends SmartInventory {
 	public BasinInventory(int slots, BasinBlockEntity be) {
 		super(slots, be, 16, true);
 		this.blockEntity = be;
-		this.whenContentsChanged(te::notifyChangeOfContents);
+		this.whenContentsChanged(be::notifyChangeOfContents);
 	}
 
 	@Override
 	public SmartInventory whenContentsChanged(Runnable updateCallback) {
 		return super.whenContentsChanged(() -> {
 			updateCallback.run();
-			te.notifyChangeOfContents();
+			blockEntity.notifyChangeOfContents();
 		});
 	}
 

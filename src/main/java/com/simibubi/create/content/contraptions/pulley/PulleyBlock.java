@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.pulley;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.HorizontalAxisKineticBlock;

@@ -132,7 +132,7 @@ public class ToolboxInventory extends ItemStackHandler {
 				.isEmpty()) {
 			filters.set(compartment, ItemHandlerHelper.copyStackWithSize(stack, 1));
 			if (ctx != null) TransactionCallback.onSuccess(ctx, blockEntity::sendData);
-			else te.sendData();
+			else blockEntity.sendData();
 		}
 	}
 

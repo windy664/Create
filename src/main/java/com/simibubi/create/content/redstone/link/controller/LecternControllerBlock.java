@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.schematics.requirement.ISpecialBlockItemRequirement;

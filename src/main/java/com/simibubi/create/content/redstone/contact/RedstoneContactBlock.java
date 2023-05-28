@@ -9,8 +9,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.elevator.ElevatorColumn;
 import com.simibubi.create.content.contraptions.elevator.ElevatorColumn.ColumnCoords;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
-import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
+import com.simibubi.create.foundation.utility.BlockHelper;
 
+import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

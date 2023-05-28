@@ -59,7 +59,7 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 	public void initialize() {
 		if (firstNbtRead) {
 			firstNbtRead = false;
-			TileEntityBehaviourEvent.EVENT.invoker().onDeserialize(new BlockEntityBehaviourEvent<>(getBlockState(), this, behaviours));
+			BlockEntityBehaviourEvent.EVENT.invoker().manageBehaviors(new BlockEntityBehaviourEvent(this, behaviours));
 		}
 
 		forEachBehaviour(BlockEntityBehaviour::initialize);
@@ -108,7 +108,7 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 			ArrayList<BlockEntityBehaviour> list = new ArrayList<>();
 			addBehavioursDeferred(list);
 			list.forEach(b -> behaviours.put(b.getType(), b));
-			TileEntityBehaviourEvent.EVENT.invoker().onDeserialize(new BlockEntityBehaviourEvent<>(getBlockState(), this, behaviours));
+			BlockEntityBehaviourEvent.EVENT.invoker().manageBehaviors(new BlockEntityBehaviourEvent(this, behaviours));
 		}
 		super.load(tag);
 		forEachBehaviour(tb -> tb.read(tag, clientPacket));

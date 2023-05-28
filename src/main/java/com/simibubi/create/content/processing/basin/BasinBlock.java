@@ -2,6 +2,7 @@ package com.simibubi.create.content.processing.basin;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.Create;
@@ -97,7 +98,7 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 					return InteractionResult.SUCCESS;
 				if (heldItem.getItem()
 					.equals(Items.SPONGE)) {
-					Storage<FluidVariant> storage = te.getFluidStorage(direction);
+					Storage<FluidVariant> storage = be.getFluidStorage(direction);
 					if (storage != null && !TransferUtil.extractAnyFluid(storage, Long.MAX_VALUE).isEmpty()) {
 						return InteractionResult.SUCCESS;
 					}
@@ -134,7 +135,7 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 			be.inputInventory.withMaxStackSize(64);
 			ItemStack stack = itemEntity.getItem().copy();
 			try (Transaction t = TransferUtil.getTransaction()) {
-				long inserted = te.inputInventory.insert(ItemVariant.of(stack), stack.getCount(), t);
+				long inserted = be.inputInventory.insert(ItemVariant.of(stack), stack.getCount(), t);
 				be.inputInventory.withMaxStackSize(16);
 				t.commit();
 

@@ -191,8 +191,8 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 		if (level.isClientSide)
 			return;
 		int actualLuminosity = luminosity;
-		FluidTankTileEntity controllerTE = getControllerTE();
-		if (controllerTE == null || !controllerTE.window)
+		FluidTankBlockEntity controllerBE = getControllerBE();
+		if (controllerBE == null || !controllerBE.window)
 			actualLuminosity = 0;
 		refreshBlockState();
 		BlockState state = getBlockState();
@@ -307,7 +307,7 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 
 					level.setBlock(pos, blockState.setValue(FluidTankBlock.SHAPE, shape), 23);
 					BlockEntity be = level.getBlockEntity(pos);
-					if (be instanceof FluidTankTileEntity tankAt)
+					if (be instanceof FluidTankBlockEntity tankAt)
 						tankAt.updateStateLuminosity();
 					level.getChunkSource()
 							.getLightEngine()

@@ -16,8 +16,8 @@ public class ChuteItemHandler extends SingleVariantStorage<ItemVariant> {
 	}
 
 	public void update() {
-		this.variant = ItemVariant.of(te.item);
-		this.amount = te.item.getCount();
+		this.variant = ItemVariant.of(blockEntity.item);
+		this.amount = blockEntity.item.getCount();
 	}
 
 	@Override

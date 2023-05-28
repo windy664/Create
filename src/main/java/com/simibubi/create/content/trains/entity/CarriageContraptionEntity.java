@@ -139,7 +139,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	public void sendCarriageDataUpdate() {
-		AllPackets.channel.sendToClientsTracking(new CarriageDataUpdatePacket(this), this);
+		AllPackets.getChannel().sendToClientsTracking(new CarriageDataUpdatePacket(this), this);
 	}
 
 	public CarriageSyncData getCarriageData() {

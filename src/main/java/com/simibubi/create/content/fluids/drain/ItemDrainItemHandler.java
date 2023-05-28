@@ -23,18 +23,18 @@ public class ItemDrainItemHandler extends SnapshotParticipant<Unit> implements S
 
 	@Override
 	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		if (!te.getHeldItemStack().isEmpty())
+		if (!blockEntity.getHeldItemStack().isEmpty())
 			return 0;
 
 		ItemStack stack = resource.toStack();
-		int toInsert = GenericItemEmptying.canItemBeEmptied(te.getLevel(), stack)
+		int toInsert = GenericItemEmptying.canItemBeEmptied(blockEntity.getLevel(), stack)
 				? 1
 				: Math.min((int) maxAmount, resource.getItem().getMaxStackSize());
 		stack.setCount(toInsert);
 		TransportedItemStack heldItem = new TransportedItemStack(stack);
 		heldItem.prevBeltPosition = 0;
-		te.snapshotParticipant.updateSnapshots(transaction);
-		te.setHeldItem(heldItem, side.getOpposite());
+		blockEntity.snapshotParticipant.updateSnapshots(transaction);
+		blockEntity.setHeldItem(heldItem, side.getOpposite());
 		return toInsert;
 	}
 
@@ -47,10 +47,10 @@ public class ItemDrainItemHandler extends SnapshotParticipant<Unit> implements S
 		int toExtract = Math.min((int) maxAmount, held.stack.getCount());
 		ItemStack stack = held.stack.copy();
 		stack.shrink(toExtract);
-		te.snapshotParticipant.updateSnapshots(transaction);
-		te.heldItem.stack = stack;
+		blockEntity.snapshotParticipant.updateSnapshots(transaction);
+		blockEntity.heldItem.stack = stack;
 		if (stack.isEmpty())
-			te.heldItem = null;
+			blockEntity.heldItem = null;
 		return toExtract;
 	}
 
@@ -76,7 +76,7 @@ public class ItemDrainItemHandler extends SnapshotParticipant<Unit> implements S
 	}
 
 	public ItemStack getStack() {
-		TransportedItemStack held = te.heldItem;
+		TransportedItemStack held = blockEntity.heldItem;
 		if (held == null || held.stack == null || held.stack.isEmpty())
 			return ItemStack.EMPTY;
 		return held.stack;
@@ -94,6 +94,6 @@ public class ItemDrainItemHandler extends SnapshotParticipant<Unit> implements S
 	@Override
 	protected void onFinalCommit() {
 		super.onFinalCommit();
-		te.notifyUpdate();
+		blockEntity.notifyUpdate();
 	}
 }

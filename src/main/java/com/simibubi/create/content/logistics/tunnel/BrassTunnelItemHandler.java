@@ -18,8 +18,8 @@ public class BrassTunnelItemHandler implements SingleSlotStorage<ItemVariant> {
 
 	@Override
 	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		if (!te.hasDistributionBehaviour()) {
-			Storage<ItemVariant> beltCapability = te.getBeltCapability();
+		if (!blockEntity.hasDistributionBehaviour()) {
+			Storage<ItemVariant> beltCapability = blockEntity.getBeltCapability();
 			if (beltCapability == null)
 				return 0;
 			return beltCapability.insert(resource, maxAmount, transaction);
@@ -35,7 +35,7 @@ public class BrassTunnelItemHandler implements SingleSlotStorage<ItemVariant> {
 
 	@Override
 	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		Storage<ItemVariant> beltCapability = te.getBeltCapability();
+		Storage<ItemVariant> beltCapability = blockEntity.getBeltCapability();
 		if (beltCapability == null)
 			return 0;
 		return beltCapability.extract(resource, maxAmount, transaction);
@@ -63,7 +63,7 @@ public class BrassTunnelItemHandler implements SingleSlotStorage<ItemVariant> {
 	}
 
 	public ItemStack getStack() {
-		ItemStack stack = te.stackToDistribute;
+		ItemStack stack = blockEntity.stackToDistribute;
 		if (stack.isEmpty())
 			return ItemStack.EMPTY;
 		return stack;

@@ -1,5 +1,10 @@
 package com.simibubi.create.content.kinetics.deployer;
 
+import java.util.Iterator;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
@@ -11,11 +16,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Iterator;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class DeployerItemHandler extends SnapshotParticipant<Unit> implements Storage<ItemVariant> {
 
@@ -50,7 +50,7 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 
 		ItemStack held = getHeld();
 		if (held.isEmpty()) {
-			te.snapshotParticipant.updateSnapshots(transaction);
+			be.snapshotParticipant.updateSnapshots(transaction);
 			set(stack);
 			return maxInsert;
 		}
@@ -65,7 +65,7 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 		int toInsert = Math.min(maxInsert, space);
 		ItemStack newStack = held.copy();
 		newStack.grow(toInsert);
-		te.snapshotParticipant.updateSnapshots(transaction);
+		be.snapshotParticipant.updateSnapshots(transaction);
 		set(newStack);
 		return toInsert;
 	}
@@ -84,19 +84,19 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 	 */
 	public long extractFromOverflow(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 		long extracted = 0;
-		for (int i = 0; i < te.overflowItems.size(); i++) {
-			ItemStack itemStack = te.overflowItems.get(i);
+		for (int i = 0; i < be.overflowItems.size(); i++) {
+			ItemStack itemStack = be.overflowItems.get(i);
 			if (itemStack.isEmpty())
 				continue;
 			if (!resource.matches(itemStack))
 				continue;
 			int toExtract = (int) Math.min(maxAmount - extracted, itemStack.getCount());
 			if (extracted == 0)
-				te.snapshotParticipant.updateSnapshots(transaction);
+				be.snapshotParticipant.updateSnapshots(transaction);
 			extracted += toExtract;
 			ItemStack newStack = itemStack.copy();
 			newStack.shrink(toExtract);
-			te.overflowItems.set(i, newStack);
+			be.overflowItems.set(i, newStack);
 		}
 		return extracted;
 	}
@@ -111,7 +111,7 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 		if (!be.filtering.getFilter().isEmpty() && be.filtering.test(held))
 			return 0;
 		int toExtract = (int) Math.min(maxAmount, held.getCount());
-		te.snapshotParticipant.updateSnapshots(transaction);
+		be.snapshotParticipant.updateSnapshots(transaction);
 		ItemStack newStack = held.copy();
 		newStack.shrink(toExtract);
 		set(newStack);
@@ -140,7 +140,7 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 	}
 
 	public boolean isItemValid(ItemStack stack) {
-		FilteringBehaviour filteringBehaviour = te.getBehaviour(FilteringBehaviour.TYPE);
+		FilteringBehaviour filteringBehaviour = be.getBehaviour(FilteringBehaviour.TYPE);
 		return filteringBehaviour == null || filteringBehaviour.test(stack);
 	}
 
@@ -150,28 +150,28 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 
 		public DeployerItemHandlerIterator(TransactionContext transaction) {
 			transaction.addCloseCallback((t, r) -> open = false);
-			this.index = te.overflowItems.size() != 0 ? 0 : -1;
+			this.index = be.overflowItems.size() != 0 ? 0 : -1;
 		}
 
 		@Override
 		public boolean hasNext() {
-			return open && index < te.overflowItems.size();
+			return open && index < be.overflowItems.size();
 		}
 
 		@Override
 		public StorageView<ItemVariant> next() {
 			final int indexFinal = this.index;
-			Supplier<ItemStack> heldGetter = () -> te.overflowItems.get(indexFinal);
-			Consumer<ItemStack> heldSetter = (stack) -> te.overflowItems.set(indexFinal, stack);
+			Supplier<ItemStack> heldGetter = () -> be.overflowItems.get(indexFinal);
+			Consumer<ItemStack> heldSetter = (stack) -> be.overflowItems.set(indexFinal, stack);
 			Predicate<ItemStack> mayExtract = stack -> true;
 			if (index == -1) {
 				heldGetter = player::getMainHandItem;
 				heldSetter = s -> player.setItemInHand(InteractionHand.MAIN_HAND, s);
-				mayExtract = s -> te.filtering.getFilter().isEmpty() || !te.filtering.test(s);
-				index = te.overflowItems.size(); // hasNext will be false now
+				mayExtract = s -> be.filtering.getFilter().isEmpty() || !be.filtering.test(s);
+				index = be.overflowItems.size(); // hasNext will be false now
 			}
 			index++;
-			if (index == te.overflowItems.size())
+			if (index == be.overflowItems.size())
 				index = -1;
 			return new DeployerSlotView(heldGetter, heldSetter, mayExtract);
 		}
@@ -229,7 +229,7 @@ public class DeployerItemHandler extends SnapshotParticipant<Unit> implements St
 		@Override
 		public void updateSnapshots(TransactionContext transaction) {
 			super.updateSnapshots(transaction);
-			te.snapshotParticipant.updateSnapshots(transaction);
+			be.snapshotParticipant.updateSnapshots(transaction);
 		}
 
 		@Override

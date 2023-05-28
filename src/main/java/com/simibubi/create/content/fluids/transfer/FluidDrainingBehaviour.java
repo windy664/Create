@@ -195,7 +195,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				playEffect(world, currentPos, finalFluid, true);
 				blockEntity.award(AllAdvancements.HOSE_PULLEY);
 				if (infinite && FluidHelper.isLava(finalFluid))
-					tileEntity.award(AllAdvancements.HOSE_PULLEY_LAVA);
+					blockEntity.award(AllAdvancements.HOSE_PULLEY_LAVA);
 			});
 
 			if (infinite) {

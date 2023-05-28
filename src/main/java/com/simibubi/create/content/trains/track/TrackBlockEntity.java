@@ -171,7 +171,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 			bezierConnection.spawnDestroyParticles(level);
 		}
 		if (dropAndDiscard)
-			AllPackets.getChannel().send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
+			AllPackets.getChannel().sendToClientsTracking(new RemoveBlockEntityPacket(worldPosition), this);
 	}
 
 	public void bind(ResourceKey<Level> boundDimension, BlockPos boundLocation) {

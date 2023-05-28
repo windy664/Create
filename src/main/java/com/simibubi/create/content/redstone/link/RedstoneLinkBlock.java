@@ -133,7 +133,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 	}
 
 	public boolean playerCanToggle(Player player, Level level, BlockPos pos) {
-		return onTileEntityUse(level, pos, te -> te.link.canInteract(player)
+		return onBlockEntityUse(level, pos, be -> be.link.canInteract(player)
 				? InteractionResult.SUCCESS
 				: InteractionResult.FAIL
 		) != InteractionResult.FAIL;

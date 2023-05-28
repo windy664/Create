@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -322,8 +323,7 @@ public class SymmetryWandItem extends Item {
 			}
 		}
 
-		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-				new SymmetryEffectPacket(to, targets));
+		AllPackets.getChannel().sendToClientsTrackingAndSelf(new SymmetryEffectPacket(to, targets), player);
 	}
 
 	/**

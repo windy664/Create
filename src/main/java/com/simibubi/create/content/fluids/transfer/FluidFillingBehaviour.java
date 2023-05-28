@@ -217,7 +217,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				success = true;
 				BlockState blockState = world.getBlockState(currentPos);
 
-				if (!tileEntity.isVirtual())
+				if (!blockEntity.isVirtual())
 					world.updateSnapshots(ctx);
 
 				new SnapshotParticipant<Unit>() { // can't be a typical TransactionCallback because ordering refuses to cooperate
@@ -242,7 +242,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 								updatePostWaterlogging(blockState.setValue(BlockStateProperties.WATERLOGGED, true)),
 								2 | 16);
 				} else {
-					replaceBlock(world, currentPos, blockState, blockState.hasBlockEntity() ? world.getBlockEntity(currentPos) : null, ctx);
+					replaceBlock(world, currentPos, blockState, ctx);
 					if (!blockEntity.isVirtual())
 						world.setBlock(currentPos, FluidHelper.convertToStill(fluid)
 								.defaultFluidState()

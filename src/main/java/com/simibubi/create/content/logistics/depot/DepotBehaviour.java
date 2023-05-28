@@ -76,7 +76,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 
 		@Override
 		protected void onFinalCommit() {
-			tileEntity.notifyUpdate();
+			blockEntity.notifyUpdate();
 		}
 	};
 
@@ -171,7 +171,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 
 		// fabric: might be set to null in processing
 		if (heldItem == null) {
-			tileEntity.sendData();
+			blockEntity.sendData();
 			return;
 		}
 
