@@ -22,6 +22,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
@@ -385,4 +387,8 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		return setFilter(side, copied);
 	}
 
+	public static boolean playerCanInteract(Player player) {
+		boolean adventure = !player.mayBuild() && !player.isSpectator(); // from GameRenderer
+		return !(adventure && AllConfigs.server().limitAdventureMode.get());
+	}
 }
