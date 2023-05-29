@@ -2,6 +2,7 @@ package com.simibubi.create.content.trains.track;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.mixin.fabric.GuiAccessor;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -29,8 +30,7 @@ public class TrackPlacementOverlay {
 		if (TrackPlacement.extraTipWarmup < 4)
 			return;
 
-		if (ObfuscationReflectionHelper.getPrivateValue(Gui.class, gui,
-			"toolHighlightTimer") instanceof Integer toolHighlightTimer && toolHighlightTimer > 0)
+		if (((GuiAccessor) gui).getToolHighlightTimer() > 0)
 			return;
 
 		boolean active = mc.options.keySprint.isDown();

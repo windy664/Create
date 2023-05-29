@@ -41,7 +41,8 @@
     "client.MapRendererMapInstanceMixin",
     "client.PlayerRendererMixin",
     "client.WindowResizeMixin",
-    "fabric.ClientTextTooltipAccessor"
+    "fabric.ClientTextTooltipAccessor",
+    "fabric.GuiAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

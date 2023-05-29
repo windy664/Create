@@ -1,7 +1,5 @@
 package com.simibubi.create.content.equipment.armor;
 
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.EntityAccessor;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -88,7 +86,7 @@ public class DivingBootsItem extends BaseArmorItem {
 		double vMultiplier = yMotion < 0 ? Math.max(0, 2.5 - Math.abs(yMotion) * 2) : 1;
 
 		if (!entity.isOnGround()) {
-			if (entity.jumping && entity.getExtraCustomData()
+			if (((LivingEntityAccessor) entity).port_lib$isJumping() && entity.getExtraCustomData()
 				.contains("LavaGrounded")) {
 				vMultiplier = yMotion == 0 ? 0 : 1 / yMotion;
 			} else if (yMotion > 0)
