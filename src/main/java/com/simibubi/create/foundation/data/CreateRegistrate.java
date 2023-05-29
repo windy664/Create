@@ -7,8 +7,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.simibubi.create.foundation.item.TooltipModifier;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
@@ -17,7 +15,9 @@ import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
 import com.simibubi.create.content.fluids.VirtualFluid;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
+import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
+import com.simibubi.create.foundation.item.render.CustomRenderedItems;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
@@ -250,13 +250,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		b.onRegister(new CustomRendererRegistrationHelper(supplier));
 	}
 
-	@Environment(EnvType.CLIENT)
-	private static void registerCustomRenderedItem(Item entry, CustomRenderedItemModelRenderer renderer) {
-		CreateClient.MODEL_SWAPPER.getCustomRenderedItems()
-				.register(RegisteredObjects.getKeyOrThrow(entry), renderer::createModel);
-	}
-
 	// fabric: these records are required jank since @Environment doesn't strip lambdas
+
 	@Environment(EnvType.CLIENT)
 	private record CTModelProvider(ConnectedTextureBehaviour behavior) implements NonNullFunction<BakedModel, BakedModel> {
 		@Override
@@ -271,7 +266,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		public void accept(Item entry) {
 			CustomRenderedItemModelRenderer renderer = supplier.get().get();
 			BuiltinItemRendererRegistry.INSTANCE.register(entry, renderer);
-			registerCustomRenderedItem(entry, renderer);
+			CustomRenderedItems.register(entry);
 		}
 	}
 }
