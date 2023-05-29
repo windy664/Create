@@ -85,8 +85,7 @@ public class ElevatorFloorListPacket extends SimplePacketBase {
 					return;
 				if (!(ace.getContraption()instanceof ElevatorContraption ec))
 					return;
-				AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> sender),
-					new ElevatorFloorListPacket(ace, ec.namesList));
+				AllPackets.getChannel().sendToClient(new ElevatorFloorListPacket(ace, ec.namesList), sender);
 			});
 			return true;
 		}

@@ -53,7 +53,10 @@ import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
 import com.simibubi.create.content.kinetics.deployer.ManualApplicationRecipe;
 import com.simibubi.create.content.kinetics.fan.HauntingRecipe;
 import com.simibubi.create.content.kinetics.fan.SplashingRecipe;
+import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
+import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
+import com.simibubi.create.content.kinetics.saw.SawBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
@@ -62,6 +65,7 @@ import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CRecipes;
 
 import dev.architectury.fluid.FluidStack;
@@ -169,7 +173,7 @@ public class CreateREI implements REIClientPlugin {
 				.addAllRecipesIf(r -> r instanceof CraftingRecipe && !(r instanceof ShapedRecipe)
 								&& r.getIngredients()
 								.size() > 1
-								&& !MechanicalPressTileEntity.canCompress(r) && !AllRecipeTypes.shouldIgnoreInAutomation(r),
+								&& !MechanicalPressBlockEntity.canCompress(r) && !AllRecipeTypes.shouldIgnoreInAutomation(r),
 						BasinRecipe::convertShapeless)
 				.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 				.catalyst(AllBlocks.BASIN::get)
@@ -200,7 +204,7 @@ public class CreateREI implements REIClientPlugin {
 				.enableWhen(c -> c.allowShapedSquareInPress)
 				.addAllRecipesIf(
 						r -> (r instanceof CraftingRecipe) && !(r instanceof MechanicalCraftingRecipe)
-								&& MechanicalPressTileEntity.canCompress(r) && !AllRecipeTypes.shouldIgnoreInAutomation(r),
+								&& MechanicalPressBlockEntity.canCompress(r) && !AllRecipeTypes.shouldIgnoreInAutomation(r),
 						BasinRecipe::convertShapeless)
 				.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 				.catalyst(AllBlocks.BASIN::get)
@@ -227,7 +231,7 @@ public class CreateREI implements REIClientPlugin {
 		woodCutting = builder(CondensedBlockCuttingRecipe.class)
 				.enableIf(c -> c.allowWoodcuttingOnSaw.get() && FabricLoader.getInstance()
 						.isModLoaded("druidcraft"))
-				.addRecipes(() -> CondensedBlockCuttingRecipe.condenseRecipes(getTypedRecipesExcluding(SawTileEntity.woodcuttingRecipeType.get(), AllRecipeTypes::shouldIgnoreInAutomation)))
+				.addRecipes(() -> CondensedBlockCuttingRecipe.condenseRecipes(getTypedRecipesExcluding(SawBlockEntity.woodcuttingRecipeType.get(), AllRecipeTypes::shouldIgnoreInAutomation)))
 				.catalyst(AllBlocks.MECHANICAL_SAW::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_STAIRS)
 				.emptyBackground(177, 76)
@@ -543,10 +547,10 @@ public class CreateREI implements REIClientPlugin {
 
 		public CreateRecipeCategory<T> build(String name, CreateRecipeCategory.Factory<T> factory) {
 			Supplier<List<T>> recipesSupplier;
-			if (predicate.test(AllConfigs.SERVER.recipes)) {
+			if (predicate.test(AllConfigs.server().recipes)) {
 				recipesSupplier = () -> {
 					List<T> recipes = new ArrayList<>();
-					if (predicate.test(AllConfigs.SERVER.recipes)) {
+					if (predicate.test(AllConfigs.server().recipes)) {
 						for (Consumer<List<T>> consumer : recipeListConsumers)
 							consumer.accept(recipes);
 					}

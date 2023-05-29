@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -46,7 +47,7 @@ public class ClipboardEntry {
 		List<ClipboardEntry> entries = pages.get(page);
 		return entries;
 	}
-	
+
 	public static void saveAll(List<List<ClipboardEntry>> entries, ItemStack clipboardItem) {
 		CompoundTag tag = clipboardItem.getOrCreateTag();
 		tag.put("Pages", NBTHelper.writeCompoundList(entries, list -> {
@@ -62,7 +63,7 @@ public class ClipboardEntry {
 		nbt.putString("Text", Component.Serializer.toJson(text));
 		if (icon.isEmpty())
 			return nbt;
-		nbt.put("Icon", icon.serializeNBT());
+		nbt.put("Icon", NBTSerializer.serializeNBT(icon));
 		return nbt;
 	}
 

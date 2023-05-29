@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.simibubi.create.content.fluids.hosePulley.HosePulleyBlockEntity;
-import com.simibubi.create.content.fluids.hosePulley.HosePulleyFluidHandler;
 import com.simibubi.create.content.fluids.pump.PumpBlock;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
@@ -14,9 +13,9 @@ import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
@@ -124,7 +123,7 @@ public class HosePulleyScenes {
 		}
 
 		scene.world.modifyBlockEntity(util.grid.at(1, 5, 1), HosePulleyBlockEntity.class, be ->
-				TransferUtil.insert(te.getFluidStorage(null), FluidVariant.of(Fluids.WATER), FluidConstants.BUCKET * 10));
+				TransferUtil.insert(be.getFluidStorage(null), FluidVariant.of(Fluids.WATER), FluidConstants.BUCKET * 10));
 
 		scene.idle(20);
 		scene.world.modifyBlock(util.grid.at(3, 2, 1), s -> s.setValue(PumpBlock.FACING, Direction.DOWN), true);
@@ -224,7 +223,7 @@ public class HosePulleyScenes {
 		scene.world.showSectionAndMerge(cogs, Direction.NORTH, hoselink);
 		scene.world.showSectionAndMerge(pipes, Direction.WEST, hoselink);
 		scene.world.modifyBlockEntity(util.grid.at(1, 6, 1), HosePulleyBlockEntity.class,
-			be -> TransferUtil.insert(te.getFluidStorage(null), FluidVariant.of(Fluids.WATER), FluidConstants.BUCKET));
+			be -> TransferUtil.insert(be.getFluidStorage(null), FluidVariant.of(Fluids.WATER), FluidConstants.BUCKET));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
 		Vec3 surface = util.vector.topOf(1, 3, 1)
@@ -336,9 +335,7 @@ public class HosePulleyScenes {
 
 		scene.idle(40);
 		scene.world.modifyBlockEntity(util.grid.at(1, 3, 2), HosePulleyBlockEntity.class,
-			be -> be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.ifPresent(
-					fh -> ((HosePulleyFluidHandler) fh).fill(new FluidStack(Fluids.WATER, 1000), FluidAction.EXECUTE)));
+			be -> TransferUtil.insertFluid(be.getFluidStorage(null), new FluidStack(Fluids.WATER, FluidConstants.BUCKET)));
 		scene.world.setKineticSpeed(hose, 0);
 		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.DOWN), true);
 		scene.world.propagatePipeChange(pumpPos);
@@ -354,8 +351,8 @@ public class HosePulleyScenes {
 
 		scene.idle(60);
 
-		scene.world.modifyBlockEntity(util.grid.at(4, 1, 1), FluidTankBlockEntity.class, be -> be.getTankInventory()
-			.fill(new FluidStack(Fluids.WATER, 24000), FluidAction.EXECUTE));
+		scene.world.modifyBlockEntity(util.grid.at(4, 1, 1), FluidTankBlockEntity.class, be ->
+				TransferUtil.insertFluid(be.getTankInventory(), new FluidStack(Fluids.WATER, 24 * FluidConstants.BUCKET)));
 
 		scene.idle(20);
 

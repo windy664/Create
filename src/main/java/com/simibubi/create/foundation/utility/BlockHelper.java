@@ -148,9 +148,9 @@ public class BlockHelper {
 			world.levelEvent(2001, pos, Block.getId(state));
 		BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
 		if (player != null) {
-			boolean allowed = PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, pos, state, tileentity);
+			boolean allowed = PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, pos, state, blockEntity);
 			if (!allowed) {
-				PlayerBlockBreakEvents.CANCELED.invoker().onBlockBreakCanceled(world, player, pos, state, tileentity);
+				PlayerBlockBreakEvents.CANCELED.invoker().onBlockBreakCanceled(world, player, pos, state, blockEntity);
 				return;
 			}
 
@@ -181,7 +181,7 @@ public class BlockHelper {
 					.getMaterial();
 				if (material.blocksMotion() || material.isLiquid()) {
 					world.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
-					afterBreak(world, player, pos, state, tileentity);
+					afterBreak(world, player, pos, state, blockEntity);
 				}
 				return;
 			}
@@ -190,7 +190,7 @@ public class BlockHelper {
 		}
 
 		world.setBlockAndUpdate(pos, fluidState.createLegacyBlock());
-		afterBreak(world, player, pos, state, tileentity);
+		afterBreak(world, player, pos, state, blockEntity);
 	}
 
 	// fabric: after break event

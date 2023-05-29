@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
+import io.github.fabricators_of_create.porting_lib.block.WeakPowerCheckingBlock;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,7 +33,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class RedstoneContactBlock extends WrenchableDirectionalBlock implements ConnectableRedstoneBlock {
+public class RedstoneContactBlock extends WrenchableDirectionalBlock implements ConnectableRedstoneBlock, WeakPowerCheckingBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 

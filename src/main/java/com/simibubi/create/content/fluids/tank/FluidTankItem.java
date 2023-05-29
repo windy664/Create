@@ -2,6 +2,7 @@ package com.simibubi.create.content.fluids.tank;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 

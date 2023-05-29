@@ -11,7 +11,6 @@ import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity.Crea
 import com.simibubi.create.content.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
-import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -23,9 +22,9 @@ import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -162,7 +161,7 @@ public class FluidTankScenes {
 			.pointAt(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.WEST));
 		scene.idle(80);
 		scene.world.modifyBlockEntity(util.grid.at(4, 3, 0), SpoutBlockEntity.class,
-			be -> TransferUtil.insertFluid(ge.getFluidStorage(null), content));
+			be -> TransferUtil.insertFluid(be.getFluidStorage(null), content));
 
 		scene.world.moveSection(tankLink, util.vector.of(0, 0, 1), 7);
 		scene.world.multiplyKineticSpeed(spoutstuff, -1);

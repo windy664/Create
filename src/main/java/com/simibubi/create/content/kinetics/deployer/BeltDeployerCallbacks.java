@@ -57,7 +57,7 @@ public class BeltDeployerCallbacks {
 			return ProcessingResult.HOLD;
 		if (blockEntity.getRecipe(s.stack) == null) {
 			if (Mods.SANDWICHABLE.isLoaded()) {
-				if (!SequencedSandwiching.shouldSandwich(s.stack, held, deployerTileEntity.getLevel()))
+				if (!SequencedSandwiching.shouldSandwich(s.stack, held, blockEntity.getLevel()))
 					return ProcessingResult.PASS;
 			} else {
 				return ProcessingResult.PASS;
@@ -83,7 +83,7 @@ public class BeltDeployerCallbacks {
 			return ProcessingResult.HOLD;
 
 		Recipe<?> recipe = blockEntity.getRecipe(s.stack);
-		boolean shouldSandwich = Mods.SANDWICHABLE.isLoaded() && SequencedSandwiching.shouldSandwich(s.stack, held, deployerTileEntity.getLevel());
+		boolean shouldSandwich = Mods.SANDWICHABLE.isLoaded() && SequencedSandwiching.shouldSandwich(s.stack, held, blockEntity.getLevel());
 		if (recipe == null && !shouldSandwich) {
 			return ProcessingResult.PASS;
 		}
@@ -92,7 +92,7 @@ public class BeltDeployerCallbacks {
 			if (recipe != null)
 				activate(s, i, blockEntity, recipe);
 			else
-				SequencedSandwiching.activateSandwich(s, i, deployerTileEntity);
+				SequencedSandwiching.activateSandwich(s, i, blockEntity);
 			return ProcessingResult.HOLD;
 		}
 

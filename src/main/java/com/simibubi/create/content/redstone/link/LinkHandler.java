@@ -3,7 +3,6 @@ package com.simibubi.create.content.redstone.link;
 import java.util.Arrays;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
@@ -17,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class LinkHandler {
 
@@ -40,7 +40,7 @@ public class LinkHandler {
 		if (AllItems.WRENCH.isIn(heldItem))
 			return InteractionResult.PASS;
 
-		boolean fakePlayer = player instanceof FakePlayer;
+		boolean fakePlayer = player.isFake();
 		boolean fakePlayerChoice = false;
 
 		if (fakePlayer) {

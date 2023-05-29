@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.placement.PoleHelper;
 
+import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.DamageSourceAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -32,7 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class RollerBlock extends AttachedActorBlock implements IBE<RollerBlockEntity> {
 
-	public static DamageSource damageSourceRoller = new DamageSource("create.mechanical_roller");
+	public static DamageSource damageSourceRoller = DamageSourceAccessor.port_lib$init("create.mechanical_roller");
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 

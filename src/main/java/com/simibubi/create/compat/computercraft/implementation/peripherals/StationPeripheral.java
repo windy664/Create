@@ -128,7 +128,7 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	public final void setTrainName(String name) throws LuaException {
 		Train train = getTrainOrThrow();
 		train.name = Components.literal(name);
-		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainEditPacket.TrainEditReturnPacket(train.id, name, train.icon.getId()));
+		AllPackets.getChannel().sendToClientsInCurrentServer(new TrainEditPacket.TrainEditReturnPacket(train.id, name, train.icon.getId()));
 	}
 
 	@LuaFunction

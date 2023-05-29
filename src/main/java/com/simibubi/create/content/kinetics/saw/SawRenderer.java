@@ -148,7 +148,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 			.getAxis()
 			.isHorizontal())
 			return CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF,
-				state.rotate(be.getLevel(), be.getBlockPos(), Rotation.CLOCKWISE_180));
+				state.rotate(Rotation.CLOCKWISE_180));
 		return CachedBufferer.block(KineticBlockEntityRenderer.KINETIC_BLOCK,
 			getRenderedBlockState(be));
 	}

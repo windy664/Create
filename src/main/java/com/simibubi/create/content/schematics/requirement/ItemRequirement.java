@@ -165,6 +165,10 @@ public class ItemRequirement {
 			this.usage = usage;
 		}
 
+		public boolean matches(ItemStack stack) {
+			return this.stack.sameItem(stack);
+		}
+
 		public boolean matches(ItemVariant variant) {
 			return variant.getItem() == stack.getItem();
 		}
@@ -173,6 +177,11 @@ public class ItemRequirement {
 	public static class StrictNbtStackRequirement extends StackRequirement {
 		public StrictNbtStackRequirement(ItemStack stack, ItemUseType usage) {
 			super(stack, usage);
+		}
+
+		@Override
+		public boolean matches(ItemStack other) {
+			return ItemStack.isSameItemSameTags(stack, other);
 		}
 
 		@Override

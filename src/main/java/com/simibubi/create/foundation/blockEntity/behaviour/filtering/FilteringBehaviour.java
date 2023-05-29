@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 
 import net.minecraft.ChatFormatting;
@@ -86,7 +87,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
-		nbt.put("Filter", getFilter().serializeNBT());
+		nbt.put("Filter", NBTSerializer.serializeNBT(getFilter()));
 		nbt.putInt("FilterAmount", count);
 		nbt.putBoolean("UpTo", upTo);
 		super.write(nbt, clientPacket);
@@ -329,7 +330,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	public boolean writeToClipboard(CompoundTag tag, Direction side) {
 		ValueSettingsBehaviour.super.writeToClipboard(tag, side);
 		ItemStack filter = getFilter(side);
-		tag.put("Filter", filter.serializeNBT());
+		tag.put("Filter", NBTSerializer.serializeNBT(filter));
 		return true;
 	}
 

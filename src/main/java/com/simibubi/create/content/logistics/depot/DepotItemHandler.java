@@ -1,8 +1,9 @@
 package com.simibubi.create.content.logistics.depot;
 
+import java.util.Iterator;
+
 import com.google.common.collect.Iterators;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
-
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -12,8 +13,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Iterator;
 
 public class DepotItemHandler extends SnapshotParticipant<Unit> implements Storage<ItemVariant> {
 
@@ -54,7 +53,7 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 		ItemStack stack = held.stack;
 		if (!resource.matches(stack))
 			return 0;
-		int toExtract = Math.min(ItemHelper.truncateLong(maxAmount), Math.min(stack.getCount(), te.maxStackSize.get()));
+		int toExtract = Math.min(ItemHelper.truncateLong(maxAmount), Math.min(stack.getCount(), behaviour.maxStackSize.get()));
 		stack = stack.copy();
 		stack.shrink(toExtract);
 		if (stack.isEmpty())
@@ -68,7 +67,7 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 
 	@Override
 	public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		return Iterators.concat(Iterators.singletonIterator(new MainSlotView()), te.processingOutputBuffer.iterator(transaction));
+		return Iterators.concat(Iterators.singletonIterator(new MainSlotView()), behaviour.processingOutputBuffer.iterator(transaction));
 	}
 
 	@Override
@@ -83,7 +82,7 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 	@Override
 	protected void onFinalCommit() {
 		super.onFinalCommit();
-		te.tileEntity.notifyUpdate();
+		behaviour.blockEntity.notifyUpdate();
 	}
 
 	public class MainSlotView implements StorageView<ItemVariant> {
@@ -116,7 +115,7 @@ public class DepotItemHandler extends SnapshotParticipant<Unit> implements Stora
 		}
 
 		public ItemStack getStack() {
-			TransportedItemStack held = te.heldItem;
+			TransportedItemStack held = behaviour.heldItem;
 			if (held == null || held.stack == null || held.stack.isEmpty())
 				return ItemStack.EMPTY;
 			return held.stack;

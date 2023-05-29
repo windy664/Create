@@ -106,8 +106,7 @@ public class CopycatBlockEntity extends SmartBlockEntity
 	}
 
 	private void redraw() {
-		if (!isVirtual())
-			requestModelDataUpdate();
+		// fabric: no need for requestModelDataUpdate
 		if (hasLevel()) {
 			level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 16);
 			level.getChunkSource()
