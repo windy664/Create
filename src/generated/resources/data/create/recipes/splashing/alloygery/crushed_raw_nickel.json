@@ -2,12 +2,12 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_uranium_ore"
+      "item": "create:crushed_raw_nickel"
     }
   ],
   "results": [
     {
-      "item": "modern_industrialization:uranium_nugget",
+      "item": "alloygery:nickel_nugget",
       "count": 9
     }
   ],
@@ -15,7 +15,7 @@
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
-        "modern_industrialization"
+        "alloygery"
       ]
     }
   ]

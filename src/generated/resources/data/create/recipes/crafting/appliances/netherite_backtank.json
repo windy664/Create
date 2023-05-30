@@ -4,7 +4,7 @@
     "item": "create:copper_backtank"
   },
   "addition": {
-    "tag": "forge:ingots/netherite"
+    "tag": "c:ingots/netherite"
   },
   "result": {
     "item": "create:netherite_backtank"

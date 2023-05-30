@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:andesite_from_stone_types_andesite_stonecutting"
+      "minecraft:andesite_from_stone_types_andesite_stonecutting"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:andesite_from_stone_types_andesite_stonecutting"
+        "recipe": "minecraft:andesite_from_stone_types_andesite_stonecutting"
       }
     }
   },

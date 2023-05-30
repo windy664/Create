@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:calcite_from_stone_types_calcite_stonecutting"
+      "minecraft:calcite_from_stone_types_calcite_stonecutting"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:calcite_from_stone_types_calcite_stonecutting"
+        "recipe": "minecraft:calcite_from_stone_types_calcite_stonecutting"
       }
     }
   },

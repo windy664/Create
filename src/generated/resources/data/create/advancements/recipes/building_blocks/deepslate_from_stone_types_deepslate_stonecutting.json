@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:deepslate_from_stone_types_deepslate_stonecutting"
+      "minecraft:deepslate_from_stone_types_deepslate_stonecutting"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:deepslate_from_stone_types_deepslate_stonecutting"
+        "recipe": "minecraft:deepslate_from_stone_types_deepslate_stonecutting"
       }
     }
   },

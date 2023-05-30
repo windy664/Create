@@ -2,12 +2,12 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_tin_ore"
+      "item": "create:crushed_raw_lead"
     }
   ],
   "results": [
     {
-      "item": "modern_industrialization:tin_nugget",
+      "item": "modern_industrialization:lead_nugget",
       "count": 9
     }
   ],

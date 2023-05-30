@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:granite_from_stone_types_granite_stonecutting"
+      "minecraft:granite_from_stone_types_granite_stonecutting"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:granite_from_stone_types_granite_stonecutting"
+        "recipe": "minecraft:granite_from_stone_types_granite_stonecutting"
       }
     }
   },

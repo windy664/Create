@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "item": "create:crushed_lead_ore"
+    "item": "create:crushed_raw_lead"
   },
   "result": "modern_industrialization:lead_ingot",
   "experience": 0.1,

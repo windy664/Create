@@ -2,12 +2,12 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_lead_ore"
+      "item": "create:crushed_raw_nickel"
     }
   ],
   "results": [
     {
-      "item": "modern_industrialization:lead_nugget",
+      "item": "modern_industrialization:nickel_nugget",
       "count": 9
     }
   ],

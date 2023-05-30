@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:diorite_from_stone_types_diorite_stonecutting"
+      "minecraft:diorite_from_stone_types_diorite_stonecutting"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:diorite_from_stone_types_diorite_stonecutting"
+        "recipe": "minecraft:diorite_from_stone_types_diorite_stonecutting"
       }
     }
   },

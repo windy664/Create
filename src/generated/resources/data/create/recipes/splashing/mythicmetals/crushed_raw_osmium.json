@@ -2,12 +2,12 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_platinum_ore"
+      "item": "create:crushed_raw_osmium"
     }
   ],
   "results": [
     {
-      "item": "mythicmetals:platinum_nugget",
+      "item": "mythicmetals:osmium_nugget",
       "count": 9
     }
   ],

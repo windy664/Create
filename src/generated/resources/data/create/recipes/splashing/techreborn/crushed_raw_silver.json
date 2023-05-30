@@ -2,12 +2,12 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_nickel_ore"
+      "item": "create:crushed_raw_silver"
     }
   ],
   "results": [
     {
-      "item": "alloygery:nickel_nugget",
+      "item": "techreborn:silver_nugget",
       "count": 9
     }
   ],
@@ -15,7 +15,7 @@
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
-        "alloygery"
+        "techreborn"
       ]
     }
   ]

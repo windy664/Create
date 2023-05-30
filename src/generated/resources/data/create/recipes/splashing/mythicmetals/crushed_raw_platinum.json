@@ -2,12 +2,12 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_nickel_ore"
+      "item": "create:crushed_raw_platinum"
     }
   ],
   "results": [
     {
-      "item": "modern_industrialization:nickel_nugget",
+      "item": "mythicmetals:platinum_nugget",
       "count": 9
     }
   ],
@@ -15,7 +15,7 @@
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
-        "modern_industrialization"
+        "mythicmetals"
       ]
     }
   ]

@@ -119,9 +119,9 @@ public class TagGen {
 		prov.tag(AllBlockTags.COPYCAT_ALLOW.tag)
 			.add(Blocks.BARREL);
 		prov.tag(AllBlockTags.COPYCAT_DENY.tag)
-			.addTag(BlockTags.CAULDRONS)
-			.addTag(BlockTags.SAPLINGS)
-			.addTag(BlockTags.CLIMBABLE);
+			.forceAddTag(BlockTags.CAULDRONS)
+			.forceAddTag(BlockTags.SAPLINGS)
+			.forceAddTag(BlockTags.CLIMBABLE);
 
 		// COMPAT
 

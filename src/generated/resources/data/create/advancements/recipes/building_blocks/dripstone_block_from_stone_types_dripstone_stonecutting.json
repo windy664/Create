@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:dripstone_block_from_stone_types_dripstone_stonecutting"
+      "minecraft:dripstone_block_from_stone_types_dripstone_stonecutting"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:dripstone_block_from_stone_types_dripstone_stonecutting"
+        "recipe": "minecraft:dripstone_block_from_stone_types_dripstone_stonecutting"
       }
     }
   },

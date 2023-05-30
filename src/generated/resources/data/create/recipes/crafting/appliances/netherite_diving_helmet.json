@@ -4,7 +4,7 @@
     "item": "create:copper_diving_helmet"
   },
   "addition": {
-    "tag": "forge:ingots/netherite"
+    "tag": "c:ingots/netherite"
   },
   "result": {
     "item": "create:netherite_diving_helmet"

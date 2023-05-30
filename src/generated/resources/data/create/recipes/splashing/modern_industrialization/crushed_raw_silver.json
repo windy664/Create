@@ -2,12 +2,12 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_tin_ore"
+      "item": "create:crushed_raw_silver"
     }
   ],
   "results": [
     {
-      "item": "mythicmetals:tin_nugget",
+      "item": "modern_industrialization:silver_nugget",
       "count": 9
     }
   ],
@@ -15,7 +15,7 @@
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
-        "mythicmetals"
+        "modern_industrialization"
       ]
     }
   ]
