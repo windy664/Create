@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import net.minecraft.util.RandomSource;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -12,7 +14,6 @@ import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.render.MultiPosDestructionHandler;
 
 import io.github.fabricators_of_create.porting_lib.block.CustomDestroyEffectsBlock;
-import io.github.fabricators_of_create.porting_lib.block.CustomHitEffectsBlock;
 import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -155,7 +156,7 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		if (!stillValid(pLevel, pPos, pState, false))
 			pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
 	}

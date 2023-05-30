@@ -2,7 +2,7 @@ package com.simibubi.create.content.equipment.armor;
 
 import java.util.Locale;
 
-import io.github.fabricators_of_create.porting_lib.util.ArmorTextureItem;
+import io.github.fabricators_of_create.porting_lib.item.ArmorTextureItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;

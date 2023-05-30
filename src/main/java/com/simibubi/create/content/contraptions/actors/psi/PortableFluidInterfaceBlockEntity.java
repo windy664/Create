@@ -2,11 +2,9 @@ package com.simibubi.create.content.contraptions.actors.psi;
 
 import java.util.Iterator;
 
-import java.util.Iterator;
-
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.utility.fabric.ListeningStorageView;
 import com.simibubi.create.foundation.utility.fabric.ProcessingIterator;
 
@@ -17,11 +15,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-
-import org.jetbrains.annotations.Nullable;
-
-import com.simibubi.create.content.contraptions.Contraption;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;

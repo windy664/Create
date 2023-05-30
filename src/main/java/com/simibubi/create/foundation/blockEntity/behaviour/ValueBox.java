@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.outliner.ChasingAABBOutline;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Components;
 
-import io.github.fabricators_of_create.porting_lib.model.ItemMultiLayerBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
@@ -142,7 +141,7 @@ public class ValueBox extends ChasingAABBOutline {
 				.getItemRenderer();
 			BakedModel modelWithOverrides = itemRenderer.getModel(stack, null, null, 0);
 			boolean blockItem =
-				modelWithOverrides.isGui3d() && !(modelWithOverrides instanceof ItemMultiLayerBakedModel);
+				modelWithOverrides.isGui3d();
 
 			float scale = 1.5f;
 			ms.translate(-font.width(countString), 0, 0);
