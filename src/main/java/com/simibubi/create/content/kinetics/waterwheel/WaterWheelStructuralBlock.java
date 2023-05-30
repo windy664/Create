@@ -173,7 +173,7 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public boolean applyCustomHitEffects(BlockState state, Level level, HitResult target, ParticleEngine engine) {
+	public boolean addHitEffects(BlockState state, Level level, HitResult target, ParticleEngine engine) {
 		if (target instanceof BlockHitResult bhr) {
 			BlockPos targetPos = bhr.getBlockPos();
 			WaterWheelStructuralBlock waterWheelStructuralBlock = AllBlocks.WATER_WHEEL_STRUCTURAL.get();

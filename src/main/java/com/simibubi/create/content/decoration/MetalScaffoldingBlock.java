@@ -5,6 +5,7 @@ import java.util.Random;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 
+import io.github.fabricators_of_create.porting_lib.block.CustomScaffoldingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -19,7 +20,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class MetalScaffoldingBlock extends ScaffoldingBlock implements IWrenchable {
+public class MetalScaffoldingBlock extends ScaffoldingBlock implements IWrenchable, CustomScaffoldingBlock {
 
 	public MetalScaffoldingBlock(Properties pProperties) {
 		super(pProperties);
@@ -40,7 +41,7 @@ public class MetalScaffoldingBlock extends ScaffoldingBlock implements IWrenchab
 			return AllShapes.SCAFFOLD_HALF;
 		return super.getCollisionShape(pState, pLevel, pPos, pContext);
 	}
-	
+
 	@Override
 	public boolean isScaffolding(BlockState state, LevelReader level, BlockPos pos, LivingEntity entity) {
 		return true;

@@ -4,6 +4,7 @@ import java.util.concurrent.Executor;
 
 import com.simibubi.create.content.equipment.armor.NetheriteDivingHandler;
 
+import com.simibubi.create.content.equipment.clipboard.ClipboardValueSettingsHandler;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsInputHandler;
 
 import org.jetbrains.annotations.Nullable;
@@ -276,9 +277,11 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(SuperGlueItem::glueItemAlwaysPlacesWhenUsed);
 		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
 		UseBlockCallback.EVENT.register(ValueSettingsInputHandler::onBlockActivated);
+		UseBlockCallback.EVENT.register(ClipboardValueSettingsHandler::leftClickToPaste);
+		AttackBlockCallback.EVENT.register(ClipboardValueSettingsHandler::rightClickToCopy);
+		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		UseEntityCallback.EVENT.register(ScheduleItemEntityInteraction::interactWithConductor);
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
-		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);
 		MountEntityCallback.EVENT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
 		LivingEntityEvents.EXPERIENCE_DROP.register(DeployerFakePlayer::deployerKillsDoNotSpawnXP);

@@ -7,21 +7,30 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.ClipboardType;
 import com.simibubi.create.content.trains.track.TrackBlockOutline;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -110,94 +119,86 @@ public class ClipboardValueSettingsHandler {
 		CreateClient.VALUE_SETTINGS_HANDLER.showHoverTip(tip);
 	}
 
-//	@SubscribeEvent
-//	public static void rightClickToCopy(PlayerInteractEvent.RightClickBlock event) {
-//		interact(event, false);
-//	}
-//
-//	@SubscribeEvent
-//	public static void leftClickToPaste(PlayerInteractEvent.LeftClickBlock event) {
-//		interact(event, true);
-//	}
-//
-//	private static void interact(PlayerInteractEvent event, boolean paste) {
-//		ItemStack itemStack = event.getItemStack();
-//		if (!AllBlocks.CLIPBOARD.isIn(itemStack))
-//			return;
-//
-//		BlockPos pos = event.getPos();
-//		Level world = event.getWorld();
-//		Player player = event.getPlayer();
-//		if (player != null && player.isSpectator())
-//			return;
-//		if (player.isSteppingCarefully())
-//			return;
-//		if (!(world.getBlockEntity(pos) instanceof SmartBlockEntity smartBE))
-//			return;
-//		CompoundTag tag = itemStack.getTagElement("CopiedValues");
-//		if (paste && tag == null)
-//			return;
-//		if (!paste)
-//			tag = new CompoundTag();
-//
-//		boolean anySuccess = false;
-//		boolean anyValid = false;
-//		for (BlockEntityBehaviour behaviour : smartBE.getAllBehaviours()) {
-//			if (!(behaviour instanceof ClipboardCloneable cc))
-//				continue;
-//			anyValid = true;
-//			String clipboardKey = cc.getClipboardKey();
-//			if (paste) {
-//				anySuccess |=
-//					cc.readFromClipboard(tag.getCompound(clipboardKey), player, event.getFace(), world.isClientSide());
-//				continue;
-//			}
-//			CompoundTag compoundTag = new CompoundTag();
-//			boolean success = cc.writeToClipboard(compoundTag, event.getFace());
-//			anySuccess |= success;
-//			if (success)
-//				tag.put(clipboardKey, compoundTag);
-//		}
-//
-//		if (smartBE instanceof ClipboardCloneable ccbe) {
-//			anyValid = true;
-//			String clipboardKey = ccbe.getClipboardKey();
-//			if (paste) {
-//				anySuccess |= ccbe.readFromClipboard(tag.getCompound(clipboardKey), player, event.getFace(),
-//					world.isClientSide());
-//			} else {
-//				CompoundTag compoundTag = new CompoundTag();
-//				boolean success = ccbe.writeToClipboard(compoundTag, event.getFace());
-//				anySuccess |= success;
-//				if (success)
-//					tag.put(clipboardKey, compoundTag);
-//			}
-//		}
-//
-//		if (!anyValid)
-//			return;
-//
-//		event.setCanceled(true);
-//		event.setCancellationResult(InteractionResult.SUCCESS);
-//
-//		if (world.isClientSide())
-//			return;
-//		if (!anySuccess)
-//			return;
-//
-//		player.displayClientMessage(Lang
-//			.translate(paste ? "clipboard.pasted_to" : "clipboard.copied_from", world.getBlockState(pos)
-//				.getBlock()
-//				.getName()
-//				.withStyle(ChatFormatting.WHITE))
-//			.style(ChatFormatting.GREEN)
-//			.component(), true);
-//
-//		if (!paste) {
-//			ClipboardOverrides.switchTo(ClipboardType.WRITTEN, itemStack);
-//			itemStack.getOrCreateTag()
-//				.put("CopiedValues", tag);
-//		}
-//	}
+	public static InteractionResult rightClickToCopy(Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction) {
+		return interact(player.getItemInHand(hand), pos, world, player, direction, false);
+	}
+
+	public static InteractionResult leftClickToPaste(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+		return interact(player.getItemInHand(hand), hitResult.getBlockPos(), world, player, hitResult.getDirection(), true);
+	}
+
+	private static InteractionResult interact(ItemStack itemStack, BlockPos pos, Level world, Player player, Direction face, boolean paste) {
+		if (!AllBlocks.CLIPBOARD.isIn(itemStack))
+			return InteractionResult.PASS;
+
+		if (player != null && player.isSpectator())
+			return InteractionResult.PASS;
+		if (player.isSteppingCarefully())
+			return InteractionResult.PASS;
+		if (!(world.getBlockEntity(pos) instanceof SmartBlockEntity smartBE))
+			return InteractionResult.PASS;
+		CompoundTag tag = itemStack.getTagElement("CopiedValues");
+		if (paste && tag == null)
+			return InteractionResult.PASS;
+		if (!paste)
+			tag = new CompoundTag();
+
+		boolean anySuccess = false;
+		boolean anyValid = false;
+		for (BlockEntityBehaviour behaviour : smartBE.getAllBehaviours()) {
+			if (!(behaviour instanceof ClipboardCloneable cc))
+				continue;
+			anyValid = true;
+			String clipboardKey = cc.getClipboardKey();
+			if (paste) {
+				anySuccess |=
+					cc.readFromClipboard(tag.getCompound(clipboardKey), player, face, world.isClientSide());
+				continue;
+			}
+			CompoundTag compoundTag = new CompoundTag();
+			boolean success = cc.writeToClipboard(compoundTag, face);
+			anySuccess |= success;
+			if (success)
+				tag.put(clipboardKey, compoundTag);
+		}
+
+		if (smartBE instanceof ClipboardCloneable ccbe) {
+			anyValid = true;
+			String clipboardKey = ccbe.getClipboardKey();
+			if (paste) {
+				anySuccess |= ccbe.readFromClipboard(tag.getCompound(clipboardKey), player, face,
+					world.isClientSide());
+			} else {
+				CompoundTag compoundTag = new CompoundTag();
+				boolean success = ccbe.writeToClipboard(compoundTag, face);
+				anySuccess |= success;
+				if (success)
+					tag.put(clipboardKey, compoundTag);
+			}
+		}
+
+		if (!anyValid)
+			return InteractionResult.PASS;
+
+		if (world.isClientSide())
+			return InteractionResult.SUCCESS;
+		if (!anySuccess)
+			return InteractionResult.SUCCESS;
+
+		player.displayClientMessage(Lang
+			.translate(paste ? "clipboard.pasted_to" : "clipboard.copied_from", world.getBlockState(pos)
+				.getBlock()
+				.getName()
+				.withStyle(ChatFormatting.WHITE))
+			.style(ChatFormatting.GREEN)
+			.component(), true);
+
+		if (!paste) {
+			ClipboardOverrides.switchTo(ClipboardType.WRITTEN, itemStack);
+			itemStack.getOrCreateTag()
+				.put("CopiedValues", tag);
+		}
+		return InteractionResult.SUCCESS;
+	}
 
 }
