@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.compat.emi.CreateEmiAnimations;
 import com.simibubi.create.compat.emi.CreateEmiPlugin;
-import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
+import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import dev.emi.emi.api.stack.EmiStack;

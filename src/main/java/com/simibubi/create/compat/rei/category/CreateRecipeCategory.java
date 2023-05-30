@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
-import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
+import com.simibubi.create.content.processing.recipe.ProcessingOutput;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
@@ -196,7 +196,39 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 		outputs.forEach(f -> amounts.add(f.getAmount()));
 
 		fluidStacks.stream().filter(widget -> widget instanceof Slot slot && slot.getCurrentEntry().getType() == VanillaEntryTypes.FLUID).forEach(widget -> {
-			setFluidTooltip((Slot) widget);
+			Slot slot = (Slot) widget;
+			ClientEntryStacks.setTooltipProcessor(slot.getCurrentEntry(), (entryStack, tooltip) -> {
+				dev.architectury.fluid.FluidStack fluidStack = entryStack.castValue();
+				FluidStack fluid = new FluidStack(fluidStack.getFluid(), fluidStack.getAmount(), fluidStack.getTag());
+				if (fluid.getFluid()
+						.isSame(AllFluids.POTION.get())) {
+					Component name = fluid.getDisplayName();
+					if (tooltip.entries().isEmpty())
+						tooltip.entries().add(0, Tooltip.entry(name));
+					else
+						tooltip.entries().set(0, Tooltip.entry(name));
+
+					ArrayList<Component> potionTooltip = new ArrayList<>();
+					PotionFluidHandler.addPotionTooltip(fluid, potionTooltip, 1);
+					ArrayList<Tooltip.Entry> potionEntries = new ArrayList<>();
+					potionTooltip.forEach(component -> potionEntries.add(Tooltip.entry(component)));
+					// why 2 here??? it works though
+					tooltip.entries().addAll(2, potionEntries.stream().toList());
+				}
+
+				FluidUnit unit = AllConfigs.client().fluidUnitType.get();
+				String amount = FluidTextUtil.getUnicodeMillibuckets(amounts.get(0), unit, AllConfigs.client().simplifyFluidUnit.get());
+				Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
+				if (tooltip.entries().isEmpty())
+					tooltip.entries().add(0, Tooltip.entry(text));
+				else {
+					List<Component> siblings = tooltip.entries().get(0).getAsText().getSiblings();
+					siblings.add(new TextComponent(" "));
+					siblings.add(text);
+				}
+				tooltip.entries().remove(1); // Remove REI added amount
+				return tooltip;
+			});
 		});
 	}
 
@@ -204,7 +236,6 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 		ClientEntryStacks.setTooltipProcessor(slot.getCurrentEntry(), (entryStack, tooltip) -> {
 			dev.architectury.fluid.FluidStack fluidStack = entryStack.castValue();
 			FluidStack fluid = new FluidStack(fluidStack.getFluid(), fluidStack.getAmount(), fluidStack.getTag());
-			tooltip.entries().remove(1); // Remove REI added amount
 			if (fluid.getFluid()
 					.isSame(AllFluids.POTION.get())) {
 				Component name = fluid.getDisplayName();
@@ -220,8 +251,8 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 				tooltip.entries().addAll(1, potionEntries.stream().toList());
 			}
 
-			FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
-			String amount = FluidTextUtil.getUnicodeMillibuckets(fluid.getAmount(), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
+			FluidUnit unit = AllConfigs.client().fluidUnitType.get();
+			String amount = FluidTextUtil.getUnicodeMillibuckets(fluid.getAmount(), unit, AllConfigs.client().simplifyFluidUnit.get());
 			Component text = Component.literal(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
 			if (tooltip.entries().isEmpty())
 				tooltip.entries().add(0, Tooltip.entry(text));

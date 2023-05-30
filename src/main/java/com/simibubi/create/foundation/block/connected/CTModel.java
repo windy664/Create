@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.decoration.copycat.CopycatBlock;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -37,10 +38,13 @@ public class CTModel extends ForwardingBakedModel {
 		CTData data = new CTData();
 		MutableBlockPos mutablePos = new MutableBlockPos();
 		for (Direction face : Iterate.directions) {
+			BlockState actualState = world.getBlockState(pos);
 			if (!behaviour.buildContextForOccludedDirections()
-				&& !Block.shouldRenderFace(state, world, pos, face, mutablePos.setWithOffset(pos, face)))
+				&& !Block.shouldRenderFace(state, world, pos, face, mutablePos.setWithOffset(pos, face))
+				&& !(actualState.getBlock()instanceof CopycatBlock ufb
+					&& !ufb.canFaceBeOccluded(actualState, face)))
 				continue;
-			CTType dataType = behaviour.getDataType(state, face);
+			CTType dataType = behaviour.getDataType(world, pos, state, face);
 			if (dataType == null)
 				continue;
 			CTContext context = behaviour.buildContext(world, pos, state, face, dataType.getContextRequirement());

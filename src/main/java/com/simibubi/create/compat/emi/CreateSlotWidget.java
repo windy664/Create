@@ -2,9 +2,9 @@ package com.simibubi.create.compat.emi;
 
 import java.util.List;
 
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.mixin.fabric.ClientTextTooltipAccessor;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -39,8 +39,8 @@ public class CreateSlotWidget extends SlotWidget {
 	}
 
 	private void addCreateAmount(List<ClientTooltipComponent> tooltip, FluidEntry fluid) {
-		FluidUnit unit = AllConfigs.CLIENT.fluidUnitType.get();
-		String amount = FluidTextUtil.getUnicodeMillibuckets(stack.getAmount(), unit, AllConfigs.CLIENT.simplifyFluidUnit.get());
+		FluidUnit unit = AllConfigs.client().fluidUnitType.get();
+		String amount = FluidTextUtil.getUnicodeMillibuckets(stack.getAmount(), unit, AllConfigs.client().simplifyFluidUnit.get());
 
 		Component amountComponent = Component.literal(" " + amount)
 				.append(Lang.translateDirect(unit.getTranslationKey()))

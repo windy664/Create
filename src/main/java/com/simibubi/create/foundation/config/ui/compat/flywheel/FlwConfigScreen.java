@@ -35,7 +35,7 @@ public class FlwConfigScreen extends BaseConfigScreen {
 		guiTop += windowYOffset;
 		returnOnClose = true;
 
-		TextStencilElement clientText = new TextStencilElement(minecraft.font, Component.literal(clientTile)).centered(true, true);
+		TextStencilElement clientText = new TextStencilElement(minecraft.font, Component.literal(clientTitle)).centered(true, true);
 		addRenderableWidget(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 30, 200, 16).showingElement(clientText));
 
 		if (flwConfig != null) {
@@ -47,7 +47,7 @@ public class FlwConfigScreen extends BaseConfigScreen {
 			clientText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement commonText = new TextStencilElement(minecraft.font, Component.literal(commonTile)).centered(true, true);
+		TextStencilElement commonText = new TextStencilElement(minecraft.font, Component.literal(commonTitle)).centered(true, true);
 		addRenderableWidget(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 16).showingElement(commonText));
 
 		commonConfigWidget.active = false;
@@ -55,7 +55,7 @@ public class FlwConfigScreen extends BaseConfigScreen {
 		commonText.withElementRenderer(DISABLED_RENDERER);
 
 
-		TextStencilElement serverText = new TextStencilElement(minecraft.font, Component.literal(serverTile)).centered(true, true);
+		TextStencilElement serverText = new TextStencilElement(minecraft.font, Component.literal(serverTitle)).centered(true, true);
 		addRenderableWidget(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 30, 200, 16).showingElement(serverText));
 
 		serverConfigWidget.active = false;

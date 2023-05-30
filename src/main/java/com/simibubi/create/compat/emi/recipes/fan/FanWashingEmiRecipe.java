@@ -3,8 +3,9 @@ package com.simibubi.create.compat.emi.recipes.fan;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.emi.CreateEmiAnimations;
 import com.simibubi.create.compat.emi.CreateEmiPlugin;
-import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.kinetics.fan.SplashingRecipe;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+
 import net.minecraft.world.level.material.Fluids;
 
 public class FanWashingEmiRecipe extends FanEmiRecipe.MultiOutput<SplashingRecipe> {

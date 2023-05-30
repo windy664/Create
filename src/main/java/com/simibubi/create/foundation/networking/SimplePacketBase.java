@@ -1,16 +1,13 @@
 package com.simibubi.create.foundation.networking;
 
 import java.util.concurrent.Executor;
-import java.util.function.Supplier;
-
-import me.pepperbell.simplenetworking.SimpleChannel;
-
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 
 import org.jetbrains.annotations.Nullable;
 
 import me.pepperbell.simplenetworking.C2SPacket;
 import me.pepperbell.simplenetworking.S2CPacket;
+import me.pepperbell.simplenetworking.SimpleChannel;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
@@ -23,7 +20,7 @@ public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 
 	public abstract void write(FriendlyByteBuf buffer);
 
-	public abstract void handle(Supplier<Context> context);
+	public abstract boolean handle(Context context);
 
 	@Override
 	public final void encode(FriendlyByteBuf buffer) {
@@ -45,7 +42,7 @@ public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 		PLAY_TO_SERVER
 	}
 
-	public record Context(Executor exec, PacketListener listener, @Nullable ServerPlayer sender) implements Supplier<Context> {
+	public record Context(Executor exec, PacketListener listener, @Nullable ServerPlayer sender) {
 		public void enqueueWork(Runnable runnable) {
 			exec().execute(runnable);
 		}
@@ -57,14 +54,6 @@ public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 
 		public NetworkDirection getDirection() {
 			return sender() == null ? NetworkDirection.PLAY_TO_SERVER : NetworkDirection.PLAY_TO_CLIENT;
-		}
-
-		public void setPacketHandled(boolean value) {
-		}
-
-		@Override
-		public Context get() {
-			return this;
 		}
 	}
 }

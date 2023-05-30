@@ -1,7 +1,11 @@
 {
   "type": "minecraft:smelting",
-  "cookingtime": 200,
+  "ingredient": {
+    "item": "create:crushed_raw_lead"
+  },
+  "result": "techreborn:lead_ingot",
   "experience": 0.1,
+  "cookingtime": 200,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
@@ -9,9 +13,5 @@
         "techreborn"
       ]
     }
-  ],
-  "ingredient": {
-    "item": "create:crushed_lead_ore"
-  },
-  "result": "techreborn:lead_ingot"
+  ]
 }

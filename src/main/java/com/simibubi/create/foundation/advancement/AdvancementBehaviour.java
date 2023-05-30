@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -17,15 +17,15 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class AdvancementBehaviour extends TileEntityBehaviour {
+public class AdvancementBehaviour extends BlockEntityBehaviour {
 
 	public static final BehaviourType<AdvancementBehaviour> TYPE = new BehaviourType<>();
 
 	private UUID playerId;
 	private Set<CreateAdvancement> advancements;
 
-	public AdvancementBehaviour(SmartTileEntity te, CreateAdvancement... advancements) {
-		super(te);
+	public AdvancementBehaviour(SmartBlockEntity be, CreateAdvancement... advancements) {
+		super(be);
 		this.advancements = new HashSet<>();
 		add(advancements);
 	}
@@ -45,7 +45,7 @@ public class AdvancementBehaviour extends TileEntityBehaviour {
 			return;
 		playerId = id;
 		removeAwarded();
-		tileEntity.setChanged();
+		blockEntity.setChanged();
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class AdvancementBehaviour extends TileEntityBehaviour {
 		advancements.removeIf(c -> c.isAlreadyAwardedTo(player));
 		if (advancements.isEmpty()) {
 			playerId = null;
-			tileEntity.setChanged();
+			blockEntity.setChanged();
 		}
 	}
 
@@ -113,13 +113,13 @@ public class AdvancementBehaviour extends TileEntityBehaviour {
 	}
 
 	public static void tryAward(BlockGetter reader, BlockPos pos, CreateAdvancement advancement) {
-		AdvancementBehaviour behaviour = TileEntityBehaviour.get(reader, pos, AdvancementBehaviour.TYPE);
+		AdvancementBehaviour behaviour = BlockEntityBehaviour.get(reader, pos, AdvancementBehaviour.TYPE);
 		if (behaviour != null)
 			behaviour.awardPlayer(advancement);
 	}
 
 	public static void setPlacedBy(Level worldIn, BlockPos pos, LivingEntity placer) {
-		AdvancementBehaviour behaviour = TileEntityBehaviour.get(worldIn, pos, TYPE);
+		AdvancementBehaviour behaviour = BlockEntityBehaviour.get(worldIn, pos, TYPE);
 		if (behaviour == null)
 			return;
 		if (placer instanceof ServerPlayer player && !player.isFake())

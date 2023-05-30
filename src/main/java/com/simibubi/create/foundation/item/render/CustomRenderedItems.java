@@ -1,47 +1,30 @@
 package com.simibubi.create.foundation.item.render;
 
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
 
-import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
-
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.world.item.Item;
 
 public class CustomRenderedItems {
 
-	private final Map<ResourceLocation, NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> modelFuncs = new HashMap<>();
-	private final Map<Item, NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> finalModelFuncs = new IdentityHashMap<>();
+	private static final Set<Item> ITEMS = new ReferenceOpenHashSet<>();
 
-	public void register(ResourceLocation item,
-		NonNullFunction<BakedModel, ? extends CustomRenderedItemModel> func) {
-		modelFuncs.put(item, func);
+	/**
+	 * Track an item that uses a subclass of {@link CustomRenderedItemModelRenderer} as its custom renderer
+	 * to automatically wrap its model with {@link CustomRenderedItemModel}.
+	 * @param item The item that should have its model swapped.
+	 */
+	public static void register(Item item) {
+		ITEMS.add(item);
 	}
 
-	public void forEach(
-		NonNullBiConsumer<Item, NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> consumer) {
-		loadEntriesIfMissing();
-		finalModelFuncs.forEach(consumer);
-	}
-
-	private void loadEntriesIfMissing() {
-		if (finalModelFuncs.isEmpty())
-			loadEntries();
-	}
-
-	private void loadEntries() {
-		finalModelFuncs.clear();
-		modelFuncs.forEach((location, func) -> {
-			Item item = Registry.ITEM.get(location);
-			if (item == null) {
-				return;
-			}
-			finalModelFuncs.put(item, func);
-		});
+	/**
+	 * This method must not be called before item registration is finished!
+	 */
+	public static void forEach(Consumer<Item> consumer) {
+		// fabric: filtering is unnecessary without registry replacement
+		ITEMS.forEach(consumer);
 	}
 
 }

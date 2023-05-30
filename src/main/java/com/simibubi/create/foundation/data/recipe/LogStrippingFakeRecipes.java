@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
-import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.content.kinetics.deployer.ManualApplicationRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.AxeItemAccessor;
 import net.minecraft.core.Registry;
@@ -30,7 +30,7 @@ public class LogStrippingFakeRecipes {
 
 	public static List<ManualApplicationRecipe> createRecipes() {
 		List<ManualApplicationRecipe> recipes = new ArrayList<>();
-		if (!AllConfigs.SERVER.recipes.displayLogStrippingRecipes.get())
+		if (!AllConfigs.server().recipes.displayLogStrippingRecipes.get())
 			return recipes;
 
 		ItemStack axe = new ItemStack(Items.IRON_AXE);

@@ -13,8 +13,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
-import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
+import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
+import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -42,14 +42,14 @@ import java.util.Set;
 
 public class ConnectivityHandler {
 
-	public static <T extends BlockEntity & IMultiTileContainer> void formMulti(T be) {
+	public static <T extends BlockEntity & IMultiBlockEntityContainer> void formMulti(T be) {
 		SearchCache<T> cache = new SearchCache<>();
 		List<T> frontier = new ArrayList<>();
 		frontier.add(be);
 		formMulti(be.getType(), be.getLevel(), cache, frontier);
 	}
 
-	private static <T extends BlockEntity & IMultiTileContainer> void formMulti(BlockEntityType<?> type,
+	private static <T extends BlockEntity & IMultiBlockEntityContainer> void formMulti(BlockEntityType<?> type,
 		BlockGetter level, SearchCache<T> cache, List<T> frontier) {
 		PriorityQueue<Pair<Integer, T>> creationQueue = makeCreationQueue();
 		Set<BlockPos> visited = new HashSet<>();
@@ -121,7 +121,7 @@ public class ConnectivityHandler {
 		}
 	}
 
-	private static <T extends BlockEntity & IMultiTileContainer> int tryToFormNewMulti(T be, SearchCache<T> cache,
+	private static <T extends BlockEntity & IMultiBlockEntityContainer> int tryToFormNewMulti(T be, SearchCache<T> cache,
 		boolean simulate) {
 		int bestWidth = 1;
 		int bestAmount = -1;
@@ -143,7 +143,7 @@ public class ConnectivityHandler {
 				return bestAmount;
 
 			splitMultiAndInvalidate(be, cache, false);
-			if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank())
+			if (be instanceof IMultiBlockEntityContainer.Fluid ifluid && ifluid.hasTank())
 				ifluid.setTankSize(0, bestAmount);
 
 			tryToFormNewMultiOfWidth(be, bestWidth, cache, false);
@@ -156,7 +156,7 @@ public class ConnectivityHandler {
 		return bestAmount;
 	}
 
-	private static <T extends BlockEntity & IMultiTileContainer> int tryToFormNewMultiOfWidth(T be, int width,
+	private static <T extends BlockEntity & IMultiBlockEntityContainer> int tryToFormNewMultiOfWidth(T be, int width,
 		SearchCache<T> cache, boolean simulate) {
 		int amount = 0;
 		int height = 0;
@@ -169,7 +169,7 @@ public class ConnectivityHandler {
 		// optional fluid handling
 		FluidTank beTank = null;
 		FluidStack fluid = FluidStack.EMPTY;
-		if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank()) {
+		if (be instanceof IMultiBlockEntityContainer.Fluid ifluid && ifluid.hasTank()) {
 			beTank = ifluid.getTank(0);
 			fluid = beTank.getFluid();
 		}
@@ -224,7 +224,7 @@ public class ConnectivityHandler {
 								break Search;
 						}
 					}
-					if (controller instanceof IMultiTileContainer.Fluid ifluidCon && ifluidCon.hasTank()) {
+					if (controller instanceof IMultiBlockEntityContainer.Fluid ifluidCon && ifluidCon.hasTank()) {
 						FluidStack otherFluid = ifluidCon.getFluid(0);
 						if (!fluid.isEmpty() && !otherFluid.isEmpty() && !fluid.isFluidEqual(otherFluid))
 							break Search;
@@ -256,17 +256,17 @@ public class ConnectivityHandler {
 
 					extraData = be.modifyExtraData(extraData);
 
-					if (part instanceof IMultiTileContainer.Fluid ifluidPart && ifluidPart.hasTank()) {
+					if (part instanceof IMultiBlockEntityContainer.Fluid ifluidPart && ifluidPart.hasTank()) {
 						FluidTank tankAt = ifluidPart.getTank(0);
 						FluidStack fluidAt = tankAt.getFluid();
 						if (!fluidAt.isEmpty()) {
 							// making this generic would be a rather large mess, unfortunately
 							if (beTank != null && fluid.isEmpty()
-								&& beTank instanceof CreativeFluidTankTileEntity.CreativeSmartFluidTank) {
-								((CreativeFluidTankTileEntity.CreativeSmartFluidTank) beTank)
+								&& beTank instanceof CreativeFluidTankBlockEntity.CreativeSmartFluidTank) {
+								((CreativeFluidTankBlockEntity.CreativeSmartFluidTank) beTank)
 									.setContainedFluid(fluidAt);
 							}
-							if (be instanceof IMultiTileContainer.Fluid ifluidBE && ifluidBE.hasTank()
+							if (be instanceof IMultiBlockEntityContainer.Fluid ifluidBE && ifluidBE.hasTank()
 								&& beTank != null) {
 								TransferUtil.insertFluid(beTank, fluidAt);
 							}
@@ -289,18 +289,18 @@ public class ConnectivityHandler {
 		return amount;
 	}
 
-	public static <T extends BlockEntity & IMultiTileContainer> void splitMulti(T be) {
+	public static <T extends BlockEntity & IMultiBlockEntityContainer> void splitMulti(T be) {
 		splitMultiAndInvalidate(be, null, false);
 	}
 
 	// tryReconnect helps whenever only a few tanks have been removed
-	private static <T extends BlockEntity & IMultiTileContainer> void splitMultiAndInvalidate(T be,
+	private static <T extends BlockEntity & IMultiBlockEntityContainer> void splitMultiAndInvalidate(T be,
 		@Nullable SearchCache<T> cache, boolean tryReconnect) {
 		Level level = be.getLevel();
 		if (level == null)
 			return;
 
-		be = be.getControllerTE();
+		be = be.getControllerBE();
 		if (be == null)
 			return;
 
@@ -316,7 +316,7 @@ public class ConnectivityHandler {
 		// fluid handling, if present
 		FluidStack toDistribute = FluidStack.EMPTY;
 		long maxCapacity = 0;
-		if (be instanceof IMultiTileContainer.Fluid ifluidBE && ifluidBE.hasTank()) {
+		if (be instanceof IMultiBlockEntityContainer.Fluid ifluidBE && ifluidBE.hasTank()) {
 			toDistribute = ifluidBE.getFluid(0);
 			maxCapacity = ifluidBE.getTankSize(0);
 			if (!toDistribute.isEmpty() && !be.isRemoved())
@@ -341,16 +341,16 @@ public class ConnectivityHandler {
 						.equals(origin))
 						continue;
 
-					T controllerBE = partAt.getControllerTE();
+					T controllerBE = partAt.getControllerBE();
 					partAt.setExtraData((controllerBE == null ? null : controllerBE.getExtraData()));
 					partAt.removeController(true);
 
 					if (!toDistribute.isEmpty() && partAt != be) {
 						FluidStack copy = toDistribute.copy();
 						FluidTank tank =
-							(partAt instanceof IMultiTileContainer.Fluid ifluidPart ? ifluidPart.getTank(0) : null);
+							(partAt instanceof IMultiBlockEntityContainer.Fluid ifluidPart ? ifluidPart.getTank(0) : null);
 						// making this generic would be a rather large mess, unfortunately
-						if (tank instanceof CreativeFluidTankTileEntity.CreativeSmartFluidTank creativeTank) {
+						if (tank instanceof CreativeFluidTankBlockEntity.CreativeSmartFluidTank creativeTank) {
 							if (creativeTank.isEmpty())
 								creativeTank.setContainedFluid(toDistribute);
 						} else {
@@ -374,12 +374,12 @@ public class ConnectivityHandler {
 			formMulti(be.getType(), level, cache == null ? new SearchCache<>() : cache, frontier);
 	}
 
-	private static <T extends BlockEntity & IMultiTileContainer> PriorityQueue<Pair<Integer, T>> makeCreationQueue() {
+	private static <T extends BlockEntity & IMultiBlockEntityContainer> PriorityQueue<Pair<Integer, T>> makeCreationQueue() {
 		return new PriorityQueue<>((one, two) -> two.getKey() - one.getKey());
 	}
 
 	@Nullable
-	public static <T extends BlockEntity & IMultiTileContainer> T partAt(BlockEntityType<?> type, BlockGetter level,
+	public static <T extends BlockEntity & IMultiBlockEntityContainer> T partAt(BlockEntityType<?> type, BlockGetter level,
 		BlockPos pos) {
 		BlockEntity be = level.getBlockEntity(pos);
 		if (be != null && be.getType() == type && !be.isRemoved())
@@ -387,7 +387,7 @@ public class ConnectivityHandler {
 		return null;
 	}
 
-	public static <T extends BlockEntity & IMultiTileContainer> boolean isConnected(BlockGetter level, BlockPos pos,
+	public static <T extends BlockEntity & IMultiBlockEntityContainer> boolean isConnected(BlockGetter level, BlockPos pos,
 		BlockPos other) {
 		T one = checked(level.getBlockEntity(pos));
 		T two = checked(level.getBlockEntity(other));
@@ -399,13 +399,13 @@ public class ConnectivityHandler {
 
 	@Nullable
 	@SuppressWarnings("unchecked")
-	private static <T extends BlockEntity & IMultiTileContainer> T checked(BlockEntity be) {
-		if (be instanceof IMultiTileContainer)
+	private static <T extends BlockEntity & IMultiBlockEntityContainer> T checked(BlockEntity be) {
+		if (be instanceof IMultiBlockEntityContainer)
 			return (T) be;
 		return null;
 	}
 
-	private static class SearchCache<T extends BlockEntity & IMultiTileContainer> {
+	private static class SearchCache<T extends BlockEntity & IMultiBlockEntityContainer> {
 		Map<BlockPos, Optional<T>> controllerMap;
 
 		public SearchCache() {

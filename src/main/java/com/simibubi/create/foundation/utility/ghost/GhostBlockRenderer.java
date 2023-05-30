@@ -7,8 +7,8 @@ import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 
 import io.github.fabricators_of_create.porting_lib.render.virtual.FixedLightBakedModel;
 import io.github.fabricators_of_create.porting_lib.render.virtual.TranslucentBakedModel;
@@ -22,10 +22,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class GhostBlockRenderer {
 
@@ -41,12 +38,12 @@ public abstract class GhostBlockRenderer {
 		return TRANSPARENT;
 	}
 
-	public abstract void render(PoseStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params);
+	public abstract void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, GhostBlockParams params);
 
 	private static class DefaultGhostBlockRenderer extends GhostBlockRenderer {
 
 		@Override
-		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params) {
+		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, GhostBlockParams params) {
 			ms.pushPose();
 
 			BlockRenderDispatcher dispatcher = Minecraft.getInstance()
@@ -58,7 +55,7 @@ public abstract class GhostBlockRenderer {
 			VertexConsumer vb = buffer.getEarlyBuffer(layer);
 
 			BlockPos pos = params.pos;
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			ms.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
 
 			model = DefaultLayerFilteringBakedModel.wrap(model);
 			dispatcher.getModelRenderer()
@@ -72,7 +69,7 @@ public abstract class GhostBlockRenderer {
 	private static class TransparentGhostBlockRenderer extends GhostBlockRenderer {
 
 		@Override
-		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params) {
+		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, GhostBlockParams params) {
 			Minecraft mc = Minecraft.getInstance();
 			BlockRenderDispatcher dispatcher = mc.getBlockRenderer();
 
@@ -85,7 +82,7 @@ public abstract class GhostBlockRenderer {
 			VertexConsumer vb = buffer.getEarlyBuffer(layer);
 
 			ms.pushPose();
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			ms.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
 
 			ms.translate(.5, .5, .5);
 			ms.scale(.85f, .85f, .85f);

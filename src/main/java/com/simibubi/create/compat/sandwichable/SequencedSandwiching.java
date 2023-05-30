@@ -1,14 +1,15 @@
 package com.simibubi.create.compat.sandwichable;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.content.kinetics.belt.BeltHelper;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
+import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity;
+import com.simibubi.create.content.kinetics.deployer.DeployerFakePlayer;
 
 import io.github.foundationgames.sandwichable.Sandwichable;
 import io.github.foundationgames.sandwichable.items.ItemsRegistry;
@@ -19,8 +20,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
 
 public class SequencedSandwiching {
 	/**
@@ -41,18 +40,17 @@ public class SequencedSandwiching {
 	 * Actually assemble a sandwich.
 	 * @param transported the sandwich stack, passing below the deployer
 	 * @param handler the deployer's handler
-	 * @param deployerTileEntity the block entity of the deployer
+	 * @param deployer the block entity of the deployer
 	 */
 	public static void activateSandwich(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler,
-								DeployerTileEntity deployerTileEntity) {
+										DeployerBlockEntity deployer) {
 
 		TransportedItemStack transportedRemainder = transported.copy();
-		DeployerFakePlayer player = deployerTileEntity.getPlayer();
-		player.setSpawnedItemEffects(transported.stack.copy());
+		DeployerFakePlayer player = deployer.getPlayer();
 		transportedRemainder.stack.shrink(1);
 		ItemStack heldItem = player.getMainHandItem();
 
-		ItemStack newSandwich = stackOnSandwich(transported.stack, heldItem, deployerTileEntity);
+		ItemStack newSandwich = stackOnSandwich(transported.stack, heldItem, deployer);
 		if (newSandwich.isEmpty())
 			return;
 
@@ -66,13 +64,13 @@ public class SequencedSandwiching {
 
 		heldItem.shrink(1);
 
-		BlockPos pos = deployerTileEntity.getBlockPos();
-		Level world = deployerTileEntity.getLevel();
+		BlockPos pos = deployer.getBlockPos();
+		Level world = deployer.getLevel();
 		if (heldItem.isEmpty())
 			world.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, .25f, 1);
 		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .25f, .75f);
 
-		deployerTileEntity.sendData();
+		deployer.sendData();
 	}
 
 	/**
@@ -80,7 +78,7 @@ public class SequencedSandwiching {
 	 * If the item to add is a spread (and has a remainder) it is added to the deployer's overflow items.
 	 * @return the new sandwich, with the item stacked on top, or EMPTY if nothing stacked
 	 */
-	public static ItemStack stackOnSandwich(ItemStack sandwich, ItemStack toAdd, DeployerTileEntity deployer) {
+	public static ItemStack stackOnSandwich(ItemStack sandwich, ItemStack toAdd, DeployerBlockEntity deployer) {
 		Level level = deployer.getLevel();
 		Sandwich s = sandwichFromStack(sandwich);
 		if (s != null) {

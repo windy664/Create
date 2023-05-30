@@ -2,7 +2,7 @@ package com.simibubi.create.compat.jei;
 
 import java.util.List;
 
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.BottleType;
+import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;

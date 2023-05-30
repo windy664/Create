@@ -27,7 +27,6 @@ public class ModelSwapper {
 
 	protected CustomBlockModels customBlockModels = new CustomBlockModels();
 	protected CustomItemModels customItemModels = new CustomItemModels();
-	protected CustomRenderedItems customRenderedItems = new CustomRenderedItems();
 
 	public CustomBlockModels getCustomBlockModels() {
 		return customBlockModels;
@@ -37,30 +36,13 @@ public class ModelSwapper {
 		return customItemModels;
 	}
 
-	public CustomRenderedItems getCustomRenderedItems() {
-		return customRenderedItems;
-	}
-
-	public void onModelRegistry(ResourceManager manager, Consumer<ResourceLocation> out) {
-		customRenderedItems.forEach((item, modelFunc) -> modelFunc.apply(null)
-			.getModelLocations()
-			.forEach(out));
-	}
-
 	public void onModelBake(ModelManager manager, Map<ResourceLocation, BakedModel> modelRegistry, ModelBakery loader) {
 		customBlockModels.forEach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
 		customItemModels.forEach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
-		customRenderedItems.forEach((item, modelFunc) -> {
-			swapModels(modelRegistry, getItemModelLocation(item), m -> {
-				CustomRenderedItemModel swapped = modelFunc.apply(m);
-				swapped.loadPartials(loader);
-				return swapped;
-			});
-		});
+		CustomRenderedItems.forEach(item -> swapModels(modelRegistry, getItemModelLocation(item), CustomRenderedItemModel::new));
 	}
 
 	public void registerListeners() {
-		ModelLoadingRegistry.INSTANCE.registerModelProvider(this::onModelRegistry);
 		ModelsBakedCallback.EVENT.register(this::onModelBake);
 	}
 

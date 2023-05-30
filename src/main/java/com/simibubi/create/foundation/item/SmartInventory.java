@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.item;
 
-import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
+import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 
 import io.github.fabricators_of_create.porting_lib.extensions.INBTSerializable;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandlerContainer;
@@ -17,17 +17,17 @@ public class SmartInventory extends ItemStackHandlerContainer implements INBTSer
 	protected boolean stackNonStackables;
 	protected int stackSize;
 
-	public SmartInventory(int slots, SyncedTileEntity te) {
-		this(slots, te, 64, false);
+	public SmartInventory(int slots, SyncedBlockEntity be) {
+		this(slots, be, 64, false);
 	}
 
-	public SmartInventory(int slots, SyncedTileEntity te, int stackSize, boolean stackNonStackables) {
+	public SmartInventory(int slots, SyncedBlockEntity be, int stackSize, boolean stackNonStackables) {
 		super(slots);
 		this.stackNonStackables = stackNonStackables;
 		insertionAllowed = true;
 		extractionAllowed = true;
 		this.stackSize = stackSize;
-		this.te = te;
+		this.blockEntity = be;
 	}
 
 	public SmartInventory withMaxStackSize(int maxStackSize) {
@@ -84,14 +84,14 @@ public class SmartInventory extends ItemStackHandlerContainer implements INBTSer
 
 	// fabric: merge SyncedStackHandler, it exists only to be wrapped, and removing it allows avoiding extending RecipeWrapper
 
-	private SyncedTileEntity te;
+	private SyncedBlockEntity blockEntity;
 	private Runnable updateCallback;
 
 	@Override
 	protected void onFinalCommit() {
 		if (updateCallback != null)
 			updateCallback.run();
-		te.notifyUpdate();
+		blockEntity.notifyUpdate();
 	}
 
 	@Override

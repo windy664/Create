@@ -5,15 +5,15 @@
       "item": "create:asurine"
     }
   ],
-  "processingTime": 250,
   "results": [
     {
-      "chance": 0.3,
-      "item": "create:crushed_zinc_ore"
+      "item": "create:crushed_raw_zinc",
+      "chance": 0.3
     },
     {
-      "chance": 0.3,
-      "item": "create:zinc_nugget"
+      "item": "create:zinc_nugget",
+      "chance": 0.3
     }
-  ]
+  ],
+  "processingTime": 250
 }

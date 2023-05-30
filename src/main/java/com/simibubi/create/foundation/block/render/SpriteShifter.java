@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.block.render;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
 import net.minecraft.resources.ResourceLocation;
 
 public class SpriteShifter {
@@ -15,7 +17,7 @@ public class SpriteShifter {
 			return ENTRY_CACHE.get(key);
 
 		SpriteShiftEntry entry = new SpriteShiftEntry();
-		entry.set(originalLocation, targetLocation);
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> entry.set(originalLocation, targetLocation));
 		ENTRY_CACHE.put(key, entry);
 		return entry;
 	}

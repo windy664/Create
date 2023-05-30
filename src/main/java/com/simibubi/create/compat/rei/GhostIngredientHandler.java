@@ -1,18 +1,21 @@
 package com.simibubi.create.compat.rei;
 
-import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
-import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
-import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
-import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
-import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleScreen;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
-import com.simibubi.create.foundation.gui.container.GhostItemContainer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
-import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.AllPackets;
+import com.simibubi.create.content.equipment.blueprint.BlueprintScreen;
+import com.simibubi.create.content.logistics.filter.AbstractFilterScreen;
+import com.simibubi.create.content.logistics.filter.AttributeFilterScreen;
+import com.simibubi.create.content.redstone.link.controller.LinkedControllerScreen;
+import com.simibubi.create.content.trains.schedule.ScheduleScreen;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
+import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractContainerScreenAccessor;
-
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.drag.DraggableStack;
@@ -25,12 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-public class GhostIngredientHandler<T extends GhostItemContainer<?>>
+public class GhostIngredientHandler<T extends GhostItemMenu<?>>
 		implements DraggableStackVisitor<AbstractSimiContainerScreen<T>> {
 
 	@Override
@@ -86,7 +84,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 		return screen instanceof AbstractFilterScreen || screen instanceof BlueprintScreen || screen instanceof LinkedControllerScreen || screen instanceof ScheduleScreen;
 	}
 
-	private static class GhostTarget<I, T extends GhostItemContainer<?>> implements BoundsProvider {
+	private static class GhostTarget<I, T extends GhostItemMenu<?>> implements BoundsProvider {
 
 		private final Rectangle area;
 		private final AbstractSimiContainerScreen<T> gui;
@@ -111,7 +109,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 				return;
 
 			// sync new filter contents with server
-			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(stack, slotIndex));
+			AllPackets.getChannel().sendToServer(new GhostItemSubmitPacket(stack, slotIndex));
 		}
 
 		@Override

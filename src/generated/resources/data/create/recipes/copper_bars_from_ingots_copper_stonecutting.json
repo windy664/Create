@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "c:ingots/copper"
+  },
+  "result": "create:copper_bars",
+  "count": 4
+}

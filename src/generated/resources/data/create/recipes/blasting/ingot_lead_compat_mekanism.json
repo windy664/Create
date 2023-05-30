@@ -1,7 +1,11 @@
 {
   "type": "minecraft:blasting",
-  "cookingtime": 100,
+  "ingredient": {
+    "item": "create:crushed_raw_lead"
+  },
+  "result": "mekanism:ingot_lead",
   "experience": 0.1,
+  "cookingtime": 100,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
@@ -9,9 +13,5 @@
         "mekanism"
       ]
     }
-  ],
-  "ingredient": {
-    "item": "create:crushed_lead_ore"
-  },
-  "result": "mekanism:ingot_lead"
+  ]
 }

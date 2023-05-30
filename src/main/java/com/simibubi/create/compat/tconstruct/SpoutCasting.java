@@ -2,9 +2,9 @@ package com.simibubi.create.compat.tconstruct;
 
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.compat.Mods;
-import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
-import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
@@ -27,20 +27,20 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 	ResourceLocation BASIN = new ResourceLocation("tconstruct", "basin");
 
 	@Override
-	public long fillBlock(Level level, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
+	public long fillBlock(Level level, BlockPos pos, SpoutBlockEntity spout, FluidStack availableFluid,
 		boolean simulate) {
 		if (!enabled())
 			return 0;
 
-		BlockEntity te = level.getBlockEntity(pos);
-		if (te == null)
+		BlockEntity blockEntity = level.getBlockEntity(pos);
+		if (blockEntity == null)
 			return 0;
 
-		ResourceLocation registryName = RegisteredObjects.getKeyOrThrow(te.getType());
+		ResourceLocation registryName = RegisteredObjects.getKeyOrThrow(blockEntity.getType());
 		if (!registryName.equals(TABLE) && !registryName.equals(BASIN))
 			return 0;
 
-		Storage<FluidVariant> handler = FluidStorage.SIDED.find(level, pos, null, te, Direction.UP);
+		Storage<FluidVariant> handler = TransferUtil.getFluidStorage(level, pos, blockEntity, Direction.UP);
 		if (handler == null)
 			return 0;
 
@@ -65,7 +65,7 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 			TICON_PRESENT = Mods.TCONSTRUCT.isLoaded();
 		if (!TICON_PRESENT)
 			return false;
-		return AllConfigs.SERVER.recipes.allowCastingBySpout.get();
+		return AllConfigs.server().recipes.allowCastingBySpout.get();
 	}
 
 }

@@ -7,13 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.shedaniel.rei.api.client.gui.widgets.TooltipContext;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.rei.category.sequencedAssembly.ReiSequencedAssemblySubCategory;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
-import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
-import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
+import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -36,6 +38,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -108,7 +111,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 
 			@Override
 			public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-				Point mouse = new Point(mouseX, mouseY);
+				TooltipContext context = TooltipContext.of(new Point(mouseX, mouseY));
+				Point mouse = context.getPoint();
 				if (containsMouse(mouse)) {
 					for (Slot slot : Widgets.<Slot>walk(ingredients, listener -> listener instanceof Slot)) {
 						if (slot.containsMouse(mouse) && slot.isHighlightEnabled()) {
@@ -118,7 +122,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 						}
 					}
 
-					Tooltip tooltip = getTooltip(mouse);
+					Tooltip tooltip = getTooltip(context);
 
 					if (tooltip != null) {
 						tooltip.queue();
@@ -132,7 +136,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			}
 
 			@Nullable
-			public Tooltip getTooltip(Point mouse) {
+			public Tooltip getTooltip(TooltipContext context) {
+				Point mouse = context.getPoint();
 				List<Component> strings = getTooltipStrings(display.getRecipe(), mouse.x - origin.x, mouse.y - origin.y);
 				if (strings.isEmpty()) {
 					return null;
