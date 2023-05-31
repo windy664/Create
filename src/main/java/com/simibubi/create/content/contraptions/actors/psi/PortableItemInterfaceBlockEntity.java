@@ -6,13 +6,6 @@ import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.item.ItemHandlerWrapper;
-
-import java.util.Iterator;
-
-import org.jetbrains.annotations.Nullable;
-
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.foundation.item.ItemHandlerWrapper;
 import com.simibubi.create.foundation.utility.fabric.ListeningStorageView;
 import com.simibubi.create.foundation.utility.fabric.ProcessingIterator;
 

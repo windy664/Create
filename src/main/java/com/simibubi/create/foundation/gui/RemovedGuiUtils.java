@@ -5,8 +5,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.github.fabricators_of_create.porting_lib.util.client.GuiUtils;
 
+import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +26,7 @@ public class RemovedGuiUtils {
 	public static void drawHoveringText(PoseStack mStack, List<? extends FormattedText> textLines, int mouseX,
 		int mouseY, int screenWidth, int screenHeight, int maxTextWidth, Font font) {
 		drawHoveringText(mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
-			GuiUtils.DEFAULT_BACKGROUND_COLOR, GuiUtils.DEFAULT_BORDER_COLOR_START, GuiUtils.DEFAULT_BORDER_COLOR_END,
+			ScreenUtils.DEFAULT_BACKGROUND_COLOR, ScreenUtils.DEFAULT_BORDER_COLOR_START, ScreenUtils.DEFAULT_BORDER_COLOR_END,
 			font);
 	}
 
@@ -41,14 +41,14 @@ public class RemovedGuiUtils {
 		List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
 		int maxTextWidth, Font font) {
 		drawHoveringText(stack, mStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth,
-			GuiUtils.DEFAULT_BACKGROUND_COLOR, GuiUtils.DEFAULT_BORDER_COLOR_START, GuiUtils.DEFAULT_BORDER_COLOR_END,
+			ScreenUtils.DEFAULT_BACKGROUND_COLOR, ScreenUtils.DEFAULT_BORDER_COLOR_START, ScreenUtils.DEFAULT_BORDER_COLOR_END,
 			font);
 	}
 
 	public static void drawHoveringText(@Nonnull final ItemStack stack, PoseStack pStack,
 		List<? extends FormattedText> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight,
 		int maxTextWidth, int backgroundColor, int borderColorStart, int borderColorEnd, Font font) {
-		GuiUtils.drawHoveringText(stack, pStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth, backgroundColor, borderColorStart, borderColorEnd, font);
+		ScreenUtils.drawHoveringText(stack, pStack, textLines, mouseX, mouseY, screenWidth, screenHeight, maxTextWidth, backgroundColor, borderColorStart, borderColorEnd, font);
 //		if (textLines.isEmpty())
 //			return;
 //

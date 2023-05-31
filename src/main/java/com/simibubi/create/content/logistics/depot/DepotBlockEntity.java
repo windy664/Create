@@ -2,12 +2,13 @@ package com.simibubi.create.content.logistics.depot;
 
 import java.util.List;
 
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemTransferable;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;

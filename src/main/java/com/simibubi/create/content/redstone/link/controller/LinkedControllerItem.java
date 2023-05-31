@@ -5,11 +5,11 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.utility.Couple;
-import io.github.fabricators_of_create.porting_lib.item.UseFirstBehaviorItem;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
-import io.github.fabricators_of_create.porting_lib.util.NetworkUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
+import io.github.fabricators_of_create.porting_lib.item.UseFirstBehaviorItem;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.util.NetworkHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -85,7 +85,7 @@ public class LinkedControllerItem extends Item implements MenuProvider, UseFirst
 
 		if (player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
 			if (!world.isClientSide && player instanceof ServerPlayer && player.mayBuild())
-				NetworkUtil.openGui((ServerPlayer) player, this, buf -> {
+				NetworkHooks.openScreen((ServerPlayer) player, this, buf -> {
 					buf.writeItem(heldItem);
 				});
 			return InteractionResultHolder.success(heldItem);

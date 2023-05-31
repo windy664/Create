@@ -1,18 +1,30 @@
 package com.simibubi.create;
 
+import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.sodium.SodiumCompat;
+import com.simibubi.create.compat.trinkets.Trinkets;
 import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.render.SBBContraptionManager;
 import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
+import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
+import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
 import com.simibubi.create.content.equipment.bell.SoulPulseEffectHandler;
+import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
+import com.simibubi.create.content.equipment.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonRenderHandler;
+import com.simibubi.create.content.equipment.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.equipment.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.waterwheel.WaterWheelRenderer;
+import com.simibubi.create.content.redstone.link.controller.LinkedControllerClientHandler;
 import com.simibubi.create.content.schematics.client.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
+import com.simibubi.create.content.trains.TrainHUD;
+import com.simibubi.create.content.trains.track.TrackPlacementOverlay;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsClient;
 import com.simibubi.create.foundation.events.ClientEvents;
@@ -33,6 +45,7 @@ import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
 import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
+import io.github.fabricators_of_create.porting_lib.util.ArmorTextureRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
@@ -91,7 +104,7 @@ public class CreateClient implements ClientModInitializer {
 		AllPonderTags.register();
 		PonderIndex.register();
 
-		OverlayRenderCallback.EVENT.register(ClientEvents.ModBusEvents::registerGuiOverlays);
+		registerOverlays();
 		UIRenderHelper.init();
 
 		// fabric exclusive
@@ -99,7 +112,7 @@ public class CreateClient implements ClientModInitializer {
 		InputEvents.register();
 		AllPackets.getChannel().initClientListener();
 		RenderTypes.init();
-		ArmorTextureRegistry.register(AllArmorMaterials.COPPER, CopperArmorItem.TEXTURE);
+//		ArmorTextureRegistry.register(AllArmorMaterials.COPPER, CopperArmorItem.TEXTURE);
 		AllFluids.initRendering();
 		initCompat();
 	}

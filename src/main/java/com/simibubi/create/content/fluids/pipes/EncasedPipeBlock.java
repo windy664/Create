@@ -51,6 +51,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.ticks.TickPriority;
 
+import javax.annotation.Nullable;
+
 public class EncasedPipeBlock extends Block
 	implements IWrenchable, ISpecialBlockItemRequirement, IBE<FluidPipeBlockEntity>, BlockPickInteractionAware, EncasedBlock, ITransformableBlock {
 	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = PipeBlock.PROPERTY_BY_DIRECTION;

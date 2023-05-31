@@ -15,10 +15,10 @@ import io.github.fabricators_of_create.porting_lib.block.CustomFrictionBlock;
 import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
 import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
 import io.github.fabricators_of_create.porting_lib.block.CustomSoundTypeBlock;
+import io.github.fabricators_of_create.porting_lib.block.ExplosionResistanceBlock;
 import io.github.fabricators_of_create.porting_lib.block.LightEmissiveBlock;
+import io.github.fabricators_of_create.porting_lib.block.ValidSpawnBlock;
 import io.github.fabricators_of_create.porting_lib.enchant.EnchantmentBonusBlock;
-import io.github.fabricators_of_create.porting_lib.util.ExplosionResistanceBlock;
-import io.github.fabricators_of_create.porting_lib.util.ValidSpawnBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
@@ -269,10 +269,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 		if (isIgnoredConnectivitySide(level, state, side, pos, queryPos))
 			return state;
 
-		ModelDataManager modelDataManager = level.getModelDataManager();
-		if (modelDataManager == null)
-			return getMaterial(level, pos);
-		return CopycatModel.getMaterial(modelDataManager.getAt(pos));
+		return CopycatModel.getMaterial(getMaterial(level, pos));
 	}
 
 	public boolean isIgnoredConnectivitySide(BlockAndTintGetter reader, BlockState state, Direction face,

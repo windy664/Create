@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.events;
 import java.util.List;
 
 import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
-import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
@@ -26,12 +26,10 @@ import com.simibubi.create.content.decoration.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.equipment.armor.BacktankArmorLayer;
 import com.simibubi.create.content.equipment.armor.DivingHelmetItem;
 import com.simibubi.create.content.equipment.armor.NetheriteBacktankFirstPersonRenderer;
-import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
 import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
 import com.simibubi.create.content.equipment.clipboard.ClipboardValueSettingsHandler;
-import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.equipment.extendoGrip.ExtendoGripRenderHandler;
-import com.simibubi.create.content.equipment.goggles.GoggleOverlayRenderer;
+import com.simibubi.create.content.equipment.symmetryWand.SymmetryHandler;
 import com.simibubi.create.content.equipment.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.equipment.zapper.ZapperItem;
 import com.simibubi.create.content.equipment.zapper.terrainzapper.WorldshaperRenderHandler;
@@ -55,13 +53,11 @@ import com.simibubi.create.content.trains.track.CurvedTrackInteraction;
 import com.simibubi.create.content.trains.track.TrackBlockItem;
 import com.simibubi.create.content.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.trains.track.TrackPlacement;
-import com.simibubi.create.content.trains.track.TrackPlacementOverlay;
 import com.simibubi.create.content.trains.track.TrackTargetingClient;
 import com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueHandler;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueRenderer;
-import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
@@ -83,7 +79,6 @@ import io.github.fabricators_of_create.porting_lib.event.client.DrawSelectionEve
 import io.github.fabricators_of_create.porting_lib.event.client.FogEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.FogEvents.ColorData;
 import io.github.fabricators_of_create.porting_lib.event.client.InteractEvents;
-import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.ParticleManagerRegistrationCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderArmCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderHandCallback;
@@ -130,6 +125,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 
 public class ClientEvents {
@@ -313,7 +309,7 @@ public class ClientEvents {
 		return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
 	}
 
-	public static boolean getFogDensity(FogRenderer.FogMode type, Camera camera, FogEvents.FogData fogData) {
+	public static boolean getFogDensity(FogRenderer.FogMode mode, FogType type, Camera camera, float partialTick, float renderDistance, float nearDistance, float farDistance, FogShape shape, FogEvents.FogData fogData) {
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = camera.getBlockPosition();
 		FluidState fluidState = level.getFluidState(blockPos);
@@ -435,7 +431,6 @@ public class ClientEvents {
 		RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
 		InteractEvents.USE.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		RenderArmCallback.EVENT.register(NetheriteBacktankFirstPersonRenderer::onRenderPlayerHand);
-		OnStartUseItemCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
 		PlayerTickEvents.END.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
 		ClientPlayConnectionEvents.DISCONNECT.register(ClientEvents::onLeave);
 		DrawSelectionEvents.BLOCK.register(TrackBlockOutline::drawCustomBlockSelection);

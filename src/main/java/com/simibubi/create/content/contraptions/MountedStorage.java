@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
@@ -70,7 +71,7 @@ public class MountedStorage {
 			return false;
 
 		// There doesn't appear to be much of a standard for tagging chests/barrels
-		String blockId = ForgeRegistries.BLOCKS.getKey(blockState.getBlock())
+		String blockId = Registry.BLOCK.getKey(blockState.getBlock())
 			.getPath();
 		if (blockId.contains("ender"))
 			return false;

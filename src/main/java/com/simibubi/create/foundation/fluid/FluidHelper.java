@@ -142,7 +142,7 @@ public class FluidHelper {
 
 		Pair<FluidStack, ItemStack> emptyingResult = GenericItemEmptying.emptyItem(worldIn, heldItem, true);
 
-		Storage<FluidVariant> tank = FluidStorage.SIDED.find(worldIn, te.getBlockPos(), null, te, side);
+		Storage<FluidVariant> tank = FluidStorage.SIDED.find(worldIn, be.getBlockPos(), null, be, side);
 		FluidStack fluidStack = emptyingResult.getFirst();
 
 		if (tank == null)
@@ -176,7 +176,7 @@ public class FluidHelper {
 		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
 			return false;
 
-		Storage<FluidVariant> tank = FluidStorage.SIDED.find(world, te.getBlockPos(), null, te, side);
+		Storage<FluidVariant> tank = FluidStorage.SIDED.find(world, be.getBlockPos(), null, be, side);
 
 		if (tank == null)
 			return false;

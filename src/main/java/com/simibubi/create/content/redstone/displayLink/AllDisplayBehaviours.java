@@ -37,11 +37,11 @@ import net.minecraft.world.level.block.state.BlockState;
 public class AllDisplayBehaviours {
 	public static final Map<ResourceLocation, DisplayBehaviour> GATHERER_BEHAVIOURS = new HashMap<>();
 
-	private static final AttachedRegistry<Block, List<DisplaySource>> SOURCES_BY_BLOCK = new AttachedRegistry<>(ForgeRegistries.BLOCKS);
-	private static final AttachedRegistry<BlockEntityType<?>, List<DisplaySource>> SOURCES_BY_BLOCK_ENTITY = new AttachedRegistry<>(ForgeRegistries.BLOCK_ENTITY_TYPES);
+	private static final AttachedRegistry<Block, List<DisplaySource>> SOURCES_BY_BLOCK = new AttachedRegistry<>(Registry.BLOCK);
+	private static final AttachedRegistry<BlockEntityType<?>, List<DisplaySource>> SOURCES_BY_BLOCK_ENTITY = new AttachedRegistry<>(Registry.BLOCK_ENTITY_TYPE);
 
-	private static final AttachedRegistry<Block, DisplayTarget> TARGETS_BY_BLOCK = new AttachedRegistry<>(ForgeRegistries.BLOCKS);
-	private static final AttachedRegistry<BlockEntityType<?>, DisplayTarget> TARGETS_BY_BLOCK_ENTITY = new AttachedRegistry<>(ForgeRegistries.BLOCK_ENTITY_TYPES);
+	private static final AttachedRegistry<Block, DisplayTarget> TARGETS_BY_BLOCK = new AttachedRegistry<>(Registry.BLOCK);
+	private static final AttachedRegistry<BlockEntityType<?>, DisplayTarget> TARGETS_BY_BLOCK_ENTITY = new AttachedRegistry<>(Registry.BLOCK_ENTITY_TYPE);
 
 	public static DisplayBehaviour register(ResourceLocation id, DisplayBehaviour behaviour) {
 		behaviour.id = id;

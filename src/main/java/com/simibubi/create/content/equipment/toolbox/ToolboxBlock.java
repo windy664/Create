@@ -9,9 +9,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import io.github.fabricators_of_create.porting_lib.util.NetworkUtil;
-import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
+import io.github.fabricators_of_create.porting_lib.util.NetworkHooks;
+import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -163,7 +163,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 			return InteractionResult.SUCCESS;
 
 		withBlockEntityDo(world, pos,
-			toolbox -> NetworkUtil.openScreen((ServerPlayer) player, toolbox, toolbox::sendToMenu));
+			toolbox -> NetworkHooks.openScreen((ServerPlayer) player, toolbox, toolbox::sendToMenu));
 		return InteractionResult.SUCCESS;
 	}
 

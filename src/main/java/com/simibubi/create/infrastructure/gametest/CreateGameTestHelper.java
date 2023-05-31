@@ -284,7 +284,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 		Storage<ItemVariant> storage = itemStorageAt(pos);
 		Object2LongMap<Item> map = new Object2LongArrayMap<>();
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(storage, t)) {
+			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(storage)) {
 				ItemVariant resource = view.getResource();
 				Item item = resource.getItem();
 				long amount = map.getLong(item);
@@ -358,9 +358,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	@Override
 	public void assertContainerEmpty(@NotNull BlockPos pos) {
 		Storage<ItemVariant> storage = itemStorageAt(pos);
-		try (Transaction t = TransferUtil.getTransaction()) {
-			TransferUtil.getNonEmpty(storage, t).forEach(view -> fail("Storage not empty"));
-		}
+		TransferUtil.getNonEmpty(storage).forEach(view -> fail("Storage not empty"));
 	}
 
 	/** @see CreateGameTestHelper#assertContainerContains(BlockPos, ItemStack) */

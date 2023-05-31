@@ -19,9 +19,9 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
-import io.github.fabricators_of_create.porting_lib.extensions.RenderTargetExtensions;
-import io.github.fabricators_of_create.porting_lib.util.client.GuiUtils;
 
+import io.github.fabricators_of_create.porting_lib.extensions.RenderTargetExtensions;
+import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 
@@ -108,9 +108,9 @@ public class UIRenderHelper {
 		double split1 = .5;
 		double split2 = .75;
 		Matrix4f model = ms.last().pose();
-		GuiUtils.drawGradientRect(model, 0, -width, 0, width, (int) (split1 * height), c1, c2);
-		GuiUtils.drawGradientRect(model, 0, -width, (int) (split1 * height), width, (int) (split2 * height), c2, c3);
-		GuiUtils.drawGradientRect(model, 0, -width, (int) (split2 * height), width, height, c3, c4);
+		ScreenUtils.drawGradientRect(model, 0, -width, 0, width, (int) (split1 * height), c1, c2);
+		ScreenUtils.drawGradientRect(model, 0, -width, (int) (split1 * height), width, (int) (split2 * height), c2, c3);
+		ScreenUtils.drawGradientRect(model, 0, -width, (int) (split2 * height), width, height, c3, c4);
 	}
 
 	public static void angledGradient(@Nonnull PoseStack ms, float angle, int x, int y, int breadth, int length, Couple<Color> c) {
@@ -140,7 +140,7 @@ public class UIRenderHelper {
 
 		Matrix4f model = ms.last().pose();
 		int w = breadth / 2;
-		GuiUtils.drawGradientRect(model, 0, -w, 0, w, length, color1.getRGB(), color2.getRGB());
+		ScreenUtils.drawGradientRect(model, 0, -w, 0, w, length, color1.getRGB(), color2.getRGB());
 
 		ms.popPose();
 	}

@@ -46,9 +46,9 @@ import com.simibubi.create.infrastructure.ponder.DebugScenes;
 import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
-import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
 
-import net.fabricmc.fabric.api.client.keybinding.v1.client.GuiUtils;
+import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;

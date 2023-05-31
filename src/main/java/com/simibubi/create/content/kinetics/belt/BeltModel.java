@@ -1,6 +1,5 @@
 package com.simibubi.create.content.kinetics.belt;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllPartialModels;
@@ -9,6 +8,7 @@ import com.simibubi.create.content.kinetics.belt.BeltBlockEntity.CasingType;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity.RenderData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
+import io.github.fabricators_of_create.porting_lib.model.CustomParticleIconModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
@@ -19,11 +19,12 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BeltModel extends ForwardingBakedModel {
+public class BeltModel extends ForwardingBakedModel implements CustomParticleIconModel {
 
 	private static final SpriteShiftEntry SPRITE_SHIFT = AllSpriteShifts.ANDESIDE_BELT_CASING;
 
@@ -31,16 +32,16 @@ public class BeltModel extends ForwardingBakedModel {
 		wrapped = template;
 	}
 
-	// TODO
-//	@Override
-//	public TextureAtlasSprite getParticleIcon(IModelData data) {
-//		if (!data.hasProperty(CASING_PROPERTY))
-//			return super.getParticleIcon(data);
-//		CasingType type = data.getData(CASING_PROPERTY);
-//		if (type == CasingType.NONE || type == CasingType.BRASS)
-//			return super.getParticleIcon(data);
-//		return AllSpriteShifts.ANDESITE_CASING.getOriginal();
-//	}
+	@Override
+	public TextureAtlasSprite getParticleIcon(Object data) {
+		if (data instanceof RenderData renderData) {
+			CasingType type = renderData.casingType();
+			if (type == CasingType.NONE || type == CasingType.BRASS)
+				return CustomParticleIconModel.super.getParticleIcon(data);
+		}
+
+		return AllSpriteShifts.ANDESITE_CASING.getOriginal();
+	}
 
 	@Override
 	public boolean isVanillaAdapter() {
@@ -48,7 +49,7 @@ public class BeltModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
 		if (!(blockView instanceof RenderAttachedBlockView attachmentView
 				&& attachmentView.getBlockEntityRenderAttachment(pos) instanceof RenderData data)) {
 			super.emitBlockQuads(blockView, state, pos, randomSupplier, context);

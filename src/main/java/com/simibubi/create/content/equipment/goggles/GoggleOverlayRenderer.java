@@ -14,7 +14,6 @@ import com.simibubi.create.content.contraptions.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.trains.entity.TrainRelocator;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox;
-import com.simibubi.create.foundation.gui.RemovedGuiUtils;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.outliner.Outline;
@@ -25,8 +24,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CClient;
-import io.github.fabricators_of_create.porting_lib.util.client.GuiUtils;
 
+import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -197,7 +196,7 @@ public class GoggleOverlayRenderer {
 			colorBorderBot.scaleAlpha(fade);
 		}
 
-		GuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(), -1, colorBackground.getRGB(),
+		ScreenUtils.drawHoveringText(poseStack, tooltip, posX, posY, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(), -1, colorBackground.getRGB(),
 			colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		ItemStack item = AllItems.GOGGLES.asStack();

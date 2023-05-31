@@ -19,7 +19,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.minecraft.core.Registry;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class ComputerBehaviour extends AbstractComputerBehaviour {
 
@@ -53,11 +52,6 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 
 		throw new IllegalArgumentException(
 			"No peripheral available for " + Registry.BLOCK_ENTITY_TYPE.getKey(te.getType()));
-	}
-
-	@Override
-	public <T> boolean isPeripheralCap(Capability<T> cap) {
-		return cap == PERIPHERAL_CAPABILITY;
 	}
 
 	@Override

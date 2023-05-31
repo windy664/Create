@@ -285,7 +285,7 @@ public class PumpBlockEntity extends KineticBlockEntity implements PipeAttachmen
 			return false;
 
 		// fluid handler endpoint
-		if (FluidStorage.SIDED.find(world, connectedPos, null, tileEntity, face.getOpposite()) != null)
+		if (FluidStorage.SIDED.find(world, connectedPos, null, blockEntity, face.getOpposite()) != null)
 			return true;
 
 		// open endpoint

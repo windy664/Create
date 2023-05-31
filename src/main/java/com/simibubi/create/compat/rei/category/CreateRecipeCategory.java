@@ -218,12 +218,12 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 				FluidUnit unit = AllConfigs.client().fluidUnitType.get();
 				String amount = FluidTextUtil.getUnicodeMillibuckets(amounts.get(0), unit, AllConfigs.client().simplifyFluidUnit.get());
-				Component text = new TextComponent(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
+				Component text = Component.literal(String.valueOf(amount)).append(Lang.translateDirect(unit.getTranslationKey())).withStyle(ChatFormatting.GOLD);
 				if (tooltip.entries().isEmpty())
 					tooltip.entries().add(0, Tooltip.entry(text));
 				else {
 					List<Component> siblings = tooltip.entries().get(0).getAsText().getSiblings();
-					siblings.add(new TextComponent(" "));
+					siblings.add(Component.literal(" "));
 					siblings.add(text);
 				}
 				tooltip.entries().remove(1); // Remove REI added amount

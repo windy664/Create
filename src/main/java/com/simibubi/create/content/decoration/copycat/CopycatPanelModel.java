@@ -1,6 +1,5 @@
 package com.simibubi.create.content.decoration.copycat;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
@@ -19,6 +18,7 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -35,7 +35,7 @@ public class CopycatPanelModel extends CopycatModel {
 	}
 
 	@Override
-	protected void emitBlockQuadsInner(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, BlockState material, CullFaceRemovalData cullFaceRemovalData, OcclusionData occlusionData) {
+	protected void emitBlockQuadsInner(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context, BlockState material, CullFaceRemovalData cullFaceRemovalData, OcclusionData occlusionData) {
 		Direction facing = state.getOptionalValue(CopycatPanelBlock.FACING)
 			.orElse(Direction.UP);
 		BlockRenderDispatcher blockRenderer = Minecraft.getInstance()

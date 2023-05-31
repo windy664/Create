@@ -3,6 +3,7 @@ package com.simibubi.create.content.kinetics.waterwheel;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.github.fabricators_of_create.porting_lib.block.CustomHitEffectsBlock;
 import net.minecraft.util.RandomSource;
 
 import org.jetbrains.annotations.Nullable;

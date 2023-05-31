@@ -24,7 +24,7 @@ import com.simibubi.create.foundation.utility.fabric.ReachUtil;
 import io.github.fabricators_of_create.porting_lib.entity.ExtraSpawnDataEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
-import io.github.fabricators_of_create.porting_lib.util.NetworkUtil;
+import io.github.fabricators_of_create.porting_lib.util.NetworkHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -432,7 +432,7 @@ public class BlueprintEntity extends HangingEntity
 
 		int i = section.index;
 		if (!level.isClientSide && player instanceof ServerPlayer) {
-			NetworkUtil.openGui((ServerPlayer) player, section, buf -> {
+			NetworkHooks.openScreen((ServerPlayer) player, section, buf -> {
 				buf.writeVarInt(getId());
 				buf.writeVarInt(i);
 			});

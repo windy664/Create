@@ -6,7 +6,8 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.item.ItemHelper;
-import io.github.fabricators_of_create.porting_lib.util.NetworkUtil;
+
+import io.github.fabricators_of_create.porting_lib.util.NetworkHooks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -51,7 +52,7 @@ public class SchematicannonBlock extends Block implements IBE<SchematicannonBloc
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
 		withBlockEntityDo(worldIn, pos,
-				be -> NetworkUtil.openScreen((ServerPlayer) player, be, be::sendToMenu));
+				be -> NetworkHooks.openScreen((ServerPlayer) player, be, be::sendToMenu));
 		return InteractionResult.SUCCESS;
 	}
 

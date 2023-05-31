@@ -6,19 +6,24 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import io.github.fabricators_of_create.porting_lib.model.CustomParticleIconModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class CopycatModel extends ForwardingBakedModel {
+import javax.annotation.Nullable;
+
+public abstract class CopycatModel extends ForwardingBakedModel implements CustomParticleIconModel {
 
 	public CopycatModel(BakedModel originalModel) {
 		wrapped = originalModel;
@@ -42,7 +47,7 @@ public abstract class CopycatModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
 		BlockState material;
 		if (blockView instanceof RenderAttachedBlockView attachmentView
 				&& attachmentView.getBlockEntityRenderAttachment(pos) instanceof BlockState material1) {
@@ -68,28 +73,29 @@ public abstract class CopycatModel extends ForwardingBakedModel {
 		emitBlockQuadsInner(blockView, state, pos, randomSupplier, context, material, cullFaceRemovalData, occlusionData);
 	}
 
-	protected abstract void emitBlockQuadsInner(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, BlockState material, CullFaceRemovalData cullFaceRemovalData, OcclusionData occlusionData);
+	protected abstract void emitBlockQuadsInner(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context, BlockState material, CullFaceRemovalData cullFaceRemovalData, OcclusionData occlusionData);
 
-	// TODO
-//	@Override
-//	public TextureAtlasSprite getParticleIcon(IModelData data) {
-//		BlockState material = getMaterial(data);
-//
-//		if (material == null)
-//			return super.getParticleIcon(data);
-//
-//		IModelData wrappedData = data.getData(WRAPPED_DATA_PROPERTY);
-//		if (wrappedData == null)
-//			wrappedData = EmptyModelData.INSTANCE;
-//
-//		return getModelOf(material).getParticleIcon(wrappedData);
-//	}
-//
-//	@Nullable
-//	public static BlockState getMaterial(IModelData data) {
-//		BlockState material = data.getData(MATERIAL_PROPERTY);
-//		return material == null ? AllBlocks.COPYCAT_BASE.getDefaultState() : material;
-//	}
+	@Override
+	public TextureAtlasSprite getParticleIcon(Object data) {
+		if (data instanceof BlockState state) {
+			BlockState material = getMaterial(state);
+
+			return getIcon(getModelOf(material), null);
+		}
+
+		return CustomParticleIconModel.super.getParticleIcon(data);
+	}
+
+	public static TextureAtlasSprite getIcon(BakedModel model, @Nullable Object data) {
+		if (model instanceof CustomParticleIconModel particleIconModel)
+			return particleIconModel.getParticleIcon(data);
+		return model.getParticleIcon();
+	}
+
+	@Nullable
+	public static BlockState getMaterial(BlockState material) {
+		return material == null ? AllBlocks.COPYCAT_BASE.getDefaultState() : material;
+	}
 
 	public static BakedModel getModelOf(BlockState state) {
 		return Minecraft.getInstance()

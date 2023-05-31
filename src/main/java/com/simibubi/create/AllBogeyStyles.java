@@ -96,7 +96,7 @@ public class AllBogeyStyles {
 		public BogeyStyleBuilder size(BogeySizes.BogeySize size, Supplier<Supplier<? extends BogeyRenderer>> renderer,
 			ResourceLocation location) {
 			this.sizes.put(size, location);
-			EnvExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 				this.sizeRenderers.put(size, () -> new BogeyStyle.SizeRenderData(renderer.get(), renderer.get()
 					.get()));
 			});

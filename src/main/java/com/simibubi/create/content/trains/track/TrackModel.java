@@ -1,6 +1,5 @@
 package com.simibubi.create.content.trains.track;
 
-import java.util.Random;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -14,6 +13,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -30,7 +30,7 @@ public class TrackModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
 		if (!(blockView instanceof RenderAttachedBlockView attachmentView
 				&& attachmentView.getBlockEntityRenderAttachment(pos) instanceof Double data)) {
 			super.emitBlockQuads(blockView, state, pos, randomSupplier, context);

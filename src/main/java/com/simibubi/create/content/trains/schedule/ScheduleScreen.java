@@ -9,12 +9,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import com.simibubi.create.foundation.utility.IntAttached;
-
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
-import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
-import io.github.fabricators_of_create.porting_lib.util.client.GuiUtils;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -48,12 +42,15 @@ import com.simibubi.create.foundation.gui.widget.Indicator.State;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Components;
-import com.simibubi.create.foundation.utility.LongAttached;
+import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
+import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
+import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -473,9 +470,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		int zLevel = 200;
 		Matrix4f mat = matrixStack.last()
 			.pose();
-		GuiUtils.drawGradientRect(mat, zLevel, leftPos + 16, topPos + 16, leftPos + 16 + 220, topPos + 16 + 10,
+		ScreenUtils.drawGradientRect(mat, zLevel, leftPos + 16, topPos + 16, leftPos + 16 + 220, topPos + 16 + 10,
 			0x77000000, 0x00000000);
-		GuiUtils.drawGradientRect(mat, zLevel, leftPos + 16, topPos + 179, leftPos + 16 + 220, topPos + 179 + 10,
+		ScreenUtils.drawGradientRect(mat, zLevel, leftPos + 16, topPos + 179, leftPos + 16 + 220, topPos + 179 + 10,
 			0x00000000, 0x77000000);
 		UIRenderHelper.swapAndBlitColor(UIRenderHelper.framebuffer, minecraft.getMainRenderTarget());
 	}
@@ -567,8 +564,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 				.rotateZ(-90);
 			Matrix4f m = matrixStack.last()
 				.pose();
-			GuiUtils.drawGradientRect(m, 200, -cardHeight + 2, 18, -2 - cardHeader, 28, 0x44000000, 0x00000000);
-			GuiUtils.drawGradientRect(m, 200, -cardHeight + 2, cardWidth - 26, -2 - cardHeader, cardWidth - 16,
+			ScreenUtils.drawGradientRect(m, 200, -cardHeight + 2, 18, -2 - cardHeader, 28, 0x44000000, 0x00000000);
+			ScreenUtils.drawGradientRect(m, 200, -cardHeight + 2, cardWidth - 26, -2 - cardHeader, cardWidth - 16,
 				0x00000000, 0x44000000);
 		}
 
@@ -870,7 +867,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		matrixStack.pushPose();
 		matrixStack.translate(x, y, 0);
 		matrixStack.scale(w, h, 1);
-		GuiUtils.drawGradientRect(matrixStack.last()
+		ScreenUtils.drawGradientRect(matrixStack.last()
 			.pose(), -100, 0, 0, 1, 1, 0xff000000, 0xff000000);
 		matrixStack.popPose();
 
