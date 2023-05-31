@@ -1,7 +1,5 @@
 package com.simibubi.create.content.redstone.link;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.IBE;

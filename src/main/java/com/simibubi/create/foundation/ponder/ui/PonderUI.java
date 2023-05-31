@@ -492,14 +492,14 @@ public class PonderUI extends NavigatableSimiScreen {
 				if (flash > 0) {
 					ms.pushPose();
 					ms.scale(1, .5f + flash * .75f, 1);
-					GuiUtils.drawGradientRect(ms.last()
+					ScreenUtils.drawGradientRect(ms.last()
 						.pose(), 0, 0, -1, -scene.getBasePlateSize(), 0, 0x00_c6ffc9,
 						new Color(0xaa_c6ffc9).scaleAlpha(alpha)
 							.getRGB());
 					ms.popPose();
 				}
 				ms.translate(0, 0, 2 / 1024f);
-				GuiUtils.drawGradientRect(ms.last()
+				ScreenUtils.drawGradientRect(ms.last()
 					.pose(), 0, 0, 0, -scene.getBasePlateSize(), 4, 0x66_000000, 0x00_000000);
 				ms.popPose();
 				ms.mulPose(Vector3f.YP.rotationDegrees(-90));

@@ -1,7 +1,6 @@
 package com.simibubi.create.content.kinetics.waterwheel;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.util.RandomSource;
@@ -22,6 +21,7 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;

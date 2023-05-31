@@ -101,13 +101,13 @@ public class TextWindowElement extends AnimatedOverlayElement {
 
 		boolean settled = transform.xRotation.settled() && transform.yRotation.settled();
 		float pY = settled ? (int) sceneToScreen.y : sceneToScreen.y;
-		
+
 		float yDiff = (screen.height / 2f - sceneToScreen.y - 10) / 100f;
 		float targetX = (screen.width * Mth.lerp(yDiff * yDiff, 6f / 8, 5f / 8));
 
 		if (nearScene)
 			targetX = Math.min(targetX, sceneToScreen.x + 50);
-		
+
 		if (settled)
 			targetX = (int) targetX;
 
@@ -145,8 +145,8 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			ms.scale((float) lineTarget, 1, 1);
 			Matrix4f model = ms.last()
 				.pose();
-			GuiUtils.drawGradientRect(model, -100, 0, 0, 1, 1, brighterColor, brighterColor);
-			GuiUtils.drawGradientRect(model, -100, 0, 1, 1, 2, 0xFF494949, 0xFF393939);
+			ScreenUtils.drawGradientRect(model, -100, 0, 0, 1, 1, brighterColor, brighterColor);
+			ScreenUtils.drawGradientRect(model, -100, 0, 1, 1, 2, 0xFF494949, 0xFF393939);
 			ms.popPose();
 		}
 

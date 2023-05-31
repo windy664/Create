@@ -88,7 +88,7 @@ public class TooltipHelper {
 
 		// Split words
 		List<String> words = new LinkedList<>();
-		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftClientUtil.getLocale());
+		BreakIterator iterator = BreakIterator.getLineInstance(Minecraft.getInstance().getLocale());
 		iterator.setText(s);
 		int start = iterator.first();
 		for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {

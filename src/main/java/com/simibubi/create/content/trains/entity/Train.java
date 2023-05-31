@@ -725,9 +725,9 @@ public class Train {
 				Vec3 bogeyPosition = bogey.getAnchorPosition();
 				if (bogeyPosition == null) continue;
 				BlockEntity be = level.getBlockEntity(new BlockPos(bogeyPosition));
-				if (!(be instanceof AbstractBogeyBlockEntity sbte))
+				if (!(be instanceof AbstractBogeyBlockEntity sbbe))
 					continue;
-				sbte.setBogeyData(bogey.bogeyData);
+				sbbe.setBogeyData(bogey.bogeyData);
 			}
 
 			offset += carriage.bogeySpacing;
@@ -740,8 +740,8 @@ public class Train {
 		if (currentStation != null) {
 			currentStation.cancelReservation(this);
 			BlockPos blockEntityPos = currentStation.getBlockEntityPos();
-			if (level.getBlockEntity(blockEntityPos) instanceof StationBlockEntity ste)
-				ste.lastDisassembledTrainName = name.copy();
+			if (level.getBlockEntity(blockEntityPos) instanceof StationBlockEntity sbe)
+				sbe.lastDisassembledTrainName = name.copy();
 		}
 
 		Create.RAILWAYS.removeTrain(id);

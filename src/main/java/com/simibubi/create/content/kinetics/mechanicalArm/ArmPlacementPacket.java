@@ -82,12 +82,10 @@ public class ArmPlacementPacket extends SimplePacketBase {
 		}
 
 		@Override
-		public void handle(Supplier<Context> context) {
-			context.get()
-				.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
-					() -> () -> ArmInteractionPointHandler.flushSettings(pos)));
-			context.get()
-				.setPacketHandled(true);
+		public boolean handle(Context context) {
+			context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
+				() -> () -> ArmInteractionPointHandler.flushSettings(pos)));
+			return true;
 		}
 
 	}

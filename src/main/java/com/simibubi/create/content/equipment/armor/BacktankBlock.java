@@ -111,7 +111,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 		if (stack == null)
 			return;
 		withBlockEntityDo(worldIn, pos, be -> {
-			be.setCapacityEnchantLevel(EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.CAPACITY.get(), stack));
+			be.setCapacityEnchantLevel(stack.getEnchantmentLevel(AllEnchantments.CAPACITY.get()));
 			be.setAirLevel(stack.getOrCreateTag()
 				.getInt("Air"));
 			if (stack.isEnchanted())

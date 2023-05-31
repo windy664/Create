@@ -1,7 +1,5 @@
 package com.simibubi.create.content.redstone.thresholdSwitch;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.redstone.DirectedDirectionalBlock;

@@ -3,7 +3,6 @@ package com.simibubi.create.content.redstone.nixieTube;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.BiConsumer;
 
 import org.jetbrains.annotations.Nullable;

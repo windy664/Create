@@ -92,4 +92,5 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		BacktankArmorLayer<?, ?> layer = new BacktankArmorLayer<>(livingRenderer);
 		helper.register(layer);
 	}
+
 }

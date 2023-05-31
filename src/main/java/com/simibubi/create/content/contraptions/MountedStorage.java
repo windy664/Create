@@ -70,9 +70,10 @@ public class MountedStorage {
 			return false;
 
 		// There doesn't appear to be much of a standard for tagging chests/barrels
-		String blockId = blockState.getBlock()
-			.getRegistryName()
+		String blockId = ForgeRegistries.BLOCKS.getKey(blockState.getBlock())
 			.getPath();
+		if (blockId.contains("ender"))
+			return false;
 		return blockId.endsWith("_chest") || blockId.endsWith("_barrel");
 	}
 

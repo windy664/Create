@@ -279,7 +279,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		int y = guiTop - 8;
 
 		AllGuiTextures.CLIPBOARD.render(ms, x, y);
-		font.draw(ms, Component.translatable("book.pageIndicator", currentPage + 1, getNumPages()), x + 150, y + 9,
+		font.draw(ms, Components.translatable("book.pageIndicator", currentPage + 1, getNumPages()), x + 150, y + 9,
 			0x43ffffff);
 
 		for (int i = 0; i < currentEntries.size(); i++) {
@@ -820,7 +820,8 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			contents = pContents;
 			x = pX;
 			y = pY;
-			asComponent = (Component.literal(pContents)).setStyle(pStyle);
+			asComponent = Components.literal(pContents)
+				.setStyle(pStyle);
 		}
 	}
 

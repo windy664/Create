@@ -1,7 +1,5 @@
 package com.simibubi.create.content.decoration.steamWhistle;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;

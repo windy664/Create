@@ -290,9 +290,9 @@ public class RemapHelper {
 	}
 
 	@SubscribeEvent
-	public static void remapBlockEntities(RegistryEvent.MissingMappings<BlockEntityType<?>> event) {
-		for (Mapping<BlockEntityType<?>> mapping : event.getMappings(Create.ID)) {
-			ResourceLocation key = mapping.key;
+	public static void remapBlockEntities(MissingMappingsEvent event) {
+		for (Mapping<BlockEntityType<?>> mapping : event.getMappings(Registry.BLOCK_ENTITY_TYPE_REGISTRY, Create.ID)) {
+			ResourceLocation key = mapping.getKey();
 			String path = key.getPath();
 
 			if (path.equals("copper_backtank")) {

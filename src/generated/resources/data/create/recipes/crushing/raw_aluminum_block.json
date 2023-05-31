@@ -1,28 +1,29 @@
 {
   "type": "create:crushing",
-  "ingredients": [
+  "conditions": [
     {
-      "tag": "c:storage_blocks/raw_aluminum"
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:storage_blocks/raw_aluminum"
+      }
     }
   ],
-  "results": [
+  "ingredients": [
     {
-      "item": "create:crushed_raw_aluminum",
-      "count": 9
-    },
-    {
-      "item": "create:experience_nugget",
-      "count": 9,
-      "chance": 0.75
+      "tag": "forge:storage_blocks/raw_aluminum"
     }
   ],
   "processingTime": 400,
-  "fabric:load_conditions": [
+  "results": [
     {
-      "condition": "fabric:item_tags_populated",
-      "values": [
-        "c:storage_blocks/raw_aluminum"
-      ]
+      "count": 9,
+      "item": "create:crushed_raw_aluminum"
+    },
+    {
+      "chance": 0.75,
+      "count": 9,
+      "item": "create:experience_nugget"
     }
   ]
 }

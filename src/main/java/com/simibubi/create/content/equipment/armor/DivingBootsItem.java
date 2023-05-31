@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.LivingEntityAccessor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -88,7 +89,8 @@ public class DivingBootsItem extends BaseArmorItem {
 		if (!entity.isOnGround()) {
 			if (((LivingEntityAccessor) entity).port_lib$isJumping() && entity.getExtraCustomData()
 				.contains("LavaGrounded")) {
-				vMultiplier = yMotion == 0 ? 0 : 1 / yMotion;
+				boolean eyeInFluid = entity.isEyeInFluid(FluidTags.LAVA);
+				vMultiplier = yMotion == 0 ? 0 : (eyeInFluid ? 1 : 0.5) / yMotion;
 			} else if (yMotion > 0)
 				vMultiplier = 1.3;
 

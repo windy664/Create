@@ -1,30 +1,31 @@
 {
   "type": "create:crushing",
-  "ingredients": [
+  "conditions": [
     {
-      "tag": "c:ores/silver"
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:ores/silver"
+      }
     }
   ],
+  "ingredients": [
+    {
+      "tag": "forge:ores/silver"
+    }
+  ],
+  "processingTime": 400,
   "results": [
     {
       "item": "create:crushed_raw_silver"
     },
     {
-      "item": "create:crushed_raw_silver",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:crushed_raw_silver"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
-    }
-  ],
-  "processingTime": 400,
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:item_tags_populated",
-      "values": [
-        "c:ores/silver"
-      ]
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     }
   ]
 }

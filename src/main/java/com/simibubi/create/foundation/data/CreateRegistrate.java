@@ -49,7 +49,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.material.Fluid;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	@Nullable

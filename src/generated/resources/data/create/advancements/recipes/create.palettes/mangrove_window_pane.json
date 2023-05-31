@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_item": {
+    "has_ingredient": {
       "conditions": {
         "items": [
           {
             "items": [
-              "create:crushed_raw_lead"
+              "create:mangrove_window"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "create:blasting/lead_ingot_compat_techreborn"
+        "recipe": "create:mangrove_window_pane"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_item",
+      "has_ingredient",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "create:blasting/lead_ingot_compat_techreborn"
+      "create:mangrove_window_pane"
     ]
   }
 }

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.kinetics.transmission.sequencer;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.ITransformableBlock;

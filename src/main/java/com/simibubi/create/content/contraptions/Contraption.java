@@ -326,8 +326,8 @@ public abstract class Contraption {
 		if (AllBlocks.BELT.has(state))
 			moveBelt(pos, frontier, visited, state);
 
-		if (AllBlocks.WINDMILL_BEARING.has(state) && world.getBlockEntity(pos) instanceof WindmillBearingBlockEntity wbte)
-			wbte.disassembleForMovement();
+		if (AllBlocks.WINDMILL_BEARING.has(state) && world.getBlockEntity(pos) instanceof WindmillBearingBlockEntity wbbe)
+			wbbe.disassembleForMovement();
 
 		if (AllBlocks.GANTRY_CARRIAGE.has(state))
 			moveGantryPinion(world, pos, frontier, visited, state);
@@ -896,8 +896,8 @@ public abstract class Contraption {
 			if (be == null)
 				return;
 			be.setLevel(world);
-			if (be instanceof KineticBlockEntity kte)
-				kte.setSpeed(0);
+			if (be instanceof KineticBlockEntity kbe)
+				kbe.setSpeed(0);
 			be.getBlockState();
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(info.state);
@@ -1064,6 +1064,10 @@ public abstract class Contraption {
 				if (state.hasProperty(SlidingDoorBlock.VISIBLE))
 					state = state.setValue(SlidingDoorBlock.VISIBLE, !state.getValue(SlidingDoorBlock.OPEN))
 							.setValue(SlidingDoorBlock.POWERED, false);
+				// Stop Sculk shriekers from getting "stuck" if moved mid-shriek.
+				if(state.is(Blocks.SCULK_SHRIEKER)){
+					state = Blocks.SCULK_SHRIEKER.defaultBlockState();
+				}
 
 				world.setBlock(targetPos, state, Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL);
 
@@ -1078,6 +1082,11 @@ public abstract class Contraption {
 				BlockEntity blockEntity = world.getBlockEntity(targetPos);
 
 				CompoundTag tag = block.nbt;
+
+				// Temporary fix: Calling load(CompoundTag tag) on a Sculk sensor causes it to not react to vibrations.
+				if(state.is(Blocks.SCULK_SENSOR) || state.is(Blocks.SCULK_SHRIEKER))
+					tag = null;
+
 				if (blockEntity != null)
 					tag = NBTProcessors.process(blockEntity, tag, false);
 				if (blockEntity != null && tag != null) {

@@ -79,12 +79,11 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 		}
 
 		@Override
-		public void handle(Supplier<Context> context) {
-			context.get()
-				.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
+		public boolean handle(Context context) {
+			context.enqueueWork(
+				() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
 						() -> () -> EjectorTargetHandler.flushSettings(pos)));
-			context.get()
-				.setPacketHandled(true);
+			return true;
 		}
 
 	}

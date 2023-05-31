@@ -1,5 +1,7 @@
 package com.simibubi.create.content.equipment.armor;
 
+import java.util.Map;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllTags.AllFluidTags;
@@ -38,6 +40,21 @@ public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingB
 		return CustomEnchantingBehaviorItem.super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
+	@Override
+	public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
+		if (enchantment == Enchantments.AQUA_AFFINITY) {
+			return 1;
+		}
+		return super.getEnchantmentLevel(stack, enchantment);
+	}
+
+	@Override
+	public Map<Enchantment, Integer> getAllEnchantments(ItemStack stack) {
+		Map<Enchantment, Integer> map = super.getAllEnchantments(stack);
+		map.put(Enchantments.AQUA_AFFINITY, 1);
+		return map;
+	}
+
 	public static boolean isWornBy(Entity entity, boolean fireproof) {
 		ItemStack stack = getWornItem(entity);
 		if (stack == null)
@@ -66,7 +83,7 @@ public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingB
 			entity.getExtraCustomData()
 				.remove("VisualBacktankAir");
 
-		boolean lavaDiving = entity.isEyeInFluid(FluidTags.LAVA);
+		boolean lavaDiving = entity.isInLava();
 		if (!isWornBy(entity, lavaDiving))
 			return;
 		if (!entity.isEyeInFluid(AllFluidTags.DIVING_FLUIDS.tag) && !lavaDiving)

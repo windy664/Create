@@ -117,6 +117,8 @@ public class SchematicRenderer {
 
 			if (state.getRenderShape() == RenderShape.MODEL) {
 				BakedModel model = dispatcher.getBlockModel(state);
+				long seed = state.getSeed(pos);
+				random.setSeed(seed);
 				if (((FabricBakedModel) model).isVanillaAdapter()) {
 					if (!FabricModelUtil.doesLayerMatch(state, layer)) {
 						continue;
@@ -131,7 +133,7 @@ public class SchematicRenderer {
 				poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
 
 				renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, shadeSeparatingWrapper, true, random,
-					state.getSeed(pos), OverlayTexture.NO_OVERLAY);
+						seed, OverlayTexture.NO_OVERLAY);
 
 				poseStack.popPose();
 			}

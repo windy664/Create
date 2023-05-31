@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.behaviour;
 
-import java.util.Random;
-
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.CampfireBlock;

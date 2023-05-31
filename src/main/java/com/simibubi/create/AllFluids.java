@@ -13,11 +13,7 @@ import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.content.fluids.VirtualFluid;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
-import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
-import com.simibubi.create.content.fluids.potion.PotionFluid.PotionFluidAttributes;
-import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.tterrag.registrate.fabric.SimpleFlowableFluid;
+import com.simibubi.create.content.fluids.potion.PotionFluid.PotionFluidType;
 import com.tterrag.registrate.util.entry.FluidEntry;
 
 import io.github.fabricators_of_create.porting_lib.event.common.FluidPlaceBlockCallback;

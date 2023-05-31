@@ -163,7 +163,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 			return InteractionResult.SUCCESS;
 
 		withBlockEntityDo(world, pos,
-			toolbox -> NetworkUtil.openGui((ServerPlayer) player, toolbox, toolbox::sendToMenu));
+			toolbox -> NetworkUtil.openScreen((ServerPlayer) player, toolbox, toolbox::sendToMenu));
 		return InteractionResult.SUCCESS;
 	}
 

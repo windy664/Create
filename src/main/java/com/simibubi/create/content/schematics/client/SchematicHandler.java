@@ -48,7 +48,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class SchematicHandler {
+public class SchematicHandler implements IGuiOverlay {
 
 	private String displayedSchematic;
 	private SchematicTransformation transformation;

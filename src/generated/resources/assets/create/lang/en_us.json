@@ -309,6 +309,8 @@
 	"block.create.magenta_seat": "Magenta Seat",
 	"block.create.magenta_toolbox": "Magenta Toolbox",
 	"block.create.magenta_valve_handle": "Magenta Valve Handle",
+	"block.create.mangrove_window": "Mangrove Window",
+	"block.create.mangrove_window_pane": "Mangrove Window Pane",
 	"block.create.mechanical_arm": "Mechanical Arm",
 	"block.create.mechanical_bearing": "Mechanical Bearing",
 	"block.create.mechanical_crafter": "Mechanical Crafter",
@@ -2611,7 +2613,7 @@
 
 	"create.ponder.encased_fluid_pipe.header": "Encasing Fluid Pipes",
 	"create.ponder.encased_fluid_pipe.text_1": "Copper Casing can be used to decorate Fluid Pipes",
-	"create.ponder.encased_fluid_pipe.text_2": "Aside from being conceiled, Encased Pipes are locked into their connectivity state",
+	"create.ponder.encased_fluid_pipe.text_2": "Aside from being concealed, Encased Pipes are locked into their connectivity state",
 	"create.ponder.encased_fluid_pipe.text_3": "It will no longer react to any neighbouring blocks being added or removed",
 
 	"create.ponder.fan_direction.header": "Air flow of Encased Fans",
@@ -3079,7 +3081,7 @@
 	"create.ponder.smart_chute.text_4": "Redstone power will prevent Smart Chutes from acting.",
 
 	"create.ponder.smart_observer.header": "Advanced detection with Smart Observers",
-	"create.ponder.smart_observer.text_1": "Smart Observers can be used detect a variety of events",
+	"create.ponder.smart_observer.text_1": "Smart Observers can be used to detect a variety of events",
 	"create.ponder.smart_observer.text_2": "It can detect items or fluids inside of generic containers",
 	"create.ponder.smart_observer.text_3": "The filter slot can be used to look for specific contents only",
 	"create.ponder.smart_observer.text_4": "It also activates when the block itself matches the filter",

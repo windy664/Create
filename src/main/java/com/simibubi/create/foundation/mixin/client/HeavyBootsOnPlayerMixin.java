@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.ProfilePublicKey;
 @Environment(EnvType.CLIENT)
 @Mixin(LocalPlayer.class)
 public abstract class HeavyBootsOnPlayerMixin extends AbstractClientPlayer {
+
 	private HeavyBootsOnPlayerMixin(ClientLevel level, GameProfile profile, ProfilePublicKey profileKey) {
 		super(level, profile, profileKey);
 	}

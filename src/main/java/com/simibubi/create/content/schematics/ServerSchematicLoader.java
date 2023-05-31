@@ -26,7 +26,6 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CSchematics;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -160,7 +159,6 @@ public class ServerSchematicLoader {
 	protected boolean validateSchematicSizeOnServer(ServerPlayer player, long size) {
 		Integer maxFileSize = getConfig().maxTotalSchematicSize.get();
 		if (size > maxFileSize * 1000) {
-
 			player.sendSystemMessage(Lang.translateDirect("schematics.uploadTooLarge")
 				.append(Components.literal(" (" + size / 1000 + " KB).")));
 			player.sendSystemMessage(Lang.translateDirect("schematics.maxAllowedSize")

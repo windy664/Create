@@ -120,7 +120,6 @@ public class BuilderTransformers {
 			.addLayer(() -> RenderType::cutoutMipped)
 			.addLayer(() -> RenderType::translucent)
 			.color(() -> CopycatBlock::wrappedColor)
-			.tag(AllBlockTags.SAFE_NBT.tag)
 			.transform(TagGen.axeOrPickaxe());
 	}
 

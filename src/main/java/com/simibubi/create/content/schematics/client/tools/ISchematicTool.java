@@ -12,7 +12,6 @@ public interface ISchematicTool {
 
 	public boolean handleRightClick();
 	public boolean handleMouseWheel(double delta);
-
 	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera);
 	public void renderOverlay(PoseStack poseStack, float partialTicks, int width, int height);
 	public void renderOnSchematic(PoseStack ms, SuperRenderTypeBuffer buffer);

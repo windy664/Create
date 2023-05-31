@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.minecraft.core.Registry;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ComputerBehaviour extends AbstractComputerBehaviour {
 
@@ -37,20 +38,26 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 	}
 
 	public static IPeripheral getPeripheralFor(SmartBlockEntity te) {
-		if (te instanceof SpeedControllerBlockEntity scte)
-			return new SpeedControllerPeripheral(scte, scte.targetSpeed);
-		if (te instanceof DisplayLinkBlockEntity dlte)
-			return new DisplayLinkPeripheral(dlte);
-		if (te instanceof SequencedGearshiftBlockEntity sgte)
-			return new SequencedGearshiftPeripheral(sgte);
-		if (te instanceof SpeedGaugeBlockEntity sgte)
-			return new SpeedGaugePeripheral(sgte);
-		if (te instanceof StressGaugeBlockEntity sgte)
-			return new StressGaugePeripheral(sgte);
-		if (te instanceof StationBlockEntity ste)
-			return new StationPeripheral(ste);
+		if (te instanceof SpeedControllerBlockEntity scbe)
+			return new SpeedControllerPeripheral(scbe, scbe.targetSpeed);
+		if (te instanceof DisplayLinkBlockEntity dlbe)
+			return new DisplayLinkPeripheral(dlbe);
+		if (te instanceof SequencedGearshiftBlockEntity sgbe)
+			return new SequencedGearshiftPeripheral(sgbe);
+		if (te instanceof SpeedGaugeBlockEntity sgbe)
+			return new SpeedGaugePeripheral(sgbe);
+		if (te instanceof StressGaugeBlockEntity sgbe)
+			return new StressGaugePeripheral(sgbe);
+		if (te instanceof StationBlockEntity sbe)
+			return new StationPeripheral(sbe);
 
-		throw new IllegalArgumentException("No peripheral available for " + Registry.BLOCK_ENTITY_TYPE.getKey(te.getType()));
+		throw new IllegalArgumentException(
+			"No peripheral available for " + Registry.BLOCK_ENTITY_TYPE.getKey(te.getType()));
+	}
+
+	@Override
+	public <T> boolean isPeripheralCap(Capability<T> cap) {
+		return cap == PERIPHERAL_CAPABILITY;
 	}
 
 	@Override

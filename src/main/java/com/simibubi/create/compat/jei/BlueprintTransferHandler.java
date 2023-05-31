@@ -37,7 +37,7 @@ public class BlueprintTransferHandler implements IRecipeTransferHandler<Blueprin
 	}
 
 	@Override
-	public Optional<MenuType<BlueprintContainer>> getMenuType() {
+	public Optional<MenuType<BlueprintMenu>> getMenuType() {
 		return Optional.empty();
 	}
 

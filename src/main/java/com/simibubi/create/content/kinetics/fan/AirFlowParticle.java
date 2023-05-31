@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.fan;
 
 import javax.annotation.Nonnull;
 
-import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
