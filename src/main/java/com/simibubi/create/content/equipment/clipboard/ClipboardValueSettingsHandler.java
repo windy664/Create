@@ -83,13 +83,14 @@ public class ClipboardValueSettingsHandler {
 		Minecraft mc = Minecraft.getInstance();
 		if (!(mc.hitResult instanceof BlockHitResult target))
 			return;
-		if (!AllBlocks.CLIPBOARD.isIn(mc.player.getMainHandItem()))
+		Player player = mc.player; // fabric: keep LocalPlayer out of lambdas
+		if (!AllBlocks.CLIPBOARD.isIn(player.getMainHandItem()))
 			return;
 		BlockPos pos = target.getBlockPos();
 		if (!(mc.level.getBlockEntity(pos) instanceof SmartBlockEntity smartBE))
 			return;
 
-		CompoundTag tagElement = mc.player.getMainHandItem()
+		CompoundTag tagElement = player.getMainHandItem()
 			.getTagElement("CopiedValues");
 
 		boolean canCopy = smartBE.getAllBehaviours()
@@ -102,9 +103,9 @@ public class ClipboardValueSettingsHandler {
 		boolean canPaste = tagElement != null && (smartBE.getAllBehaviours()
 			.stream()
 			.anyMatch(b -> b instanceof ClipboardCloneable cc && cc.readFromClipboard(
-				tagElement.getCompound(cc.getClipboardKey()), mc.player, target.getDirection(), true))
+				tagElement.getCompound(cc.getClipboardKey()), player, target.getDirection(), true))
 			|| smartBE instanceof ClipboardCloneable ccbe && ccbe.readFromClipboard(
-				tagElement.getCompound(ccbe.getClipboardKey()), mc.player, target.getDirection(), true));
+				tagElement.getCompound(ccbe.getClipboardKey()), player, target.getDirection(), true));
 
 		if (!canCopy && !canPaste)
 			return;
