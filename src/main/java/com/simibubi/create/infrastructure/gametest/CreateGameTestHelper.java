@@ -23,6 +23,7 @@ import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelp
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongMap.Entry;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -326,21 +327,20 @@ public class CreateGameTestHelper extends GameTestHelper {
 	 */
 	public void assertContentPresent(Object2LongMap<Item> content, BlockPos pos) {
 		Storage<ItemVariant> storage = itemStorageAt(pos);
-		Object2LongMap<Item> map = new Object2LongArrayMap<>(content);
+		Object2LongMap<Item> missing = new Object2LongArrayMap<>();
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (Item item : map.keySet()) {
-				long amount = map.getLong(item);
+			for (Entry<Item> entry : content.object2LongEntrySet()) {
+				Item item = entry.getKey();
+				long amount = entry.getLongValue();
 				long extracted = storage.extract(ItemVariant.of(item), amount, t);
 				long remaining = amount - extracted;
-				if (remaining <= 0) {
-					map.removeLong(item);
-				} else {
-					map.put(item, remaining);
+				if (remaining > 0) {
+					missing.put(item, remaining);
 				}
 			}
 		}
-		if (!map.isEmpty())
-			fail("Storage missing content: " + map);
+		if (!missing.isEmpty())
+			fail("Storage missing content: " + missing + ", expected: " + content);
 	}
 
 	/**

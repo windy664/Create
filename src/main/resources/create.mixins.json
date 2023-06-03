@@ -23,7 +23,8 @@
     "fabric.AbstractMinecartMixin",
     "fabric.EntityMixin",
     "fabric.ServerGamePacketListenerImplAccessor",
-    "fabric.SortedArraySetAccessor"
+    "fabric.SortedArraySetAccessor",
+    "fabric.StructureUtilsMixin"
   ],
   "client": [
     "accessor.AgeableListModelAccessor",
