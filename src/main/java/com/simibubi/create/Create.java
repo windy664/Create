@@ -50,6 +50,7 @@ import com.simibubi.create.infrastructure.worldgen.BuiltinRegistration;
 import io.github.tropheusj.milk.Milk;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -148,11 +149,13 @@ public class Create implements ModInitializer {
 		BuiltinPotatoProjectileTypes.register();
 
 //		event.enqueueWork(() -> {
-			AttachedRegistry.unwrapAll();
 			AllAdvancements.register();
 			AllTriggers.register();
 			BoilerHeaters.registerDefaults();
 //		});
+
+		// fabric: registration not done yet, do it later
+		ServerLifecycleEvents.SERVER_STARTING.register(server -> AttachedRegistry.unwrapAll());
 	}
 
 	public static void gatherData(FabricDataGenerator gen, ExistingFileHelper helper) {
