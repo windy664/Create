@@ -30,6 +30,7 @@ import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.TagGen;
+import com.simibubi.create.foundation.data.TagLangGen;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
@@ -160,6 +161,7 @@ public class Create implements ModInitializer {
 
 	public static void gatherData(FabricDataGenerator gen, ExistingFileHelper helper) {
 		TagGen.datagen();
+		TagLangGen.datagen();
 		gen.addProvider(new LangMerger(gen, ID, NAME, AllLangPartials.values()));
 		gen.addProvider(AllSoundEvents.provider(gen));
 		gen.addProvider(new AllAdvancements(gen));
