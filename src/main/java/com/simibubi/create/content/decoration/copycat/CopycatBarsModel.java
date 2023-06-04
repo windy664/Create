@@ -48,7 +48,7 @@ public class CopycatBarsModel extends CopycatModel {
 			}
 			return false;
 		});
-		((FabricBakedModel) model).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		((FabricBakedModel) model).emitBlockQuads(blockView, material, pos, randomSupplier, context);
 		context.popTransform();
 		TextureAtlasSprite altTargetSprite = altTargetSpriteHolder.sprite;
 
