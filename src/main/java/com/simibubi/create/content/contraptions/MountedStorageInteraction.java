@@ -152,7 +152,7 @@ public class MountedStorageInteraction {
 		public boolean canPlaceItem(int slot, ItemStack stack) {
 			ItemStackHandler handler = handlerForSlot(slot);
 			slot = actualSlot(slot);
-			return handler.isItemValid(slot, ItemVariant.of(stack));
+			return handler.isItemValid(slot, ItemVariant.of(stack), stack.getCount());
 		}
 
 		@Override

@@ -8,9 +8,10 @@ import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import io.github.fabricators_of_create.porting_lib.enchant.CustomEnchantingBehaviorItem;
+import io.github.fabricators_of_create.porting_lib.item.CustomEnchantmentLevelItem;
+import io.github.fabricators_of_create.porting_lib.item.CustomEnchantmentsItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -23,9 +24,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
-import org.jetbrains.annotations.Nullable;
-
-public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingBehaviorItem {
+public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingBehaviorItem, CustomEnchantmentLevelItem, CustomEnchantmentsItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.HEAD;
 
 	public DivingHelmetItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
@@ -41,18 +40,16 @@ public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingB
 	}
 
 	@Override
-	public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
+	public int modifyEnchantmentLevel(ItemStack stack, Enchantment enchantment, int level) {
 		if (enchantment == Enchantments.AQUA_AFFINITY) {
 			return 1;
 		}
-		return super.getEnchantmentLevel(stack, enchantment);
+		return level;
 	}
 
 	@Override
-	public Map<Enchantment, Integer> getAllEnchantments(ItemStack stack) {
-		Map<Enchantment, Integer> map = super.getAllEnchantments(stack);
-		map.put(Enchantments.AQUA_AFFINITY, 1);
-		return map;
+	public void modifyEnchantments(Map<Enchantment, Integer> enchantments, ItemStack stack) {
+		enchantments.put(Enchantments.AQUA_AFFINITY, 1);
 	}
 
 	public static boolean isWornBy(Entity entity, boolean fireproof) {

@@ -22,7 +22,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 
 public class BlockTagIngredient extends AbstractIngredient {
@@ -82,8 +81,7 @@ public class BlockTagIngredient extends AbstractIngredient {
 
 	@Override
 	public IntList getStackingIds() {
-		if (stackingIds == null || checkInvalidation()) {
-			markValid();
+		if (stackingIds == null) {
 			dissolve();
 			stackingIds = new IntArrayList(itemStacks.length);
 
