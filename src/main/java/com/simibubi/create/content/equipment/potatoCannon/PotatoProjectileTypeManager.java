@@ -154,8 +154,13 @@ public class PotatoProjectileTypeManager {
 
 		@Override
 		public boolean handle(Context context) {
+			buffer.retain();
 			context.enqueueWork(() -> {
-				fromBuffer(buffer);
+				try {
+					fromBuffer(buffer);
+				} finally {
+					buffer.release();
+				}
 			});
 			return true;
 		}

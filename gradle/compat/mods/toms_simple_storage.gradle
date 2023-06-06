@@ -4,10 +4,7 @@ repositories {
 
 // https://modrinth.com/mod/toms-storage/versions
 String tomsStorageVersion = "1.19-1.5.6-fabric"
-// https://modrinth.com/mod/cloth-config/versions
-String clothConfigVersion = "8.2.88+fabric"
 
 dependencies {
     modLocalRuntime("maven.modrinth:toms-storage:$tomsStorageVersion")
-    modLocalRuntime("maven.modrinth:cloth-config:$clothConfigVersion")
 }

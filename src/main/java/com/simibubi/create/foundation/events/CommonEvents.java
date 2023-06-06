@@ -2,11 +2,6 @@ package com.simibubi.create.foundation.events;
 
 import java.util.concurrent.Executor;
 
-import com.simibubi.create.content.equipment.armor.NetheriteDivingHandler;
-
-import com.simibubi.create.content.equipment.clipboard.ClipboardValueSettingsHandler;
-import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsInputHandler;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -22,7 +17,9 @@ import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMi
 import com.simibubi.create.content.contraptions.mounted.MinecartContraptionItem;
 import com.simibubi.create.content.equipment.armor.DivingBootsItem;
 import com.simibubi.create.content.equipment.armor.DivingHelmetItem;
+import com.simibubi.create.content.equipment.armor.NetheriteDivingHandler;
 import com.simibubi.create.content.equipment.bell.HauntedBellPulser;
+import com.simibubi.create.content.equipment.clipboard.ClipboardValueSettingsHandler;
 import com.simibubi.create.content.equipment.extendoGrip.ExtendoGripItem;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileTypeManager;
 import com.simibubi.create.content.equipment.symmetryWand.SymmetryHandler;
@@ -42,6 +39,7 @@ import com.simibubi.create.content.redstone.link.controller.LinkedControllerServ
 import com.simibubi.create.content.trains.entity.CarriageEntityHandler;
 import com.simibubi.create.content.trains.schedule.ScheduleItemEntityInteraction;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsInputHandler;
 import com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
@@ -243,7 +241,6 @@ public class CommonEvents {
 
 		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
 		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
-		UseBlockCallback.EVENT.register(ValveHandleBlock::onBlockActivated);
 		UseBlockCallback.EVENT.register(WrenchEventHandler::useOwnWrenchLogicForCreateBlocks);
 		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
@@ -253,6 +250,7 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
 		UseBlockCallback.EVENT.register(ValueSettingsInputHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(ClipboardValueSettingsHandler::leftClickToPaste);
+		UseBlockCallback.EVENT.register(ValveHandleBlock::onBlockActivated);
 		AttackBlockCallback.EVENT.register(ClipboardValueSettingsHandler::rightClickToCopy);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		UseEntityCallback.EVENT.register(ScheduleItemEntityInteraction::interactWithConductor);

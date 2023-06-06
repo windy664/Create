@@ -16,41 +16,28 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RedStoneWireBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.RedstoneSide;
 import net.minecraft.world.level.material.Fluids;
 
 @GameTestGroup(path = "fluids")
 public class TestFluids {
 	@GameTest(template = "hose_pulley_transfer", timeoutTicks = CreateGameTestHelper.TWENTY_SECONDS)
 	public static void hosePulleyTransfer(CreateGameTestHelper helper) {
-		// there was supposed to be redstone here built in, but it kept popping off, so put it there manually
-		BlockPos brokenRedstone = new BlockPos(4, 8, 3);
-		BlockState redstone = Blocks.REDSTONE_WIRE.defaultBlockState()
-				.setValue(RedStoneWireBlock.NORTH, RedstoneSide.NONE)
-				.setValue(RedStoneWireBlock.SOUTH, RedstoneSide.NONE)
-				.setValue(RedStoneWireBlock.EAST, RedstoneSide.UP)
-				.setValue(RedStoneWireBlock.WEST, RedstoneSide.SIDE)
-				.setValue(RedStoneWireBlock.POWER, 14);
-		helper.setBlock(brokenRedstone, redstone);
-		// pump
-		BlockPos lever = new BlockPos(6, 9, 3);
+		BlockPos lever = new BlockPos(7, 7, 5);
 		helper.pullLever(lever);
 		helper.succeedWhen(() -> {
 			helper.assertSecondsPassed(15);
 			// check filled
-			BlockPos filledLowerCorner = new BlockPos(8, 3, 2);
-			BlockPos filledUpperCorner = new BlockPos(10, 5, 4);
+			BlockPos filledLowerCorner = new BlockPos(2, 3, 2);
+			BlockPos filledUpperCorner = new BlockPos(4, 5, 4);
 			BlockPos.betweenClosed(filledLowerCorner, filledUpperCorner)
 					.forEach(pos -> helper.assertBlockPresent(Blocks.WATER, pos));
 			// check emptied
-			BlockPos emptiedLowerCorner = new BlockPos(2, 3, 2);
-			BlockPos emptiedUpperCorner = new BlockPos(4, 5, 4);
+			BlockPos emptiedLowerCorner = new BlockPos(8, 3, 2);
+			BlockPos emptiedUpperCorner = new BlockPos(10, 5, 4);
 			BlockPos.betweenClosed(emptiedLowerCorner, emptiedUpperCorner)
 					.forEach(pos -> helper.assertBlockPresent(Blocks.AIR, pos));
 			// check nothing left in pulley
-			BlockPos pulleyPos = new BlockPos(8, 7, 4);
+			BlockPos pulleyPos = new BlockPos(4, 7, 3);
 			Storage<FluidVariant> storage = helper.fluidStorageAt(pulleyPos);
 			if (storage instanceof HosePulleyFluidHandler hose) {
 				SmartFluidTank internalTank = hose.getInternalTank();
@@ -63,27 +50,27 @@ public class TestFluids {
 	}
 
 	@GameTest(template = "in_world_pumping_out")
-	public static void inWorldPumpingOutput(CreateGameTestHelper helper) {
-		BlockPos pumpPos = new BlockPos(3, 2, 2);
-		BlockPos waterPos = pumpPos.west();
-		BlockPos basinPos = pumpPos.east();
-		helper.flipBlock(pumpPos);
+	public static void inWorldPumpingOut(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(4, 3, 3);
+		BlockPos basin = new BlockPos(5, 2, 2);
+		BlockPos output = new BlockPos(2, 2, 2);
+		helper.pullLever(lever);
 		helper.succeedWhen(() -> {
-			helper.assertBlockPresent(Blocks.WATER, waterPos);
-			helper.assertTankEmpty(basinPos);
+			helper.assertBlockPresent(Blocks.WATER, output);
+			helper.assertTankEmpty(basin);
 		});
 	}
 
 	@GameTest(template = "in_world_pumping_in")
-	public static void inWorldPumpingPickup(CreateGameTestHelper helper) {
-		BlockPos pumpPos = new BlockPos(3, 2, 2);
-		BlockPos basinPos = pumpPos.east();
-		BlockPos waterPos = pumpPos.west();
+	public static void inWorldPumpingIn(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(4, 3, 3);
+		BlockPos basin = new BlockPos(5, 2, 2);
+		BlockPos water = new BlockPos(2, 2, 2);
 		FluidStack expectedResult = new FluidStack(Fluids.WATER, FluidConstants.BUCKET);
-		helper.flipBlock(pumpPos);
+		helper.pullLever(lever);
 		helper.succeedWhen(() -> {
-			helper.assertBlockPresent(Blocks.AIR, waterPos);
-			helper.assertFluidPresent(expectedResult, basinPos);
+			helper.assertBlockPresent(Blocks.AIR, water);
+			helper.assertFluidPresent(expectedResult, basin);
 		});
 	}
 
