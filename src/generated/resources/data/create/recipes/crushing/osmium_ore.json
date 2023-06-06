@@ -1,17 +1,16 @@
 {
   "type": "create:crushing",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:tag_empty",
-        "tag": "forge:ores/osmium"
-      }
+      "condition": "fabric:tags_populated",
+      "values": [
+        "c:osmium_ores"
+      ]
     }
   ],
   "ingredients": [
     {
-      "tag": "forge:ores/osmium"
+      "tag": "c:osmium_ores"
     }
   ],
   "processingTime": 400,

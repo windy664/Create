@@ -2014,21 +2014,21 @@ public class AllBlocks {
 	public static final BlockEntry<MetalLadderBlock> BRASS_LADDER =
 		REGISTRATE.block("brass_ladder", MetalLadderBlock::new)
 			.transform(BuilderTransformers.ladder("brass",
-				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")), MaterialColor.TERRACOTTA_YELLOW))
+				() -> DataIngredient.tag(AllTags.forgeItemTag("brass_ingots")), MaterialColor.TERRACOTTA_YELLOW))
 			.register();
 
 	public static final BlockEntry<MetalLadderBlock> COPPER_LADDER =
 		REGISTRATE.block("copper_ladder", MetalLadderBlock::new)
 			.transform(BuilderTransformers.ladder("copper",
-				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), MaterialColor.COLOR_ORANGE))
+				() -> DataIngredient.tag(AllTags.forgeItemTag("copper_ingots")), MaterialColor.COLOR_ORANGE))
 			.register();
 
 	public static final BlockEntry<IronBarsBlock> ANDESITE_BARS = MetalBarsGen.createBars("andesite", true,
 		() -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()), MaterialColor.STONE);
 	public static final BlockEntry<IronBarsBlock> BRASS_BARS = MetalBarsGen.createBars("brass", true,
-		() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")), MaterialColor.TERRACOTTA_YELLOW);
+		() -> DataIngredient.tag(AllTags.forgeItemTag("brass_ingots")), MaterialColor.TERRACOTTA_YELLOW);
 	public static final BlockEntry<IronBarsBlock> COPPER_BARS = MetalBarsGen.createBars("copper", true,
-		() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), MaterialColor.COLOR_ORANGE);
+		() -> DataIngredient.tag(AllTags.forgeItemTag("copper_ingots")), MaterialColor.COLOR_ORANGE);
 
 	public static final BlockEntry<MetalScaffoldingBlock> ANDESITE_SCAFFOLD = REGISTRATE
 		.block("andesite_scaffolding", MetalScaffoldingBlock::new)
@@ -2040,14 +2040,14 @@ public class AllBlocks {
 	public static final BlockEntry<MetalScaffoldingBlock> BRASS_SCAFFOLD =
 		REGISTRATE.block("brass_scaffolding", MetalScaffoldingBlock::new)
 			.transform(BuilderTransformers.scaffold("brass",
-				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")), MaterialColor.TERRACOTTA_YELLOW,
+				() -> DataIngredient.tag(AllTags.forgeItemTag("brass_ingots")), MaterialColor.TERRACOTTA_YELLOW,
 				AllSpriteShifts.BRASS_SCAFFOLD, AllSpriteShifts.BRASS_SCAFFOLD_INSIDE, AllSpriteShifts.BRASS_CASING))
 			.register();
 
 	public static final BlockEntry<MetalScaffoldingBlock> COPPER_SCAFFOLD =
 		REGISTRATE.block("copper_scaffolding", MetalScaffoldingBlock::new)
 			.transform(BuilderTransformers.scaffold("copper",
-				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), MaterialColor.COLOR_ORANGE,
+				() -> DataIngredient.tag(AllTags.forgeItemTag("copper_ingots")), MaterialColor.COLOR_ORANGE,
 				AllSpriteShifts.COPPER_SCAFFOLD, AllSpriteShifts.COPPER_SCAFFOLD_INSIDE, AllSpriteShifts.COPPER_CASING))
 			.register();
 
@@ -2090,7 +2090,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.copycat())
 			.onRegister(CreateRegistrate.blockModel(() -> CopycatStepModel::new))
 			.item()
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/zinc")), c::get, 4))
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("zinc_ingots")), c::get, 4))
 			.transform(customItemModel("copycat_base", "step"))
 			.register();
 
@@ -2099,7 +2099,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.copycat())
 			.onRegister(CreateRegistrate.blockModel(() -> CopycatPanelModel::new))
 			.item()
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/zinc")), c::get, 4))
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("zinc_ingots")), c::get, 4))
 			.transform(customItemModel("copycat_base", "panel"))
 			.register();
 
@@ -2273,7 +2273,7 @@ public class AllBlocks {
 		.transform(pickaxeOnly())
 		.blockstate(simpleCubeAll("andesite_block"))
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
-		.transform(tagBlockAndItem("storage_blocks/andesite_alloy"))
+		.transform(tagBlockAndItem("andesite_alloy_blocks"))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.lang("Block of Andesite Alloy")

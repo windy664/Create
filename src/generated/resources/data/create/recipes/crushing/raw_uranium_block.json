@@ -1,17 +1,16 @@
 {
   "type": "create:crushing",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:tag_empty",
-        "tag": "forge:storage_blocks/raw_uranium"
-      }
+      "condition": "fabric:tags_populated",
+      "values": [
+        "c:raw_uranium_blocks"
+      ]
     }
   ],
   "ingredients": [
     {
-      "tag": "forge:storage_blocks/raw_uranium"
+      "tag": "c:raw_uranium_blocks"
     }
   ],
   "processingTime": 400,

@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.data;
 import org.apache.commons.lang3.StringUtils;
 
 import com.simibubi.create.Create;
-import com.tterrag.registrate.fabric.LanguageProvider;
+import com.tterrag.registrate.fabric.BaseLangProvider;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 
@@ -86,7 +86,7 @@ public class TagLangGen {
 		create.auto("vanilla_stripped_wood");
 	}
 
-	public record TagLangHelper(String namespace, LanguageProvider prov) {
+	public record TagLangHelper(String namespace, BaseLangProvider prov) {
 		public TagLangHelper auto(String path) {
 			ResourceLocation id = new ResourceLocation(namespace, path);
 			String key = key(id);

@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "create:crushed_raw_iron",
     "create:crushed_raw_gold",

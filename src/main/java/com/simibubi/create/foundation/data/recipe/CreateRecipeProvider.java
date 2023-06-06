@@ -150,7 +150,7 @@ public abstract class CreateRecipeProvider extends FabricRecipeProvider {
 		}
 
 		static TagKey<Item> wheatFlour() {
-			return AllTags.forgeItemTag("flour/wheat");
+			return AllTags.forgeItemTag("wheat_flour");
 		}
 
 		static ItemLike copper() {
@@ -186,7 +186,7 @@ public abstract class CreateRecipeProvider extends FabricRecipeProvider {
 		}
 
 		static Ingredient netherite() {
-			return Ingredient.of(AllTags.forgeItemTag("ingots/netherite"));
+			return Ingredient.of(AllTags.forgeItemTag("netherite_ingots"));
 		}
 
 	}

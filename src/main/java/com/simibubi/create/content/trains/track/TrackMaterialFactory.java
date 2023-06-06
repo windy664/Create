@@ -23,8 +23,8 @@ public class TrackMaterialFactory {
 	private NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock;
 	private Ingredient sleeperIngredient = Ingredient.EMPTY;
 	private Ingredient railsIngredient = Ingredient.fromValues(Stream.of(
-			TagValueAccessor.createTagValue(AllTags.forgeItemTag("nuggets/iron")),
-			TagValueAccessor.createTagValue(AllTags.forgeItemTag("nuggets/zinc"))
+			TagValueAccessor.createTagValue(AllTags.forgeItemTag("iron_nuggets")),
+			TagValueAccessor.createTagValue(AllTags.forgeItemTag("zinc_nuggets"))
 	));
 	private ResourceLocation particle;
 	private TrackMaterial.TrackType trackType = TrackMaterial.TrackType.STANDARD;

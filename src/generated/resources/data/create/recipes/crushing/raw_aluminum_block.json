@@ -1,17 +1,16 @@
 {
   "type": "create:crushing",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:tag_empty",
-        "tag": "forge:storage_blocks/raw_aluminum"
-      }
+      "condition": "fabric:tags_populated",
+      "values": [
+        "c:raw_aluminum_blocks"
+      ]
     }
   ],
   "ingredients": [
     {
-      "tag": "forge:storage_blocks/raw_aluminum"
+      "tag": "c:raw_aluminum_blocks"
     }
   ],
   "processingTime": 400,

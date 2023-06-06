@@ -1,17 +1,16 @@
 {
   "type": "create:crushing",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:tag_empty",
-        "tag": "forge:ores/platinum"
-      }
+      "condition": "fabric:tags_populated",
+      "values": [
+        "c:platinum_ores"
+      ]
     }
   ],
   "ingredients": [
     {
-      "tag": "forge:ores/platinum"
+      "tag": "c:platinum_ores"
     }
   ],
   "processingTime": 400,

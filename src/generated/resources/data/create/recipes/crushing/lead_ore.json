@@ -1,17 +1,16 @@
 {
   "type": "create:crushing",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:tag_empty",
-        "tag": "forge:ores/lead"
-      }
+      "condition": "fabric:tags_populated",
+      "values": [
+        "c:lead_ores"
+      ]
     }
   ],
   "ingredients": [
     {
-      "tag": "forge:ores/lead"
+      "tag": "c:lead_ores"
     }
   ],
   "processingTime": 400,
