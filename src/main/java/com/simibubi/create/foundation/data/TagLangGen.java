@@ -19,36 +19,47 @@ public class TagLangGen {
 
 	private static void genItemTagLang(RegistrateLangProvider prov) {
 		TagLangHelper common = new TagLangHelper("c", prov);
-		common.subDir("armors")
-				.put("boots", "Boots")
-				.put("chestplates", "Chestplates")
-				.put("helmets", "Helmets");
-		common.subDir("dough")
-				.autoRoot()
-				.auto("wheat");
-		common.subDir("flour")
-				.autoRoot()
-				.auto("wheat");
-		common.subDir("ingots")
-				.auto("brass")
-				.auto("zinc");
-		common.subDir("nuggets")
-				.auto("brass")
-				.auto("zinc");
-		common.subDir("ores")
-				.auto("zinc");
-		common.subDir("plates")
-				.auto("brass")
-				.auto("obsidian");
-		common.subDir("raw_materials")
-				.auto("zinc");
-		common.subDir("storage_blocks")
+		common.suffixedCategory("blocks")
 				.auto("andesite_alloy")
 				.auto("brass")
 				.auto("raw_zinc")
 				.auto("zinc");
-		common.auto("stripped_logs");
-		common.auto("stripped_wood");
+		common.suffixedCategory("ingots")
+				.auto("brass")
+				.auto("zinc");
+		common.suffixedCategory("nuggets")
+				.auto("brass")
+				.auto("zinc");
+		common.suffixedCategory("plates")
+				.auto("copper")
+				.auto("gold")
+				.auto("iron")
+				.auto("brass")
+				.auto("obsidian");
+		common.suffixedCategory("ores")
+				.auto("zinc");
+
+		common.prefixedCategory("raw")
+				.auto("zinc")
+				.auto("ores")
+				.auto("zinc_ores");
+
+		common.suffixedCategory("dough")
+				.autoRoot()
+				.auto("wheat");
+		common.suffixedCategory("flour")
+				.autoRoot()
+				.auto("wheat");
+
+		common.prefixedCategory("stripped")
+				.auto("logs")
+				.auto("wood");
+
+		common.auto("boots");
+		common.auto("chestplates");
+		common.auto("helmets");
+
+		common.auto("honey_buckets");
 
 		TagLangHelper create = new TagLangHelper(Create.ID, prov);
 		create.subDir("blaze_burner_fuel")
@@ -113,8 +124,17 @@ public class TagLangGen {
 		public SubDirHelper subDir(String dir) {
 			return new SubDirHelper(this, dir);
 		}
+
+		public CategoryHelper suffixedCategory(String suffix) {
+			return new CategoryHelper(this, suffix, true);
+		}
+
+		public CategoryHelper prefixedCategory(String prefix) {
+			return new CategoryHelper(this, prefix, false);
+		}
 	}
 
+	// prefix
 	public record SubDirHelper(TagLangHelper parent, String dir) {
 		public SubDirHelper put(String path, String translated) {
 			ResourceLocation id = tagId(path);
@@ -143,6 +163,34 @@ public class TagLangGen {
 
 		public ResourceLocation tagId(String path) {
 			return new ResourceLocation(parent.namespace, dir + '/' + path);
+		}
+	}
+
+	// suffix
+	public record CategoryHelper(TagLangHelper parent, String category, boolean suffix) {
+		public CategoryHelper put(String path, String translated) {
+			ResourceLocation id = tagId(path);
+			parent.prov.add(key(id), translated);
+			return this;
+		}
+
+		public CategoryHelper auto(String path) {
+			return put(path, translate(tagId(path)));
+		}
+
+		public CategoryHelper plural(String path) {
+			return put(path, translate(tagId(path)) + 's');
+		}
+
+		public CategoryHelper autoRoot() {
+			ResourceLocation id = new ResourceLocation(parent.namespace, category);
+			parent.prov.add(key(id), translate(id));
+			return this;
+		}
+
+		public ResourceLocation tagId(String name) {
+			String path = suffix ? name + '_' + category : category + '_' + name;
+			return new ResourceLocation(parent.namespace, path);
 		}
 	}
 
