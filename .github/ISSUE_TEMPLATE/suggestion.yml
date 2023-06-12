@@ -1,6 +1,6 @@
 name: Suggestion
 description: Suggest something that would improve Create
-labels: [ "type: suggestion" ]
+labels: [ "suggestion" ]
 body:
     -   type: textarea
         attributes:
