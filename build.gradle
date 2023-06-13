@@ -14,8 +14,8 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 String runNumber = System.getenv("GITHUB_RUN_NUMBER")
-String build = runNumber != null ? runNumber : "local"
-version = "$mod_version-$build+$minecraft_version"
+String build = runNumber != null ? "build.$runNumber" : "local"
+version = "$mod_version-$build+mc$minecraft_version"
 
 group = project.maven_group
 archivesBaseName = "create-fabric"
