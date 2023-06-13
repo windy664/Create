@@ -250,7 +250,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	}
 
 	public static int getLight(BlockState state) {
-		return state.getValue(POWERING) ? 10 : state.getValue(CALLING) ? 5 : 0;
+		return state.getValue(POWERING) ? 10 : 0;
 	}
 
 }

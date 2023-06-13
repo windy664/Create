@@ -73,6 +73,8 @@ public class MountedStorage {
 		String blockId = blockState.getBlock()
 			.getRegistryName()
 			.getPath();
+		if (blockId.contains("ender"))
+			return false;
 		return blockId.endsWith("_chest") || blockId.endsWith("_barrel");
 	}
 

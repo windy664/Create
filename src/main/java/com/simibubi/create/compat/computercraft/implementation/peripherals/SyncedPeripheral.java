@@ -15,30 +15,30 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 
 public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IPeripheral {
 
-	protected final T tile;
+	protected final T blockEntity;
 	private final AtomicInteger computers = new AtomicInteger();
 
-	public SyncedPeripheral(T tile) {
-		this.tile = tile;
+	public SyncedPeripheral(T blockEntity) {
+		this.blockEntity = blockEntity;
 	}
 
 	@Override
 	public void attach(@NotNull IComputerAccess computer) {
 		computers.incrementAndGet();
-		updateTile();
+		updateBlockEntity();
 	}
 
 	@Override
 	public void detach(@NotNull IComputerAccess computer) {
 		computers.decrementAndGet();
-		updateTile();
+		updateBlockEntity();
 	}
 
-	private void updateTile() {
+	private void updateBlockEntity() {
 		boolean hasAttachedComputer = computers.get() > 0;
 
-		tile.getBehaviour(ComputerBehaviour.TYPE).setHasAttachedComputer(hasAttachedComputer);
-		AllPackets.getChannel().sendToClientsInCurrentServer(new AttachedComputerPacket(tile.getBlockPos(), hasAttachedComputer));
+		blockEntity.getBehaviour(ComputerBehaviour.TYPE).setHasAttachedComputer(hasAttachedComputer);
+		AllPackets.getChannel().sendToClientsInCurrentServer(new AttachedComputerPacket(blockEntity.getBlockPos(), hasAttachedComputer));
 	}
 
 	@Override

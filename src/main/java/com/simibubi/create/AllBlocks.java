@@ -786,6 +786,7 @@ public class AllBlocks {
 		.properties(p -> p.color(MaterialColor.COLOR_GRAY))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.properties(p -> p.noOcclusion())
+		.properties(p -> p.isRedstoneConductor((level, pos, state) -> false))
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> BlockStateGen.simpleBlock(c, p, AssetLookup.forPowered(c, p)))
 		.item()

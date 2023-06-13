@@ -12,7 +12,6 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity.CasingType;
@@ -24,10 +23,9 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.utility.IPartialSafeNBT;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CSchematics;
 
@@ -775,18 +773,7 @@ if (printer.isErrored())
 			return;
 		}
 
-		CompoundTag data = null;
-		if (blockEntity != null) {
-			if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-				data = blockEntity.saveWithFullMetadata();
-				data = NBTProcessors.process(blockEntity, data, true);
-			} else if (blockEntity instanceof IPartialSafeNBT) {
-				data = new CompoundTag();
-				((IPartialSafeNBT) blockEntity).writeSafe(data);
-				data = NBTProcessors.process(blockEntity, data, true);
-			}
-		}
-
+		CompoundTag data = BlockHelper.prepareBlockEntityData(blockState, blockEntity);
 		launchBlock(target, icon, blockState, data);
 	}
 

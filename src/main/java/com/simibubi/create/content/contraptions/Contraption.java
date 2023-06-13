@@ -324,8 +324,8 @@ public abstract class Contraption {
 		if (AllBlocks.BELT.has(state))
 			moveBelt(pos, frontier, visited, state);
 
-		if (AllBlocks.WINDMILL_BEARING.has(state) && world.getBlockEntity(pos)instanceof WindmillBearingBlockEntity wbte)
-			wbte.disassembleForMovement();
+		if (AllBlocks.WINDMILL_BEARING.has(state) && world.getBlockEntity(pos)instanceof WindmillBearingBlockEntity wbbe)
+			wbbe.disassembleForMovement();
 
 		if (AllBlocks.GANTRY_CARRIAGE.has(state))
 			moveGantryPinion(world, pos, frontier, visited, state);
@@ -893,8 +893,8 @@ public abstract class Contraption {
 			if (be == null)
 				return;
 			be.setLevel(world);
-			if (be instanceof KineticBlockEntity kte)
-				kte.setSpeed(0);
+			if (be instanceof KineticBlockEntity kbe)
+				kbe.setSpeed(0);
 			be.getBlockState();
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(info.state);

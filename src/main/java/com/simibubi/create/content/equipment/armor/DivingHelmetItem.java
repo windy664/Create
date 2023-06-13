@@ -66,7 +66,7 @@ public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingB
 			entity.getExtraCustomData()
 				.remove("VisualBacktankAir");
 
-		boolean lavaDiving = entity.isEyeInFluid(FluidTags.LAVA);
+		boolean lavaDiving = entity.isInLava();
 		if (!isWornBy(entity, lavaDiving))
 			return;
 		if (!entity.isEyeInFluid(AllFluidTags.DIVING_FLUIDS.tag) && !lavaDiving)

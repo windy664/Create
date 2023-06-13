@@ -39,15 +39,20 @@ public class BogeyStyle {
 	public final CompoundTag defaultData;
 
 	private Optional<Supplier<? extends CommonRenderer>> commonRendererFactory;
+private Map<BogeySizes.BogeySize, ResourceLocation> sizes;
 
 	@Environment(EnvType.CLIENT)
-	private Map<BogeySizes.BogeySize, SizeData> sizes;
+	private Map<BogeySizes.BogeySize, SizeRenderData> sizeRenderers;
 
 	@Environment(EnvType.CLIENT)
 	private Optional<CommonRenderer> commonRenderer;
 
-	public BogeyStyle(ResourceLocation name, ResourceLocation cycleGroup, Component displayName, ResourceLocation soundType, ParticleOptions contactParticle, ParticleOptions smokeParticle,
-					  CompoundTag defaultData, Map<BogeySizes.BogeySize, Supplier<SizeData>> sizes, Optional<Supplier<? extends CommonRenderer>> commonRenderer) {
+	public BogeyStyle(ResourceLocation name, ResourceLocation cycleGroup, Component displayName,
+		ResourceLocation soundType, ParticleOptions contactParticle, ParticleOptions smokeParticle,
+		CompoundTag defaultData, Map<BogeySizes.BogeySize, ResourceLocation> sizes,
+		Map<BogeySizes.BogeySize, Supplier<SizeRenderData>> sizeRenderers,
+		Optional<Supplier<? extends CommonRenderer>> commonRenderer) {
+
 		this.name = name;
 		this.cycleGroup = cycleGroup;
 		this.displayName = displayName;
@@ -55,11 +60,11 @@ public class BogeyStyle {
 		this.contactParticle = contactParticle;
 		this.smokeParticle = smokeParticle;
 		this.defaultData = defaultData;
+		this.sizes = sizes;
 
 		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
-			this.sizes = new HashMap<>();
-			sizes.forEach((k, v) -> this.sizes.put(k, v.get()));
-
+			this.sizeRenderers = new HashMap<>();
+			sizeRenderers.forEach((k, v) -> this.sizeRenderers.put(k, v.get()));
 			this.commonRendererFactory = commonRenderer;
 			this.commonRenderer = commonRenderer.map(Supplier::get);
 		});
@@ -73,12 +78,12 @@ public class BogeyStyle {
 		return Stream.iterate(currentSize.increment(), BogeySizes.BogeySize::increment)
 				.filter(sizes::containsKey)
 				.findFirst()
-				.map(size -> Registry.BLOCK.get(sizes.get(size).block()))
-				.orElse(Registry.BLOCK.get(sizes.get(currentSize).block()));
+				.map(this::getBlockOfSize)
+				.orElse(getBlockOfSize(currentSize));
 	}
 
 	public Block getBlockOfSize(BogeySizes.BogeySize size) {
-		return Registry.BLOCK.get(sizes.get(size).block());
+		return Registry.BLOCK.get(sizes.get(size));
 	}
 
 	public Set<BogeySizes.BogeySize> validSizes() {
@@ -94,12 +99,12 @@ public class BogeyStyle {
 
 	@Environment(EnvType.CLIENT)
 	public BogeyRenderer createRendererInstance(BogeySizes.BogeySize size) {
-		return this.sizes.get(size).createRenderInstance();
+		return this.sizeRenderers.get(size).createRenderInstance();
 	}
 
 	@Environment(EnvType.CLIENT)
 	public BogeyRenderer getInWorldRenderInstance(BogeySizes.BogeySize size) {
-		SizeData sizeData = this.sizes.get(size);
+		SizeRenderData sizeData = this.sizeRenderers.get(size);
 		return sizeData != null ? sizeData.getInWorldInstance() : BackupBogeyRenderer.INSTANCE;
 	}
 
@@ -116,7 +121,7 @@ public class BogeyStyle {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public record SizeData(ResourceLocation block, Supplier<? extends BogeyRenderer> rendererFactory, BogeyRenderer instance) {
+	public record SizeRenderData(Supplier<? extends BogeyRenderer> rendererFactory, BogeyRenderer instance) {
 		public BogeyRenderer createRenderInstance() {
 			return rendererFactory.get();
 		}
