@@ -14,9 +14,6 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        java: [ 17 ]
     runs-on: ubuntu-latest
     env:
       PUBLISH_SUFFIX: snapshots
@@ -29,30 +26,23 @@ jobs:
     steps:
 
       - name: checkout repository
-        uses: actions/checkout@v2
-
-      - name: setup jdk ${{ matrix.java }}
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
-
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/loom-cache
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle
+        uses: actions/checkout@v3
 
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
+
+      - name: setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
 
       - name: build
         run: ./gradlew buildOrPublish
 
       - name: capture build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Artifacts
           path: build/libs/

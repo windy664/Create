@@ -194,7 +194,7 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 
 	@Override
 	public void onShortInteract(Player player, InteractionHand hand, Direction side) {
-		if (player instanceof FakePlayer)
+		if (player.isFake())
 			blockEntity.getBlockState()
 				.use(getWorld(), player, hand,
 					new BlockHitResult(VecHelper.getCenterOf(getPos()), side, getPos(), true));

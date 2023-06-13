@@ -150,6 +150,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IB
 					continue;
 				be.crushingspeed = Math.abs(cwbe.getSpeed() / 50f);
 				be.sendData();
+
 				cwbe.award(AllAdvancements.CRUSHING_WHEEL);
 				if (cwbe.getSpeed() > 255)
 					cwbe.award(AllAdvancements.CRUSHER_MAXED);
