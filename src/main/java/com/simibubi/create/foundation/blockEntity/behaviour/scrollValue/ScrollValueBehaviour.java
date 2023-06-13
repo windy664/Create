@@ -26,7 +26,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayer;
 
 public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueSettingsBehaviour {
 
@@ -194,7 +193,7 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 
 	@Override
 	public void onShortInteract(Player player, InteractionHand hand, Direction side) {
-		if (player instanceof FakePlayer)
+		if (player.isFake())
 			blockEntity.getBlockState()
 				.use(getWorld(), player, hand,
 					new BlockHitResult(VecHelper.getCenterOf(getPos()), side, getPos(), true));
