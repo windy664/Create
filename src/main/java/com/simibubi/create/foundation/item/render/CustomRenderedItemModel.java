@@ -23,7 +23,7 @@ public class CustomRenderedItemModel extends ForwardingBakedModel implements Tra
 		boolean leftHand) {
 		// Super call returns originalModel, but we want to return this, else BEWLR
 		// won't be used.
-		TransformTypeDependentItemBakedModel.super.applyTransform(cameraTransformType, mat, leftHand);
+		TransformTypeDependentItemBakedModel.maybeApplyTransform(wrapped, cameraTransformType, mat, leftHand);
 		return this;
 	}
 
