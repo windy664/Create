@@ -16,9 +16,11 @@ public class GogglesModel extends ForwardingBakedModel implements TransformTypeD
 
 	@Override
 	public BakedModel applyTransform(TransformType cameraTransformType, PoseStack mat, boolean leftHanded) {
-		if (cameraTransformType == TransformType.HEAD)
-			return ((TransformTypeDependentItemBakedModel)AllPartialModels.GOGGLES.get())
-				.applyTransform(cameraTransformType, mat, leftHanded);
+		if (cameraTransformType == TransformType.HEAD) {
+			return TransformTypeDependentItemBakedModel.maybeApplyTransform(
+					AllPartialModels.GOGGLES.get(), cameraTransformType, mat, leftHanded
+			);
+		}
 		return TransformTypeDependentItemBakedModel.super.applyTransform(cameraTransformType, mat, leftHanded);
 	}
 
