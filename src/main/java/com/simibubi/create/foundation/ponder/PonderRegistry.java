@@ -70,9 +70,11 @@ public class PonderRegistry {
 
 		for (int i = 0; i < entries.size(); i++) {
 			PonderStoryBoardEntry sb = entries.get(i);
-			StructureTemplate activeTemplate = loadSchematic(sb.getSchematicLocation());
+			ResourceLocation id = sb.getSchematicLocation();
+			StructureTemplate activeTemplate = loadSchematic(id);
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().level);
-			activeTemplate.placeInWorld(world, BlockPos.ZERO, BlockPos.ZERO, new StructurePlaceSettings(), world.random, Block.UPDATE_CLIENTS);
+			StructurePlaceSettings settings = FabricPonderProcessing.makePlaceSettings(id);
+			activeTemplate.placeInWorld(world, BlockPos.ZERO, BlockPos.ZERO, settings, world.random, Block.UPDATE_CLIENTS);
 			world.createBackup();
 			PonderScene scene = compileScene(i, sb, world);
 			scene.begin();

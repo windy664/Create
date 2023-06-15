@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.foundation.ponder.FabricPonderProcessing;
+
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -142,6 +144,7 @@ public class Create implements ModInitializer {
 		// fabric exclusive
 		CommonEvents.register();
 		AllPackets.getChannel().initServerListener();
+		FabricPonderProcessing.init();
 	}
 
 	public static void init() {
