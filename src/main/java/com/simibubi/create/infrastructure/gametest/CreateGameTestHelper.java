@@ -3,6 +3,10 @@ package com.simibubi.create.infrastructure.gametest;
 import java.util.Arrays;
 import java.util.List;
 
+import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
+
+import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -122,6 +126,16 @@ public class CreateGameTestHelper extends GameTestHelper {
 	public void setTunnelMode(BlockPos pos, SelectionMode mode) {
 		ScrollValueBehaviour behavior = getBehavior(pos, ScrollOptionBehaviour.TYPE);
 		behavior.setValue(mode.ordinal());
+	}
+
+	public void assertSpeedometerSpeed(BlockPos speedometer, float value) {
+		SpeedGaugeBlockEntity be = getBlockEntity(AllBlockEntityTypes.SPEEDOMETER.get(), speedometer);
+		assertInRange(be.getSpeed(), value - 0.01, value + 0.01);
+	}
+
+	public void assertStressometerCapacity(BlockPos stressometer, float value) {
+		StressGaugeBlockEntity be = getBlockEntity(AllBlockEntityTypes.STRESSOMETER.get(), stressometer);
+		assertInRange(be.getNetworkCapacity(), value - 0.01, value + 0.01);
 	}
 
 	// block entities
