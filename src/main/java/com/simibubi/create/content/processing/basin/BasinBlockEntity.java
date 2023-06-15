@@ -807,19 +807,21 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		LangBuilder unitSuffix = Lang.translate(unit.getTranslationKey());
 		boolean simplify = AllConfigs.client().simplifyFluidUnit.get();
 		for (SmartFluidTankBehaviour behaviour : fluids) {
-			SmartFluidTank tank = behaviour.getPrimaryHandler();
-			FluidStack fluidStack = tank.getFluid();
-			if (fluidStack.isEmpty())
-				continue;
-			Lang.text("")
-					.add(Lang.fluidName(fluidStack)
-							.add(Lang.text(" "))
-							.style(ChatFormatting.GRAY)
-							.add(Lang.translate(FluidTextUtil.getUnicodeMillibuckets(fluidStack.getAmount(), unit, simplify))
-									.add(unitSuffix)
-									.style(ChatFormatting.BLUE)))
-					.forGoggles(tooltip, 1);
-			isEmpty = false;
+			for (TankSegment tank : behaviour.getTanks()) {
+				FluidStack fluidStack = tank.getRenderedFluid();
+				if (fluidStack.isEmpty()) {
+					continue;
+				}
+				Lang.text("")
+						.add(Lang.fluidName(fluidStack)
+								.add(Lang.text(" "))
+								.style(ChatFormatting.GRAY)
+								.add(Lang.text(FluidTextUtil.getUnicodeMillibuckets(fluidStack.getAmount(), unit, simplify))
+										.add(unitSuffix)
+										.style(ChatFormatting.BLUE)))
+						.forGoggles(tooltip, 1);
+				isEmpty = false;
+			}
 		}
 
 
