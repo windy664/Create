@@ -20,6 +20,7 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RedstoneLampBlock;
 
 @GameTestGroup(path = "misc")
 public class TestMisc {
@@ -61,6 +62,18 @@ public class TestMisc {
 		sheep.shear(SoundSource.NEUTRAL);
 		helper.succeedWhen(() -> {
 			helper.assertItemEntityPresent(Items.WHITE_WOOL, sheepPos, 2);
+		});
+	}
+
+	@GameTest(template = "smart_observer_blocks")
+	public static void smartObserverBlocks(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(2, 2, 1);
+		BlockPos leftLamp = new BlockPos(3, 4, 3);
+		BlockPos rightLamp = new BlockPos(1, 4, 3);
+		helper.pullLever(lever);
+		helper.succeedWhen(() -> {
+			helper.assertBlockProperty(leftLamp, RedstoneLampBlock.LIT, true);
+			helper.assertBlockProperty(rightLamp, RedstoneLampBlock.LIT, false);
 		});
 	}
 }

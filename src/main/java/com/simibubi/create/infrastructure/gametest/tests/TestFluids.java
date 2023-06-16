@@ -240,4 +240,17 @@ public class TestFluids {
 				helper.fail("Not all planks have been consumed");
 		});
 	}
+
+	@GameTest(template = "smart_observer_pipes")
+	public static void smartObserverPipes(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(3, 3, 1);
+		BlockPos output = new BlockPos(3, 4, 4);
+		BlockPos tankOutput = new BlockPos(1, 2, 4);
+		FluidStack expected = new FluidStack(Fluids.WATER, 2 * FluidConstants.BUCKET);
+		helper.pullLever(lever);
+		helper.succeedWhen(() -> {
+			helper.assertFluidPresent(expected, tankOutput);
+			helper.assertBlockPresent(Blocks.DIAMOND_BLOCK, output);
+		});
+	}
 }
