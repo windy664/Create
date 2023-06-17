@@ -3,6 +3,7 @@ package com.simibubi.create.infrastructure.gametest.tests;
 import static com.simibubi.create.infrastructure.gametest.CreateGameTestHelper.FIFTEEN_SECONDS;
 
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.content.redstone.thresholdSwitch.ThresholdSwitchBlockEntity;
 import com.simibubi.create.content.schematics.SchematicExport;
 import com.simibubi.create.content.schematics.SchematicItem;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity;
@@ -74,6 +75,19 @@ public class TestMisc {
 		helper.succeedWhen(() -> {
 			helper.assertBlockProperty(leftLamp, RedstoneLampBlock.LIT, true);
 			helper.assertBlockProperty(rightLamp, RedstoneLampBlock.LIT, false);
+		});
+	}
+
+	@GameTest(template = "threshold_switch_pulley")
+	public static void thresholdSwitchPulley(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(3, 7, 1);
+		BlockPos switchPos = new BlockPos(1, 6, 1);
+		helper.pullLever(lever);
+		helper.succeedWhen(() -> {
+			ThresholdSwitchBlockEntity switchBe = helper.getBlockEntity(AllBlockEntityTypes.THRESHOLD_SWITCH.get(), switchPos);
+			float level = switchBe.getStockLevel();
+			if (level < 0 || level > 1)
+				helper.fail("Invalid level: " + level);
 		});
 	}
 }

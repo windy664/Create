@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.fluids.hosePulley.HosePulleyFluidHandler;
+import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlock;
+import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlockEntity;
+import com.simibubi.create.content.fluids.pump.PumpBlock;
+import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
 import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.kinetics.waterwheel.WaterWheelBlockEntity;
@@ -19,6 +23,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.gametest.framework.GameTest;
@@ -32,6 +37,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.material.Fluids;
 
 @GameTestGroup(path = "fluids")
@@ -251,6 +257,46 @@ public class TestFluids {
 		helper.succeedWhen(() -> {
 			helper.assertFluidPresent(expected, tankOutput);
 			helper.assertBlockPresent(Blocks.DIAMOND_BLOCK, output);
+		});
+	}
+
+	@GameTest(template = "threshold_switch", timeoutTicks = CreateGameTestHelper.TWENTY_SECONDS)
+	public static void thresholdSwitch(CreateGameTestHelper helper) {
+		BlockPos leftHandle = new BlockPos(4, 2, 4);
+		BlockPos leftValve = new BlockPos(4, 2, 3);
+		BlockPos leftTank = new BlockPos(5, 2, 3);
+
+		BlockPos rightHandle = new BlockPos(2, 2, 4);
+		BlockPos rightValve = new BlockPos(2, 2, 3);
+		BlockPos rightTank = new BlockPos(1, 2, 3);
+
+		BlockPos drainHandle = new BlockPos(3, 3, 2);
+		BlockPos drainValve = new BlockPos(3, 3, 1);
+		BlockPos lamp = new BlockPos(1, 3, 1);
+		BlockPos tank = new BlockPos(2, 2, 1);
+		helper.succeedWhen(() -> {
+			if (!helper.getBlockState(leftValve).getValue(FluidValveBlock.ENABLED)) { // step 1
+				helper.getBlockEntity(AllBlockEntityTypes.VALVE_HANDLE.get(), leftHandle)
+						.activate(false); // open the valve, fill 4 buckets
+				helper.fail("Entering step 2");
+			} else if (!helper.getBlockState(rightValve).getValue(FluidValveBlock.ENABLED)) { // step 2
+				helper.assertFluidPresent(FluidStack.EMPTY, leftTank); // wait for left tank to drain
+				helper.assertBlockProperty(lamp, RedstoneLampBlock.LIT, false); // should not be on yet
+				helper.getBlockEntity(AllBlockEntityTypes.VALVE_HANDLE.get(), rightHandle)
+						.activate(false); // fill another 4 buckets
+				helper.fail("Entering step 3");
+			} else if (!helper.getBlockState(drainValve).getValue(FluidValveBlock.ENABLED)) { // step 3
+				helper.assertFluidPresent(FluidStack.EMPTY, rightTank); // wait for right tank to drain
+				// 16 buckets inserted. tank full, lamp on.
+				helper.assertBlockProperty(lamp, RedstoneLampBlock.LIT, true);
+				// drain what's filled so far
+				helper.getBlockEntity(AllBlockEntityTypes.VALVE_HANDLE.get(), drainHandle)
+						.activate(false); // drain all 8 buckets
+				helper.fail("Entering step 4");
+			} else {
+				helper.assertTankEmpty(tank); // wait for it to empty
+				helper.assertBlockProperty(lamp, RedstoneLampBlock.LIT, false); // should be off now
+			}
 		});
 	}
 }
