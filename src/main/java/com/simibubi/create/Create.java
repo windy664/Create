@@ -2,6 +2,7 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.foundation.ponder.FabricPonderProcessing;
 import com.simibubi.create.foundation.recipe.AllIngredients;
 
 import org.slf4j.Logger;
