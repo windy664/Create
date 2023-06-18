@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.ponder.FabricPonderProcessing;
 import com.simibubi.create.foundation.ponder.PonderChapter;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderScene;
@@ -384,9 +385,11 @@ public class PonderUI extends NavigatableSimiScreen {
 		if (hasShiftDown()) {
 			List<PonderStoryBoardEntry> list = PonderRegistry.ALL.get(scene.getComponent());
 			PonderStoryBoardEntry sb = list.get(index);
-			StructureTemplate activeTemplate = PonderRegistry.loadSchematic(sb.getSchematicLocation());
+			ResourceLocation id = sb.getSchematicLocation();
+			StructureTemplate activeTemplate = PonderRegistry.loadSchematic(id);
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().level);
-			activeTemplate.placeInWorld(world, BlockPos.ZERO, BlockPos.ZERO, new StructurePlaceSettings(), RandomSource.create(),
+			StructurePlaceSettings settings = FabricPonderProcessing.makePlaceSettings(id);
+			activeTemplate.placeInWorld(world, BlockPos.ZERO, BlockPos.ZERO, settings, RandomSource.create(),
 				Block.UPDATE_CLIENTS);
 			world.createBackup();
 			scene = PonderRegistry.compileScene(index, sb, world);

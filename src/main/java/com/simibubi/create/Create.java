@@ -143,6 +143,7 @@ public class Create implements ModInitializer {
 		// fabric exclusive
 		CommonEvents.register();
 		AllPackets.getChannel().initServerListener();
+		FabricPonderProcessing.init();
 	}
 
 	public static void init() {
