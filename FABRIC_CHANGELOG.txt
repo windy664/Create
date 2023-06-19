@@ -6,3 +6,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 Change logging starts below:
 ----------
 - fix crash with Polymer
+- fix rare startup crash from loader loading the wrong version of porting lib
