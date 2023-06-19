@@ -5,4 +5,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- updated to 0.5.1a
+- fix crash with Polymer
