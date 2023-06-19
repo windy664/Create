@@ -10,17 +10,17 @@ ext /* -ra properties */ {
     changelog_text = getChangelog(file(changelog_file))
 }
 
-task publishMod {
+tasks.register("publishMod") {
     if (version_valid) {
-        dependsOn(tasks.getByName("modrinth"))
-        dependsOn(tasks.getByName("curseforge"))
+        dependsOn(tasks.named("modrinth"))
+        dependsOn(tasks.named("curseforge"))
     }
 }
 
 static String makeName(String version) {
-    // version example: 0.5.0.h-861+1.18.2
-    String createVer = "v" + version.split("-")[0]
-    String mcVer = version.split("\\+")[1]
+    // version example: 0.5.1-b-build.861+mc1.18.2
+    String createVer = "v" + version.split("-build")[0].replace('-', '.')
+    String mcVer = version.split("\\+mc")[1]
     String rawPatch = System.getenv("PATCH_NUMBER")
     String patch = rawPatch === null || rawPatch.isEmpty() || rawPatch == "0" ? "" : "Patch $rawPatch"
     return "Create $mcVer $createVer $patch".trim()
@@ -28,7 +28,7 @@ static String makeName(String version) {
 }
 
 static boolean versionValidForPublishing(String version) {
-    return version.contains("-") && version.contains("+")
+    return !version.contains("local")
 }
 
 static String getChangelog(File changelogFile) {
