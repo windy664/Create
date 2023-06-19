@@ -101,16 +101,16 @@ public class MountedStorage {
 			return;
 		}
 
-		Storage<ItemVariant> beHandler = TransferUtil.getItemStorage(blockEntity);
-		if (beHandler == null)
-			return;
-
 		// multiblock vaults need to provide individual invs
 		if (blockEntity instanceof ItemVaultBlockEntity) {
 			handler = ((ItemVaultBlockEntity) blockEntity).getInventoryOfBlock();
 			valid = true;
 			return;
 		}
+
+		Storage<ItemVariant> beHandler = TransferUtil.getItemStorage(blockEntity);
+		if (beHandler == null)
+			return;
 
 		// be uses ItemStackHandler
 		if (beHandler instanceof ItemStackHandler) {
