@@ -114,6 +114,7 @@ public class BlockTagIngredient extends AbstractIngredient {
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer) {
+		buffer.writeResourceLocation(CraftingHelper.getID(Serializer.INSTANCE));
 		TagKey<Block> tag = getTag();
 		buffer.writeResourceLocation(tag.location());
 	}
