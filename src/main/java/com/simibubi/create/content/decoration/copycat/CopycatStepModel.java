@@ -105,7 +105,7 @@ public class CopycatStepModel extends CopycatModel {
 
 			return false;
 		});
-		((FabricBakedModel) model).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		((FabricBakedModel) model).emitBlockQuads(blockView, material, pos, randomSupplier, context);
 		context.popTransform();
 		context.meshConsumer().accept(meshBuilder.build());
 	}
