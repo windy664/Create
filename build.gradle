@@ -59,7 +59,9 @@ dependencies {
 def dependencies(DependencyHandler deps) {
     deps.modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
-    deps.modApi(deps.include("io.github.fabricators_of_create.Porting-Lib:Porting-Lib:$port_lib_version+$minecraft_version"))
+    for (String module in port_lib_modules.split(",")) {
+        deps.modApi(deps.include("io.github.fabricators_of_create.Porting-Lib:$module:$port_lib_version+$minecraft_version"))
+    }
 
     deps.modApi(deps.include("com.tterrag.registrate_fabric:Registrate:$registrate_version")) {
         exclude(group: "io.github.fabricators_of_create") // avoid duplicate Porting Lib
@@ -192,12 +194,14 @@ processResources {
             "minecraft_version": minecraft_version,
             "loader_version": loader_version,
             "fabric_version": fabric_version,
-            "port_lib_version": port_lib_version,
-            "forge_tags_version": forge_tags_version,
             "forge_config_version": forge_config_api_port_version,
             "milk_lib_version": milk_lib_version,
             "reach_entity_attributes_version": reach_entity_attributes_version
     ]
+    for (String module in port_lib_modules.split(","))
+        properties.put("port_lib_${module}_version".toString(), port_lib_version)
+    properties.put("port_lib_tags_version", "3.0") // the weird one
+
     properties.forEach((k, v) -> inputs.property(k, v))
 
     filesMatching("fabric.mod.json") {

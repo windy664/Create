@@ -52,8 +52,17 @@
     "minecraft": "${minecraft_version}",
     "fabricloader": ">=${loader_version}",
     "fabric-api": ">=${fabric_version}",
-    "porting_lib": ">=${port_lib_version}",
-    "forge_tags": ">=${forge_tags_version}",
+
+    "porting_lib_accessors": ">=${port_lib_accessors_version}",
+    "porting_lib_base": ">=${port_lib_base_version}",
+    "porting_lib_entity": ">=${port_lib_entity_version}",
+    "porting_lib_extensions": ">=${port_lib_extensions_version}",
+    "porting_lib_fake_players": ">=${port_lib_fake_players_version}",
+    "porting_lib_networking": ">=${port_lib_networking_version}",
+    "porting_lib_obj_loader": ">=${port_lib_obj_loader_version}",
+    "forge_tags": ">=${port_lib_tags_version}",
+    "porting_lib_transfer": ">=${port_lib_transfer_version}",
+
     "forgeconfigapiport": ">=${forge_config_version}",
     "milk": ">=${milk_lib_version}",
     "reach-entity-attributes": ">=${reach_entity_attributes_version}"
