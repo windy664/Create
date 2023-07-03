@@ -346,7 +346,7 @@ public class OpenEndedPipe extends FlowSource {
 		public long getAmount() {
 			long amount = super.getAmount();
 			if (amount != 0) return amount;
-			return isResourceBlank() ? FluidConstants.BUCKET : 0;
+			return isResourceBlank() ? 0 : FluidConstants.BUCKET;
 		}
 	}
 

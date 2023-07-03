@@ -59,6 +59,7 @@ public class MountedStorageManager {
 		Collection<MountedStorage> itemHandlers = storage.values();
 
 		inventory = wrapItems(itemHandlers.stream()
+			.filter(MountedStorage::isValid)
 			.map(MountedStorage::getItemHandler)
 			.toList(), false);
 

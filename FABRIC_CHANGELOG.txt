@@ -5,6 +5,8 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- fix crash with Polymer
-- fix rare startup crash from loader loading the wrong version of porting lib
-- fix inability to connect to servers
+- fix some blocks in copycats causing crashes (#988, #984, #971)
+- fix pipe ponder crashing (#987, #970)
+- added safety on train carriage loading (#985)
+- fix visibility in fluids (#967)
+- fix unsupported inventories on contraptions causing crashes (#965)

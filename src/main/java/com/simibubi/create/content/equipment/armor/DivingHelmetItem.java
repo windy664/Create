@@ -67,7 +67,8 @@ public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingB
 		if (!(entity instanceof LivingEntity livingEntity)) {
 			return null;
 		}
-		return livingEntity.getItemBySlot(SLOT);
+		ItemStack stack = livingEntity.getItemBySlot(SLOT);
+		return stack.getItem() instanceof DivingHelmetItem ? stack : null;
 	}
 
 	public static void breatheUnderwater(LivingEntity entity) {

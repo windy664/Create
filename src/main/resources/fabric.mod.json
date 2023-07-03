@@ -49,9 +49,14 @@
   "accessWidener": "create.accesswidener",
 
   "depends": {
+    "minecraft": "${minecraft_version}",
     "fabricloader": ">=${loader_version}",
     "fabric-api": ">=${fabric_version}",
-    "minecraft": "${minecraft_version}"
+    "porting_lib": ">=${port_lib_version}",
+    "forge_tags": ">=${forge_tags_version}",
+    "forgeconfigapiport": ">=${forge_config_version}",
+    "milk": ">=${milk_lib_version}",
+    "reach-entity-attributes": ">=${reach_entity_attributes_version}"
   },
 
   "breaks": {
