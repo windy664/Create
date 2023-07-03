@@ -136,28 +136,29 @@ machete {
     enabled = Boolean.getBoolean("PUBLISHING") // only optimize published releases
 }
 
-task buildOrPublish {
+tasks.register("buildOrPublish") {
     group = "build"
     String mavenUser = System.getenv("MAVEN_USER")
     if (mavenUser != null && !mavenUser.isEmpty()) {
-        dependsOn(tasks.getByName("publish"))
+        dependsOn(tasks.named("publish"))
         println("prepared for publish")
     } else {
-        dependsOn(tasks.getByName("build"))
+        dependsOn(tasks.named("build"))
         println("prepared for build")
+    }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir("src/generated/resources")
+            exclude("src/generated/resources/.cache")
+        }
     }
 }
 
 loom {
     accessWidenerPath = file("src/main/resources/create.accesswidener")
-    sourceSets {
-        main {
-            resources {
-                srcDir("src/generated/resources")
-                exclude("src/generated/resources/.cache")
-            }
-        }
-    }
 
     runs {
         datagen {
@@ -187,12 +188,17 @@ loom {
 processResources {
     exclude("**/*.bbmodel", "**/*.lnk")
 
-    Map<String, String> properties = new HashMap<>()
-    properties.put("version", version)
-    properties.put("loader_version", loader_version)
-    properties.put("fabric_version", fabric_version)
-    properties.put("minecraft_version", minecraft_version)
-
+    Map<String, Object> properties = [
+            "version": version,
+            "minecraft_version": minecraft_version,
+            "loader_version": loader_version,
+            "fabric_version": fabric_version,
+            "port_lib_version": port_lib_version,
+            "forge_tags_version": forge_tags_version,
+            "forge_config_version": forge_config_api_port_version,
+            "milk_lib_version": milk_lib_version,
+            "reach_entity_attributes_version": reach_entity_attributes_version
+    ]
     properties.forEach((k, v) -> inputs.property(k, v))
 
     filesMatching("fabric.mod.json") {
