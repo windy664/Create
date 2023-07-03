@@ -55,7 +55,7 @@ public class MountedStorage {
 			Storage<ItemVariant> handler = TransferUtil.getItemStorage(be);
 			if (handler instanceof ItemStackHandler)
 				return !(handler instanceof ProcessingInventory);
-			return canUseModdedInventory(be, handler);
+			return handler != null && canUseModdedInventory(be, handler);
 
 		} catch (Exception e) {
 			return false;
@@ -216,7 +216,7 @@ public class MountedStorage {
 	}
 
 	public boolean canUseForFuel() {
-		return !noFuel;
+		return isValid() && !noFuel;
 	}
 
 }

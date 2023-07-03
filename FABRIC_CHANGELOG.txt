@@ -9,3 +9,4 @@ Change logging starts below:
 - fix pipe ponder crashing (#987, #970)
 - added safety on train carriage loading (#985)
 - fix visibility in fluids (#967)
+- fix unsupported inventories on contraptions causing crashes (#965)
