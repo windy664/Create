@@ -45,8 +45,6 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 	private IntSupplier transmission;
 	private IntConsumer signalCallback;
 
-	private Predicate<Player> canInteract;
-
 	protected LinkBehaviour(SmartBlockEntity be, Pair<ValueBoxTransform, ValueBoxTransform> slots) {
 		super(be);
 		frequencyFirst = Frequency.EMPTY;
@@ -55,7 +53,6 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 		secondSlot = slots.getRight();
 		textShift = Vec3.ZERO;
 		newPosition = true;
-		canInteract = FilteringBehaviour::playerCanInteract;
 	}
 
 	public static LinkBehaviour receiver(SmartBlockEntity be, Pair<ValueBoxTransform, ValueBoxTransform> slots,
@@ -178,11 +175,6 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 		getHandler().addToNetwork(getWorld(), this);
 	}
 
-	public LinkBehaviour interactiveWhen(Predicate<Player> condition) {
-		canInteract = condition;
-		return this;
-	}
-
 	@Override
 	public BehaviourType<?> getType() {
 		return TYPE;
@@ -228,10 +220,6 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 		if (!level.isLoaded(pos))
 			return false;
 		return level.getBlockEntity(pos) == blockEntity;
-	}
-
-	public boolean canInteract(Player player) {
-		return canInteract.test(player);
 	}
 
 	@Override

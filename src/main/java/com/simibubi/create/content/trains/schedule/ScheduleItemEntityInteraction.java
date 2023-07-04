@@ -1,5 +1,7 @@
 package com.simibubi.create.content.trains.schedule;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllItems;
@@ -26,7 +28,7 @@ public class ScheduleItemEntityInteraction {
 	public static InteractionResult interactWithConductor(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
 		if (player == null || entity == null)
 			return InteractionResult.PASS;
-		if (player.isSpectator())
+		if (player.isSpectator() || AdventureUtil.isAdventure(player))
 			return InteractionResult.PASS;
 
 		Entity rootVehicle = entity.getRootVehicle();

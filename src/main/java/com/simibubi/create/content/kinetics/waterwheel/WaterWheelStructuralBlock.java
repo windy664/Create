@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
@@ -90,6 +92,8 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
+		if (AdventureUtil.isAdventure(pPlayer))
+			return InteractionResult.PASS;
 		if (!stillValid(pLevel, pPos, pState, false))
 			return InteractionResult.FAIL;
 		if (!(pLevel.getBlockEntity(getMaster(pLevel, pPos, pState))instanceof WaterWheelBlockEntity wwt))

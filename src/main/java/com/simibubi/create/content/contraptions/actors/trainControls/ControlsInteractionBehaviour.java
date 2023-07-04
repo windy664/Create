@@ -7,6 +7,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.minecraft.core.BlockPos;
@@ -19,6 +20,8 @@ public class ControlsInteractionBehaviour extends MovingInteractionBehaviour {
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
+		if (AdventureUtil.isAdventure(player))
+			return false;
 		if (AllItems.WRENCH.isIn(player.getItemInHand(activeHand)))
 			return false;
 

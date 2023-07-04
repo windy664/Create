@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.glue;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -33,6 +34,8 @@ public class SuperGlueRemovalPacket extends SimplePacketBase {
 	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			ServerPlayer player = context.getSender();
+			if (AdventureUtil.isAdventure(player))
+				return;
 			Entity entity = player.level.getEntity(entityId);
 			if (!(entity instanceof SuperGlueEntity superGlue))
 				return;

@@ -11,6 +11,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.chassis.AbstractChassisBlock;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -188,6 +189,8 @@ public class SuperGlueSelectionHandler {
 		ClientLevel level = mc.level;
 
 		if (!isGlue(player.getMainHandItem()))
+			return false;
+		if (AdventureUtil.isAdventure(player))
 			return false;
 
 		if (attack) {

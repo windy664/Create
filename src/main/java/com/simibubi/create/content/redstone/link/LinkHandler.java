@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import net.minecraft.core.BlockPos;
@@ -28,7 +29,7 @@ public class LinkHandler {
 		LinkBehaviour behaviour = BlockEntityBehaviour.get(world, pos, LinkBehaviour.TYPE);
 		if (behaviour == null)
 			return InteractionResult.PASS;
-		if (!behaviour.canInteract(player))
+		if (AdventureUtil.isAdventure(player))
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);

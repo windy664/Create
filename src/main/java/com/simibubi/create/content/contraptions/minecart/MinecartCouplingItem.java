@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.minecart;
 
 import com.simibubi.create.AllTags;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllItems;
@@ -32,6 +34,8 @@ public class MinecartCouplingItem extends Item {
 
 	public static InteractionResult handleInteractionWithMinecart(Player player, Level world, InteractionHand hand, Entity interacted, @Nullable EntityHitResult hitResult) {
 		if (player.isSpectator()) // forge checks this, fabric does not
+			return InteractionResult.PASS;
+		if (AdventureUtil.isAdventure(player))
 			return InteractionResult.PASS;
 		if (!(interacted instanceof AbstractMinecart))
 			return InteractionResult.PASS;

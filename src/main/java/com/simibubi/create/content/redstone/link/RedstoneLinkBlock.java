@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Iterate;
 import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
 
@@ -127,16 +128,9 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
-		if (player.isShiftKeyDown() && playerCanToggle(player, worldIn, pos))
+		if (player.isShiftKeyDown() && !AdventureUtil.isAdventure(player))
 			return toggleMode(state, worldIn, pos);
 		return InteractionResult.PASS;
-	}
-
-	public boolean playerCanToggle(Player player, Level level, BlockPos pos) {
-		return onBlockEntityUse(level, pos, be -> be.link.canInteract(player)
-				? InteractionResult.SUCCESS
-				: InteractionResult.FAIL
-		) != InteractionResult.FAIL;
 	}
 
 	public InteractionResult toggleMode(BlockState state, Level worldIn, BlockPos pos) {

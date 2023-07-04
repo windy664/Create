@@ -5,6 +5,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -71,7 +72,7 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 			return;
 		super.onRemove(state, world, pos, newState, isMoving);
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
@@ -81,6 +82,8 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
+		if (AdventureUtil.isAdventure(player))
+			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(handIn);
 		boolean shouldntInsertItem = heldItem.isEmpty() || AllBlocks.MECHANICAL_ARM.isIn(heldItem) || !canInsertIntoFunnel(state);

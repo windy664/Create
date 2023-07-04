@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -31,7 +32,7 @@ public class EdgeInteractionHandler {
 //		InteractionHand hand = event.getHand();
 		ItemStack heldItem = player.getItemInHand(hand);
 
-		if (player.isShiftKeyDown() || player.isSpectator())
+		if (player.isShiftKeyDown() || player.isSpectator() || AdventureUtil.isAdventure(player))
 			return InteractionResult.PASS;
 		EdgeInteractionBehaviour behaviour = BlockEntityBehaviour.get(world, pos, EdgeInteractionBehaviour.TYPE);
 		if (behaviour == null)

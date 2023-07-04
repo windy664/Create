@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import io.github.fabricators_of_create.porting_lib.entity.RemovalFromWorldListener;
 
 import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
@@ -308,6 +310,9 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 				toDismount = entity;
 			}
 		}
+
+		if (toDismount != null && AdventureUtil.isAdventure(player))
+			return false;
 
 		if (toDismount != null && !level.isClientSide) {
 			Vec3 transformedVector = getPassengerPosition(toDismount, 1);

@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllItems;
@@ -209,6 +211,8 @@ public class MinecartContraptionItem extends Item {
 			return InteractionResult.PASS;
 
 		if (player.isSpectator()) // forge checks this, fabric does not
+			return InteractionResult.PASS;
+		if (AdventureUtil.isAdventure(player))
 			return InteractionResult.PASS;
 
 		ItemStack wrench = player.getItemInHand(hand);

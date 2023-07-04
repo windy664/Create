@@ -13,6 +13,7 @@ import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Lang;
 
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
@@ -126,7 +127,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 				return InteractionResult.SUCCESS;
 			});
 
-		if (!FilteringBehaviour.playerCanInteract(player))
+		if (AdventureUtil.isAdventure(player))
 			return InteractionResult.PASS;
 
 		if (heldItem.isEmpty() && heat != HeatLevel.NONE)

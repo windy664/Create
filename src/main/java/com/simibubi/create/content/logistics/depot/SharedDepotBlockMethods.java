@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -41,6 +43,8 @@ public class SharedDepotBlockMethods {
 			return InteractionResult.PASS;
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
+		if (AdventureUtil.isAdventure(player))
+			return InteractionResult.PASS;
 
 		DepotBehaviour behaviour = get(world, pos);
 		if (behaviour == null)

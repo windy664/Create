@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.actors.contraptionControls;
 import java.util.Iterator;
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllMovementBehaviours;
@@ -29,6 +31,8 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
+		if (AdventureUtil.isAdventure(player))
+			return false;
 		Contraption contraption = contraptionEntity.getContraption();
 
 		MutablePair<StructureBlockInfo, MovementContext> actor = contraption.getActorAt(localPos);

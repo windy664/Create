@@ -7,6 +7,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
@@ -83,6 +84,8 @@ public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IB
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
+		if (AdventureUtil.isAdventure(player))
+			return InteractionResult.PASS;
 		if (player != null && AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
 			return InteractionResult.PASS;
 		EnvExecutor.runWhenOn(EnvType.CLIENT,

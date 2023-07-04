@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox.IconValueBox;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox.TextValueBox;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -88,7 +89,7 @@ public class ScrollValueRenderer {
 			box = new TextValueBox(label, bb, pos, Components.literal(behaviour.formatValue()));
 		}
 
-		if (behaviour.canInteract(Minecraft.getInstance().player))
+		if (AdventureUtil.isAdventure(Minecraft.getInstance().player))
 			box.passive(!highlight)
 			.wideOutline();
 
