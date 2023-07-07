@@ -222,7 +222,7 @@ public class OpenEndedPipe extends FlowSource {
 			return true;
 		}
 
-		if (!AllConfigs.server().fluids.placeFluidSourceBlocks.get())
+		if (!AllConfigs.server().fluids.pipesPlaceFluidSourceBlocks.get())
 			return true;
 
 		world.setBlock(outputPos, fluid.getFluid()

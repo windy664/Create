@@ -14,6 +14,8 @@ import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 
+import java.util.List;
+
 public class RemainingAirOverlay {
 	public static void render(PoseStack poseStack, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
@@ -54,9 +56,9 @@ public class RemainingAirOverlay {
 	}
 
 	public static ItemStack getDisplayedBacktank(LocalPlayer player) {
-		ItemStack backtank = BacktankUtil.get(player);
-		if (!backtank.isEmpty()) {
-			return backtank;
+		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(player);
+		if (!backtanks.isEmpty()) {
+			return backtanks.get(0);
 		}
 		return AllItems.COPPER_BACKTANK.asStack();
 	}

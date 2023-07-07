@@ -133,8 +133,9 @@ public class FlwContraption extends ContraptionRenderInfo {
 	}
 
 	private void buildLayers() {
-		for (ArrayModelRenderer buffer : renderLayers.values()) {
-			buffer.delete();
+		for (ArrayModelRenderer renderer : renderLayers.values()) {
+			renderer.delete();
+			renderer.getModel().delete();
 		}
 
 		renderLayers.clear();
@@ -145,7 +146,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 		for (RenderType layer : blockLayers) {
 			Model layerModel = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
 					.withBlocks(renderedBlocks)
-					.intoMesh(layer + "_" + contraption.entity.getId());
+					.toModel(layer + "_" + contraption.entity.getId());
 			renderLayers.put(layer, new ArrayModelRenderer(layerModel));
 		}
 	}

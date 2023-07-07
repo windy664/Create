@@ -592,9 +592,6 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			}
 
 			for (ItemStack itemStack : outputItems) {
-				ItemStack remainder = itemStack.getRecipeRemainder();
-				if (!remainder.isEmpty() && itemStack.sameItem(remainder))
-					continue;
 				spoutputBuffer.add(itemStack.copy());
 			}
 			if (!externalTankNotPresent)
@@ -634,13 +631,8 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	private boolean acceptItemOutputsIntoBasin(List<ItemStack> outputItems, TransactionContext ctx, Storage<ItemVariant> targetInv) {
 		for (ItemStack itemStack : outputItems) {
-			// Catalyst items are never consumed
-			ItemStack remainder = itemStack.getRecipeRemainder();
-			if (!remainder.isEmpty() && remainder
-					.sameItem(itemStack))
-				continue;
-			long inserted = targetInv.insert(ItemVariant.of(itemStack), itemStack.getCount(), ctx);
-			if (inserted != itemStack.getCount())
+			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
+				.isEmpty())
 				return false;
 		}
 		return true;

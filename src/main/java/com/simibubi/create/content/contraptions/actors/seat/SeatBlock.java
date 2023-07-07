@@ -8,8 +8,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.base.Optional;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 import io.github.fabricators_of_create.porting_lib.block.CustomPathNodeTypeBlock;
 import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 
@@ -190,6 +192,12 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock, CustomPa
 		if (passenger instanceof Shulker)
 			return false;
 		if (passenger instanceof Player)
+			return false;
+		if (AllEntityTags.IGNORE_SEAT.matches(passenger))
+			return false;
+		if (!AllConfigs.server().logistics.seatHostileMobs.get() && !passenger.getType()
+			.getCategory()
+			.isFriendly())
 			return false;
 		return passenger instanceof LivingEntity;
 	}

@@ -46,7 +46,7 @@ public class CopycatPanelModel extends CopycatModel {
 			specialCopycatModelState = AllBlocks.COPYCAT_BARS.getDefaultState();
 		if (CopycatSpecialCases.isTrapdoorMaterial(material)) {
 			((FabricBakedModel) blockRenderer.getBlockModel(material))
-				.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+				.emitBlockQuads(blockView, material, pos, randomSupplier, context);
 			return;
 		}
 

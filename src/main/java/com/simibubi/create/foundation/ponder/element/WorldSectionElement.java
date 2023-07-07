@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
+import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
 import com.jozufozu.flywheel.fabric.model.CullingBakedModel;
 import com.jozufozu.flywheel.fabric.model.FabricModelUtil;
@@ -261,7 +261,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		prevAnimatedRotation = animatedRotation;
 		if (!isVisible())
 			return;
-		loadTEsIfMissing(scene.getWorld());
+		loadBEsIfMissing(scene.getWorld());
 		renderedBlockEntities.removeIf(be -> scene.getWorld()
 			.getBlockEntity(be.getBlockPos()) != be);
 		tickableBlockEntities.removeIf(be -> scene.getWorld()
@@ -280,7 +280,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		redraw = false;
 	}
 
-	protected void loadTEsIfMissing(PonderWorld world) {
+	protected void loadBEsIfMissing(PonderWorld world) {
 		if (renderedBlockEntities != null)
 			return;
 		tickableBlockEntities = new ArrayList<>();
@@ -409,7 +409,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	private void renderBlockEntities(PonderWorld world, PoseStack ms, MultiBufferSource buffer, float pt) {
-		loadTEsIfMissing(world);
+		loadBEsIfMissing(world);
 		BlockEntityRenderHelper.renderBlockEntities(world, renderedBlockEntities, ms, buffer, pt);
 	}
 
@@ -420,12 +420,12 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		PoseStack poseStack = objects.poseStack;
 		Random random = objects.random;
 		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		ShadeSeparatedBufferBuilder builder = new ShadeSeparatedBufferBuilder(512);
+		BufferBuilder shadedBuilder = objects.shadedBuilder;
 		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
 
-		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		shadeSeparatingWrapper.prepare(builder, unshadedBuilder);
+		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
 
 		world.setMask(this.section);
 		ModelBlockRenderer.enableCaching();
@@ -454,7 +454,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			}
 
 			if (!fluidState.isEmpty() && ItemBlockRenderTypes.getRenderLayer(fluidState) == layer)
-				dispatcher.renderLiquid(pos, world, builder, state, fluidState);
+				dispatcher.renderLiquid(pos, world, shadedBuilder, state, fluidState);
 
 			poseStack.popPose();
 		});
@@ -462,17 +462,18 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		world.clearMask();
 
 		shadeSeparatingWrapper.clear();
-		unshadedBuilder.end();
-		builder.appendUnshadedVertices(unshadedBuilder);
-		builder.end();
+		ShadeSeparatedBufferedData bufferedData = ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
 
-		return new SuperByteBuffer(builder);
+		SuperByteBuffer sbb = new SuperByteBuffer(bufferedData);
+		bufferedData.release();
+		return sbb;
 	}
 
 	private static class ThreadLocalObjects {
 		public final PoseStack poseStack = new PoseStack();
 		public final Random random = new Random();
 		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
 		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}
 

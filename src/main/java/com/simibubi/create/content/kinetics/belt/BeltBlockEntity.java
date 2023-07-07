@@ -184,6 +184,8 @@ public class BeltBlockEntity extends KineticBlockEntity implements ItemTransfera
 	@Nullable
 	@Override
 	public Storage<ItemVariant> getItemStorage(@Nullable Direction direction) {
+		if (!isItemHandlerCap(cap))
+			return super.getCapability(cap, side);
 		if (!isRemoved() && itemHandler == null)
 			initializeItemHandler();
 		if (direction == Direction.UP || BeltBlock.canAccessFromSide(direction, getBlockState())) {
