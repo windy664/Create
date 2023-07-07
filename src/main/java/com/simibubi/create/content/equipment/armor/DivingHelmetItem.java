@@ -38,23 +38,19 @@ public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingB
 		return CustomEnchantingBehaviorItem.super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
-	public static boolean isWornBy(Entity entity, boolean fireproof) {
-		ItemStack stack = getWornItem(entity);
-		if (stack == null)
-			return false;
-		if (!stack.getItem()
-			.isFireResistant() && fireproof)
-			return false;
-		return stack.getItem() instanceof DivingHelmetItem;
+	public static boolean isWornBy(Entity entity) {
+		return !getWornItem(entity).isEmpty();
 	}
 
-	@Nullable
 	public static ItemStack getWornItem(Entity entity) {
 		if (!(entity instanceof LivingEntity livingEntity)) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 		ItemStack stack = livingEntity.getItemBySlot(SLOT);
-		return stack.getItem() instanceof DivingHelmetItem ? stack : null;
+		if (!(stack.getItem() instanceof DivingHelmetItem)) {
+			return ItemStack.EMPTY;
+		}
+		return stack;
 	}
 
 	public static void breatheUnderwater(LivingEntity entity) {
@@ -67,8 +63,13 @@ public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingB
 			entity.getExtraCustomData()
 				.remove("VisualBacktankAir");
 
+		ItemStack helmet = getWornItem(entity);
+		if (helmet.isEmpty())
+			return;
+
 		boolean lavaDiving = entity.isInLava();
-		if (!isWornBy(entity, lavaDiving))
+		if (!helmet.getItem()
+			.isFireResistant() && lavaDiving)
 			return;
 		if (!entity.isEyeInFluid(AllFluidTags.DIVING_FLUIDS.tag) && !lavaDiving)
 			return;
