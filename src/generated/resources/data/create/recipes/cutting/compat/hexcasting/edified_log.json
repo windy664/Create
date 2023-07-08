@@ -10,13 +10,13 @@
   ],
   "ingredients": [
     {
-      "item": "hexcasting:akashic_log"
+      "item": "hexcasting:edified_log"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "hexcasting:akashic_log_stripped"
+      "item": "hexcasting:stripped_edified_log"
     }
   ]
 }
