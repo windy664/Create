@@ -29,7 +29,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
-import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -630,10 +629,15 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	}
 
 	private boolean acceptItemOutputsIntoBasin(List<ItemStack> outputItems, TransactionContext ctx, Storage<ItemVariant> targetInv) {
-		for (ItemStack itemStack : outputItems) {
-			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
-				.isEmpty())
-				return false;
+		try (Transaction t = ctx.openNested()) {
+			for (ItemStack itemStack : outputItems) {
+				long inserted = targetInv.insert(ItemVariant.of(itemStack), itemStack.getCount(), t);
+				if (inserted != itemStack.getCount()) {
+					t.commit();
+					return false;
+				}
+			}
+			t.commit();
 		}
 		return true;
 	}
@@ -776,11 +780,9 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		Lang.translate("gui.goggles.basin_contents")
 			.forGoggles(tooltip);
 
-		Couple<SmartInventory> items = Couple.create(inputInventory, outputInventory);
-		Couple<SmartFluidTankBehaviour> fluids = Couple.create(inputTank, outputTank);
 		boolean isEmpty = true;
 
-		for (SmartInventory inventory : items) {
+		for (SmartInventory inventory : invs) {
 			for (int i = 0; i < inventory.getSlots(); i++) {
 				ItemStack stackInSlot = inventory.getStackInSlot(i);
 				if (stackInSlot.isEmpty())
@@ -798,7 +800,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		FluidUnit unit = AllConfigs.client().fluidUnitType.get();
 		LangBuilder unitSuffix = Lang.translate(unit.getTranslationKey());
 		boolean simplify = AllConfigs.client().simplifyFluidUnit.get();
-		for (SmartFluidTankBehaviour behaviour : fluids) {
+		for (SmartFluidTankBehaviour behaviour : tanks) {
 			for (TankSegment tank : behaviour.getTanks()) {
 				FluidStack fluidStack = tank.getRenderedFluid();
 				if (fluidStack.isEmpty()) {

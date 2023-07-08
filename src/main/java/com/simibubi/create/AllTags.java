@@ -5,7 +5,6 @@ import static com.simibubi.create.AllTags.NameSpace.MOD;
 import static com.simibubi.create.AllTags.NameSpace.QUARK;
 import static com.simibubi.create.AllTags.NameSpace.TIC;
 
-import com.simibubi.create.foundation.data.TagGen;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.Registry;
@@ -44,7 +43,7 @@ public class AllTags {
 	}
 
 	public enum NameSpace {
-		
+
 		MOD(Create.ID, false, true),
 		FORGE("c"),
 		TIC("tconstruct"),
@@ -68,7 +67,7 @@ public class AllTags {
 	}
 
 	public enum AllBlockTags {
-		
+
 		BRITTLE,
 		CASING,
 		FAN_TRANSPARENT,
@@ -137,11 +136,11 @@ public class AllTags {
 		}
 
 		private static void init() {}
-		
+
 	}
 
 	public enum AllItemTags {
-		
+
 		BLAZE_BURNER_FUEL_REGULAR(MOD, "blaze_burner_fuel/regular"),
 		BLAZE_BURNER_FUEL_SPECIAL(MOD, "blaze_burner_fuel/special"),
 		CASING,
@@ -205,11 +204,11 @@ public class AllTags {
 		}
 
 		private static void init() {}
-		
+
 	}
 
 	public enum AllFluidTags {
-		
+
 		BOTTOMLESS_ALLOW(MOD, "bottomless/allow"),
 		BOTTOMLESS_DENY(MOD, "bottomless/deny"),
 		// fabric: extra tag for diving helmet behavior
@@ -254,11 +253,11 @@ public class AllTags {
 		}
 
 		private static void init() {}
-		
+
 	}
-	
+
 	public enum AllEntityTags {
-		
+
 		IGNORE_SEAT,
 
 		;
@@ -285,7 +284,7 @@ public class AllTags {
 		AllEntityTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
 			if (optional) {
-				tag = optionalTag(ForgeRegistries.ENTITIES, id);
+				tag = optionalTag(Registry.ENTITY_TYPE, id);
 			} else {
 				tag = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, id);
 			}
@@ -298,7 +297,7 @@ public class AllTags {
 		}
 
 		private static void init() {}
-		
+
 	}
 
 	public static void init() {

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.equipment.armor;
 
-import org.jetbrains.annotations.Nullable;
+import java.util.List;
 
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import io.github.fabricators_of_create.porting_lib.enchant.CustomEnchantingBehaviorItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -20,8 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-
-import org.jetbrains.annotations.Nullable;
 
 public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingBehaviorItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.HEAD;
