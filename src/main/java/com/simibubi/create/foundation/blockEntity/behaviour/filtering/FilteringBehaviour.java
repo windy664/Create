@@ -275,8 +275,8 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	public void onShortInteract(Player player, InteractionHand hand, Direction side) {
 		Level level = getWorld();
 		BlockPos pos = getPos();
-		ItemStack toApply = player.getItemInHand(hand)
-			.copy();
+		ItemStack itemInHand = player.getItemInHand(hand);
+		ItemStack toApply = itemInHand.copy();
 
 		if (AllItems.WRENCH.isIn(toApply))
 			return;
@@ -285,23 +285,13 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		if (level.isClientSide())
 			return;
 
-		if (!player.isCreative()) {
-			if (toApply.getItem() instanceof FilterItem) {
-				if (toApply.getCount() == 1)
-					player.setItemInHand(hand, ItemStack.EMPTY);
-				else
-					player.getItemInHand(hand)
-						.shrink(1);
-			}
-		}
-
-		if (getFilter().getItem() instanceof FilterItem) {
+		if (getFilter(side).getItem() instanceof FilterItem) {
 			if (!player.isCreative() || ItemHelper
 				.extract(PlayerInventoryStorage.of(player),
-					stack -> ItemHandlerHelper.canItemStacksStack(stack, getFilter()), true)
+					stack -> ItemHandlerHelper.canItemStacksStack(stack, getFilter(side)), true)
 				.isEmpty())
 				player.getInventory()
-					.placeItemBackInInventory(getFilter());
+					.placeItemBackInInventory(getFilter(side));
 		}
 
 		if (toApply.getItem() instanceof FilterItem)
@@ -311,6 +301,15 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 			player.displayClientMessage(Lang.translateDirect("logistics.filter.invalid_item"), true);
 			AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
 			return;
+		}
+
+		if (!player.isCreative()) {
+			if (toApply.getItem() instanceof FilterItem) {
+				if (itemInHand.getCount() == 1)
+					player.setItemInHand(hand, ItemStack.EMPTY);
+				else
+					itemInHand.shrink(1);
+			}
 		}
 
 		level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f, .1f);
@@ -385,10 +384,5 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 				.placeItemBackInInventory(refund);
 
 		return setFilter(side, copied);
-	}
-
-	public static boolean playerCanInteract(Player player) {
-		boolean adventure = !player.mayBuild() && !player.isSpectator(); // from GameRenderer
-		return !(adventure && AllConfigs.server().limitAdventureMode.get());
 	}
 }

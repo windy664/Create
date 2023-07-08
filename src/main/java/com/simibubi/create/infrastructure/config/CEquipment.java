@@ -12,6 +12,7 @@ public class CEquipment extends ConfigBase {
 
 	public final ConfigInt maxExtendoGripActions = i(1000, 0, "maxExtendoGripActions", Comments.maxExtendoGripActions);
 	public final ConfigInt maxPotatoCannonShots = i(200, 0, "maxPotatoCannonShots", Comments.maxPotatoCannonShots);
+	public final ConfigBool potatoCannonWorldModification = b(true, "potatoCannonWorldModification", Comments.potatoCannonWorldModification);
 
 //	public ConfigInt zapperUndoLogLength = i(10, 0, "zapperUndoLogLength", Comments.zapperUndoLogLength); NYI
 
@@ -35,6 +36,8 @@ public class CEquipment extends ConfigBase {
 		static String maxPotatoCannonShots =
 			"Amount of free Potato Cannon shots provided by one filled Copper Backtank. Set to 0 makes Potato Cannons unbreakable";
 //		static String zapperUndoLogLength = "The maximum amount of operations a blockzapper can remember for undoing. (0 to disable undo)";
+		static String potatoCannonWorldModification =
+		"Weather Potato Cannon shots can modify the world or not. This includes placing blocks and changing entities.";
 	}
 
 }

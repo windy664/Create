@@ -334,7 +334,7 @@ public class ClientEvents {
 			return false;
 
 		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
-		if (divingHelmet != null) {
+		if (!divingHelmet.isEmpty()) {
 			if (FluidHelper.isWater(fluid)) {
 				fogData.scaleFarPlaneDistance(6.25f);
 				return true;

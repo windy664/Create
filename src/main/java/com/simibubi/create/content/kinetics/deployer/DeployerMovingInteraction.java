@@ -2,6 +2,8 @@ package com.simibubi.create.content.kinetics.deployer;
 
 import java.util.UUID;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllItems;
@@ -25,6 +27,8 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
+		if (AdventureUtil.isAdventure(player))
+			return false;
 		MutablePair<StructureBlockInfo, MovementContext> actor = contraptionEntity.getContraption()
 			.getActorAt(localPos);
 		if (actor == null || actor.right == null)

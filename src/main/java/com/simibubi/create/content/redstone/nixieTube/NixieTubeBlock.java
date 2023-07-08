@@ -5,6 +5,8 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -68,7 +70,7 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {
 
-		if (player.isShiftKeyDown())
+		if (player.isShiftKeyDown() || AdventureUtil.isAdventure(player))
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);

@@ -11,6 +11,7 @@ import com.simibubi.create.content.equipment.clipboard.ClipboardOverrides.Clipbo
 import com.simibubi.create.content.trains.track.TrackBlockOutline;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -132,7 +133,7 @@ public class ClipboardValueSettingsHandler {
 		if (!AllBlocks.CLIPBOARD.isIn(itemStack))
 			return InteractionResult.PASS;
 
-		if (player != null && player.isSpectator())
+		if (player != null && player.isSpectator() || AdventureUtil.isAdventure(player))
 			return InteractionResult.PASS;
 		if (player.isSteppingCarefully())
 			return InteractionResult.PASS;

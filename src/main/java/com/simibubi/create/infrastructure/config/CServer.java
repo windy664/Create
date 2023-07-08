@@ -4,7 +4,6 @@ import com.simibubi.create.foundation.config.ConfigBase;
 
 public class CServer extends ConfigBase {
 
-	public final ConfigBool limitAdventureMode = b(true, "limitAdventureMode", Comments.limitAdventureMode, Comments.limitAdventureMode2);
 	public final ConfigGroup infrastructure = group(0, "infrastructure", Comments.infrastructure);
 	public final ConfigInt tickrateSyncTimer =
 		i(20, 5, "tickrateSyncTimer", "[in Ticks]", Comments.tickrateSyncTimer, Comments.tickrateSyncTimer2);

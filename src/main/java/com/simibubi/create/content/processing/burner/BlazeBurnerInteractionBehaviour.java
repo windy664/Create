@@ -12,6 +12,7 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.schedule.Schedule;
 import com.simibubi.create.content.trains.schedule.ScheduleItem;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -28,6 +29,8 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
+		if (AdventureUtil.isAdventure(player))
+			return false;
 		ItemStack itemInHand = player.getItemInHand(activeHand);
 
 		if (!(contraptionEntity instanceof CarriageContraptionEntity carriageEntity))

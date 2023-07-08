@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.placement.PlacementOffset;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -121,7 +122,7 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {
 
-		if (player.isShiftKeyDown())
+		if (player.isShiftKeyDown() || AdventureUtil.isAdventure(player))
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);

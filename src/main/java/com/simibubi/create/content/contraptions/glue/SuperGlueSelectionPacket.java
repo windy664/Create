@@ -5,6 +5,7 @@ import java.util.Set;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -37,6 +38,8 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			ServerPlayer player = context.getSender();
+			if (AdventureUtil.isAdventure(player))
+				return;
 
 			double range = ReachEntityAttributes.getReachDistance(player, player.isCreative() ? 5 : 4.5) + 2;
 			if (player.distanceToSqr(Vec3.atCenterOf(to)) > range * range)

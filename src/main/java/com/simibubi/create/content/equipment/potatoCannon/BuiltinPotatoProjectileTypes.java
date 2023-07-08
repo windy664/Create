@@ -12,6 +12,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.mixin.accessor.FallingBlockEntityAccessor;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents.Teleport.EntityTeleportEvent;
 import io.github.fabricators_of_create.porting_lib.fake_players.FakePlayer;
@@ -165,6 +167,8 @@ public class BuiltinPotatoProjectileTypes {
 			.renderTumbling()
 			.soundPitch(1.1f)
 			.onEntityHit(ray -> {
+				if (!canModifyWorld())
+					return false;
 				Entity entity = ray.getEntity();
 				Level world = entity.level;
 
@@ -314,11 +318,15 @@ public class BuiltinPotatoProjectileTypes {
 		return (world, ray) -> {
 			if (world.isClientSide())
 				return true;
+			if (!canModifyWorld())
+				return false;
 
 			BlockPos hitPos = ray.getBlockPos();
 			if (world instanceof Level l && !l.isLoaded(hitPos))
 				return true;
 			Direction face = ray.getDirection();
+			if (face != Direction.UP)
+				return false;
 			BlockPos placePos = hitPos.relative(face);
 			if (!world.getBlockState(placePos)
 				.getMaterial()
@@ -343,6 +351,8 @@ public class BuiltinPotatoProjectileTypes {
 		return (world, ray) -> {
 			if (world.isClientSide())
 				return true;
+			if (!canModifyWorld())
+				return false;
 
 			BlockPos hitPos = ray.getBlockPos();
 			if (world instanceof Level l && !l.isLoaded(hitPos))
@@ -383,6 +393,8 @@ public class BuiltinPotatoProjectileTypes {
 			Level world = entity.getCommandSenderWorld();
 			if (world.isClientSide)
 				return true;
+			if (!canModifyWorld())
+				return false;
 			if (!(entity instanceof LivingEntity))
 				return false;
 			LivingEntity livingEntity = (LivingEntity) entity;
@@ -421,5 +433,9 @@ public class BuiltinPotatoProjectileTypes {
 	}
 
 	public static void register() {}
+
+	private static boolean canModifyWorld() {
+		return AllConfigs.server().equipment.potatoCannonWorldModification.get();
+	}
 
 }

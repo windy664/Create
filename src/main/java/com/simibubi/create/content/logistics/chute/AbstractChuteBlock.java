@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -194,6 +195,8 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	@Override
 	public InteractionResult use(BlockState p_225533_1_, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult p_225533_6_) {
+		if (AdventureUtil.isAdventure(player))
+			return InteractionResult.PASS;
 		if (!player.getItemInHand(hand)
 			.isEmpty())
 			return InteractionResult.PASS;

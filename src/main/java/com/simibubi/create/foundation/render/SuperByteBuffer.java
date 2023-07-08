@@ -2,13 +2,13 @@ package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.api.vertex.ShadedVertexList;
 import com.jozufozu.flywheel.backend.ShadersModHandler;
+import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.DiffuseLightCalculator;
 import com.jozufozu.flywheel.util.transform.TStack;
 import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.BufferBuilder.DrawState;
 import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
-import com.mojang.blaze3d.vertex.BufferBuilder.DrawState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -35,7 +35,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	private final ShadedVertexList template;
 
 	// Vertex Position
-	private final PoseStack transforms;
+	private final PoseStack transforms = new PoseStack();
 
 	// Vertex Coloring
 	private boolean shouldColor;
@@ -63,11 +63,28 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	// Temporary
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
-	public SuperByteBuffer(RenderedBuffer buf, int unshadedStartVertex) {
-		DrawState drawState = buf.drawState();
-		template = new BlockVertexList.Shaded(buf.vertexBuffer(), drawState.vertexCount(), drawState.format().getVertexSize(), unshadedStartVertex);
+	public SuperByteBuffer(ByteBuffer vertexBuffer, BufferBuilder.DrawState drawState, int unshadedStartVertex) {
+		int vertexCount = drawState.vertexCount();
+		int stride = drawState.format().getVertexSize();
 
-		transforms = new PoseStack();
+		ShadedVertexList template = new BlockVertexList.Shaded(vertexBuffer, vertexCount, stride, unshadedStartVertex);
+		shadedPredicate = template::isShaded;
+		this.template = template;
+
+		transforms.pushPose();
+	}
+
+	public SuperByteBuffer(ShadeSeparatedBufferedData data) {
+		this(data.vertexBuffer(), data.drawState(), data.unshadedStartVertex());
+	}
+
+	public SuperByteBuffer(ByteBuffer vertexBuffer, BufferBuilder.DrawState drawState) {
+		int vertexCount = drawState.vertexCount();
+		int stride = drawState.format().getVertexSize();
+
+		template = new BlockVertexList(vertexBuffer, vertexCount, stride);
+		shadedPredicate = index -> true;
+
 		transforms.pushPose();
 	}
 
@@ -226,6 +243,10 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 
 	public boolean isEmpty() {
 		return template.isEmpty();
+	}
+
+	public void delete() {
+		template.delete();
 	}
 
 	public PoseStack getTransforms() {

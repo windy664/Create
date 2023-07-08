@@ -7,6 +7,7 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.EmptyMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.fabricmc.api.EnvType;
@@ -52,7 +53,7 @@ public class SymmetryHandler {
 			return;
 
 		Player player = context.getPlayer();
-		if (player == null)
+		if (player == null || AdventureUtil.isAdventure(player))
 			return;
 		Inventory inv = player.getInventory();
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
@@ -66,7 +67,7 @@ public class SymmetryHandler {
 	}
 
 	public static boolean onBlockDestroyed(Level world, Player player, BlockPos pos, BlockState state, /* Nullable */ BlockEntity blockEntity) {
-		if (handlingSymmetry)
+		if (handlingSymmetry && AdventureUtil.isAdventure(player))
 			return true;
 
 		if (world

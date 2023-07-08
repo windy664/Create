@@ -10,6 +10,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
@@ -33,6 +34,9 @@ import net.minecraft.world.phys.BlockHitResult;
 public class ManualApplicationRecipe extends ItemApplicationRecipe {
 
 	public static InteractionResult manualApplicationRecipesApplyInWorld(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+		if (AdventureUtil.isAdventure(player))
+			return InteractionResult.PASS;
+
 		ItemStack heldItem = player.getItemInHand(hand);
 		BlockPos pos = hitResult.getBlockPos();
 		BlockState blockState = level.getBlockState(pos);

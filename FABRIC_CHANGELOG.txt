@@ -5,4 +5,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- require newer FAPI, should fix issues with Porting Lib not loading
+- updated to 0.5.1.c

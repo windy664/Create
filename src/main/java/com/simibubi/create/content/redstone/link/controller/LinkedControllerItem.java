@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler.Frequency;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
@@ -129,6 +130,8 @@ public class LinkedControllerItem extends Item implements MenuProvider, UseFirst
 
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
+		if (AdventureUtil.isAdventure(player))
+			return null;
 		ItemStack heldItem = player.getMainHandItem();
 		return LinkedControllerMenu.create(id, inv, heldItem);
 	}

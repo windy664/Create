@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.minecraft.client.player.LocalPlayer;
@@ -114,7 +115,7 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
 
-		if (pPlayer == null || pPlayer.isSteppingCarefully())
+		if (pPlayer == null || pPlayer.isSteppingCarefully() || AdventureUtil.isAdventure(pPlayer))
 			return InteractionResult.PASS;
 		ItemStack itemInHand = pPlayer.getItemInHand(pHand);
 		if (AllItems.WRENCH.isIn(itemInHand))

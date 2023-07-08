@@ -186,10 +186,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements SidedStorageB
 	public Storage<ItemVariant> getItemStorage(@Nullable Direction direction) {
 		if (!isRemoved() && itemHandler == null)
 			initializeItemHandler();
-		if (direction == Direction.UP || BeltBlock.canAccessFromSide(direction, getBlockState())) {
-			return itemHandler;
-		}
-		return null;
+		return itemHandler;
 	}
 
 	@Override

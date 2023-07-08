@@ -7,6 +7,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.BlockMovementChecks;
 import com.simibubi.create.foundation.placement.IPlacementHelper;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.fabric.ReachUtil;
 import com.simibubi.create.foundation.utility.worldWrappers.RayTraceWorld;
@@ -34,7 +35,7 @@ public class SuperGlueHandler {
 		Player entity = context.getPlayer();
 		BlockPos pos = context.getClickedPos();
 
-		if (entity == null)
+		if (entity == null || AdventureUtil.isAdventure(entity))
 			return;
 		if (world.isClientSide())
 			return;

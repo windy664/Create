@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.blockEntity.behaviour;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -83,7 +85,7 @@ public class ValueSettingsInputHandler {
 	}
 
 	public static boolean canInteract(Player player) {
-		return player != null && !player.isSpectator() && !player.isShiftKeyDown();
+		return player != null && !player.isSpectator() && !player.isShiftKeyDown() && !AdventureUtil.isAdventure(player);
 	}
 
 }

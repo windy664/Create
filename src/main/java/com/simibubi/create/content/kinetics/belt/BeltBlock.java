@@ -571,10 +571,6 @@ public class BeltBlock extends HorizontalKineticBlock
 		return pos;
 	}
 
-	public static boolean canAccessFromSide(Direction facing, BlockState belt) {
-		return true;
-	}
-
 	@Override
 	public Class<BeltBlockEntity> getBlockEntityClass() {
 		return BeltBlockEntity.class;

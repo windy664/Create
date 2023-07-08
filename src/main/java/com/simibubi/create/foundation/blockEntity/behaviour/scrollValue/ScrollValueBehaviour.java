@@ -43,7 +43,6 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 	Consumer<Integer> clientCallback;
 	Function<Integer, String> formatter;
 	private Supplier<Boolean> isActive;
-	private Predicate<Player> canInteract;
 	boolean needsWrench;
 
 	public ScrollValueBehaviour(Component label, SmartBlockEntity be, ValueBoxTransform slot) {
@@ -57,7 +56,6 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 		formatter = i -> Integer.toString(i);
 		value = 0;
 		isActive = () -> true;
-		canInteract = FilteringBehaviour::playerCanInteract;
 	}
 
 	@Override
@@ -108,11 +106,6 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 		return this;
 	}
 
-	public ScrollValueBehaviour interactiveWhen(Predicate<Player> condition) {
-		canInteract = condition;
-		return this;
-	}
-
 	public void setValue(int value) {
 		value = Mth.clamp(value, min, max);
 		if (value == this.value)
@@ -139,10 +132,6 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 	@Override
 	public boolean isActive() {
 		return isActive.get();
-	}
-
-	public boolean canInteract(Player player) {
-		return canInteract.test(player);
 	}
 
 	@Override

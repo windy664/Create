@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.placement.PlacementOffset;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -99,6 +100,8 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
+		if (AdventureUtil.isAdventure(player))
+			return InteractionResult.PASS;
 		ItemStack heldByPlayer = player.getItemInHand(handIn)
 			.copy();
 
@@ -125,8 +128,6 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 			return InteractionResult.SUCCESS;
 
 		withBlockEntityDo(worldIn, pos, be -> {
-			if (!FilteringBehaviour.playerCanInteract(player))
-				return;
 			ItemStack heldByDeployer = be.player.getMainHandItem()
 				.copy();
 			if (heldByDeployer.isEmpty() && heldByPlayer.isEmpty())

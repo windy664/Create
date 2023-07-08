@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -138,7 +139,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
-		if (pPlayer == null)
+		if (pPlayer == null || AdventureUtil.isAdventure(pPlayer))
 			return InteractionResult.PASS;
 		if (pPlayer.isSteppingCarefully())
 			return InteractionResult.PASS;
