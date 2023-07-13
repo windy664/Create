@@ -32,7 +32,6 @@ repositories {
     maven { url = "https://maven.shedaniel.me/" } // REI and deps
     maven { url = "https://api.modrinth.com/maven" } // LazyDFU, Sodium, Sandwichable
     maven { url = "https://maven.terraformersmc.com/" } // Mod Menu, Trinkets
-    maven { url = "https://ladysnake.jfrog.io/artifactory/mods" } // CCA, for Trinkets
     maven { url = "https://modmaven.dev" } // Botania
     maven { // Reach Entity Attributes
         url = "https://maven.jamieswhiteshirt.com/libs-release"
@@ -60,7 +59,7 @@ def dependencies(DependencyHandler deps) {
     deps.modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
     for (String module in port_lib_modules.split(",")) {
-        deps.modApi(deps.include("io.github.fabricators_of_create.Porting-Lib:$module:$port_lib_version+$minecraft_version"))
+        deps.modApi(deps.include("io.github.fabricators_of_create.Porting-Lib:$module:$port_lib_version"))
     }
 
     deps.modApi(deps.include("com.tterrag.registrate_fabric:Registrate:$registrate_version")) {
@@ -89,9 +88,8 @@ def setup(DependencyHandler deps) {
 
 // setup mods that enhance development
 def devEnv(DependencyHandler deps) {
-    deps.modLocalRuntime("maven.modrinth:lazydfu:$lazy_dfu_version")
     deps.modLocalRuntime("com.terraformersmc:modmenu:$modmenu_version")
-    deps.modLocalRuntime("dev.emi:trinkets:$trinkets_version")
+    deps.modLocalRuntime("dev.emi:trinkets:$trinkets_version") { transitive = false }
     if (cc_enabled) {
         deps.modLocalRuntime("maven.modrinth:cc-restitched:$cc_version")
         deps.modLocalRuntime("maven.modrinth:cloth-config:$cloth_version")
@@ -107,9 +105,8 @@ def compat(DependencyHandler deps) {
     deps.modCompileOnly("maven.modrinth:sandwichable:$sandwichable_version")
     deps.modCompileOnly("maven.modrinth:sodium:$sodium_version")
 
-    deps.modCompileOnly("dev.emi:trinkets:$trinkets_version") { exclude(group: "com.terraformersmc") }
-    deps.modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-base:$cca_version")
-    deps.modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:$cca_version")
+    deps.modCompileOnly("dev.emi:trinkets:$trinkets_version") { transitive = false }
+    deps.modCompileOnly("maven.modrinth:cardinal-components-api:$cca_version") // for trinkets
 
     recipeViewers(deps)
 }
@@ -117,7 +114,7 @@ def compat(DependencyHandler deps) {
 // setup the three recipe viewer mods
 def recipeViewers(DependencyHandler deps) {
     // EMI
-    deps.modCompileOnly("dev.emi:emi:$emi_version") { transitive = false }
+    deps.modCompileOnly("dev.emi:emi-fabric:$emi_version:api") { transitive = false }
     // JEI
     deps.modCompileOnly("mezz.jei:jei-$minecraft_version-fabric:$jei_version") { transitive = false }
     // REI
@@ -127,7 +124,7 @@ def recipeViewers(DependencyHandler deps) {
     switch (recipe_viewer.toLowerCase(Locale.ROOT)) {
         case "jei": deps.modLocalRuntime("mezz.jei:jei-$minecraft_version-fabric:$jei_version"); break
         case "rei": deps.modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"); break
-        case "emi": deps.modLocalRuntime("dev.emi:emi:$emi_version"); break
+        case "emi": deps.modLocalRuntime("dev.emi:emi-fabric:$emi_version"); break
         case "disabled": break
         default: println("Unknown recipe viewer specified: $recipe_viewer. Must be JEI, REI, EMI, or disabled.")
     }
