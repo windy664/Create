@@ -2,9 +2,10 @@ package com.simibubi.create.content.trains.station;
 
 import java.util.List;
 
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.FontAccessor;
+
 import org.joml.Matrix4f;
 
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.FontAccessor;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
@@ -26,14 +27,14 @@ public class NoShadowFontWrapper extends Font {
 	public FontSet getFontSet(ResourceLocation pFontLocation) {
 		return ((FontAccessor) wrapped).port_lib$getFontSet(pFontLocation);
 	}
-	
+
 	@Override
 	public int drawInBatch(Component pText, float pX, float pY, int pColor, boolean pDropShadow, Matrix4f pMatrix,
 		MultiBufferSource pBuffer, DisplayMode pDisplayMode, int pBackgroundColor, int pPackedLightCoords) {
 		return wrapped.drawInBatch(pText, pX, pY, pColor, false, pMatrix, pBuffer, pDisplayMode, pBackgroundColor,
 			pPackedLightCoords);
 	}
-	
+
 	@Override
 	public int drawInBatch(FormattedCharSequence pText, float pX, float pY, int pColor, boolean pDropShadow,
 		Matrix4f pMatrix, MultiBufferSource pBuffer, DisplayMode pDisplayMode, int pBackgroundColor,
@@ -41,14 +42,14 @@ public class NoShadowFontWrapper extends Font {
 		return wrapped.drawInBatch(pText, pX, pY, pColor, false, pMatrix, pBuffer, pDisplayMode, pBackgroundColor,
 			pPackedLightCoords);
 	}
-	
+
 	@Override
 	public int drawInBatch(String pText, float pX, float pY, int pColor, boolean pDropShadow, Matrix4f pMatrix,
 		MultiBufferSource pBuffer, DisplayMode pDisplayMode, int pBackgroundColor, int pPackedLightCoords) {
 		return wrapped.drawInBatch(pText, pX, pY, pColor, false, pMatrix, pBuffer, pDisplayMode, pBackgroundColor,
 			pPackedLightCoords);
 	}
-	
+
 	@Override
 	public int drawInBatch(String pText, float pX, float pY, int pColor, boolean pDropShadow, Matrix4f pMatrix,
 		MultiBufferSource pBuffer, DisplayMode pDisplayMode, int pBackgroundColor, int pPackedLightCoords,
@@ -56,12 +57,12 @@ public class NoShadowFontWrapper extends Font {
 		return wrapped.drawInBatch(pText, pX, pY, pColor, false, pMatrix, pBuffer, pDisplayMode, pBackgroundColor,
 			pPackedLightCoords, pBidirectional);
 	}
-	
+
 	@Override
 	public FormattedText ellipsize(FormattedText text, int maxWidth) {
 		return wrapped.ellipsize(text, maxWidth);
 	}
-	
+
 	@Override
 	public int wordWrapHeight(FormattedText pText, int pMaxWidth) {
 		return wrapped.wordWrapHeight(pText, pMaxWidth);

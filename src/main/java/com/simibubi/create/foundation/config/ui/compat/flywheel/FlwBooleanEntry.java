@@ -8,7 +8,8 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.RenderElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractWidgetAccessor;
+
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AbstractWidgetAccessor;
 
 public class FlwBooleanEntry extends FlwValueEntry<Boolean> {
 	RenderElement enabled;

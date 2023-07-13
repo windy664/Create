@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.BucketItemAccessor;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
@@ -22,7 +24,6 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import io.github.fabricators_of_create.porting_lib.item.UseFirstBehaviorItem;
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.BucketItemAccessor;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
@@ -154,15 +155,14 @@ public class DeployerHandler {
 		InteractionHand hand = InteractionHand.MAIN_HAND;
 		if (!entities.isEmpty()) {
 			Entity entity = entities.get(world.random.nextInt(entities.size()));
-			List<ItemEntity> capturedDrops = new ArrayList<>();
 			boolean success = false;
-			entity.captureDrops(capturedDrops);
+			entity.startCapturingDrops();
 
 			// Use on entity
 			if (mode == Mode.USE) {
 				InteractionResult cancelResult = UseEntityCallback.EVENT.invoker().interact(player, world, hand, entity, new EntityHitResult(entity));
 				if (cancelResult == InteractionResult.FAIL) {
-					entity.captureDrops(null);
+					entity.finishCapturingDrops();
 					return;
 				}
 				if (cancelResult == null || cancelResult == InteractionResult.PASS) {
@@ -203,7 +203,7 @@ public class DeployerHandler {
 				success = true;
 			}
 
-			entity.captureDrops(null);
+			List<ItemEntity> capturedDrops = entity.finishCapturingDrops();
 			capturedDrops.forEach(e -> player.getInventory()
 				.placeItemBackInInventory(e.getItem()));
 			if (success)
@@ -231,13 +231,13 @@ public class DeployerHandler {
 				player.blockBreakingProgress = null;
 				return;
 			}
-			InteractionResult actionResult = UseBlockCallback.EVENT.invoker().interact(player, player.level, player.getUsedItemHand(), result);
+			InteractionResult actionResult = UseBlockCallback.EVENT.invoker().interact(player, player.level(), player.getUsedItemHand(), result);
 			if (actionResult == InteractionResult.FAIL)
 				return;
 			if (BlockHelper.extinguishFire(world, player, clickedPos, face))
 				return;
-//			if (actionResult != InteractionResult.FAIL)
-				clickedState.attack(world, clickedPos, player);
+//			if (actionResult != InteractionResult.FAIL) // fabric: checked above
+			clickedState.attack(world, clickedPos, player);
 			if (stack.isEmpty())
 				return;
 
@@ -273,7 +273,7 @@ public class DeployerHandler {
 		InteractionResult useItem = InteractionResult.PASS;
 		if (!clickedState.getShape(world, clickedPos)
 			.isEmpty()) {
-			useBlock = UseBlockCallback.EVENT.invoker().interact(player, player.level, hand, result);
+			useBlock = UseBlockCallback.EVENT.invoker().interact(player, player.level(), hand, result);
 			useItem = useBlock;
 		}
 

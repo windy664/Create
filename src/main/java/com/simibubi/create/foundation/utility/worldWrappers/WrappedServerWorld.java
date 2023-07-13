@@ -5,13 +5,11 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.MinecraftServerAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.MinecraftServerAccessor;
 import io.github.fabricators_of_create.porting_lib.util.BiomeManagerHelper;
-import io.github.fabricators_of_create.porting_lib.util.MinecraftServerUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
-import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;

@@ -7,7 +7,8 @@ import javax.annotation.Nullable;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.AllStructureProcessorTypes;
 import com.simibubi.create.foundation.utility.NBTProcessors;
-import io.github.fabricators_of_create.porting_lib.extensions.StructureProcessorExtensions;
+
+import io.github.fabricators_of_create.porting_lib.extensions.extensions.StructureProcessorExtensions;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.placement.PlacementOffset;
-import io.github.fabricators_of_create.porting_lib.util.DamageSourceHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -24,7 +23,6 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -183,10 +181,10 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 		});
 	}
 
-	@Override
-	public PushReaction getPistonPushReaction(BlockState state) {
-		return PushReaction.NORMAL;
-	}
+	// fabric: unnecessary
+//	public PushReaction getPistonPushReaction(BlockState state) {
+//		return PushReaction.NORMAL;
+//	}
 
 	public static boolean isHorizontal(BlockState state) {
 		return state.getValue(FACING)

@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.actors.harvester;
 
 import javax.annotation.Nullable;
 
+import io.github.fabricators_of_create.porting_lib.common.util.PlantUtil;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.jozufozu.flywheel.api.MaterialManager;
@@ -16,7 +18,6 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.util.PlantUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;

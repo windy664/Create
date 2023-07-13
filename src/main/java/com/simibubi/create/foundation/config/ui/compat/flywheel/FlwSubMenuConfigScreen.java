@@ -21,11 +21,11 @@ import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractSelectionListAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AbstractSelectionListAccessor;
 import net.minecraftforge.fml.config.ModConfig;
 
 public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {

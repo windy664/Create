@@ -11,6 +11,8 @@ import java.util.WeakHashMap;
 
 import com.simibubi.create.AllDamageTypes;
 
+import com.simibubi.create.foundation.mixin.fabric.ServerGamePacketListenerImplAccessor;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -37,7 +39,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.ServerGamePacketListenerImplAccessor;
 import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -119,7 +120,7 @@ public class ContraptionCollider {
 			entity.getSelfAndPassengers()
 				.forEach(e -> {
 					if (e instanceof ServerPlayer)
-						((ServerGamePacketListenerImplAccessor) ((ServerPlayer) e).connection).port_lib$setAboveGroundTickCount(0);
+						((ServerGamePacketListenerImplAccessor) ((ServerPlayer) e).connection).create$setAboveGroundTickCount(0);
 				});
 			if (playerType == PlayerType.SERVER)
 				continue;
@@ -206,7 +207,7 @@ public class ContraptionCollider {
 					Vec3 collisionPosition = intersect.getCollisionPosition();
 
 					if (!isTemporal) {
-						Vec3 separation = intersect.asSeparationVec(entity.maxUpStep);
+						Vec3 separation = intersect.asSeparationVec(entity.maxUpStep());
 						if (separation != null && !separation.equals(Vec3.ZERO)) {
 							collisionResponse.setValue(currentResponse.add(separation));
 							timeOfImpact = 0;
@@ -620,12 +621,12 @@ public class ContraptionCollider {
 		boolean flag1 = p_20273_.y != vec3.y;
 		boolean flag2 = p_20273_.z != vec3.z;
 		boolean flag3 = flag1 && p_20273_.y < 0.0D;
-		if (e.maxUpStep > 0.0F && flag3 && (flag || flag2)) {
-			Vec3 vec31 = collideBoundingBox(e, new Vec3(p_20273_.x, e.maxUpStep, p_20273_.z), aabb,
+		if (e.maxUpStep() > 0.0F && flag3 && (flag || flag2)) {
+			Vec3 vec31 = collideBoundingBox(e, new Vec3(p_20273_.x, e.maxUpStep(), p_20273_.z), aabb,
 				e.level(), list);
-			Vec3 vec32 = collideBoundingBox(e, new Vec3(0.0D, e.maxUpStep, 0.0D),
+			Vec3 vec32 = collideBoundingBox(e, new Vec3(0.0D, e.maxUpStep(), 0.0D),
 				aabb.expandTowards(p_20273_.x, 0.0D, p_20273_.z), e.level(), list);
-			if (vec32.y < (double) e.maxUpStep) {
+			if (vec32.y < (double) e.maxUpStep()) {
 				Vec3 vec33 =
 					collideBoundingBox(e, new Vec3(p_20273_.x, 0.0D, p_20273_.z), aabb.move(vec32), e.level(), list)
 						.add(vec32);

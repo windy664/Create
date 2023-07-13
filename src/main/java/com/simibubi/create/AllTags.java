@@ -7,6 +7,8 @@ import static com.simibubi.create.AllTags.NameSpace.TIC;
 
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -22,7 +24,7 @@ import net.minecraft.world.level.material.FluidState;
 
 public class AllTags {
 	public static <T> TagKey<T> optionalTag(Registry<T> registry,
-		ResourceLocation id) {
+											ResourceLocation id) {
 		return TagKey.create(registry.key(), id);
 	}
 
@@ -31,15 +33,15 @@ public class AllTags {
 	}
 
 	public static TagKey<Block> forgeBlockTag(String path) {
-		return forgeTag(Registry.BLOCK, path);
+		return forgeTag(BuiltInRegistries.BLOCK, path);
 	}
 
 	public static TagKey<Item> forgeItemTag(String path) {
-		return forgeTag(Registry.ITEM, path);
+		return forgeTag(BuiltInRegistries.ITEM, path);
 	}
 
 	public static TagKey<Fluid> forgeFluidTag(String path) {
-		return forgeTag(Registry.FLUID, path);
+		return forgeTag(BuiltInRegistries.FLUID, path);
 	}
 
 	public enum NameSpace {
@@ -117,7 +119,7 @@ public class AllTags {
 
 		AllBlockTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			tag = optionalTag(Registry.BLOCK, id);
+			tag = optionalTag(BuiltInRegistries.BLOCK, id);
 			this.alwaysDatagen = alwaysDatagen;
 		}
 
@@ -188,7 +190,7 @@ public class AllTags {
 
 		AllItemTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			tag = optionalTag(Registry.ITEM, id);
+			tag = optionalTag(BuiltInRegistries.ITEM, id);
 
 			this.alwaysDatagen = alwaysDatagen;
 		}
@@ -239,7 +241,7 @@ public class AllTags {
 
 		AllFluidTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			tag = optionalTag(Registry.FLUID, id);
+			tag = optionalTag(BuiltInRegistries.FLUID, id);
 			this.alwaysDatagen = alwaysDatagen;
 		}
 
@@ -284,7 +286,7 @@ public class AllTags {
 		AllEntityTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
 			if (optional) {
-				tag = optionalTag(Registry.ENTITY_TYPE, id);
+				tag = optionalTag(BuiltInRegistries.ENTITY_TYPE, id);
 			} else {
 				tag = TagKey.create(Registries.ENTITY_TYPE, id);
 			}

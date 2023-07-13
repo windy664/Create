@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.simibubi.create.foundation.mixin.fabric.ServerGamePacketListenerImplAccessor;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllTags;
@@ -17,7 +19,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.ServerGamePacketListenerImplAccessor;
 import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -108,7 +109,7 @@ public class AirCurrent {
 				() -> () -> enableClientPlayerSound(entity, Mth.clamp(speed / 128f * .4f, 0.01f, .4f)));
 
 			if (entity instanceof ServerPlayer)
-				((ServerGamePacketListenerImplAccessor) ((ServerPlayer) entity).connection).port_lib$setAboveGroundTickCount(0);
+				((ServerGamePacketListenerImplAccessor) ((ServerPlayer) entity).connection).create$setAboveGroundTickCount(0);
 
 			entityDistance -= .5f;
 			FanProcessing.Type processingType = getSegmentAt((float) entityDistance);

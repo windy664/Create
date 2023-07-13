@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import io.github.fabricators_of_create.porting_lib.extensions.INBTSerializable;
+import io.github.fabricators_of_create.porting_lib.core.util.INBTSerializable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 

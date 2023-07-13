@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ScreenAccessor;
+
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.platform.ClipboardManager;
@@ -49,8 +51,6 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.ponder.DebugScenes;
 import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
-
 import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.ChatFormatting;
@@ -62,8 +62,10 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -144,10 +146,10 @@ public class PonderUI extends NavigatableSimiScreen {
 	protected PonderUI(List<PonderScene> scenes) {
 		ResourceLocation component = scenes.get(0)
 			.getComponent();
-		if (Registry.ITEM.containsKey(component))
-			stack = new ItemStack(Registry.ITEM.get(component));
+		if (BuiltInRegistries.ITEM.containsKey(component))
+			stack = new ItemStack(BuiltInRegistries.ITEM.get(component));
 		else
-			stack = new ItemStack(Registry.BLOCK.get(component));
+			stack = new ItemStack(BuiltInRegistries.BLOCK.get(component));
 
 		tags = new ArrayList<>(PonderRegistry.TAGS.getTags(component));
 		this.scenes = scenes;

@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import io.github.fabricators_of_create.porting_lib.models.generators.ModelProvider;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.simibubi.create.foundation.data.TagGen;
@@ -24,7 +26,6 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.StairBlockAccessor;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -40,7 +41,6 @@ import net.minecraft.world.level.block.WeatheringCopperSlabBlock;
 import net.minecraft.world.level.block.WeatheringCopperStairBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.generators.ModelProvider;
 
 public class CopperBlockSet {
 	protected static final WeatherState[] WEATHER_STATES = WeatherState.values();
@@ -321,7 +321,7 @@ public class CopperBlockSet {
 			Supplier<BlockState> defaultStateSupplier = () -> blocks.get(parent, state, waxed)
 				.getDefaultState();
 			if (waxed) {
-				return p -> StairBlockAccessor.port_lib$init(defaultStateSupplier.get(), p);
+				return p -> new StairBlock(defaultStateSupplier.get(), p);
 			} else {
 				return p -> {
 					WeatheringCopperStairBlock block =

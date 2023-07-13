@@ -11,7 +11,6 @@ import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-import io.github.fabricators_of_create.porting_lib.block.CustomPathNodeTypeBlock;
 import io.github.fabricators_of_create.porting_lib.util.TagUtil;
 import net.fabricmc.fabric.api.registry.LandPathNodeTypesRegistry;
 import net.minecraft.MethodsReturnNonnullByDefault;

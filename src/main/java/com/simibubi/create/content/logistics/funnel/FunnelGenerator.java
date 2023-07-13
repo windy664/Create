@@ -7,13 +7,14 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
+import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile;
+import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockModelBuilder;
+
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
-import net.minecraftforge.client.model.generators.ModelFile;
 
 public class FunnelGenerator extends SpecialBlockStateGen {
 
@@ -39,7 +40,7 @@ public class FunnelGenerator extends SpecialBlockStateGen {
 
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> c, RegistrateBlockstateProvider p,
-		BlockState s) {
+												BlockState s) {
 		String prefix = "block/funnel/";
 		String powered = s.getValue(FunnelBlock.POWERED) ? "_powered" : "_unpowered";
 		String closed = s.getValue(FunnelBlock.POWERED) ? "_closed" : "_open";

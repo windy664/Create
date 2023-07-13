@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.item;
 
 import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 
-import io.github.fabricators_of_create.porting_lib.extensions.INBTSerializable;
+import io.github.fabricators_of_create.porting_lib.core.util.INBTSerializable;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandlerContainer;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;

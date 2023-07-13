@@ -8,9 +8,6 @@ import javax.annotation.Nullable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import io.github.fabricators_of_create.porting_lib.crafting.AbstractIngredient;
-import io.github.fabricators_of_create.porting_lib.crafting.CraftingHelper;
-import io.github.tropheusj.serialization_hooks.ingredient.IngredientDeserializer;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;

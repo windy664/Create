@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.gui;
 
+import io.github.fabricators_of_create.porting_lib.extensions.extensions.RenderTargetExtensions;
+
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -18,8 +20,6 @@ import com.mojang.math.Axis;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
-import io.github.fabricators_of_create.porting_lib.extensions.RenderTargetExtensions;
-import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;

@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.collision;
 
 import org.joml.Matrix4f;
-import io.github.fabricators_of_create.porting_lib.util.Matrix4fHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -143,7 +142,7 @@ public class Matrix3d {
 		conversionBuffer[9] = (float) m21;
 		conversionBuffer[10] = (float) m22;
 
-		return Matrix4fHelper.fromFloatArray().setTransposed(conversionBuffer);
+		return new Matrix4f().setTransposed(conversionBuffer);
 	}
 
 }

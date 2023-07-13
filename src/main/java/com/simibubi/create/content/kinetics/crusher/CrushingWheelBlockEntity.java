@@ -8,7 +8,6 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
-import io.github.fabricators_of_create.porting_lib.util.DamageSourceHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -56,13 +55,13 @@ public class CrushingWheelBlockEntity extends KineticBlockEntity {
 	}
 
 	public static int crushingIsFortunate(DamageSource source, LivingEntity target, int currentLevel, boolean recentlyHit) {
-		if (!AllDamageTypes.CRUSH.is(event.getDamageSource()))
+		if (!AllDamageTypes.CRUSH.is(source))
 			return 0;
 		return 2;		//This does not currently increase mob drops. It seems like this only works for damage done by an entity.
 	}
 
 	public static boolean handleCrushedMobDrops(LivingEntity target, DamageSource source, Collection<ItemEntity> drops, int lootingLevel, boolean recentlyHit) {
-		if (!AllDamageTypes.CRUSH.is(event.getSource()))
+		if (!AllDamageTypes.CRUSH.is(source))
 			return false;
 		Vec3 outSpeed = Vec3.ZERO;
 		for (ItemEntity outputItem : drops) {

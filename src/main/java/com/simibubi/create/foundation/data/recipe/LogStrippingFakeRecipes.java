@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.data.recipe;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.AxeItemAccessor;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.kinetics.deployer.ManualApplicationRecipe;
@@ -11,8 +13,8 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.AxeItemAccessor;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
@@ -38,7 +40,7 @@ public class LogStrippingFakeRecipes {
 		axe.setHoverName(Lang.translateDirect("recipe.item_application.any_axe")
 			.withStyle(style -> style.withItalic(false)));
 		// fabric: tag may not exist yet with JEI, #773
-		Registry.ITEM.getTagOrEmpty(ItemTags.LOGS)
+		BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.LOGS)
 			.forEach(stack -> process(stack.value(), recipes, axe));
 		return recipes;
 	}

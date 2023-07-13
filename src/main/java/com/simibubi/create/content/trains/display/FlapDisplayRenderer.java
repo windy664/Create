@@ -2,6 +2,8 @@ package com.simibubi.create.content.trains.display;
 
 import java.util.List;
 
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.FontAccessor;
+
 import org.joml.Matrix4f;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
@@ -16,7 +18,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.FontAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;

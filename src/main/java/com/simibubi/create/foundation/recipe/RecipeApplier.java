@@ -12,6 +12,7 @@ import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelp
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.Level;
 
 public class RecipeApplier {
 	public static void applyRecipeOn(ItemEntity entity, Recipe<?> recipe) {

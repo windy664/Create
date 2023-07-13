@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
-import io.github.fabricators_of_create.porting_lib.util.StairsBlockHelper;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -17,6 +16,8 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonnullType;
+
+import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile;
 
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -32,7 +33,6 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraftforge.client.model.generators.ModelFile;
 
 public abstract class PaletteBlockPartial<B extends Block> {
 
@@ -111,7 +111,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
 		@Override
 		protected StairBlock createBlock(Supplier<? extends Block> block) {
-			return StairsBlockHelper.init(block.get().defaultBlockState(), Properties.copy(block.get()));
+			return new StairBlock(block.get().defaultBlockState(), Properties.copy(block.get()));
 		}
 
 		@Override

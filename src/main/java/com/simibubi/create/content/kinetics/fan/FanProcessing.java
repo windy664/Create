@@ -23,7 +23,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandlerContainer;
-import io.github.fabricators_of_create.porting_lib.util.DamageSourceHelper;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;

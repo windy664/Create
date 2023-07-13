@@ -7,16 +7,15 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
-import io.github.fabricators_of_create.porting_lib.event.client.RegisterShadersCallback;
-import io.github.fabricators_of_create.porting_lib.event.client.RegisterShadersCallback.ShaderRegistry;
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.RenderTypeAccessor;
+
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.RenderTypeAccessor;
 
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceProvider;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.inventory.InventoryMenu;
 
 // TODO 1.17: use custom shaders instead of vanilla ones

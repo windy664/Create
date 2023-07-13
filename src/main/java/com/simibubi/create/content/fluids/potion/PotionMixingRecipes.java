@@ -15,12 +15,10 @@ import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 
-import io.github.fabricators_of_create.porting_lib.brewing.BrewingRecipe;
-import io.github.fabricators_of_create.porting_lib.brewing.BrewingRecipeRegistry;
-import io.github.fabricators_of_create.porting_lib.brewing.IBrewingRecipe;
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.PotionBrewing$MixAccessor;
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.PotionBrewingAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.PotionBrewing$MixAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.PotionBrewingAccessor;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import me.shedaniel.rei.plugin.common.displays.brewing.BrewingRecipe;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;

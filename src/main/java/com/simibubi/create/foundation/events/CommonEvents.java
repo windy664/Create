@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.events;
 
 import java.util.concurrent.Executor;
 
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEntityEvents;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -41,23 +43,13 @@ import com.simibubi.create.content.trains.schedule.ScheduleItemEntityInteraction
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsInputHandler;
 import com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
-import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 import com.simibubi.create.infrastructure.command.AllCommands;
-import com.simibubi.create.infrastructure.worldgen.AllOreFeatureConfigEntries;
 
 import io.github.fabricators_of_create.porting_lib.event.common.BlockEvents;
-import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
-import io.github.fabricators_of_create.porting_lib.event.common.EntityReadExtraDataCallback;
-import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
-import io.github.fabricators_of_create.porting_lib.event.common.MinecartEvents;
-import io.github.fabricators_of_create.porting_lib.event.common.MobEntitySetTargetCallback;
-import io.github.fabricators_of_create.porting_lib.event.common.MountEntityCallback;
-import io.github.fabricators_of_create.porting_lib.event.common.ProjectileImpactCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
@@ -187,10 +179,6 @@ public class CommonEvents {
 		CapabilityMinecartController.startTracking(target);
 	}
 
-	public static void onBiomeLoad() {
-		AllOreFeatureConfigEntries.modifyBiomes();
-	}
-
 	public static void leftClickEmpty(ServerPlayer player) {
 		ItemStack stack = player.getMainHandItem();
 		if (stack.getItem() instanceof ZapperItem) {
@@ -234,7 +222,6 @@ public class CommonEvents {
 		// fabric: some features using events on forge don't use events here.
 		// they've been left in this class for upstream compatibility.
 		CommonEvents.addReloadListeners();
-		CommonEvents.onBiomeLoad();
 		CommonEvents.addPackFinders();
 
 		// External Events

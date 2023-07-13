@@ -12,9 +12,7 @@ import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.Color;
-import io.github.fabricators_of_create.porting_lib.util.client.GuiUtils;
 
-import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;

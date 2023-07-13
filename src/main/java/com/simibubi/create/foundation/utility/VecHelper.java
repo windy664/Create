@@ -7,7 +7,6 @@ import org.joml.Vector3f;
 
 import com.simibubi.create.foundation.mixin.accessor.GameRendererAccessor;
 
-import io.github.fabricators_of_create.porting_lib.extensions.Vector3fExtensions;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

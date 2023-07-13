@@ -49,9 +49,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
 import io.github.fabricators_of_create.porting_lib.util.KeyBindingHelper;
-import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

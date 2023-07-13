@@ -9,6 +9,13 @@ import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import io.github.fabricators_of_create.porting_lib.models.generators.ConfiguredModel;
+import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile;
+
+import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile.ExistingModelFile;
+import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockModelProvider;
+import io.github.fabricators_of_create.porting_lib.models.generators.block.MultiPartBlockStateBuilder;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
@@ -43,11 +50,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.RailShape;
-import net.minecraftforge.client.model.generators.BlockModelProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.ModelFile.ExistingModelFile;
-import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
 
 public class BlockStateGen {
 
@@ -77,7 +79,7 @@ public class BlockStateGen {
 		boolean customItem) {
 		return (c, p) -> horizontalAxisBlock(c, p, getBlockModel(customItem, c, p));
 	}
-	
+
 	public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> simpleCubeAll(
 		String path) {
 		return (c, p) -> p.simpleBlock(c.get(), p.models()
@@ -97,7 +99,7 @@ public class BlockStateGen {
 	// Utility
 
 	private static <T extends Block> Function<BlockState, ModelFile> getBlockModel(boolean customItem,
-		DataGenContext<Block, T> c, RegistrateBlockstateProvider p) {
+																				   DataGenContext<Block, T> c, RegistrateBlockstateProvider p) {
 		return $ -> customItem ? AssetLookup.partialBaseModel(c, p) : AssetLookup.standardModel(c, p);
 	}
 

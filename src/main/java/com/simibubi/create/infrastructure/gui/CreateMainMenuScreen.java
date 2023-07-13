@@ -22,12 +22,11 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenAccessor;
-import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.TitleScreenAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ScreenAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.TitleScreenAccessor;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
