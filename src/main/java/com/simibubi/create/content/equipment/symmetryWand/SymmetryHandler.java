@@ -1,9 +1,11 @@
 package com.simibubi.create.content.equipment.symmetryWand;
 
-import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
+import java.util.Random;
+
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.EmptyMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
@@ -61,7 +63,7 @@ public class SymmetryHandler {
 				.isEmpty()
 				&& inv.getItem(i)
 					.getItem() == AllItems.WAND_OF_SYMMETRY.get()) {
-				SymmetryWandItem.apply(player.level, inv.getItem(i), player, context.getClickedPos(), block.getBlock().getStateForPlacement(context));
+				SymmetryWandItem.apply(player.level(), inv.getItem(i), player, context.getClickedPos(), block.getBlock().getStateForPlacement(context));
 			}
 		}
 	}
@@ -83,13 +85,14 @@ public class SymmetryHandler {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			if (!inv.getItem(i)
 				.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i))) {
-				SymmetryWandItem.remove(player.level, inv.getItem(i), player, pos, state);
+				SymmetryWandItem.remove(player.level(), inv.getItem(i), player, pos, state);
 			}
 		}
 		handlingSymmetry = false;
 		return true;
 	}
 
+	// TODO PORT 1.20
 	@Environment(EnvType.CLIENT)
 	public static void render(WorldRenderContext context) {
 		Minecraft mc = Minecraft.getInstance();
@@ -107,7 +110,7 @@ public class SymmetryHandler {
 			if (mirror instanceof EmptyMirror)
 				continue;
 
-			BlockPos pos = new BlockPos(mirror.getPosition());
+			BlockPos pos = BlockPos.containing(mirror.getPosition());
 
 			float yShift = 0;
 			double speed = 1 / 16d;
@@ -130,7 +133,7 @@ public class SymmetryHandler {
 			model = DefaultLayerFilteringBakedModel.wrap(model);
 			mc.getBlockRenderer()
 				.getModelRenderer()
-				.tesselateBlock(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
+				.tesselateBlock(player.level(), model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
 					random, Mth.getSeed(pos), OverlayTexture.NO_OVERLAY);
 
 			ms.popPose();

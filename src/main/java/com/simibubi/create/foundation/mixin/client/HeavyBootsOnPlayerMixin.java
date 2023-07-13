@@ -13,14 +13,13 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.player.ProfilePublicKey;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LocalPlayer.class)
 public abstract class HeavyBootsOnPlayerMixin extends AbstractClientPlayer {
 
-	private HeavyBootsOnPlayerMixin(ClientLevel level, GameProfile profile, ProfilePublicKey profileKey) {
-		super(level, profile, profileKey);
+	private HeavyBootsOnPlayerMixin(ClientLevel level, GameProfile profile) {
+		super(level, profile);
 	}
 
 	@Inject(method = "isUnderWater()Z", at = @At("HEAD"), cancellable = true)

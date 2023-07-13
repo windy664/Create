@@ -43,7 +43,8 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		if (filter == null)
 			return false;
 
-		boolean filterTest = filter.test(recipe.getResultItem());
+		boolean filterTest = filter.test(recipe.getResultItem(basin.getLevel()
+			.registryAccess()));
 		if (recipe instanceof BasinRecipe) {
 			BasinRecipe basinRecipe = (BasinRecipe) recipe;
 			if (basinRecipe.getRollableResults()
@@ -140,7 +141,8 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 				recipeOutputFluids.addAll(basinRecipe.getFluidResults());
 				recipeOutputItems.addAll(basinRecipe.getRemainingItems(basin.getInputInventory()));
 			} else {
-				recipeOutputItems.add(recipe.getResultItem());
+				recipeOutputItems.add(recipe.getResultItem(basin.getLevel()
+						.registryAccess()));
 
 				if (recipe instanceof CraftingRecipe craftingRecipe) {
 					recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(consumedItems)));
@@ -162,7 +164,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 	public static BasinRecipe convertShapeless(Recipe<?> recipe) {
 		BasinRecipe basinRecipe =
 			new ProcessingRecipeBuilder<>(BasinRecipe::new, recipe.getId()).withItemIngredients(recipe.getIngredients())
-				.withSingleItemOutput(recipe.getResultItem())
+				.withSingleItemOutput(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()))
 				.build();
 		return basinRecipe;
 	}

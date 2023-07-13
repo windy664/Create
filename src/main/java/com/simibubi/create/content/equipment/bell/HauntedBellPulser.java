@@ -53,9 +53,9 @@ public class HauntedBellPulser {
 			} catch (ExecutionException e) {
 			}
 
-			long gameTime = player.level.getGameTime();
+			long gameTime = player.level().getGameTime();
 			if (firstPulse || gameTime % RECHARGE_TICKS != 0)
-				sendPulse(player.level, player.blockPosition(), DISTANCE, false);
+				sendPulse(player.level(), player.blockPosition(), DISTANCE, false);
 		});
 	}
 

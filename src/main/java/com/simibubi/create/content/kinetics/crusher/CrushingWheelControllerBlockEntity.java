@@ -146,8 +146,8 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 
 			// Output Items
 			if (facing != Direction.UP) {
-				BlockPos nextPos = worldPosition.offset(facing.getAxis() == Axis.X ? 1f * offset : 0f, (-1f),
-					facing.getAxis() == Axis.Z ? 1f * offset : 0f);
+				BlockPos nextPos = worldPosition.offset(facing.getAxis() == Axis.X ? 1 * offset : 0, -1,
+					facing.getAxis() == Axis.Z ? 1 * offset : 0);
 				DirectBeltInputBehaviour behaviour =
 					BlockEntityBehaviour.get(level, nextPos, DirectBeltInputBehaviour.TYPE);
 				if (behaviour != null) {
@@ -231,7 +231,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 					processingEntity.setPos(entityOutPos.x, entityOutPos.y, entityOutPos.z);
 				}
 			}
-			processingEntity.hurt(CrushingWheelBlockEntity.DAMAGE_SOURCE, crusherDamage);
+			processingEntity.hurt(AllDamageTypes.CRUSH.source(level), crusherDamage);
 			if (!processingEntity.isAlive()) {
 				processingEntity.setPos(entityOutPos.x, entityOutPos.y, entityOutPos.z);
 			}

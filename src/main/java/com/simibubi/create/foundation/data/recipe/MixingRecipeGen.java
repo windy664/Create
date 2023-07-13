@@ -66,8 +66,8 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public MixingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public MixingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

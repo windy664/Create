@@ -8,6 +8,6 @@ import net.fabricmc.api.Environment;
 public interface ScreenElement {
 
 	@Environment(EnvType.CLIENT)
-	void render(PoseStack ms, int x, int y);
+	void render(GuiGraphics graphics, int x, int y);
 
 }

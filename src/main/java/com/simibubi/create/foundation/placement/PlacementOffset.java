@@ -98,7 +98,7 @@ public class PlacementOffset {
 		if (!success)
 			return false;
 
-		return world.getBlockState(new BlockPos(pos)).getMaterial().isReplaceable();
+		return world.getBlockState(new BlockPos(pos)).canBeReplaced();
 	}
 
 	public InteractionResult placeInWorld(Level world, BlockItem blockItem, Player player, InteractionHand hand, BlockHitResult ray) {

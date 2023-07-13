@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -26,9 +27,10 @@ import net.minecraft.world.level.Level;
 
 public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingBehaviorItem, CustomEnchantmentLevelItem, CustomEnchantmentsItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.HEAD;
+	public static final ArmorItem.Type TYPE = ArmorItem.Type.HELMET;
 
 	public DivingHelmetItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
-		super(material, SLOT, properties, textureLoc);
+		super(material, TYPE, properties, textureLoc);
 	}
 
 	@Override
@@ -69,7 +71,7 @@ public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingB
 
 	public static void breatheUnderwater(LivingEntity entity) {
 //		LivingEntity entity = event.getEntityLiving();
-		Level world = entity.level;
+		Level world = entity.level();
 		boolean second = world.getGameTime() % 20 == 0;
 		boolean drowning = entity.getAirSupply() == 0;
 

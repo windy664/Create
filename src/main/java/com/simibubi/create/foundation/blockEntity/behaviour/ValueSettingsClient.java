@@ -6,6 +6,7 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
@@ -108,7 +109,7 @@ public class ValueSettingsClient {
 		lastHoverTip = tip;
 	}
 
-	public void render(PoseStack poseStack, int width, int height) {
+	public void render(GuiGraphics graphics, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || !ValueSettingsInputHandler.canInteract(mc.player))
 			return;
@@ -126,7 +127,7 @@ public class ValueSettingsClient {
 
 		for (int i = 0; i < lastHoverTip.size(); i++) {
 			MutableComponent mutableComponent = lastHoverTip.get(i);
-			mc.font.drawShadow(poseStack, mutableComponent, x - mc.font.width(mutableComponent) / 2, y,
+			graphics.drawString(mc.font, mutableComponent, x - mc.font.width(mutableComponent) / 2, y,
 				(i == 0 ? titleColor : color).getRGB());
 			y += 12;
 		}

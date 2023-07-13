@@ -66,7 +66,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 
 	;
 
-	public MechanicalCraftingRecipeGen(FabricDataGenerator p_i48262_1_) {
+	public MechanicalCraftingRecipeGen(FabricDataOutput p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

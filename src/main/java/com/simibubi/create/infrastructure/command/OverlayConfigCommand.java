@@ -24,7 +24,7 @@ public class OverlayConfigCommand {
 										(ServerPlayer) ctx.getSource().getEntity()));
 
 					ctx.getSource()
-						.sendSuccess(Components.literal("reset overlay offset"), true);
+						.sendSuccess(() -> Components.literal("reset overlay offset"), true);
 
 						return 1;
 					})
@@ -37,7 +37,7 @@ public class OverlayConfigCommand {
 									(ServerPlayer) ctx.getSource().getEntity()));
 
 					ctx.getSource()
-							.sendSuccess(Components.literal("window opened"), true);
+							.sendSuccess(() -> Components.literal("window opened"), true);
 
 				return 1;
 			});

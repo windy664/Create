@@ -28,7 +28,9 @@ import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.TitleSc
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -75,14 +77,14 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (firstRenderTime == 0L)
 			this.firstRenderTime = Util.getMillis();
-		super.render(ms, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		float f = (float) (Util.getMillis() - this.firstRenderTime) / 1000.0F;
 		float alpha = Mth.clamp(f, 0.0F, 1.0F);
 		float elapsedPartials = minecraft.getDeltaFrameTime();
@@ -92,14 +94,15 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				vanillaPanorama.render(elapsedPartials, 1);
 			PANORAMA.render(elapsedPartials, alpha);
 
-			RenderSystem.setShaderTexture(0, PANORAMA_OVERLAY_TEXTURES);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			blit(ms, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
+			graphics.blit(PANORAMA_OVERLAY_TEXTURES, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
 		}
 
 		RenderSystem.enableDepthTest();
+
+		PoseStack ms = graphics.pose();
 
 		for (int side : Iterate.positiveAndNegative) {
 			ms.pushPose();
@@ -110,11 +113,11 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				.rotateX(45);
 			GuiGameElement.of(AllBlocks.LARGE_COGWHEEL.getDefaultState())
 				.rotateBlock(0, Util.getMillis() / 32f * side, 0)
-				.render(ms);
+				.render(graphics);
 			ms.translate(-1, 0, -1);
 			GuiGameElement.of(AllBlocks.COGWHEEL.getDefaultState())
 				.rotateBlock(0, Util.getMillis() / -16f * side + 22.5f, 0)
-				.render(ms);
+				.render(graphics);
 			ms.popPose();
 		}
 
@@ -122,18 +125,18 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		ms.translate(width / 2 - 32, 32, -10);
 		ms.pushPose();
 		ms.scale(0.25f, 0.25f, 0.25f);
-		AllGuiTextures.LOGO.render(ms, 0, 0, this);
+		AllGuiTextures.LOGO.render(graphics, 0, 0);
 		ms.popPose();
 		new BoxElement().withBackground(0x88_000000)
 			.flatBorder(new Color(0x01_000000))
 			.at(-32, 56, 100)
 			.withBounds(128, 11)
-			.render(ms);
+			.render(graphics);
 		ms.popPose();
 
 		ms.pushPose();
 		ms.translate(0, 0, 200);
-		drawCenteredString(ms, font, Components.literal(Create.NAME).withStyle(ChatFormatting.BOLD)
+		graphics.drawCenteredString(font, Components.literal(Create.NAME).withStyle(ChatFormatting.BOLD)
 			.append(
 				Components.literal(" v" + Create.VERSION).withStyle(ChatFormatting.BOLD, ChatFormatting.WHITE)),
 			width / 2, 89, 0xFF_E4BB67);
@@ -155,45 +158,49 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		int bShortWidth = 98;
 		int bLongWidth = 200;
 
-		addRenderableWidget(
-			new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translateDirect("menu.return"), $ -> linkTo(parent)));
-		addRenderableWidget(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translateDirect("menu.configure"),
-			$ -> linkTo(BaseConfigScreen.forCreate(this))));
+		addRenderableWidget(Button.builder(Lang.translateDirect("menu.return"), $ -> linkTo(parent))
+			.bounds(center - 100, yStart + 92, bLongWidth, bHeight)
+			.build());
+		addRenderableWidget(Button.builder(Lang.translateDirect("menu.configure"), $ -> linkTo(BaseConfigScreen.forCreate(this)))
+			.bounds(center - 100, yStart + 24 + -16, bLongWidth, bHeight)
+			.build());
 
-		gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
-			Lang.translateDirect("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
+		gettingStarted = Button.builder(Lang.translateDirect("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()))
+			.bounds(center + 2, yStart + 48 + -16, bShortWidth, bHeight)
+			.build();
 		gettingStarted.active = !fromTitleOrMods;
 		addRenderableWidget(gettingStarted);
 
 		addRenderableWidget(new PlatformIconButton(center - 100, yStart + 48 + -16, bShortWidth / 2, bHeight,
 			AllGuiTextures.CURSEFORGE_LOGO, 0.085f,
 			b -> linkTo(CURSEFORGE_LINK),
-			(b, ps, mx, my) -> renderTooltip(ps, CURSEFORGE_TOOLTIP, mx, my)));
+			Tooltip.create(CURSEFORGE_TOOLTIP)));
 		addRenderableWidget(new PlatformIconButton(center - 50, yStart + 48 + -16, bShortWidth / 2, bHeight,
 			AllGuiTextures.MODRINTH_LOGO, 0.0575f,
 			b -> linkTo(MODRINTH_LINK),
-			(b, ps, mx, my) -> renderTooltip(ps, MODRINTH_TOOLTIP, mx, my)));
+			Tooltip.create(MODRINTH_TOOLTIP)));
 
-		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight,
-			Lang.translateDirect("menu.report_bugs"),
-			$ -> linkTo(ISSUE_TRACKER_LINK)));
-		addRenderableWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight,
-			Lang.translateDirect("menu.support"),
-			$ -> linkTo(SUPPORT_LINK)));
+		addRenderableWidget(Button.builder(Lang.translateDirect("menu.report_bugs"), $ -> linkTo(ISSUE_TRACKER_LINK))
+			.bounds(center + 2, yStart + 68, bShortWidth, bHeight)
+			.build());
+		addRenderableWidget(Button.builder(Lang.translateDirect("menu.support"), $ -> linkTo(SUPPORT_LINK))
+			.bounds(center - 100, yStart + 68, bShortWidth, bHeight)
+			.build());
 	}
 
 	@Override
-	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
-		((ScreenAccessor) this).port_lib$getRenderables().forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
+	protected void renderWindowForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderWindowForeground(graphics, mouseX, mouseY, partialTicks);
+		((ScreenAccessor) this).port_lib$getRenderables().forEach(w -> w.render(graphics, mouseX, mouseY, partialTicks));
 
 		if (fromTitleOrMods) {
-			if (mouseX < gettingStarted.x || mouseX > gettingStarted.x + 98)
+			if (mouseX < gettingStarted.getX() || mouseX > gettingStarted.getX() + 98)
 				return;
-			if (mouseY < gettingStarted.y || mouseY > gettingStarted.y + 20)
+			if (mouseY < gettingStarted.getY() || mouseY > gettingStarted.getY() + 20)
 				return;
-			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translateDirect("menu.only_ingame"), Palette.ALL_GRAY),
-					mouseX, mouseY);
+			graphics.renderComponentTooltip(font,
+				TooltipHelper.cutTextComponent(Lang.translateDirect("menu.only_ingame"), Palette.ALL_GRAY), mouseX,
+				mouseY);
 		}
 	}
 
@@ -221,18 +228,21 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		protected final AllGuiTextures icon;
 		protected final float scale;
 
-		public PlatformIconButton(int pX, int pY, int pWidth, int pHeight, AllGuiTextures icon, float scale, OnPress pOnPress, OnTooltip pOnTooltip) {
-			super(pX, pY, pWidth, pHeight, Components.immutableEmpty(), pOnPress, pOnTooltip);
+		public PlatformIconButton(int pX, int pY, int pWidth, int pHeight, AllGuiTextures icon, float scale, OnPress pOnPress, Tooltip tooltip) {
+			super(pX, pY, pWidth, pHeight, Components.immutableEmpty(), pOnPress, DEFAULT_NARRATION);
 			this.icon = icon;
 			this.scale = scale;
+			setTooltip(tooltip);
 		}
 
 		@Override
-		protected void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY) {
+		protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pt) {
+			super.renderWidget(graphics, pMouseX, pMouseY, pt);
+			PoseStack pPoseStack = graphics.pose();
 			pPoseStack.pushPose();
-			pPoseStack.translate(x + width / 2 - (icon.width * scale) / 2, y + height / 2 - (icon.height * scale) / 2, 0);
+			pPoseStack.translate(getX() + width / 2 - (icon.width * scale) / 2, getY() + height / 2 - (icon.height * scale) / 2, 0);
 			pPoseStack.scale(scale, scale, 1);
-			icon.render(pPoseStack, 0, 0);
+			icon.render(graphics, 0, 0);
 			pPoseStack.popPose();
 		}
 	}

@@ -117,8 +117,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		if (!filter.hasTag())
 			return;
 		if (!world.getBlockState(pos)
-			.getMaterial()
-			.isReplaceable())
+			.canBeReplaced())
 			return;
 
 		CompoundTag tag = filter.getTag();

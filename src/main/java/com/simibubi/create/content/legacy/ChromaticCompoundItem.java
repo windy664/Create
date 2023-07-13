@@ -20,14 +20,12 @@ import io.github.fabricators_of_create.porting_lib.item.EntityTickListenerItem;
 import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.BeaconBlockEntityAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -53,9 +51,6 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {}
-
-	@Override
 	public boolean isBarVisible(ItemStack stack) {
 		return getLight(stack) > 0;
 	}
@@ -78,7 +73,7 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-		Level world = entity.level;
+		Level world = entity.level();
 		CompoundTag itemData = entity.getItem()
 			.getOrCreateTag();
 		Vec3 positionVec = entity.position();
@@ -173,7 +168,7 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 		if (r.nextFloat() > rate)
 			return false;
 
-		BlockPos randomOffset = new BlockPos(VecHelper.offsetRandomly(positionVec, r, range));
+		BlockPos randomOffset = BlockPos.containing(VecHelper.offsetRandomly(positionVec, r, range));
 		BlockState state = world.getBlockState(randomOffset);
 
 		TransportedItemStackHandlerBehaviour behaviour =

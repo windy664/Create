@@ -179,8 +179,7 @@ public class FluidPropagator {
 			return false;
 		if (hasFluidCapability(reader, connectedPos, side.getOpposite()))
 			return false;
-		if (!(connectedState.getMaterial()
-				.isReplaceable() && connectedState.getDestroySpeed(reader, connectedPos) != -1)
+		if (!(connectedState.canBeReplaced() && connectedState.getDestroySpeed(reader, connectedPos) != -1)
 				&& !connectedState.hasProperty(BlockStateProperties.WATERLOGGED))
 			return false;
 		return true;

@@ -12,6 +12,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.GameType;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.GameType;
 public class TrackPlacementOverlay {
 
 	@Environment(EnvType.CLIENT)
-	public static void renderOverlay(Gui gui, PoseStack poseStack) {
+	public static void renderOverlay(Gui gui, GuiGraphics graphics) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -42,9 +43,7 @@ public class TrackPlacementOverlay {
 			.width(text)) / 2;
 		int y = window.getGuiScaledHeight() - 61;
 		Color color = new Color(0x4ADB4A).setAlpha(Mth.clamp((TrackPlacement.extraTipWarmup - 4) / 3f, 0.1f, 1));
-		gui.getFont()
-			.draw(poseStack, text, x, y, color.getRGB());
-
+		graphics.drawString(gui.getFont(), text, x, y, color.getRGB(), false);
 	}
 
 }

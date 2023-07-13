@@ -82,13 +82,13 @@ public abstract class EntityContraptionInteractionMixin {
 		create$getIntersectingContraptions().forEach(cEntity -> {
 			Vec3 localPos = ContraptionCollider.worldToLocalPos(worldPos, cEntity);
 
-			BlockPos blockPos = new BlockPos(localPos);
+			BlockPos blockPos = BlockPos.containing(localPos);
 			Contraption contraption = cEntity.getContraption();
 			StructureTemplate.StructureBlockInfo info = contraption.getBlocks()
 				.get(blockPos);
 
 			if (info != null) {
-				BlockState blockstate = info.state;
+				BlockState blockstate = info.state();
 				action.accept(contraption, blockstate, blockPos);
 			}
 		});
@@ -116,7 +116,7 @@ public abstract class EntityContraptionInteractionMixin {
 		if (!level.isClientSide)
 			return;
 		Entity self = (Entity) (Object) this;
-		if (self.isOnGround())
+		if (self.onGround())
 			return;
 		if (self.isPassenger())
 			return;
@@ -125,7 +125,7 @@ public abstract class EntityContraptionInteractionMixin {
 		boolean onAtLeastOneContraption = create$getIntersectionContraptionsStream().anyMatch(cEntity -> {
 			Vec3 localPos = ContraptionCollider.worldToLocalPos(worldPos, cEntity);
 
-			BlockPos blockPos = new BlockPos(localPos);
+			BlockPos blockPos = BlockPos.containing(localPos);
 			Contraption contraption = cEntity.getContraption();
 			StructureTemplate.StructureBlockInfo info = contraption.getBlocks()
 				.get(blockPos);
@@ -149,7 +149,7 @@ public abstract class EntityContraptionInteractionMixin {
 	private void create$onSpawnSprintParticle(CallbackInfo ci) {
 		Entity self = (Entity) (Object) this;
 		Vec3 worldPos = position.add(0, -0.2, 0);
-		BlockPos particlePos = new BlockPos(worldPos); // pos where particles are spawned
+		BlockPos particlePos = BlockPos.containing(worldPos); // pos where particles are spawned
 
 		forCollision(worldPos, (contraption, state, pos) -> {
 			boolean particles = state.getRenderShape() != RenderShape.INVISIBLE;

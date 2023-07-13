@@ -92,8 +92,7 @@ public class TrackBlockItem extends BlockItem {
 		tag.remove("ExtendCurve");
 
 		if (placing) {
-			if (!state.getMaterial()
-				.isReplaceable())
+			if (!state.canBeReplaced())
 				pos = pos.relative(pContext.getClickedFace());
 			state = getPlacementState(pContext);
 			if (state == null)

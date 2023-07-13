@@ -152,7 +152,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	public void stopRiding() {
-		if (!level.isClientSide && isAlive())
+		if (!level().isClientSide && isAlive())
 			disassemble();
 		super.stopRiding();
 	}
@@ -293,7 +293,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		else
 			capability = LazyOptional.empty();
 		if (capability.isPresent()) {
-			if (!level.isClientSide())
+			if (!level().isClientSide())
 				capability.orElse(null)
 					.setStalledExternally(isStalled);
 		} else {
@@ -308,7 +308,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			}
 		}
 
-		if (level.isClientSide)
+		if (level().isClientSide)
 			return;
 
 		if (!isStalled()) {
@@ -383,11 +383,11 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			if (riding instanceof AbstractMinecart) {
 				AbstractMinecart minecartEntity = (AbstractMinecart) riding;
 				BlockPos railPosition = minecartEntity.getCurrentRailPos();
-				BlockState blockState = level.getBlockState(railPosition);
+				BlockState blockState = level().getBlockState(railPosition);
 				if (blockState.getBlock() instanceof BaseRailBlock) {
 					BaseRailBlock abstractRailBlock = (BaseRailBlock) blockState.getBlock();
 					RailShape railDirection =
-						MinecartAndRailUtil.getDirectionOfRail(blockState, level, railPosition, abstractRailBlock);
+						MinecartAndRailUtil.getDirectionOfRail(blockState, level(), railPosition, abstractRailBlock);
 					motion = VecHelper.project(motion, MinecartSim2020.getRailVec(railDirection));
 				}
 			}
@@ -432,12 +432,12 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		int i = Mth.floor(furnaceCart.getX());
 		int j = Mth.floor(furnaceCart.getY());
 		int k = Mth.floor(furnaceCart.getZ());
-		if (furnaceCart.level.getBlockState(new BlockPos(i, j - 1, k))
+		if (furnaceCart.level().getBlockState(new BlockPos(i, j - 1, k))
 			.is(BlockTags.RAILS))
 			--j;
 
 		BlockPos blockpos = new BlockPos(i, j, k);
-		BlockState blockstate = this.level.getBlockState(blockpos);
+		BlockState blockstate = this.level().getBlockState(blockpos);
 		if (blockstate.is(BlockTags.RAILS))
 			if (fuel > 1)
 				riding.setDeltaMovement(riding.getDeltaMovement()
@@ -462,11 +462,11 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		UUID couplingId = getCouplingId();
 		if (couplingId == null)
 			return null;
-		MinecartController controller = CapabilityMinecartController.getIfPresent(level, couplingId);
+		MinecartController controller = CapabilityMinecartController.getIfPresent(level(), couplingId);
 		if (controller == null || !controller.isPresent())
 			return null;
 		UUID coupledCart = controller.getCoupledCart(true);
-		MinecartController coupledController = CapabilityMinecartController.getIfPresent(level, coupledCart);
+		MinecartController coupledController = CapabilityMinecartController.getIfPresent(level(), coupledCart);
 		if (coupledController == null || !coupledController.isPresent())
 			return null;
 		return Couple.create(controller, coupledController);
@@ -515,7 +515,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	protected StructureTransform makeStructureTransform() {
-		BlockPos offset = new BlockPos(getAnchorVec().add(.5, .5, .5));
+		BlockPos offset = BlockPos.containing(getAnchorVec().add(.5, .5, .5));
 		return new StructureTransform(offset, 0, -yaw + getInitialYaw(), 0);
 	}
 

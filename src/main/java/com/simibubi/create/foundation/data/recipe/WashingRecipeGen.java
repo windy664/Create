@@ -109,8 +109,8 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
-	public WashingRecipeGen(FabricDataGenerator dataGenerator) {
-		super(dataGenerator);
+	public WashingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

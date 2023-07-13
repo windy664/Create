@@ -51,7 +51,7 @@ public class ContraptionRenderDispatcher {
 	 * @return true if there was a renderer associated with the given contraption.
 	 */
 	public static boolean invalidate(Contraption contraption) {
-		Level level = contraption.entity.level;
+		Level level = contraption.entity.level();
 
 		return WORLDS.get(level)
 			.invalidate(contraption);
@@ -88,7 +88,7 @@ public class ContraptionRenderDispatcher {
 
 	public static void renderFromEntity(AbstractContraptionEntity entity, Contraption contraption,
 		MultiBufferSource buffers) {
-		Level world = entity.level;
+		Level world = entity.level();
 
 		ContraptionRenderInfo renderInfo = WORLDS.get(world)
 			.getRenderInfo(contraption);
@@ -125,7 +125,8 @@ public class ContraptionRenderDispatcher {
 		for (StructureTemplate.StructureBlockInfo info : c.getBlocks()
 			.values())
 			// Skip individual lighting updates to prevent lag with large contraptions
-			renderWorld.setBlock(info.pos, info.state, Block.UPDATE_SUPPRESS_LIGHT);
+			// FIXME 1.20 this '0' used to be Block.UPDATE_SUPPRESS_LIGHT, yet VirtualRenderWorld didn't actually parse the flags at all
+			renderWorld.setBlock(info.pos(), info.state(), 0);
 
 		renderWorld.runLightingEngine();
 		return renderWorld;
@@ -149,13 +150,13 @@ public class ContraptionRenderDispatcher {
 				context.world = world;
 			StructureTemplate.StructureBlockInfo blockInfo = actor.getLeft();
 
-			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state);
+			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state());
 			if (movementBehaviour != null) {
-				if (c.isHiddenInPortal(blockInfo.pos))
+				if (c.isHiddenInPortal(blockInfo.pos()))
 					continue;
 				m.pushPose();
 				TransformStack.cast(m)
-					.translate(blockInfo.pos);
+					.translate(blockInfo.pos());
 				movementBehaviour.renderInContraption(context, renderWorld, matrices, buffer);
 				m.popPose();
 			}

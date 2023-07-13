@@ -132,6 +132,7 @@ public class ExtendoGripItem extends Item  {
 			return;
 
 		// Modified version of GameRenderer#getMouseOver
+		// TODO PORT 1.20
 		double d0 = player.getAttribute(ReachEntityAttributes.REACH)
 			.getValue();
 		if (!player.isCreative())
@@ -178,7 +179,7 @@ public class ExtendoGripItem extends Item  {
 	private static void findAndDamageExtendoGrip(Player player) {
 		if (player == null)
 			return;
-		if (player.level.isClientSide)
+		if (player.level().isClientSide)
 			return;
 		InteractionHand hand = InteractionHand.MAIN_HAND;
 		ItemStack extendo = player.getMainHandItem();

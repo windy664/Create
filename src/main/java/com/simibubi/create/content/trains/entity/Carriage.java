@@ -271,7 +271,7 @@ public class Carriage {
 				if (discard)
 					iterator.remove();
 				else if (dimensionalCarriageEntity.positionAnchor != null && CarriageEntityHandler
-					.isActiveChunk(currentLevel, new BlockPos(dimensionalCarriageEntity.positionAnchor)))
+					.isActiveChunk(currentLevel, BlockPos.containing(dimensionalCarriageEntity.positionAnchor)))
 					dimensionalCarriageEntity.createEntity(currentLevel, anyAvailableEntity() == null);
 
 			} else {
@@ -671,7 +671,7 @@ public class Carriage {
 			Entity entity = this.entity.get();
 			if (!(entity instanceof CarriageContraptionEntity cce))
 				return;
-			if (!(entity.level instanceof ServerLevel sLevel))
+			if (!(entity.level() instanceof ServerLevel sLevel))
 				return;
 
 			Set<Integer> loadedPassengers = new HashSet<>();
@@ -698,7 +698,7 @@ public class Carriage {
 						.getPlayer(tag.getUUID("PlayerPassenger"));
 
 				} else {
-					passenger = EntityType.loadEntityRecursive(tag, entity.level, e -> {
+					passenger = EntityType.loadEntityRecursive(tag, entity.level(), e -> {
 						e.moveTo(positionAnchor);
 						return e;
 					});
@@ -707,7 +707,7 @@ public class Carriage {
 				}
 
 				if (passenger != null) {
-					ResourceKey<Level> passengerDimension = passenger.level.dimension();
+					ResourceKey<Level> passengerDimension = passenger.level().dimension();
 					if (!passengerDimension.equals(sLevel.dimension()) && passenger instanceof ServerPlayer sp)
 						continue;
 					cce.addSittingPassenger(passenger, seatId);
@@ -757,7 +757,7 @@ public class Carriage {
 				DimensionalCarriageEntity otherDce = other.getValue();
 				if (otherDce == this)
 					continue;
-				if (sp.level.dimension()
+				if (sp.level().dimension()
 					.equals(other.getKey()))
 					continue;
 				Vec3 loc = otherDce.pivot == null ? otherDce.positionAnchor : otherDce.pivot.getLocation();
@@ -780,7 +780,7 @@ public class Carriage {
 				return;
 			cc.portalCutoffMin = minAllowedLocalCoord();
 			cc.portalCutoffMax = maxAllowedLocalCoord();
-			if (!entity.level.isClientSide())
+			if (!entity.level().isClientSide())
 				return;
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> invalidate(cce));
 		}
@@ -823,7 +823,7 @@ public class Carriage {
 					Integer seat = mapping.get(passenger.getUUID());
 
 					if (passenger instanceof ServerPlayer sp) {
-						dismountPlayer(sp.getLevel(), sp, seat, portal);
+						dismountPlayer(sp.serverLevel(), sp, seat, portal);
 						continue;
 					}
 
@@ -854,7 +854,7 @@ public class Carriage {
 			entity.prevYaw = entity.yaw;
 			entity.prevPitch = entity.pitch;
 
-			if (!entity.level.isClientSide()) {
+			if (!entity.level().isClientSide()) {
 				Vec3 lookahead = positionAnchor.add(positionAnchor.subtract(entity.position())
 					.normalize()
 					.scale(16));
@@ -864,7 +864,7 @@ public class Carriage {
 						continue;
 					if (e.distanceToSqr(entity) > 32 * 32)
 						continue;
-					if (CarriageEntityHandler.isActiveChunk(entity.level, new BlockPos(lookahead)))
+					if (CarriageEntityHandler.isActiveChunk(entity.level(), BlockPos.containing(lookahead)))
 						break;
 					train.carriageWaitingForChunks = id;
 					return;

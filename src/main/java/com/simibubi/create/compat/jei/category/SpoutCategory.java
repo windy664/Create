@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSpout;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
@@ -14,6 +13,7 @@ import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -79,7 +79,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 				fluidCopy.setAmount(FluidConstants.BUCKET);
 				TransferUtil.insertFluid(storage, fluidCopy);
 				ItemVariant container = ctx.getItemVariant();
-				if (container.matches(copy))
+				if (ItemHelper.sameItem(container, copy))
 					continue;
 				if (container.isBlank())
 					continue;
@@ -114,16 +114,16 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 51)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addItemStack(recipe.getResultItem());
+				.addItemStack(getResultItem(recipe));
 	}
 
 	@Override
-	public void draw(FillingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 57);
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 126, 29);
+	public void draw(FillingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
 		spout.withFluids(recipe.getRequiredFluid()
 			.getMatchingFluidStacks())
-			.draw(matrixStack, getBackground().getWidth() / 2 - 13, 22);
+			.draw(graphics, getBackground().getWidth() / 2 - 13, 22);
 	}
 
 }

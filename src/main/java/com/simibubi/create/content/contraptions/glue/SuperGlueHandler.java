@@ -44,7 +44,7 @@ public class SuperGlueHandler {
 		for (Direction direction : Iterate.directions) {
 			BlockPos relative = pos.relative(direction);
 			if (SuperGlueEntity.isGlued(world, pos, direction, cached)
-				&& BlockMovementChecks.isMovementNecessary(world.getBlockState(relative), entity.level, relative))
+				&& BlockMovementChecks.isMovementNecessary(world.getBlockState(relative), entity.level(), relative))
 				AllPackets.getChannel().sendToClientsTrackingAndSelf(new GlueEffectPacket(pos, direction, true), entity);
 		}
 
@@ -64,7 +64,7 @@ public class SuperGlueHandler {
 		Vec3 start = placer.getEyePosition(1);
 		Vec3 look = placer.getViewVector(1);
 		Vec3 end = start.add(look.x * distance, look.y * distance, look.z * distance);
-		Level world = placer.level;
+		Level world = placer.level();
 
 		RayTraceWorld rayTraceWorld =
 			new RayTraceWorld(world, (p, state) -> p.equals(pos) ? Blocks.AIR.defaultBlockState() : state);

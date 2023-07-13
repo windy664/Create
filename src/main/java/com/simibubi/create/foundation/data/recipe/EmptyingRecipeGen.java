@@ -32,8 +32,8 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public EmptyingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public EmptyingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

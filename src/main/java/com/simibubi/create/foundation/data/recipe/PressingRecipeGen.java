@@ -27,8 +27,8 @@ public class PressingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public PressingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public PressingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

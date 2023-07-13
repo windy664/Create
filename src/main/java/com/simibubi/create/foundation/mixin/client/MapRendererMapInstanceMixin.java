@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import com.simibubi.create.foundation.map.CustomRenderedMapDecoration;
 
 import net.minecraft.client.gui.MapRenderer;

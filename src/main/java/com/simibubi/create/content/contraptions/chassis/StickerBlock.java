@@ -19,7 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -74,9 +74,9 @@ public class StickerBlock extends WrenchableDirectionalBlock implements IBE<Stic
 	}
 
 	@Override
-	public boolean shouldCheckWeakPower(BlockState state, LevelReader world, BlockPos pos, Direction side) {
-		return false;
-	}
+    public boolean shouldCheckWeakPower(BlockState state, SignalGetter level, BlockPos pos, Direction side) {
+        return false;
+    }
 
 	@Override
 	public Class<StickerBlockEntity> getBlockEntityClass() {
@@ -99,7 +99,7 @@ public class StickerBlock extends WrenchableDirectionalBlock implements IBE<Stic
 	public void fallOn(Level p_152426_, BlockState p_152427_, BlockPos p_152428_, Entity p_152429_, float p_152430_) {
 		if (!isUprightSticker(p_152426_, p_152428_) || p_152429_.isSuppressingBounce())
 			super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, p_152430_);
-		p_152429_.causeFallDamage(p_152430_, 1.0F, DamageSource.FALL);
+		p_152429_.causeFallDamage(p_152430_, 1.0F, p_152426_.damageSources().fall());
 	}
 
 	@Override

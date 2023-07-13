@@ -130,7 +130,7 @@ public class CommonEvents {
 	}
 
 	public static void onUpdateLivingEntity(LivingEntity entityLiving) {
-		Level world = entityLiving.level;
+		Level world = entityLiving.level();
 		if (world == null)
 			return;
 		ContraptionHandler.entitiesWhoJustDismountedGetSentToTheRightLocation(entityLiving, world);

@@ -47,8 +47,8 @@ public class CompactingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public CompactingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public CompactingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 			.filter(itemStack -> !itemStack.isEmpty() && itemStack.getItem() != Items.AIR
 				&& itemStack.getMaxStackSize() > itemStack.getCount())
 			.forEach(itemStack -> itemStack.grow(ItemHelper
-				.extract(context.contraption.getSharedInventory(), itemStack::sameItem,
+				.extract(context.contraption.getSharedInventory(), ItemHelper.sameItemPredicate(itemStack),
 					ItemHelper.ExtractionCountMode.UPTO, itemStack.getMaxStackSize() - itemStack.getCount(), false)
 				.getCount()));
 	}

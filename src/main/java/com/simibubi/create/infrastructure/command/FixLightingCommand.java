@@ -18,7 +18,7 @@ public class FixLightingCommand {
 						(ServerPlayer) ctx.getSource().getEntity());
 
 				ctx.getSource()
-					.sendSuccess(
+					.sendSuccess(() -> 
 						Components.literal("Forge's experimental block rendering pipeline is now enabled."), true);
 
 				return 1;

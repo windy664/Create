@@ -57,18 +57,19 @@ public class HighlightCommand {
 	}
 
 	private static void sendMissMessage(CommandSourceStack source) {
-		source.sendSuccess(
+		source.sendSuccess(() ->
 			Components.literal("Try looking at a Block that has failed to assemble a Contraption and try again."),
 			true);
 	}
 
 	private static int highlightAssemblyExceptionFor(ServerPlayer player, CommandSourceStack source) {
+		// TODO PORT 1.20
 		double distance = player.getAttribute(ReachEntityAttributes.REACH)
 			.getValue();
 		Vec3 start = player.getEyePosition(1);
 		Vec3 look = player.getViewVector(1);
 		Vec3 end = start.add(look.x * distance, look.y * distance, look.z * distance);
-		Level world = player.level;
+		Level world = player.level();
 
 		BlockHitResult ray = world.clip(
 			new ClipContext(start, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
@@ -92,7 +93,7 @@ public class HighlightCommand {
 		}
 
 		if (!exception.hasPosition()) {
-			source.sendSuccess(Components.literal("Can't highlight a specific position for this issue"), true);
+			source.sendSuccess(() -> Components.literal("Can't highlight a specific position for this issue"), true);
 			return Command.SINGLE_SUCCESS;
 		}
 

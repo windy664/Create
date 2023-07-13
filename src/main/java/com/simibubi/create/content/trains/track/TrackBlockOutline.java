@@ -135,7 +135,7 @@ public class TrackBlockOutline {
 
 		if (mc.hitResult != null && mc.hitResult.getType() != Type.MISS) {
 			Vec3 priorLoc = mc.hitResult.getLocation();
-			mc.hitResult = BlockHitResult.miss(priorLoc, Direction.UP, new BlockPos(priorLoc));
+			mc.hitResult = BlockHitResult.miss(priorLoc, Direction.UP, BlockPos.containing(priorLoc));
 		}
 	}
 

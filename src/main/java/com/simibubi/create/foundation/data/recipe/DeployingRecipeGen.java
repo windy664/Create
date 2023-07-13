@@ -64,8 +64,8 @@ public class DeployingRecipeGen extends ProcessingRecipeGen {
 			.output(waxed.get()));
 	}
 
-	public DeployingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public DeployingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

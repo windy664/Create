@@ -6,7 +6,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllItemTags;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -39,8 +39,8 @@ public class ItemApplicationRecipeGen extends ProcessingRecipeGen {
 			.output(output.get()));
 	}
 
-	public ItemApplicationRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public ItemApplicationRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

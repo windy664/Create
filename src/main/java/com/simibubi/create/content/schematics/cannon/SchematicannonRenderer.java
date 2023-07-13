@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForBelt;
@@ -171,8 +171,8 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 			ms.translate(blockLocation.x, blockLocation.y, blockLocation.z);
 
 			ms.translate(.125f, .125f, .125f);
-			ms.mulPose(new Vector3f(0, 1, 0).rotationDegrees(360 * t));
-			ms.mulPose(new Vector3f(1, 0, 0).rotationDegrees(360 * t));
+			ms.mulPose(Axis.YP.rotationDegrees(360 * t));
+			ms.mulPose(Axis.XP.rotationDegrees(360 * t));
 			ms.translate(-.125f, -.125f, -.125f);
 
 			if (launched instanceof ForBlockState) {
@@ -207,7 +207,7 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 				ms.scale(scale, scale, scale);
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(launched.stack, TransformType.GROUND, light, overlay, ms, buffer, 0);
+					.renderStatic(launched.stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, blockEntity.getLevel(), 0);
 			}
 
 			ms.popPose();

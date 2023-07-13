@@ -60,7 +60,6 @@ import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.recipe.CompatMetals;
 import com.simibubi.create.foundation.item.CombustibleItem;
-import com.simibubi.create.foundation.item.HiddenIngredientItem;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -77,10 +76,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
 public class AllItems {
-
-	static {
-		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.BASE_CREATIVE_TAB);
-	}
+	
+	static { REGISTRATE.useCreativeTab(AllCreativeModeTabs.MAIN_TAB); }
 
 	public static final ItemEntry<Item> WHEAT_FLOUR =
 		taggedIngredient("wheat_flour", forgeItemTag("wheat_flour"), forgeItemTag("flour")),
@@ -99,8 +96,8 @@ public class AllItems {
 
 	public static final ItemEntry<Item> PRECISION_MECHANISM = ingredient("precision_mechanism");
 
-	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
-		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
+	public static final ItemEntry<Item> BLAZE_CAKE_BASE =
+		REGISTRATE.item("blaze_cake_base", Item::new)
 			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
 			.register();
 

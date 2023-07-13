@@ -75,7 +75,7 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 
 	;
 
-	public SequencedAssemblyRecipeGen(FabricDataGenerator p_i48262_1_) {
+	public SequencedAssemblyRecipeGen(FabricDataOutput p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

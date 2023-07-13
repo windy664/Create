@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -85,9 +86,9 @@ public class SeatEntity extends Entity implements ExtraSpawnDataEntity {
 
 	@Override
 	public void tick() {
-		if (level.isClientSide)
+		if (level().isClientSide)
 			return;
-		boolean blockPresent = level.getBlockState(blockPosition())
+		boolean blockPresent = level().getBlockState(blockPosition())
 			.getBlock() instanceof SeatBlock;
 		if (isVehicle() && blockPresent)
 			return;
@@ -123,7 +124,7 @@ public class SeatEntity extends Entity implements ExtraSpawnDataEntity {
 	protected void addAdditionalSaveData(CompoundTag p_213281_1_) {}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return ExtraSpawnDataEntity.createExtraDataSpawnPacket(this);
 	}
 

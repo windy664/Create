@@ -52,7 +52,7 @@ public class MountedStorageManager {
 	}
 
 	public void entityTick(AbstractContraptionEntity entity) {
-		fluidStorage.forEach((pos, mfs) -> mfs.tick(entity, pos, entity.level.isClientSide));
+		fluidStorage.forEach((pos, mfs) -> mfs.tick(entity, pos, entity.level().isClientSide));
 	}
 
 	public void createHandlers() {
@@ -170,14 +170,14 @@ public class MountedStorageManager {
 	}
 
 	public void addStorageToWorld(StructureBlockInfo block, BlockEntity blockEntity) {
-		if (storage.containsKey(block.pos)) {
-			MountedStorage mountedStorage = storage.get(block.pos);
+		if (storage.containsKey(block.pos())) {
+			MountedStorage mountedStorage = storage.get(block.pos());
 			if (mountedStorage.isValid())
 				mountedStorage.addStorageToWorld(blockEntity);
 		}
 
-		if (fluidStorage.containsKey(block.pos)) {
-			MountedFluidStorage mountedStorage = fluidStorage.get(block.pos);
+		if (fluidStorage.containsKey(block.pos())) {
+			MountedFluidStorage mountedStorage = fluidStorage.get(block.pos());
 			if (mountedStorage.isValid())
 				mountedStorage.addStorageToWorld(blockEntity);
 		}
@@ -216,7 +216,7 @@ public class MountedStorageManager {
 	}
 
 	public boolean handlePlayerStorageInteraction(Contraption contraption, Player player, BlockPos localPos) {
-		if (player.level.isClientSide()) {
+		if (player.level().isClientSide()) {
 			BlockEntity localBE = contraption.presentBlockEntities.get(localPos);
 			return MountedStorage.canUseAsStorage(localBE);
 		}
@@ -230,9 +230,9 @@ public class MountedStorageManager {
 
 		StructureBlockInfo info = contraption.getBlocks()
 			.get(localPos);
-		if (info != null && info.state.hasProperty(ChestBlock.TYPE)) {
-			ChestType chestType = info.state.getValue(ChestBlock.TYPE);
-			Direction facing = info.state.getOptionalValue(ChestBlock.FACING)
+		if (info != null && info.state().hasProperty(ChestBlock.TYPE)) {
+			ChestType chestType = info.state().getValue(ChestBlock.TYPE);
+			Direction facing = info.state().getOptionalValue(ChestBlock.FACING)
 				.orElse(Direction.SOUTH);
 			Direction connectedDirection =
 				chestType == ChestType.LEFT ? facing.getClockWise() : facing.getCounterClockWise();
@@ -259,12 +259,12 @@ public class MountedStorageManager {
 
 		Supplier<Boolean> stillValid = () -> contraption.entity.isAlive()
 			&& player.distanceToSqr(contraption.entity.toGlobalVector(Vec3.atCenterOf(localPos), 0)) < 64;
-		Component name = info != null ? info.state.getBlock()
+		Component name = info != null ? info.state().getBlock()
 			.getName() : Components.literal("Container");
 		player.openMenu(MountedStorageInteraction.createMenuProvider(name, primary, secondary, slotCount, stillValid));
 
 		Vec3 soundPos = contraption.entity.toGlobalVector(Vec3.atCenterOf(localPos), 0);
-		player.level.playSound(null, new BlockPos(soundPos), SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 0.75f, 1f);
+		player.level().playSound(null, BlockPos.containing(soundPos), SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 0.75f, 1f);
 		return true;
 	}
 

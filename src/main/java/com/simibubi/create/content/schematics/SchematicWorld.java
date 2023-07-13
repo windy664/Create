@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -141,8 +141,9 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public Holder<Biome> getBiome(BlockPos pos) {
-		return BuiltinRegistries.BIOME.getHolder(Biomes.PLAINS)
-			.orElse(null);
+		return world.registryAccess()
+			.lookupOrThrow(Registries.BIOME)
+			.getOrThrow(Biomes.PLAINS);
 	}
 
 	@Override
@@ -228,7 +229,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	public BoundingBox getBounds() {
 		return bounds;
 	}
-	
+
 	public Iterable<BlockEntity> getBlockEntities() {
 		return blockEntities.values();
 	}

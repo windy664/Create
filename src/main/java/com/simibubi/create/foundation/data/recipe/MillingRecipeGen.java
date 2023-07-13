@@ -198,8 +198,8 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			.output(crushed.get()));
 	}
 
-	public MillingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public MillingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

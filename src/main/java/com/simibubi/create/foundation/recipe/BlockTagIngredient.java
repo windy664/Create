@@ -15,7 +15,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -125,14 +125,14 @@ public class BlockTagIngredient extends AbstractIngredient {
 		@Override
 		public BlockTagIngredient fromJson(JsonObject json) {
 			ResourceLocation rl = new ResourceLocation(GsonHelper.getAsString(json, "tag"));
-			TagKey<Block> tag = TagKey.create(Registry.BLOCK_REGISTRY, rl);
+			TagKey<Block> tag = TagKey.create(Registries.BLOCK, rl);
 			return new BlockTagIngredient(tag);
 		}
 
 		@Override
 		public BlockTagIngredient fromNetwork(FriendlyByteBuf buffer) {
 			ResourceLocation rl = buffer.readResourceLocation();
-			TagKey<Block> tag = TagKey.create(Registry.BLOCK_REGISTRY, rl);
+			TagKey<Block> tag = TagKey.create(Registries.BLOCK, rl);
 			return new BlockTagIngredient(tag);
 		}
 	}

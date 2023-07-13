@@ -89,7 +89,7 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
 		super.updateEntityAfterFallOn(worldIn, entityIn);
 
-		if (entityIn.level.isClientSide)
+		if (entityIn.level().isClientSide)
 			return;
 		if (!(entityIn instanceof ItemEntity))
 			return;

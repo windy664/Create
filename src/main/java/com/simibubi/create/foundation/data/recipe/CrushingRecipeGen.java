@@ -260,8 +260,8 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		});
 	}
 
-	public CrushingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public CrushingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

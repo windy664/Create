@@ -13,8 +13,8 @@ public class PolishingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public PolishingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public PolishingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

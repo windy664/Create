@@ -7,7 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.mojang.math.Vector3f;
+import com.simibubi.create.AllDamageTypes;
+
+import org.joml.Vector3f;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult;
@@ -23,6 +26,7 @@ import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandle
 import io.github.fabricators_of_create.porting_lib.util.DamageSourceHelper;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -57,11 +61,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 
 public class FanProcessing {
-
-	private static final DamageSource FIRE_DAMAGE_SOURCE = DamageSourceHelper.port_lib$createFireDamageSource("create.fan_fire").setScalesWithDifficulty();
-
-	private static final DamageSource LAVA_DAMAGE_SOURCE = DamageSourceHelper.port_lib$createFireDamageSource("create.fan_lava").setScalesWithDifficulty();
-
 	private static final Container RECIPE_WRAPPER = new ItemStackHandlerContainer(1);
 	private static final SplashingWrapper SPLASHING_WRAPPER = new SplashingWrapper();
 	private static final HauntingWrapper HAUNTING_WRAPPER = new HauntingWrapper();
@@ -75,14 +74,14 @@ public class FanProcessing {
 				CompoundTag processing = compound.getCompound("Processing");
 
 				if (Type.valueOf(processing.getString("Type")) != type)
-					return type.canProcess(entity.getItem(), entity.level);
+					return type.canProcess(entity.getItem(), entity.level());
 				else if (processing.getInt("Time") >= 0)
 					return true;
 				else if (processing.getInt("Time") == -1)
 					return false;
 			}
 		}
-		return type.canProcess(entity.getItem(), entity.level);
+		return type.canProcess(entity.getItem(), entity.level());
 	}
 
 	public static boolean isWashable(ItemStack stack, Level world) {
@@ -100,7 +99,7 @@ public class FanProcessing {
 	public static boolean applyProcessing(ItemEntity entity, Type type) {
 		if (decrementProcessingTime(entity, type) != 0)
 			return false;
-		List<ItemStack> stacks = process(entity.getItem(), type, entity.level);
+		List<ItemStack> stacks = process(entity.getItem(), type, entity.level());
 		if (stacks == null)
 			return false;
 		if (stacks.isEmpty()) {
@@ -109,9 +108,9 @@ public class FanProcessing {
 		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks) {
-			ItemEntity entityIn = new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), additional);
+			ItemEntity entityIn = new ItemEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ(), additional);
 			entityIn.setDeltaMovement(entity.getDeltaMovement());
-			entity.level.addFreshEntity(entityIn);
+			entity.level().addFreshEntity(entityIn);
 		}
 		return true;
 	}
@@ -151,14 +150,14 @@ public class FanProcessing {
 			SPLASHING_WRAPPER.setItem(0, stack);
 			Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(SPLASHING_WRAPPER, world);
 			if (recipe.isPresent())
-				return RecipeApplier.applyRecipeOn(stack, recipe.get());
+				return RecipeApplier.applyRecipeOn(world, stack, recipe.get());
 			return null;
 		}
 		if (type == Type.HAUNTING) {
 			HAUNTING_WRAPPER.setItem(0, stack);
 			Optional<HauntingRecipe> recipe = AllRecipeTypes.HAUNTING.find(HAUNTING_WRAPPER, world);
 			if (recipe.isPresent())
-				return RecipeApplier.applyRecipeOn(stack, recipe.get());
+				return RecipeApplier.applyRecipeOn(world, stack, recipe.get());
 			return null;
 		}
 
@@ -177,11 +176,12 @@ public class FanProcessing {
 			}
 
 			if (smeltingRecipe.isPresent()) {
-				if (!smokingRecipe.isPresent() || !ItemStack.isSame(smokingRecipe.get()
-					.getResultItem(),
+				RegistryAccess registryAccess = world.registryAccess();
+				if (smokingRecipe.isEmpty() || !ItemStack.isSameItem(smokingRecipe.get()
+					.getResultItem(registryAccess),
 					smeltingRecipe.get()
-						.getResultItem())) {
-					return RecipeApplier.applyRecipeOn(stack, smeltingRecipe.get());
+						.getResultItem(registryAccess))) {
+					return RecipeApplier.applyRecipeOn(world, stack, smeltingRecipe.get());
 				}
 			}
 
@@ -189,7 +189,7 @@ public class FanProcessing {
 		}
 
 		if (type == Type.SMOKING && smokingRecipe.isPresent())
-			return RecipeApplier.applyRecipeOn(stack, smokingRecipe.get());
+			return RecipeApplier.applyRecipeOn(world, stack, smokingRecipe.get());
 
 		return null;
 	}
@@ -239,7 +239,7 @@ public class FanProcessing {
 
 				if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM
 					|| entity.getType() == EntityType.BLAZE) {
-					entity.hurt(DamageSource.DROWN, 2);
+					entity.hurt(entity.damageSources().drown(), 2);
 				}
 				if (entity.isOnFire()) {
 					entity.clearFire();
@@ -268,7 +268,7 @@ public class FanProcessing {
 
 				if (!entity.fireImmune()) {
 					entity.setSecondsOnFire(2);
-					entity.hurt(FIRE_DAMAGE_SOURCE, 2);
+					entity.hurt(AllDamageTypes.FAN_FIRE.source(level), 2);
 				}
 			}
 
@@ -366,7 +366,7 @@ public class FanProcessing {
 
 				if (!entity.fireImmune()) {
 					entity.setSecondsOnFire(10);
-					entity.hurt(LAVA_DAMAGE_SOURCE, 4);
+					entity.hurt(AllDamageTypes.FAN_LAVA.source(level), 4);
 				}
 			}
 

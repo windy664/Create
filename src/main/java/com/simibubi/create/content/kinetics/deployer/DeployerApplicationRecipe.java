@@ -41,7 +41,7 @@ public class DeployerApplicationRecipe extends ItemApplicationRecipe implements 
 					.getPath() + "_using_deployer")).require(sandpaperRecipe.getIngredients()
 						.get(0))
 						.require(AllItemTags.SANDPAPER.tag)
-						.output(sandpaperRecipe.getResultItem())
+						.output(sandpaperRecipe.getResultItem(Minecraft.getInstance().level.registryAccess()))
 						.build();
 	}
 

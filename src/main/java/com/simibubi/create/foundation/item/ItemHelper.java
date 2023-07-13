@@ -27,6 +27,14 @@ import net.minecraft.world.level.Level;
 
 public class ItemHelper {
 
+	public static boolean sameItem(ItemStack stack, ItemStack otherStack) {
+		return !otherStack.isEmpty() && stack.is(otherStack.getItem());
+	}
+
+	public static Predicate<ItemStack> sameItemPredicate(ItemStack stack) {
+		return s -> sameItem(stack, s);
+	}
+
 	public static void dropContents(Level world, BlockPos pos, Storage<ItemVariant> inv) {
 		try (Transaction t = TransferUtil.getTransaction()) {
 			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(inv)) {
@@ -134,7 +142,7 @@ public class ItemHelper {
 			return true;
 		if (stacks1.length == stacks2.length) {
 			for (int i = 0; i < stacks1.length; i++)
-				if (!ItemStack.isSame(stacks1[i], stacks2[i]))
+				if (!ItemStack.isSameItem(stacks1[i], stacks2[i]))
 					return false;
 			return true;
 		}

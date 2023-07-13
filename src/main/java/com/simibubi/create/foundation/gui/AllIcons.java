@@ -1,9 +1,10 @@
 package com.simibubi.create.foundation.gui;
 
+import org.joml.Matrix4f;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.element.ScreenElement;
@@ -11,7 +12,7 @@ import com.simibubi.create.foundation.utility.Color;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -104,7 +105,7 @@ public class AllIcons implements ScreenElement {
 
 		I_ADD_INVERTED_ATTRIBUTE = next(),
 		I_FLIP = next(),
-		
+
 		I_ROLLER_PAVE = next(),
 		I_ROLLER_FILL = next(),
 		I_ROLLER_WIDE_FILL = next(),
@@ -127,7 +128,7 @@ public class AllIcons implements ScreenElement {
 		I_PATTERN_CHANCE_75 = next(),
 		I_FOLLOW_DIAGONAL = next(),
 		I_FOLLOW_MATERIAL = next(),
-		
+
 		I_CLEAR_CHECKED = next(),
 
 		I_SCHEMATIC = newRow(),
@@ -183,15 +184,8 @@ public class AllIcons implements ScreenElement {
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void render(PoseStack matrixStack, int x, int y) {
-		bind();
-		GuiComponent.blit(matrixStack, x, y, 0, iconX, iconY, 16, 16, 256, 256);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void render(PoseStack matrixStack, int x, int y, GuiComponent component) {
-		bind();
-		component.blit(matrixStack, x, y, iconX, iconY, 16, 16);
+	public void render(GuiGraphics graphics, int x, int y) {
+		graphics.blit(ICON_ATLAS, x, y, 0, iconX, iconY, 16, 16, 256, 256);
 	}
 
 	@Environment(EnvType.CLIENT)

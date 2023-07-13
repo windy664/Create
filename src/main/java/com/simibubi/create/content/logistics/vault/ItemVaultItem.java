@@ -107,8 +107,7 @@ public class ItemVaultItem extends BlockItem {
 				BlockState blockState = world.getBlockState(offsetPos);
 				if (ItemVaultBlock.isVault(blockState))
 					continue;
-				if (!blockState.getMaterial()
-					.isReplaceable())
+				if (!blockState.canBeReplaced())
 					return;
 				tanksToPlace++;
 			}

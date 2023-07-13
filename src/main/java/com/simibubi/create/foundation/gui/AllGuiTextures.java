@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.utility.Color;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
 public enum AllGuiTextures implements ScreenElement {
@@ -72,7 +72,7 @@ public enum AllGuiTextures implements ScreenElement {
 
 	LINKED_CONTROLLER("curiosities_2", 179, 109),
 	BLUEPRINT("curiosities_2", 0, 109, 179, 109),
-	
+
 	CLIPBOARD("clipboard", 0, 0, 256, 256),
 
 	DATA_GATHERER("display_link", 235, 162),
@@ -123,7 +123,7 @@ public enum AllGuiTextures implements ScreenElement {
 	I_NEW_TRAIN("schedule_2", 14, 239, 24, 16),
 	I_DISASSEMBLE_TRAIN("schedule_2", 39, 239, 24, 16),
 	I_ASSEMBLE_TRAIN("schedule_2", 64, 239, 24, 16),
-	
+
 	ELEVATOR_CONTACT("display_link", 20, 172, 233, 82),
 
 	BRASS_FRAME_TL("value_settings", 65, 9, 4, 4),
@@ -134,7 +134,7 @@ public enum AllGuiTextures implements ScreenElement {
 	BRASS_FRAME_RIGHT("value_settings", 71, 14, 3, 4),
 	BRASS_FRAME_TOP("value_settings", 0, 24, 256, 3),
 	BRASS_FRAME_BOTTOM("value_settings", 0, 27, 256, 3),
-	
+
 	VALUE_SETTINGS_MILESTONE("value_settings", 0, 0, 7, 8),
 	VALUE_SETTINGS_WIDE_MILESTONE("value_settings", 75, 14, 13, 8),
 	VALUE_SETTINGS_BAR("value_settings", 7, 0, 249, 8),
@@ -145,7 +145,7 @@ public enum AllGuiTextures implements ScreenElement {
 	VALUE_SETTINGS_CURSOR_RIGHT("value_settings", 61, 9, 3, 14),
 	VALUE_SETTINGS_CURSOR_ICON("value_settings", 0, 44, 22, 20),
 	VALUE_SETTINGS_LABEL_BG("value_settings", 0, 31, 81, 11),
-	
+
 	// JEI
 	JEI_SLOT("jei/widgets", 18, 18),
 	JEI_CHANCE_SLOT("jei/widgets", 20, 156, 18, 18),
@@ -228,22 +228,14 @@ public enum AllGuiTextures implements ScreenElement {
 	}
 
 	@Environment(EnvType.CLIENT)
-	@Override
-	public void render(PoseStack ms, int x, int y) {
-		bind();
-		GuiComponent.blit(ms, x, y, 0, startX, startY, width, height, 256, 256);
+	public void render(GuiGraphics graphics, int x, int y) {
+		graphics.blit(location, x, y, startX, startY, width, height);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void render(PoseStack ms, int x, int y, GuiComponent component) {
+	public void render(GuiGraphics graphics, int x, int y, Color c) {
 		bind();
-		component.blit(ms, x, y, startX, startY, width, height);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void render(PoseStack ms, int x, int y, Color c) {
-		bind();
-		UIRenderHelper.drawColoredTexture(ms, c, x, y, startX, startY, width, height);
+		UIRenderHelper.drawColoredTexture(graphics, c, x, y, startX, startY, width, height);
 	}
 
 }

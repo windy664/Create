@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.fabricmc.fabric.api.entity.EntityPickInteractionAware;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -35,7 +36,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -54,7 +54,7 @@ public class ToolboxHandlerClient {
 		LocalPlayer player = mc.player;
 		if (player == null)
 			return false;
-		Level level = player.level;
+		Level level = player.level();
 		HitResult hitResult = mc.hitResult;
 
 		if (hitResult == null || hitResult.getType() == HitResult.Type.MISS)
@@ -63,7 +63,7 @@ public class ToolboxHandlerClient {
 			return false;
 
 		ItemStack result = ItemStack.EMPTY;
-		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
+		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level(), player, 8);
 
 		if (toolboxes.isEmpty())
 			return false;
@@ -71,7 +71,7 @@ public class ToolboxHandlerClient {
 		if (hitResult.getType() == HitResult.Type.BLOCK) {
 			BlockPos pos = ((BlockHitResult) hitResult).getBlockPos();
 			BlockState state = level.getBlockState(pos);
-			if (state.getMaterial() == Material.AIR)
+			if (state.isAir())
 				return false;
 			Block block = state.getBlock();
 			result = block instanceof BlockPickInteractionAware aware
@@ -96,7 +96,7 @@ public class ToolboxHandlerClient {
 						continue;
 					if (inSlot.getItem() != result.getItem())
 						continue;
-					if (!ItemStack.tagMatches(inSlot, result))
+					if (!ItemStack.matches(inSlot, result))
 						continue;
 
 					AllPackets.getChannel().sendToServer(
@@ -121,9 +121,9 @@ public class ToolboxHandlerClient {
 		LocalPlayer player = mc.player;
 		if (player == null)
 			return;
-		Level level = player.level;
+		Level level = player.level();
 
-		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
+		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level(), player, 8);
 		toolboxes.sort(Comparator.comparing(ToolboxBlockEntity::getUniqueId));
 
 		CompoundTag compound = player.getExtraCustomData()
@@ -163,7 +163,7 @@ public class ToolboxHandlerClient {
 			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_BOX, null));
 	}
 
-	public static void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
+	public static void renderOverlay(GuiGraphics graphics, float partialTicks, Window window) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -183,6 +183,7 @@ public class ToolboxHandlerClient {
 		if (compound.isEmpty())
 			return;
 
+		PoseStack poseStack = graphics.pose();
 		poseStack.pushPose();
 		for (int slot = 0; slot < 9; slot++) {
 			String key = String.valueOf(slot);
@@ -196,7 +197,7 @@ public class ToolboxHandlerClient {
 			AllGuiTextures texture = ToolboxHandler.distance(player.position(), pos) < max * max
 				? selected ? TOOLBELT_SELECTED_ON : TOOLBELT_HOTBAR_ON
 				: selected ? TOOLBELT_SELECTED_OFF : TOOLBELT_HOTBAR_OFF;
-			texture.render(poseStack, x + 20 * slot - offset, y + offset - AllConfigs.client().toolboxHotbarOverlayOffset.get());
+			texture.render(graphics, x + 20 * slot - offset, y + offset - AllConfigs.client().toolboxHotbarOverlayOffset.get());
 		}
 		poseStack.popPose();
 	}

@@ -40,7 +40,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
@@ -67,7 +66,7 @@ public class SymmetryWandItem extends Item {
 
 		// Shift -> open GUI
 		if (player.isShiftKeyDown()) {
-			if (player.level.isClientSide) {
+			if (player.level().isClientSide) {
 				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 					openWandGUI(wand, context.getHand());
 				});
@@ -205,7 +204,7 @@ public class SymmetryWandItem extends Item {
 			return;
 
 		symmetry.process(blockSet);
-		BlockPos to = new BlockPos(mirrorPos);
+		BlockPos to = BlockPos.containing(mirrorPos);
 		List<BlockPos> targets = new ArrayList<>();
 		targets.add(pos);
 
@@ -226,8 +225,7 @@ public class SymmetryWandItem extends Item {
 				}
 
 				BlockState toReplace = world.getBlockState(position);
-				if (!toReplace.getMaterial()
-						.isReplaceable())
+				if (!toReplace.canBeReplaced())
 					continue;
 				if (toReplace.getDestroySpeed(world, position) == -1)
 					continue;
@@ -268,10 +266,7 @@ public class SymmetryWandItem extends Item {
 
 	private static boolean isHoldingBlock(Player player, BlockState block) {
 		ItemStack itemBlock = BlockHelper.getRequiredItem(block);
-		return player.getMainHandItem()
-			.sameItem(itemBlock)
-			|| player.getOffhandItem()
-				.sameItem(itemBlock);
+		return player.isHolding(itemBlock.getItem());
 	}
 
 	public static void remove(Level world, ItemStack wand, Player player, BlockPos pos, BlockState ogBlock) {
@@ -291,7 +286,7 @@ public class SymmetryWandItem extends Item {
 
 		symmetry.process(blockSet);
 
-		BlockPos to = new BlockPos(mirrorPos);
+		BlockPos to = BlockPos.containing(mirrorPos);
 		List<BlockPos> targets = new ArrayList<>();
 
 		targets.add(pos);
@@ -303,8 +298,8 @@ public class SymmetryWandItem extends Item {
 			if (position.equals(pos))
 				continue;
 
-			if (blockstate.getMaterial() != Material.AIR) {
-				BlockEntity be = blockstate.hasBlockEntity() ? world.getBlockEntity(pos) : null;
+			BlockState blockstate = world.getBlockState(position);
+			if (!blockstate.isAir()) {
 				if (handlePreEvent(world, player, position, blockstate, be))
 					continue;
 				targets.add(position);

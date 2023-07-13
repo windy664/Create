@@ -33,12 +33,12 @@ public class SchematicProcessor extends StructureProcessor implements StructureP
 	@Override
 	public StructureTemplate.StructureBlockInfo processBlock(LevelReader world, BlockPos pos, BlockPos anotherPos, StructureTemplate.StructureBlockInfo rawInfo,
 			StructureTemplate.StructureBlockInfo info, StructurePlaceSettings settings) {
-		if (info.nbt != null && info.state.hasBlockEntity()) {
-			BlockEntity be = ((EntityBlock) info.state.getBlock()).newBlockEntity(info.pos, info.state);
+		if (info.nbt() != null && info.state().hasBlockEntity()) {
+			BlockEntity be = ((EntityBlock) info.state().getBlock()).newBlockEntity(info.pos(), info.state());
 			if (be != null) {
-				CompoundTag nbt = NBTProcessors.process(be, info.nbt, false);
-				if (nbt != info.nbt)
-					return new StructureTemplate.StructureBlockInfo(info.pos, info.state, nbt);
+				CompoundTag nbt = NBTProcessors.process(be, info.nbt(), false);
+				if (nbt != info.nbt())
+					return new StructureTemplate.StructureBlockInfo(info.pos(), info.state(), nbt);
 			}
 		}
 		return info;

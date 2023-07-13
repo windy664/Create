@@ -16,11 +16,9 @@ import com.simibubi.create.foundation.block.IBE;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -41,9 +39,6 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 		super(properties);
 		this.casing = casing;
 	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
 
 	@Override
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {

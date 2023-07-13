@@ -36,6 +36,7 @@ public class BigOutlines {
 			: mc.hitResult.getLocation()
 				.distanceToSqr(origin);
 
+		// TODO PORT 1.20
 		double range = ReachUtil.reach(player);
 		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range) + 1, origin);
 
@@ -91,6 +92,7 @@ public class BigOutlines {
 		double y = player.getY() - (pos.getY() + .5) + 1.5;
 		double z = player.getZ() - (pos.getZ() + .5);
 		double distSqr = x * x + y * y + z * z;
+		// TODO PORT 1.20
 		double maxDist = ReachUtil.reach(player) + 1;
 		maxDist *= maxDist;
 		return distSqr <= maxDist;

@@ -27,6 +27,7 @@ import com.simibubi.create.infrastructure.config.CClient;
 
 import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,7 +49,7 @@ public class GoggleOverlayRenderer {
 	public static int hoverTicks = 0;
 	public static BlockPos lastHovered = null;
 
-	public static void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
+	public static void renderOverlay(GuiGraphics graphics, float partialTicks, Window window) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -155,6 +156,7 @@ public class GoggleOverlayRenderer {
 			return;
 		}
 
+		PoseStack poseStack = graphics.pose();
 		poseStack.pushPose();
 
 		int tooltipTextWidth = 0;
@@ -196,13 +198,13 @@ public class GoggleOverlayRenderer {
 			colorBorderBot.scaleAlpha(fade);
 		}
 
-		ScreenUtils.drawHoveringText(poseStack, tooltip, posX, posY, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(), -1, colorBackground.getRGB(),
+		ScreenUtils.drawHoveringText(graphics, tooltip, posX, posY, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(), -1, colorBackground.getRGB(),
 			colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		GuiGameElement.of(item)
 			.at(posX + 10, posY - 16, 450)
-			.render(poseStack);
+			.render(graphics);
 		poseStack.popPose();
 	}
 

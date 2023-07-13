@@ -7,6 +7,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
@@ -51,8 +52,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class DrillBlock extends DirectionalKineticBlock implements IBE<DrillBlockEntity>, SimpleWaterloggedBlock {
-	public static DamageSource damageSourceDrill = DamageSourceHelper.port_lib$createArmorBypassingDamageSource("create.mechanical_drill");
-
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
 	public DrillBlock(Properties properties) {
@@ -70,7 +69,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IBE<DrillBloc
 		withBlockEntityDo(worldIn, pos, be -> {
 			if (be.getSpeed() == 0)
 				return;
-			entityIn.hurt(damageSourceDrill, (float) getDamage(be.getSpeed()));
+			entityIn.hurt(AllDamageTypes.DRILL.source(worldIn), (float) getDamage(be.getSpeed()));
 		});
 	}
 
@@ -187,8 +186,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IBE<DrillBloc
 				state.getValue(FACING)
 					.getAxis(),
 				dir -> world.getBlockState(pos.relative(dir))
-					.getMaterial()
-					.isReplaceable());
+					.canBeReplaced());
 
 			if (directions.isEmpty())
 				return PlacementOffset.fail();

@@ -50,12 +50,13 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 			ServerPlayer sender = context.getSender();
 			if (sender == null)
 				return;
-			Entity entityByID = sender.getLevel().getEntity(target);
+			Entity entityByID = sender.level().getEntity(target);
 			if (!(entityByID instanceof AbstractContraptionEntity))
 				return;
 			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
 			AABB bb = contraptionEntity.getBoundingBox();
 			double boundsExtra = Math.max(bb.getXsize(), bb.getYsize());
+			// TODO PORT 1.20
 			double d = sender.getAttribute(ReachEntityAttributes.REACH).getValue() + 10 + boundsExtra;
 			if (!sender.hasLineOfSight(entityByID))
 				d -= 3;

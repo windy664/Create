@@ -91,8 +91,7 @@ public class HosePulleyBlockEntity extends KineticBlockEntity implements SidedSt
 			if (newOffset < 0)
 				isMoving = false;
 			if (!level.getBlockState(worldPosition.below((int) Math.ceil(newOffset)))
-				.getMaterial()
-				.isReplaceable()) {
+				.canBeReplaced()) {
 				isMoving = false;
 			}
 			if (isMoving) {
@@ -118,8 +117,7 @@ public class HosePulleyBlockEntity extends KineticBlockEntity implements SidedSt
 			isMoving = false;
 		}
 		if (!level.getBlockState(worldPosition.below((int) Math.ceil(newOffset)))
-			.getMaterial()
-			.isReplaceable()) {
+			.canBeReplaced()) {
 			newOffset = (int) newOffset;
 			isMoving = false;
 		}
@@ -140,8 +138,7 @@ public class HosePulleyBlockEntity extends KineticBlockEntity implements SidedSt
 
 		int ceil = (int) Math.ceil(offset.getValue() + getMovementSpeed());
 		if (getMovementSpeed() > 0 && level.getBlockState(worldPosition.below(ceil))
-			.getMaterial()
-			.isReplaceable()) {
+			.canBeReplaced()) {
 			isMoving = true;
 			drainer.reset(null);
 			filler.reset(null);

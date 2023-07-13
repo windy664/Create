@@ -24,12 +24,12 @@ public class OpenCreateMenuButton extends Button {
 	public static final ItemStack ICON = AllItems.GOGGLES.asStack();
 
 	public OpenCreateMenuButton(int x, int y) {
-		super(x, y, 20, 20, Components.immutableEmpty(), OpenCreateMenuButton::click);
+		super(x, y, 20, 20, Components.immutableEmpty(), OpenCreateMenuButton::click, DEFAULT_NARRATION);
 	}
 
 	@Override
-	public void renderBg(PoseStack mstack, Minecraft mc, int mouseX, int mouseY) {
-		Minecraft.getInstance().getItemRenderer().renderGuiItem(ICON, x + 2, y + 2);
+	public void renderString(GuiGraphics graphics, Font pFont, int pColor) {
+		graphics.renderItem(ICON, getX() + 2, getY() + 2);
 	}
 
 	public static void click(Button b) {
@@ -99,7 +99,7 @@ public class OpenCreateMenuButton extends Button {
 						.findFirst()
 						.ifPresent(w -> {
 							gui.addRenderableWidget(
-									new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
+									new OpenCreateMenuButton(w.getX() + offsetX_ + (onLeft ? -20 : w.getWidth()), w.getY())
 							);
 						});
 			}

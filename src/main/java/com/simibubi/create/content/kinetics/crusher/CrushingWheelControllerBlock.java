@@ -98,7 +98,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IB
 		boolean isPlayer = entityIn instanceof Player;
 		if (isPlayer && ((Player) entityIn).isCreative())
 			return;
-		if (isPlayer && entityIn.level.getDifficulty() == Difficulty.PEACEFUL)
+		if (isPlayer && entityIn.level().getDifficulty() == Difficulty.PEACEFUL)
 			return;
 
 		be.startCrushing(entityIn);

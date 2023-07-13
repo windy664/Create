@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.data;
 
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllEntityTags;
@@ -14,10 +17,15 @@ import com.tterrag.registrate.providers.RegistrateTagsProvider;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import me.alphamode.forgetags.Tags;
+import net.minecraft.core.Holder;
+import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.data.tags.TagsProvider.TagAppender;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagBuilder;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -78,7 +86,9 @@ public class TagGen {
 	// forge mitigates it with an extra filter using ExistingFileHelper
 	// here, since we know these tags will always exist, just force them
 
-	private static void genBlockTags(RegistrateTagsProvider<Block> prov) {
+	private static void genBlockTags(RegistrateTagsProvider<Block> provIn) {
+		CreateTagsProvider<Block> prov = new CreateTagsProvider<>(provIn, Block::builtInRegistryHolder);
+
 		prov.tag(AllBlockTags.BRITTLE.tag)
 			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT)
 			.forceAddTag(BlockTags.BEDS)
@@ -144,7 +154,9 @@ public class TagGen {
 		}
 	}
 
-	private static void genItemTags(RegistrateTagsProvider<Item> prov) {
+	private static void genItemTags(RegistrateTagsProvider<Item> provIn) {
+		CreateTagsProvider<Item> prov = new CreateTagsProvider<>(provIn, Item::builtInRegistryHolder);
+
 		prov.tag(AllItemTags.SLEEPERS.tag)
 			.add(Items.STONE_SLAB, Items.SMOOTH_STONE_SLAB, Items.ANDESITE_SLAB);
 
@@ -195,7 +207,7 @@ public class TagGen {
 		}
 	}
 
-	private static void genStrippedWood(RegistrateTagsProvider<Item> prov) {
+	private static void genStrippedWood(CreateTagsProvider<Item> prov) {
 		TagAppender<Item> logAppender = prov.tag(AllItemTags.MODDED_STRIPPED_LOGS.tag);
 		TagAppender<Item> woodAppender = prov.tag(AllItemTags.MODDED_STRIPPED_WOOD.tag);
 		StrippedWoodHelper helper = new StrippedWoodHelper(logAppender, woodAppender);
@@ -224,7 +236,9 @@ public class TagGen {
 		addOptional(woodAppender, Mods.BYG, "stripped_bulbis_wood");
 	}
 
-	private static void genFluidTags(RegistrateTagsProvider<Fluid> prov) {
+	private static void genFluidTags(RegistrateTagsProvider<Fluid> provIn) {
+		CreateTagsProvider<Fluid> prov = new CreateTagsProvider<>(provIn, Fluid::builtInRegistryHolder);
+
 		prov.tag(AllFluidTags.BOTTOMLESS_ALLOW.tag)
 			.add(Fluids.WATER, Fluids.LAVA);
 
@@ -240,8 +254,9 @@ public class TagGen {
 		}
 	}
 
-	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> prov) {
-		
+	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> provIn) {
+		CreateTagsProvider<EntityType<?>> prov = new CreateTagsProvider<>(provIn, EntityType::builtInRegistryHolder);
+
 		// VALIDATE
 
 		for (AllEntityTags tag : AllEntityTags.values()) {
@@ -268,6 +283,51 @@ public class TagGen {
 				addOptional(woodAppender, mod, strippedPre + type + (mod.omitWoodSuffix ? "" : "_wood") + strippedPost);
 			}
 		}
+	}
+
+	public static class CreateTagsProvider<T> {
+
+		private RegistrateTagsProvider<T> provider;
+		private Function<T, ResourceKey<T>> keyExtractor;
+
+		public CreateTagsProvider(RegistrateTagsProvider<T> provider, Function<T, Holder.Reference<T>> refExtractor) {
+			this.provider = provider;
+			this.keyExtractor = refExtractor.andThen(Holder.Reference::key);
+		}
+
+		public CreateTagAppender<T> tag(TagKey<T> tag) {
+			TagBuilder tagbuilder = getOrCreateRawBuilder(tag);
+			return new CreateTagAppender<>(tagbuilder, keyExtractor, Create.ID);
+		}
+
+		public TagBuilder getOrCreateRawBuilder(TagKey<T> tag) {
+			return provider.addTag(tag).getInternalBuilder();
+		}
+
+	}
+
+	public static class CreateTagAppender<T> extends TagsProvider.TagAppender<T> {
+
+		private Function<T, ResourceKey<T>> keyExtractor;
+
+		public CreateTagAppender(TagBuilder pBuilder, Function<T, ResourceKey<T>> pKeyExtractor, String modId) {
+			super(pBuilder, modId);
+			this.keyExtractor = pKeyExtractor;
+		}
+
+		public CreateTagAppender<T> add(T entry) {
+			this.add(this.keyExtractor.apply(entry));
+			return this;
+		}
+
+		@SafeVarargs
+		public final CreateTagAppender<T> add(T... entries) {
+			Stream.<T>of(entries)
+				.map(this.keyExtractor)
+				.forEach(this::add);
+			return this;
+		}
+
 	}
 
 }

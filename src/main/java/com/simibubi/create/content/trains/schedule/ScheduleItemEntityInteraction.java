@@ -79,7 +79,7 @@ public class ScheduleItemEntityInteraction {
 		if (train.runtime.paused && !train.runtime.completed) {
 			if (onServer) {
 				train.runtime.paused = false;
-				AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
+				AllSoundEvents.CONFIRM.playOnServer(player.level(), player.blockPosition(), 1, 1);
 				player.displayClientMessage(Lang.translateDirect("schedule.continued"), true);
 			}
 
@@ -91,7 +91,7 @@ public class ScheduleItemEntityInteraction {
 		ItemStack itemInHand = player.getItemInHand(hand);
 		if (!itemInHand.isEmpty()) {
 			if (onServer) {
-				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+				AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
 				player.displayClientMessage(Lang.translateDirect("schedule.remove_with_empty_hand"), true);
 			}
 			return InteractionResult.SUCCESS;

@@ -68,7 +68,7 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 			.isEmpty())
 			return;
 
-		if (!world.getEntitiesOfClass(ItemEntity.class, new AABB(new BlockPos(entityPos)))
+		if (!world.getEntitiesOfClass(ItemEntity.class, new AABB(BlockPos.containing(entityPos)))
 			.isEmpty())
 			return;
 

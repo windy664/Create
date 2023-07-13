@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -12,7 +12,9 @@ import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 
 import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.AbstractContainerScreenAccessor;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
+import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.inventory.Slot;
@@ -24,11 +26,12 @@ public class GhostIngredientHandler<T extends GhostItemMenu<?>>
 		implements IGhostIngredientHandler<AbstractSimiContainerScreen<T>> {
 
 	@Override
-	public <I> List<Target<I>> getTargets(AbstractSimiContainerScreen<T> gui, I ingredient, boolean doStart) {
-		List<Target<I>> targets = new ArrayList<>();
+	public <I> List<Target<I>> getTargetsTyped(AbstractSimiContainerScreen<T> gui, ITypedIngredient<I> ingredient,
+		boolean doStart) {
 		boolean isAttributeFilter = gui instanceof AttributeFilterScreen;
+		List<Target<I>> targets = new LinkedList<>();
 
-		if (ingredient instanceof ItemStack) {
+		if (ingredient.getType() == VanillaTypes.ITEM_STACK) {
 			for (int i = 36; i < gui.getMenu().slots.size(); i++) {
 				if (gui.getMenu().slots.get(i)
 						.isActive())

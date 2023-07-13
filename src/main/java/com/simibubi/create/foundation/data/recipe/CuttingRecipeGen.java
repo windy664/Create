@@ -145,8 +145,8 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
-	public CuttingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public CuttingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

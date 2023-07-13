@@ -272,9 +272,9 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 //	@Nonnull
 //	@Override
 //	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
-//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+//		if (cap == ForgeCapabilities.ITEM_HANDLER)
 //			return itemCapability.cast();
-//		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+//		if (cap == ForgeCapabilities.FLUID_HANDLER)
 //			return fluidCapability.cast();
 //		return super.getCapability(cap, side);
 //	}

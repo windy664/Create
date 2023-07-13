@@ -57,9 +57,10 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 			ServerPlayer sender = context.getSender();
 			if (sender == null)
 				return;
-			Entity entityByID = sender.getLevel()
+			Entity entityByID = sender.level()
 				.getEntity(target);
 			if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
+				// TODO PORT 1.20
 				double d = sender.getAttribute(ReachEntityAttributes.REACH)
 					.getValue();
 				if (!sender.hasLineOfSight(entityByID))

@@ -24,6 +24,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.HumanoidModel.ArmPose;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -60,7 +62,7 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem, Enti
 	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		if (stack.hasTag() && stack.getTag()
 			.contains("BlockUsed")) {
-			MutableComponent usedBlock = NbtUtils.readBlockState(stack.getTag()
+			MutableComponent usedBlock = NbtUtils.readBlockState(worldIn.holderLookup(Registries.BLOCK), stack.getTag()
 				.getCompound("BlockUsed"))
 				.getBlock()
 				.getName();
@@ -70,6 +72,7 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem, Enti
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		boolean differentBlock = false;
@@ -77,8 +80,8 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem, Enti
 			.contains("BlockUsed")
 			&& newStack.getTag()
 				.contains("BlockUsed"))
-			differentBlock = NbtUtils.readBlockState(oldStack.getTag()
-				.getCompound("BlockUsed")) != NbtUtils.readBlockState(
+			differentBlock = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), oldStack.getTag()
+				.getCompound("BlockUsed")) != NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(),
 					newStack.getTag()
 						.getCompound("BlockUsed"));
 		return slotChanged || !isZapper(newStack) || differentBlock;
@@ -140,7 +143,7 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem, Enti
 
 		BlockState stateToUse = Blocks.AIR.defaultBlockState();
 		if (nbt.contains("BlockUsed"))
-			stateToUse = NbtUtils.readBlockState(nbt.getCompound("BlockUsed"));
+			stateToUse = NbtUtils.readBlockState(world.holderLookup(Registries.BLOCK), nbt.getCompound("BlockUsed"));
 		stateToUse = BlockHelper.setZeroAge(stateToUse);
 		CompoundTag data = null;
 		if (AllBlockTags.SAFE_NBT.matches(stateToUse) && nbt.contains("BlockData", Tag.TAG_COMPOUND)) {

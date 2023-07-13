@@ -7,7 +7,7 @@ import static com.simibubi.create.AllTags.NameSpace.TIC;
 
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
@@ -286,7 +286,7 @@ public class AllTags {
 			if (optional) {
 				tag = optionalTag(Registry.ENTITY_TYPE, id);
 			} else {
-				tag = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, id);
+				tag = TagKey.create(Registries.ENTITY_TYPE, id);
 			}
 			this.alwaysDatagen = alwaysDatagen;
 		}

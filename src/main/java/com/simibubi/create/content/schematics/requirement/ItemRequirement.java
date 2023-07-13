@@ -165,8 +165,8 @@ public class ItemRequirement {
 			this.usage = usage;
 		}
 
-		public boolean matches(ItemStack stack) {
-			return this.stack.sameItem(stack);
+		public boolean matches(ItemStack other) {
+			return ItemStack.isSameItem(stack, other);
 		}
 
 		public boolean matches(ItemVariant variant) {

@@ -77,7 +77,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, IBE<ItemDrainB
 			return;
 		if (!entityIn.isAlive())
 			return;
-		if (entityIn.level.isClientSide)
+		if (entityIn.level().isClientSide)
 			return;
 
 		ItemEntity itemEntity = (ItemEntity) entityIn;

@@ -26,7 +26,7 @@ import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -110,10 +110,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		return height;
 	}
 
-	public static boolean deployerCollectsDropsFromKilledEntities(LivingEntity target, DamageSource s, Collection<ItemEntity> drops, int lootingLevel, boolean recentlyHit) {
-		if (!(s instanceof EntityDamageSource))
-			return false;
-		EntityDamageSource source = (EntityDamageSource) s;
+	public static boolean deployerCollectsDropsFromKilledEntities(LivingEntity target, DamageSource source, Collection<ItemEntity> drops, int lootingLevel, boolean recentlyHit) {
 		Entity trueSource = source.getEntity();
 		if (trueSource != null && trueSource instanceof DeployerFakePlayer) {
 			DeployerFakePlayer fakePlayer = (DeployerFakePlayer) trueSource;
@@ -131,12 +128,9 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	protected void playEquipSound(ItemStack p_217042_) {}
-
-	@Override
 	public void remove(RemovalReason p_150097_) {
-		if (blockBreakingProgress != null && !level.isClientSide)
-			level.destroyBlockProgress(getId(), blockBreakingProgress.getKey(), -1);
+		if (blockBreakingProgress != null && !level().isClientSide)
+			level().destroyBlockProgress(getId(), blockBreakingProgress.getKey(), -1);
 		super.remove(p_150097_);
 	}
 

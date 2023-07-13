@@ -64,7 +64,7 @@ public class GantryContraption extends TranslatingContraption {
 
 	@Override
 	protected boolean shouldUpdateAfterMovement(StructureBlockInfo info) {
-		return super.shouldUpdateAfterMovement(info) && !AllBlocks.GANTRY_CARRIAGE.has(info.state);
+		return super.shouldUpdateAfterMovement(info) && !AllBlocks.GANTRY_CARRIAGE.has(info.state());
 	}
 
 	@Override

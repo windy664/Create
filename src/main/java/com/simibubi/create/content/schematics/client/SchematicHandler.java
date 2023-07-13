@@ -25,10 +25,12 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -143,12 +145,13 @@ public class SchematicHandler {
 	}
 
 	private void setupRenderer() {
-		StructureTemplate schematic = SchematicItem.loadSchematic(activeSchematicItem);
+		Level clientWorld = Minecraft.getInstance().level;
+		StructureTemplate schematic =
+			SchematicItem.loadSchematic(clientWorld.holderLookup(Registries.BLOCK), activeSchematicItem);
 		Vec3i size = schematic.getSize();
 		if (size.equals(Vec3i.ZERO))
 			return;
 
-		Level clientWorld = Minecraft.getInstance().level;
 		SchematicWorld w = new SchematicWorld(clientWorld);
 		SchematicWorld wMirroredFB = new SchematicWorld(clientWorld);
 		SchematicWorld wMirroredLR = new SchematicWorld(clientWorld);
@@ -236,14 +239,14 @@ public class SchematicHandler {
 		}
 	}
 
-	public void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
+	public void renderOverlay(GuiGraphics graphics, float partialTicks, Window window) {
 		if (Minecraft.getInstance().options.hideGui || !active)
 			return;
 		if (activeSchematicItem != null)
-			this.overlay.renderOn(poseStack, activeHotbarSlot);
+			this.overlay.renderOn(graphics, activeHotbarSlot);
 		currentTool.getTool()
-			.renderOverlay(poseStack, partialTicks, window.getGuiScaledWidth(), window.getGuiScaledHeight());
-		selectionScreen.renderPassive(poseStack, partialTicks);
+			.renderOverlay(graphics, partialTicks, window.getGuiScaledWidth(), window.getGuiScaledHeight());
+		selectionScreen.renderPassive(graphics, partialTicks);
 	}
 
 	public boolean onMouseInput(int button, boolean pressed) {
@@ -308,11 +311,7 @@ public class SchematicHandler {
 
 	private boolean itemLost(Player player) {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			if (!player.getInventory()
-				.getItem(i)
-				.sameItem(activeSchematicItem))
-				continue;
-			if (!ItemStack.tagMatches(player.getInventory()
+			if (!ItemStack.matches(player.getInventory()
 				.getItem(i), activeSchematicItem))
 				continue;
 			return false;

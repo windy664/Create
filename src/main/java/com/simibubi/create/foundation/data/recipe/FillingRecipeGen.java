@@ -64,8 +64,8 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public FillingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public FillingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

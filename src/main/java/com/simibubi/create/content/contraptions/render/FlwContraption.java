@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joml.Matrix4f;
+
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.GlStateTracker;
 import com.jozufozu.flywheel.backend.instancing.Engine;
@@ -20,7 +22,6 @@ import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.jozufozu.flywheel.fabric.helper.Matrix4fHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.render.CreateContexts;
@@ -91,7 +92,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 	public void beginFrame(BeginFrameEvent event) {
 		super.beginFrame(event);
 
-		modelViewPartial.setIdentity();
+		modelViewPartial.identity();
 		modelViewPartialReady = false;
 
 		if (!isVisible()) return;
@@ -173,7 +174,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 		float y = (float) (Mth.lerp(pt, entity.yOld, entity.getY()) - camY);
 		float z = (float) (Mth.lerp(pt, entity.zOld, entity.getZ()) - camZ);
 		Matrix4fHelper.setTranslation(matrix, x, y, z);
-		matrix.multiply(modelMatrix);
+		matrix.mul(modelMatrix);
 	}
 
 	public void tick() {

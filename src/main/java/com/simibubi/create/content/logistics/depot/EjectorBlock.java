@@ -92,7 +92,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements IBE<EjectorB
 		float p_180658_4_) {
 		Optional<EjectorBlockEntity> blockEntityOptional = getBlockEntityOptional(p_180658_1_, p_180658_2_);
 		if (blockEntityOptional.isPresent() && !p_180658_3_.isSuppressingBounce()) {
-			p_180658_3_.causeFallDamage(p_180658_4_, 1.0F, DamageSource.FALL);
+			p_180658_3_.causeFallDamage(p_180658_4_, 1.0F, p_180658_1_.damageSources().fall());
 			return;
 		}
 		super.fallOn(p_180658_1_, p_152427_, p_180658_2_, p_180658_3_, p_180658_4_);
@@ -125,7 +125,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements IBE<EjectorB
 		if (ejectorBlockEntity.launcher.getHorizontalDistance() == 0)
 			return;
 
-		if (entityIn.isOnGround()) {
+		if (entityIn.onGround()) {
 			entityIn.setOnGround(false);
 			Vec3 center = VecHelper.getCenterOf(position)
 				.add(0, 7 / 16f, 0);
@@ -142,7 +142,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements IBE<EjectorB
 
 		ejectorBlockEntity.activate();
 		ejectorBlockEntity.notifyUpdate();
-		if (entityIn.level.isClientSide)
+		if (entityIn.level().isClientSide)
 			AllPackets.getChannel().sendToServer(new EjectorTriggerPacket(ejectorBlockEntity.getBlockPos()));
 	}
 

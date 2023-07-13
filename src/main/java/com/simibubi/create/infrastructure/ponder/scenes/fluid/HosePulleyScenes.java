@@ -353,7 +353,6 @@ public class HosePulleyScenes {
 
 		scene.world.modifyBlockEntity(util.grid.at(4, 1, 1), FluidTankBlockEntity.class, be ->
 				TransferUtil.insertFluid(be.getTankInventory(), new FluidStack(Fluids.WATER, 24 * FluidConstants.BUCKET)));
-
 		scene.idle(20);
 
 		scene.overlay.showText(60)

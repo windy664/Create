@@ -234,11 +234,11 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
 	}
 
 //	protected boolean isItemHandlerCap(Capability<?> cap) {
-//		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+//		return cap == ForgeCapabilities.ITEM_HANDLER;
 //	}
 //
 //	protected boolean isFluidHandlerCap(Capability<?> cap) {
-//		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+//		return cap == ForgeCapabilities.FLUID_HANDLER;
 //	}
 
 	public void registerAwardables(List<BlockEntityBehaviour> behaviours, CreateAdvancement... advancements) {

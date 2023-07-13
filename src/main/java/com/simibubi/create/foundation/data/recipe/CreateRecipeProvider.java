@@ -24,8 +24,8 @@ public abstract class CreateRecipeProvider extends FabricRecipeProvider {
 
 	protected final List<GeneratedRecipe> all = new ArrayList<>();
 
-	public CreateRecipeProvider(FabricDataGenerator generator) {
-		super(generator);
+	public CreateRecipeProvider(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

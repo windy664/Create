@@ -29,7 +29,8 @@ import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
-import com.simibubi.create.foundation.data.AllLangPartials;
+import com.simibubi.create.foundation.damageTypes.DamageTypeDataProvider;
+import com.simibubi.create.foundation.damageTypes.DamageTypeTagGen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.TagGen;
@@ -47,14 +48,14 @@ import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.infrastructure.command.ServerLagger;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.worldgen.AllFeatures;
-import com.simibubi.create.infrastructure.worldgen.AllOreFeatureConfigEntries;
 import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
-import com.simibubi.create.infrastructure.worldgen.BuiltinRegistration;
+import com.simibubi.create.infrastructure.worldgen.WorldgenDataProvider;
 
 import io.github.tropheusj.milk.Milk;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -64,7 +65,7 @@ public class Create implements ModInitializer {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5.1c";
+	public static final String VERSION = "0.5.1d";
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -95,7 +96,6 @@ public class Create implements ModInitializer {
 	public void onInitialize() { // onCtor
 		AllSoundEvents.prepare();
 		AllTags.init();
-		AllCreativeModeTabs.init();
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();
@@ -113,10 +113,9 @@ public class Create implements ModInitializer {
 		AllParticleTypes.register();
 		AllStructureProcessorTypes.register();
 		AllEntityDataSerializers.register();
-		AllOreFeatureConfigEntries.init();
 		AllFeatures.register();
 		AllPlacementModifiers.register();
-		BuiltinRegistration.register();
+		AllCreativeModeTabs.register();
 		BogeySizes.init();
 		AllBogeyStyles.register();
 
@@ -134,7 +133,7 @@ public class Create implements ModInitializer {
 		CopperRegistries.inject();
 
 		Create.init();
-//		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData); // CreateData entrypoint
+//		modEventBus.addListener(EventPriority.LOW, Create::gatherData); // CreateData entrypoint
 		AllSoundEvents.register();
 
 		// causes class loading issues or something

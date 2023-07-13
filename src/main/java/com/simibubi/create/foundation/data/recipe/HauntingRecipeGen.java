@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.utility.RegisteredObjects;
 import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.Registry;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -61,8 +61,8 @@ public class HauntingRecipeGen extends ProcessingRecipeGen {
 				.output(result.get()));
 	}
 
-	public HauntingRecipeGen(FabricDataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public HauntingRecipeGen(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override

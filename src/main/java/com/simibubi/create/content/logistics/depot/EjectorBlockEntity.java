@@ -228,7 +228,7 @@ public class EjectorBlockEntity extends KineticBlockEntity implements SidedStora
 					;
 				else if (remainder.isEmpty())
 					iterator.remove();
-				else if (!remainder.sameItem(stack))
+				else if (!ItemStack.isSameItem(remainder, stack))
 					transportedItemStack.stack = remainder;
 			}
 

@@ -188,7 +188,7 @@ public class SequencedAssemblyRecipe implements Recipe<Container> {
 	}
 
 	@Override
-	public ItemStack assemble(Container p_77572_1_) {
+	public ItemStack assemble(Container inv, RegistryAccess registryAccess) {
 		return ItemStack.EMPTY;
 	}
 
@@ -198,7 +198,7 @@ public class SequencedAssemblyRecipe implements Recipe<Container> {
 	}
 
 	@Override
-	public ItemStack getResultItem() {
+	public ItemStack getResultItem(RegistryAccess registryAccess) {
 		return resultPool.get(0)
 			.getStack();
 	}
