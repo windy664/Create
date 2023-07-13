@@ -76,20 +76,15 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return currentTooltipModifierFactory;
 	}
 
-	@Override
-	public CreateRegistrate registerEventListeners(IEventBus bus) {
-		return super.registerEventListeners(bus);
-	}
+	private static Map<RegistryEntry<?>, ResourceKey<CreativeModeTab>> tabLookup = new IdentityHashMap<>();
+	private ResourceKey<CreativeModeTab> currentTab;
 
-	private static Map<RegistryEntry<?>, RegistryObject<CreativeModeTab>> tabLookup = new IdentityHashMap<>();
-	private RegistryObject<CreativeModeTab> currentTab;
-
-	public CreateRegistrate useCreativeTab(RegistryObject<CreativeModeTab> tab) {
+	public CreateRegistrate useCreativeTab(ResourceKey<CreativeModeTab> tab) {
 		this.currentTab = tab;
 		return this;
 	}
 
-	public boolean isInCreativeTab(RegistryEntry<?> entry, RegistryObject<CreativeModeTab> tab) {
+	public boolean isInCreativeTab(RegistryEntry<?> entry, ResourceKey<CreativeModeTab> tab) {
 		return tabLookup.get(entry) == tab;
 	}
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
@@ -18,16 +19,22 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
+import dev.architectury.registry.registries.DeferredRegister;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator;
@@ -40,48 +47,45 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 
-@EventBusSubscriber(bus = Bus.MOD)
 public class AllCreativeModeTabs {
 
-	private static final DeferredRegister<CreativeModeTab> TAB_REGISTER =
-		DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Create.ID);
-
-	public static final RegistryObject<CreativeModeTab> MAIN_TAB = TAB_REGISTER.register("base",
-		() -> CreativeModeTab.builder()
+	public static final TabInfo MAIN_TAB = register("base",
+		() -> FabricItemGroup.builder()
 			.title(Component.translatable("itemGroup.create.base"))
-			.withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
 			.icon(() -> AllBlocks.COGWHEEL.asStack())
 			.displayItems(new RegistrateDisplayItemsGenerator(true))
 			.build());
 
-	public static final RegistryObject<CreativeModeTab> BUILDING_BLOCKS_TAB = TAB_REGISTER.register("palettes",
-		() -> CreativeModeTab.builder()
+	public static final TabInfo BUILDING_BLOCKS_TAB = register("palettes",
+		() -> FabricItemGroup.builder()
 			.title(Component.translatable("itemGroup.create.palettes"))
-			.withTabsBefore(MAIN_TAB.getKey())
 			.icon(() -> AllPaletteBlocks.ORNATE_IRON_WINDOW.asStack())
 			.displayItems(new RegistrateDisplayItemsGenerator(false))
 			.build());
-	
-	public static void register(IEventBus modEventBus) {
-		TAB_REGISTER.register(modEventBus);
+
+	private static TabInfo register(String name, Supplier<CreativeModeTab> supplier) {
+		ResourceLocation id = Create.asResource(name);
+		ResourceKey<CreativeModeTab> key = ResourceKey.create(Registries.CREATIVE_MODE_TAB, id);
+		CreativeModeTab tab = supplier.get();
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, key, tab);
+		return new TabInfo(key, tab);
+	}
+
+	public static void register() {
+		// fabric: just load the class
 	}
 
 	public static CreativeModeTab getBaseTab() {
-		return MAIN_TAB.get();
+		return MAIN_TAB.tab;
 	}
 
 	public static CreativeModeTab getPalettesTab() {
-		return BUILDING_BLOCKS_TAB.get();
+		return BUILDING_BLOCKS_TAB.tab;
 	}
 
 	public static class RegistrateDisplayItemsGenerator implements DisplayItemsGenerator {
-		
+
 		private final boolean mainTab;
 
 		public RegistrateDisplayItemsGenerator(boolean mainTab) {
@@ -238,7 +242,7 @@ public class AllCreativeModeTabs {
 			List<ItemOrdering> orderings = makeOrderings();
 			Function<Item, ItemStack> stackFunc = makeStackFunc();
 			Function<Item, TabVisibility> visibilityFunc = makeVisibilityFunc();
-			RegistryObject<CreativeModeTab> tab = mainTab ? MAIN_TAB : BUILDING_BLOCKS_TAB;
+			ResourceKey<CreativeModeTab> tab = mainTab ? MAIN_TAB.key : BUILDING_BLOCKS_TAB.key;
 
 			List<Item> items = new LinkedList<>();
 			items.addAll(collectItems(tab, itemRenderer, true, exclusionPredicate));
@@ -249,7 +253,7 @@ public class AllCreativeModeTabs {
 			outputAll(output, items, stackFunc, visibilityFunc);
 		}
 
-		private List<Item> collectBlocks(RegistryObject<CreativeModeTab> tab, Predicate<Item> exclusionPredicate) {
+		private List<Item> collectBlocks(ResourceKey<CreativeModeTab> tab, Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
 			for (RegistryEntry<Block> entry : Create.REGISTRATE.getAll(Registries.BLOCK)) {
 				if (!Create.REGISTRATE.isInCreativeTab(entry, tab))
@@ -265,7 +269,7 @@ public class AllCreativeModeTabs {
 			return items;
 		}
 
-		private List<Item> collectItems(RegistryObject<CreativeModeTab> tab, ItemRenderer itemRenderer, boolean special,
+		private List<Item> collectItems(ResourceKey<CreativeModeTab> tab, ItemRenderer itemRenderer, boolean special,
 			Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
 
@@ -328,5 +332,8 @@ public class AllCreativeModeTabs {
 				AFTER;
 			}
 		}
+	}
+
+	public record TabInfo(ResourceKey<CreativeModeTab> key, CreativeModeTab tab) {
 	}
 }
