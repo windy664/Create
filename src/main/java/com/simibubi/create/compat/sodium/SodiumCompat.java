@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.sodium;
 
+import java.lang.reflect.Method;
 import java.util.function.Function;
 
 import com.simibubi.create.Create;
@@ -13,6 +14,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.ComponentUtils;
@@ -64,7 +66,9 @@ public class SodiumCompat {
 	private static boolean spriteUtilWorks() {
 		try {
 			// make sure class and method still exist, sodium is unstable
-			SpriteUtil.markSpriteActive(null); // null is safe, protected by instanceof
+			Method method = SpriteUtil.class.getMethod("markSpriteActive", TextureAtlasSprite.class); // throws if missing
+			if (method.getReturnType() != Void.TYPE)
+				throw new IllegalStateException("markSpriteActive's signature has changed");
 			return true;
 		} catch (Throwable t) {
 			Create.LOGGER.error("Create's Sodium compat errored and has been partially disabled. Report this!", t);
