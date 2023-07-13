@@ -2,8 +2,16 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.damageTypes.DamageTypeDataProvider;
+import com.simibubi.create.foundation.damageTypes.DamageTypeTagGen;
+import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.ponder.FabricPonderProcessing;
 import com.simibubi.create.foundation.recipe.AllIngredients;
+
+import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
+
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 import org.slf4j.Logger;
 
@@ -26,11 +34,8 @@ import com.simibubi.create.content.schematics.SchematicInstances;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
-import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
-import com.simibubi.create.foundation.damageTypes.DamageTypeDataProvider;
-import com.simibubi.create.foundation.damageTypes.DamageTypeTagGen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.TagGen;
@@ -55,11 +60,9 @@ import io.github.tropheusj.milk.Milk;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class Create implements ModInitializer {
 
@@ -152,7 +155,6 @@ public class Create implements ModInitializer {
 		BuiltinPotatoProjectileTypes.register();
 
 //		event.enqueueWork(() -> {
-			AllAdvancements.register();
 			AllTriggers.register();
 			BoilerHeaters.registerDefaults();
 			AllFluids.registerFluidInteractions();
@@ -162,17 +164,21 @@ public class Create implements ModInitializer {
 		ServerLifecycleEvents.SERVER_STARTING.register(server -> AttachedRegistry.unwrapAll());
 	}
 
-	public static void gatherData(FabricDataGenerator gen, ExistingFileHelper helper) {
+	public static void gatherData(FabricDataGenerator.Pack pack, ExistingFileHelper helper) {
 		TagGen.datagen();
 		TagLangGen.datagen();
-		gen.addProvider(new LangMerger(gen, ID, NAME, AllLangPartials.values()));
-		gen.addProvider(AllSoundEvents.provider(gen));
-		gen.addProvider(new AllAdvancements(gen));
-		gen.addProvider(new StandardRecipeGen(gen));
-		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
-		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
-		ProcessingRecipeGen.registerAll(gen);
-//		AllOreFeatureConfigEntries.gatherData(gen);
+
+		pack.addProvider(AllSoundEvents::provider);
+		pack.addProvider((FabricDataOutput output) -> new LangMerger(output, ID, NAME, AllLangPartials.values()));
+
+		pack.addProvider(AllAdvancements::new);
+		pack.addProvider(StandardRecipeGen::new);
+		pack.addProvider(MechanicalCraftingRecipeGen::new);
+		pack.addProvider(SequencedAssemblyRecipeGen::new);
+		pack.addProvider(ProcessingRecipeGen::registerAll);
+		pack.addProvider((output, registries) -> WorldgenDataProvider.makeFactory(registries));
+		pack.addProvider((output, registries) -> DamageTypeDataProvider.makeFactory(registries));
+		pack.addProvider(DamageTypeTagGen::new);
 	}
 
 	public static ResourceLocation asResource(String path) {

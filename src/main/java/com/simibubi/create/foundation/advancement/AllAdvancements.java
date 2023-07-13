@@ -20,6 +20,8 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.CreateAdvancement.Builder;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+
 import net.minecraft.advancements.Advancement;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -610,7 +612,7 @@ public class AllAdvancements implements DataProvider {
 
 	private final PackOutput output;
 
-	public AllAdvancements(PackOutput output) {
+	public AllAdvancements(FabricDataOutput output) {
 		this.output = output;
 	}
 

@@ -6,8 +6,10 @@ import com.simibubi.create.AllTags;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -193,7 +195,7 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 
 	protected GeneratedRecipe metalOre(String name, ItemEntry<? extends Item> crushed, int duration) {
 		return create(name + "_ore", b -> b.duration(duration)
-			.withCondition(DefaultResourceConditions.not(DefaultResourceConditions.tagsPopulated(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("c", name + "_ores")))))
+			.withCondition(DefaultResourceConditions.not(DefaultResourceConditions.tagsPopulated(TagKey.create(Registries.ITEM, new ResourceLocation("c", name + "_ores")))))
 			.require(AllTags.forgeItemTag(name + "_ores"))
 			.output(crushed.get()));
 	}

@@ -4,6 +4,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 

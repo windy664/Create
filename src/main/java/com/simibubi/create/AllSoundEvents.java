@@ -11,12 +11,16 @@ import java.util.function.Supplier;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.DataProvider.Factory;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -322,8 +326,8 @@ public class AllSoundEvents {
 		return object;
 	}
 
-	public static SoundEntryProvider provider(DataGenerator generator) {
-		return new SoundEntryProvider(generator);
+	public static DataProvider provider(FabricDataOutput output) {
+		return new SoundEntryProvider(output);
 	}
 
 	public static void playItemPickup(Player player) {
@@ -345,8 +349,8 @@ public class AllSoundEvents {
 
 		private PackOutput output;
 
-		public SoundEntryProvider(DataGenerator generator) {
-			output = generator.getPackOutput();
+		public SoundEntryProvider(PackOutput output) {
+			this.output = output;
 		}
 
 		@Override

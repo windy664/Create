@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.damageTypes;
 
 import java.util.concurrent.CompletableFuture;
 
+import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.HashMultimap;
@@ -16,20 +18,17 @@ import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class DamageTypeTagGen extends TagsProvider<DamageType> {
 	private final String namespace;
 
-	public DamageTypeTagGen(String namespace, PackOutput pOutput,
-		CompletableFuture<HolderLookup.Provider> pLookupProvider, ExistingFileHelper existingFileHelper) {
-		super(pOutput, Registries.DAMAGE_TYPE, pLookupProvider, namespace, existingFileHelper);
+	public DamageTypeTagGen(String namespace, PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider) {
+		super(pOutput, Registries.DAMAGE_TYPE, pLookupProvider);
 		this.namespace = namespace;
 	}
 
-	public DamageTypeTagGen(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider,
-		ExistingFileHelper existingFileHelper) {
-		this(Create.ID, pOutput, pLookupProvider, existingFileHelper);
+	public DamageTypeTagGen(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider) {
+		this(Create.ID, pOutput, pLookupProvider);
 	}
 
 	@Override

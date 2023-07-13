@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 
 import net.minecraft.data.CachedOutput;
@@ -30,7 +31,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 	protected static final long BUCKET = FluidConstants.BUCKET;
 	protected static final long BOTTLE = FluidConstants.BOTTLE;
 
-	public static void registerAll(FabricDataGenerator gen, PackOutput output) {
+	public static DataProvider registerAll(FabricDataOutput output) {
 		GENERATORS.add(new CrushingRecipeGen(output));
 		GENERATORS.add(new MillingRecipeGen(output));
 		GENERATORS.add(new CuttingRecipeGen(output));
@@ -45,7 +46,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 		GENERATORS.add(new HauntingRecipeGen(output));
 		GENERATORS.add(new ItemApplicationRecipeGen(output));
 
-		gen.addProvider(true, new DataProvider() {
+		return new DataProvider() {
 
 			@Override
 			public String getName() {
@@ -58,7 +59,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 					.map(gen -> gen.run(dc))
 					.toArray(CompletableFuture[]::new));
 			}
-		});
+		};
 	}
 
 	public ProcessingRecipeGen(FabricDataOutput generator) {

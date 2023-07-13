@@ -34,7 +34,6 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class LangMerger implements DataProvider {
 
