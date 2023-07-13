@@ -9,6 +9,8 @@ import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.ponder.FabricPonderProcessing;
 import com.simibubi.create.foundation.recipe.AllIngredients;
 
+import com.simibubi.create.infrastructure.worldgen.AllBiomeModifiers;
+
 import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -147,6 +149,7 @@ public class Create implements ModInitializer {
 		CommonEvents.register();
 		AllPackets.getChannel().initServerListener();
 		FabricPonderProcessing.init();
+		AllBiomeModifiers.bootstrap(); // moved out of datagen
 	}
 
 	public static void init() {
@@ -176,8 +179,8 @@ public class Create implements ModInitializer {
 		pack.addProvider(MechanicalCraftingRecipeGen::new);
 		pack.addProvider(SequencedAssemblyRecipeGen::new);
 		pack.addProvider(ProcessingRecipeGen::registerAll);
-		pack.addProvider((output, registries) -> WorldgenDataProvider.makeFactory(registries));
-		pack.addProvider((output, registries) -> DamageTypeDataProvider.makeFactory(registries));
+		pack.addProvider(WorldgenDataProvider::new);
+		pack.addProvider(DamageTypeDataProvider::new);
 		pack.addProvider(DamageTypeTagGen::new);
 	}
 

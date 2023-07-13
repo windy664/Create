@@ -7,7 +7,7 @@ import com.simibubi.create.AllDamageTypes;
 
 import com.simibubi.create.Create;
 
-import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
+import io.github.fabricators_of_create.porting_lib.data.DatapackBuiltinEntriesProvider;
 
 import org.jetbrains.annotations.NotNull;
 

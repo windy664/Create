@@ -11,6 +11,6 @@ public class CreateData implements DataGeneratorEntrypoint {
 		ExistingFileHelper helper = ExistingFileHelper.withResourcesFromArg();
 		Pack pack = generator.createPack();
 		Create.REGISTRATE.setupDatagen(pack, helper);
-		Create.gatherData(generator, helper);
+		Create.gatherData(pack, helper);
 	}
 }
