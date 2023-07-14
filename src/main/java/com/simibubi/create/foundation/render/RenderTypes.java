@@ -9,13 +9,14 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
 
 import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.RenderTypeAccessor;
+import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback.RegistrationContext;
 
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.inventory.InventoryMenu;
 
 // TODO 1.17: use custom shaders instead of vanilla ones
@@ -148,14 +149,14 @@ public class RenderTypes extends RenderStateShard {
 	}
 
 	public static void init() {
-		RegisterShadersCallback.EVENT.register(Shaders::onRegisterShaders);
+		CoreShaderRegistrationCallback.EVENT.register(Shaders::onRegisterShaders);
 	}
 
 	private static class Shaders {
 		private static ShaderInstance glowingShader;
 
-		public static void onRegisterShaders(ResourceManager resourceManager, ShaderRegistry shaderRegistry) throws IOException {
-			shaderRegistry.registerShader(new ShaderInstance(resourceManager, Create.asResource("glowing_shader").toString(), DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader);
+		public static void onRegisterShaders(RegistrationContext ctx) throws IOException {
+			ctx.register(Create.asResource("glowing_shader"), DefaultVertexFormat.NEW_ENTITY, shader -> glowingShader = shader);
 		}
 	}
 

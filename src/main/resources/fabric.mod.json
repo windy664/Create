@@ -62,6 +62,7 @@
     "porting_lib_obj_loader": ">=${port_lib_obj_loader_version}",
     "forge_tags": ">=${port_lib_tags_version}",
     "porting_lib_transfer": ">=${port_lib_transfer_version}",
+    "porting_lib_models": ">=${port_lib_models_version}",
 
     "forgeconfigapiport": ">=${forge_config_version}",
     "milk": ">=${milk_lib_version}",

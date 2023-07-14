@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 
+import io.github.fabricators_of_create.porting_lib.models.CompositeModel;
+import io.github.fabricators_of_create.porting_lib.models.CompositeModel.Baked;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
@@ -18,7 +20,6 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import vazkii.botania.fabric.client.FabricFloatingFlowerModel.Baked;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -69,7 +70,7 @@ public class MultiRenderTypeModel extends ForwardingBakedModel {
 	}
 
 	protected FabricBakedModel getPart(String name) {
-		return ((FabricBakedModel) ((Baked) wrapped).getPart(name));
+		return ((Baked) wrapped).getPart(name);
 	}
 
 	protected static boolean setMaterial(MutableQuadView quad, RenderMaterial material) {
