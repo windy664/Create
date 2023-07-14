@@ -24,6 +24,7 @@ import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -118,7 +119,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(BasinRecipe recipe, GuiGraphics graphics, PoseStack matrixStack, double mouseX, double mouseY) {
 		List<Pair<Ingredient, MutableInt>> actualIngredients = ItemHelper.condenseIngredients(recipe.getIngredients());
 
 		int size = actualIngredients.size() + recipe.getFluidIngredients()
@@ -130,26 +131,26 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		int yOffset = 0;
 
 		for (int i = 0; i < size; i++)
-			AllGuiTextures.JEI_SLOT.render(matrixStack, 16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
+			AllGuiTextures.JEI_SLOT.render(graphics, 16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
 
 		boolean noHeat = requiredHeat == HeatCondition.NONE;
 
 		int vRows = (1 + outSize) / 2;
 		for (int i = 0; i < outSize; i++)
-			AllGuiTextures.JEI_SLOT.render(matrixStack,
+			AllGuiTextures.JEI_SLOT.render(graphics,
 				141 - (outSize % 2 != 0 && i == outSize - 1 ? 0 : i % 2 == 0 ? 10 : -9), -19 * (i / 2) + 50 + yOffset);
 		if (vRows <= 2)
-			AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 136, -19 * (vRows - 1) + 32 + yOffset);
+			AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 136, -19 * (vRows - 1) + 32 + yOffset);
 
 		AllGuiTextures shadow = noHeat ? AllGuiTextures.JEI_SHADOW : AllGuiTextures.JEI_LIGHT;
-		shadow.render(matrixStack, 81, 58 + (noHeat ? 10 : 30));
+		shadow.render(graphics, 81, 58 + (noHeat ? 10 : 30));
 
 		if (!needsHeating)
 			return;
 
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
-		heatBar.render(matrixStack, 4, 80);
-		Minecraft.getInstance().font.draw(matrixStack, Lang.translateDirect(requiredHeat.getTranslationKey()), 9,
+		heatBar.render(graphics, 4, 80);
+		graphics.drawString(Minecraft.getInstance().font, Lang.translateDirect(requiredHeat.getTranslationKey()), 9,
 			86, requiredHeat.getColor());
 	}
 

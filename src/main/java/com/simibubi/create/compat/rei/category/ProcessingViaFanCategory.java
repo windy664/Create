@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.compat.rei.category.animations.AnimatedKinetics;
@@ -49,8 +49,8 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 		matrixStack.pushPose();
 		translateFan(matrixStack);
-		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-12.5f));
-		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
+		matrixStack.mulPose(Axis.XP.rotationDegrees(-12.5f));
+		matrixStack.mulPose(Axis.YP.rotationDegrees(22.5f));
 
 		AnimatedKinetics.defaultBlockElement(AllPartialModels.ENCASED_FAN_INNER)
 			.rotateBlock(180, 0, AnimatedKinetics.getCurrentAngle() * 16)

@@ -78,8 +78,8 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 
 		matrixStack.pushPose();
 		matrixStack.translate(74, 51, 100);
-		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
+		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
+		matrixStack.mulPose(Axis.YP.rotationDegrees(22.5f));
 		int scale = 20;
 
 		GuiGameElement.of(state)

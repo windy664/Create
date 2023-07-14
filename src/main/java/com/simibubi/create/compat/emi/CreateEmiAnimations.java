@@ -8,7 +8,6 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
@@ -27,6 +26,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -76,36 +76,37 @@ public class CreateEmiAnimations {
 	}
 
 	public static void addPress(WidgetHolder widgets, int x, int y, boolean basin) {
-		widgets.addDrawable(x, y, 0, 0, (matrices, mouseX, mouseY, delta) -> {
-			renderPress(matrices, 0, basin);
+		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			renderPress(graphics, 0, basin);
 		});
 	}
 
-	public static void renderPress(PoseStack matrices, int offset, boolean basin) {
+	public static void renderPress(GuiGraphics graphics, int offset, boolean basin) {
+		PoseStack matrices = graphics.pose();
 		matrices.translate(0, 0, 200);
-		matrices.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-		matrices.mulPose(Vector3f.YP.rotationDegrees(22.5f));
+		matrices.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-15.5f));
+		matrices.mulPose(com.mojang.math.Axis.YP.rotationDegrees(22.5f));
 		int scale = basin ? 23 : 24;
 
 		blockElement(shaft(Axis.Z))
 				.rotateBlock(0, 0, getCurrentAngle())
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 		blockElement(AllBlocks.MECHANICAL_PRESS.getDefaultState())
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 		blockElement(AllPartialModels.MECHANICAL_PRESS_HEAD)
 				.atLocal(0, -getAnimatedHeadOffset(offset), 0)
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 		if (basin) {
 			blockElement(AllBlocks.BASIN.getDefaultState())
 					.atLocal(0, 1.65, 0)
 					.scale(scale)
-					.render(matrices);
+					.render(graphics);
 		}
 	}
 
@@ -123,17 +124,18 @@ public class CreateEmiAnimations {
 	}
 
 	public static void addBlazeBurner(WidgetHolder widgets, int x, int y, HeatLevel heatLevel) {
-		widgets.addDrawable(x, y, 0, 0, (matrixStack, mouseX, mouseY, delta) -> {
+		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			PoseStack matrixStack = graphics.pose();
 			matrixStack.translate(0, 0, 200);
-			matrixStack.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-			matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
+			matrixStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-15.5f));
+			matrixStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(22.5f));
 			int scale = 23;
 
 			float offset = (Mth.sin(AnimationTickHolder.getRenderTime() / 16f) + 0.5f) / 16f;
 
 			blockElement(AllBlocks.BLAZE_BURNER.getDefaultState()).atLocal(0, 1.65, 0)
 					.scale(scale)
-					.render(matrixStack);
+					.render(graphics);
 
 			PartialModel blaze =
 					heatLevel == HeatLevel.SEETHING ? AllPartialModels.BLAZE_SUPER : AllPartialModels.BLAZE_ACTIVE;
@@ -143,11 +145,11 @@ public class CreateEmiAnimations {
 			blockElement(blaze).atLocal(1, 1.8, 1)
 					.rotate(0, 180, 0)
 					.scale(scale)
-					.render(matrixStack);
+					.render(graphics);
 			blockElement(rods2).atLocal(1, 1.7 + offset, 1)
 					.rotate(0, 180, 0)
 					.scale(scale)
-					.render(matrixStack);
+					.render(graphics);
 
 			matrixStack.scale(scale, -scale, scale);
 			matrixStack.translate(0, -1.8, 0);
@@ -188,71 +190,73 @@ public class CreateEmiAnimations {
 	}
 
 	public static void addMixer(WidgetHolder widgets, int x, int y) {
-		widgets.addDrawable(x, y, 0, 0, (matrices, mouseX, mouseY, delta) -> {
+		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			PoseStack matrices = graphics.pose();
 			matrices.translate(0, 0, 200);
-			matrices.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-			matrices.mulPose(Vector3f.YP.rotationDegrees(22.5f));
+			matrices.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-15.5f));
+			matrices.mulPose(com.mojang.math.Axis.YP.rotationDegrees(22.5f));
 			int scale = 23;
 
 			blockElement(cogwheel())
 				.rotateBlock(0, getCurrentAngle() * 2, 0)
 				.atLocal(0, 0, 0)
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 			blockElement(AllBlocks.MECHANICAL_MIXER.getDefaultState())
 				.atLocal(0, 0, 0)
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 			float animation = ((Mth.sin(AnimationTickHolder.getRenderTime() / 32f) + 1) / 5) + .5f;
 
 			blockElement(AllPartialModels.MECHANICAL_MIXER_POLE)
 				.atLocal(0, animation, 0)
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 			blockElement(AllPartialModels.MECHANICAL_MIXER_HEAD)
 				.rotateBlock(0, getCurrentAngle() * 4, 0)
 				.atLocal(0, animation, 0)
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 			blockElement(AllBlocks.BASIN.getDefaultState())
 				.atLocal(0, 1.65, 0)
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 		});
 	}
 
 	public static void addSaw(WidgetHolder widgets, int x, int y) {
-		widgets.addDrawable(x, y, 0, 0, (matrices, mouseX, mouseY, delta) -> {
-			renderSaw(matrices, 0);
+		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			renderSaw(graphics, 0);
 		});
 	}
 
-	public static void renderSaw(PoseStack matrices, int offset) {
+	public static void renderSaw(GuiGraphics graphics, int offset) {
+		PoseStack matrices = graphics.pose();
 		matrices.translate(0, 0, 200);
 		matrices.translate(2, 22, 0);
-		matrices.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-		matrices.mulPose(Vector3f.YP.rotationDegrees(22.5f + 90));
+		matrices.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-15.5f));
+		matrices.mulPose(com.mojang.math.Axis.YP.rotationDegrees(22.5f + 90));
 		int scale = 25;
 
 		blockElement(shaft(Axis.X))
 			.rotateBlock(-getCurrentAngle(), 0, 0)
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 
 		blockElement(AllBlocks.MECHANICAL_SAW.getDefaultState()
 			.setValue(SawBlock.FACING, Direction.UP))
 			.rotateBlock(0, 0, 0)
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 
 		blockElement(AllPartialModels.SAW_BLADE_VERTICAL_ACTIVE)
 			.rotateBlock(0, -90, -90)
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 	}
 
 	public static void addMillstone(WidgetHolder widgets, int x, int y) {
@@ -272,68 +276,71 @@ public class CreateEmiAnimations {
 	}
 
 	public static void addCrushingWheels(WidgetHolder widgets, int x, int y) {
-		widgets.addDrawable(x, y, 0, 0, (matrices, mouseX, mouseY, delta) -> {
+		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			PoseStack matrices = graphics.pose();
 			matrices.translate(0, 0, 100);
-			matrices.mulPose(Vector3f.YP.rotationDegrees(-22.5f));
+			matrices.mulPose(com.mojang.math.Axis.YP.rotationDegrees(-22.5f));
 			int scale = 22;
 
 			blockElement(WHEEL)
 					.rotateBlock(0, 90, -getCurrentAngle())
 					.scale(scale)
-					.render(matrices);
+					.render(graphics);
 
 			blockElement(WHEEL)
 					.rotateBlock(0, 90, getCurrentAngle())
 					.atLocal(2, 0, 0)
 					.scale(scale)
-					.render(matrices);
+					.render(graphics);
 		});
 	}
 
 	public static void addFan(WidgetHolder widgets, int x, int y, Consumer<PoseStack> renderAttachedBlock) {
-		widgets.addDrawable(x, y, 0, 0, (matrices, mouseX, mouseY, delta) -> {
+		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			PoseStack matrices = graphics.pose();
 			matrices.translate(0, 0, 200);
-			matrices.mulPose(Vector3f.XP.rotationDegrees(-12.5f));
-			matrices.mulPose(Vector3f.YP.rotationDegrees(22.5f));
+			matrices.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-12.5f));
+			matrices.mulPose(com.mojang.math.Axis.YP.rotationDegrees(22.5f));
 			int scale = 24;
 
 			defaultBlockElement(AllPartialModels.ENCASED_FAN_INNER)
 				.rotateBlock(180, 0, getCurrentAngle() * 16)
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 			defaultBlockElement(AllBlocks.ENCASED_FAN.getDefaultState())
 				.rotateBlock(0, 180, 0)
 				.atLocal(0, 0, 0)
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 			renderAttachedBlock.accept(matrices);
 		});
 	}
 
 	public static void addDeployer(WidgetHolder widgets, int x, int y) {
-		widgets.addDrawable(x, y, 0, 0, (matrices, mouseX, mouseY, delta) -> {
-			renderDeployer(matrices, 0);
+		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			renderDeployer(graphics, 0);
 		});
 	}
 
-	public static void renderDeployer(PoseStack matrices, int offset) {
+	public static void renderDeployer(GuiGraphics graphics, int offset) {
+		PoseStack matrices = graphics.pose();
 		matrices.translate(0, 0, 100);
-		matrices.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-		matrices.mulPose(Vector3f.YP.rotationDegrees(22.5f));
+		matrices.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-15.5f));
+		matrices.mulPose(com.mojang.math.Axis.YP.rotationDegrees(22.5f));
 		int scale = 20;
 
 		blockElement(shaft(Axis.Z))
 			.rotateBlock(0, 0, getCurrentAngle())
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 
 		blockElement(AllBlocks.DEPLOYER.getDefaultState()
 			.setValue(DeployerBlock.FACING, Direction.DOWN)
 			.setValue(DeployerBlock.AXIS_ALONG_FIRST_COORDINATE, false))
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 
 		float cycle = (AnimationTickHolder.getRenderTime() - offset * 8) % 30;
 		float off = cycle < 10 ? cycle / 10f : cycle < 20 ? (20 - cycle) / 10f : 0;
@@ -344,35 +351,36 @@ public class CreateEmiAnimations {
 		blockElement(AllPartialModels.DEPLOYER_POLE)
 			.rotateBlock(90, 0, 0)
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 		blockElement(AllPartialModels.DEPLOYER_HAND_HOLDING)
 			.rotateBlock(90, 0, 0)
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 
 		matrices.popPose();
 
 		blockElement(AllBlocks.DEPOT.getDefaultState())
 			.atLocal(0, 2, 0)
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 	}
 
 	public static void addSpout(WidgetHolder widgets, int x, int y, List<FluidStack> fluids) {
-		widgets.addDrawable(x, y, 0, 0, (matrices, mouseX, mouseY, delta) -> {
-			renderSpout(matrices, 0, fluids);
+		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			renderSpout(graphics, 0, fluids);
 		});
 	}
 
-	public static void renderSpout(PoseStack matrices, int offset, List<FluidStack> fluids) {
+	public static void renderSpout(GuiGraphics graphics, int offset, List<FluidStack> fluids) {
+		PoseStack matrices = graphics.pose();
 		matrices.translate(0, 0, 100);
-		matrices.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-		matrices.mulPose(Vector3f.YP.rotationDegrees(22.5f));
+		matrices.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-15.5f));
+		matrices.mulPose(com.mojang.math.Axis.YP.rotationDegrees(22.5f));
 		int scale = 20;
 
 		blockElement(AllBlocks.SPOUT.getDefaultState())
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 
 		float cycle = (AnimationTickHolder.getRenderTime() - offset * 8) % 30;
 		float squeeze = cycle < 20 ? Mth.sin((float) (cycle / 20f * Math.PI)) : 0;
@@ -382,15 +390,15 @@ public class CreateEmiAnimations {
 
 		blockElement(AllPartialModels.SPOUT_TOP)
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 		matrices.translate(0, -3 * squeeze / 32f, 0);
 		blockElement(AllPartialModels.SPOUT_MIDDLE)
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 		matrices.translate(0, -3 * squeeze / 32f, 0);
 		blockElement(AllPartialModels.SPOUT_BOTTOM)
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 		matrices.translate(0, -3 * squeeze / 32f, 0);
 
 		matrices.popPose();
@@ -398,7 +406,7 @@ public class CreateEmiAnimations {
 		blockElement(AllBlocks.DEPOT.getDefaultState())
 			.atLocal(0, 2, 0)
 			.scale(scale)
-			.render(matrices);
+			.render(graphics);
 
 		DEFAULT_LIGHTING.applyLighting();
 		MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
@@ -425,15 +433,16 @@ public class CreateEmiAnimations {
 	}
 
 	public static void addDrain(WidgetHolder widgets, int x, int y, FluidStack fluid) {
-		widgets.addDrawable(x, y, 0, 0, (matrices, mouseX, mouseY, delta) -> {
+		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			PoseStack matrices = graphics.pose();
 			matrices.translate(0, 0, 100);
-			matrices.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-			matrices.mulPose(Vector3f.YP.rotationDegrees(22.5f));
+			matrices.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-15.5f));
+			matrices.mulPose(com.mojang.math.Axis.YP.rotationDegrees(22.5f));
 			int scale = 20;
 
 			blockElement(AllBlocks.ITEM_DRAIN.getDefaultState())
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 			//MatrixStack ms = new MatrixStack();
@@ -448,20 +457,21 @@ public class CreateEmiAnimations {
 	}
 
 	public static void addCrafter(WidgetHolder widgets, int x, int y) {
-		widgets.addDrawable(x, y, 0, 0, (matrices, mouseX, mouseY, delta) -> {
-			matrices.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-			matrices.mulPose(Vector3f.YP.rotationDegrees(-22.5f));
+		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			PoseStack matrices = graphics.pose();
+			matrices.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-15.5f));
+			matrices.mulPose(com.mojang.math.Axis.YP.rotationDegrees(-22.5f));
 			int scale = 22;
 
 			blockElement(cogwheel())
 				.rotateBlock(90, 0, getCurrentAngle())
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 
 			blockElement(AllBlocks.MECHANICAL_CRAFTER.getDefaultState())
 				.rotateBlock(0, 180, 0)
 				.scale(scale)
-				.render(matrices);
+				.render(graphics);
 		});
 	}
 }

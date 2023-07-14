@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 
 public class AnimatedKineticsWidget extends Widget {
@@ -22,8 +23,8 @@ public class AnimatedKineticsWidget extends Widget {
 	}
 
 	@Override
-	public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-		draw(poseStack, pos.getX(), pos.getY());
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+		draw(graphics, pos.getX(), pos.getY());
 	}
 
 	@Override
@@ -31,6 +32,6 @@ public class AnimatedKineticsWidget extends Widget {
 		return Lists.newArrayList();
 	}
 
-	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
+	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
 	}
 }

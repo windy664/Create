@@ -6,17 +6,20 @@ import com.simibubi.create.foundation.mixin.fabric.ClientTextTooltipAccessor;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import com.tterrag.registrate.util.entry.FluidEntry;
+
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import dev.emi.emi.api.stack.FluidEmiStack.FluidEntry;
 import dev.emi.emi.api.widget.SlotWidget;
 import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
@@ -30,15 +33,16 @@ public class CreateSlotWidget extends SlotWidget {
 	@Override
 	public List<ClientTooltipComponent> getTooltip(int mouseX, int mouseY) {
 		List<ClientTooltipComponent> tooltip = super.getTooltip(mouseX, mouseY);
-		if (stack instanceof EmiStack emiStack && emiStack.getEntry() instanceof FluidEntry fluid) {
+		if (stack instanceof EmiStack emiStack && emiStack.getKey() instanceof Fluid fluid) {
 			// add custom fluid tooltip
-			addCreateAmount(tooltip, fluid);
-			removeEmiAmount(tooltip, fluid);
+			FluidVariant variant = FluidVariant.of(fluid);
+			addCreateAmount(tooltip, variant);
+			removeEmiAmount(tooltip, variant);
 		}
 		return tooltip;
 	}
 
-	private void addCreateAmount(List<ClientTooltipComponent> tooltip, FluidEntry fluid) {
+	private void addCreateAmount(List<ClientTooltipComponent> tooltip, FluidVariant fluid) {
 		FluidUnit unit = AllConfigs.client().fluidUnitType.get();
 		String amount = FluidTextUtil.getUnicodeMillibuckets(stack.getAmount(), unit, AllConfigs.client().simplifyFluidUnit.get());
 
@@ -46,7 +50,7 @@ public class CreateSlotWidget extends SlotWidget {
 				.append(Lang.translateDirect(unit.getTranslationKey()))
 				.withStyle(ChatFormatting.GOLD);
 
-		MutableComponent fluidName = FluidVariantAttributes.getName(fluid.getValue())
+		MutableComponent fluidName = FluidVariantAttributes.getName(fluid)
 				.copy()
 				.append(amountComponent);
 
@@ -59,9 +63,9 @@ public class CreateSlotWidget extends SlotWidget {
 		}
 	}
 
-	private void removeEmiAmount(List<ClientTooltipComponent> tooltip, FluidEntry entry) {
-		Fluid fluid = entry.getValue().getFluid();
-		String namespace = Registry.FLUID.getKey(fluid).getNamespace();
+	private void removeEmiAmount(List<ClientTooltipComponent> tooltip, FluidVariant entry) {
+		Fluid fluid = entry.getFluid();
+		String namespace = BuiltInRegistries.FLUID.getKey(fluid).getNamespace();
 		String modName = FabricLoader.getInstance().getModContainer(namespace).map(c -> c.getMetadata().getName()).orElse(null);
 		if (modName == null)
 			return;
