@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.recipe;
 
-import com.simibubi.create.Create;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 
 public class AllIngredients {
 	public static void register() {
-		CraftingHelper.register(Create.asResource("block_tag_ingredient"), BlockTagIngredient.Serializer.INSTANCE);
+		CustomIngredientSerializer.register(BlockTagIngredient.Serializer.INSTANCE);
 	}
 }

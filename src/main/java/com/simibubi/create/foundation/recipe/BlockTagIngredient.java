@@ -1,33 +1,26 @@
 package com.simibubi.create.foundation.recipe;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-import com.google.gson.JsonElement;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntComparators;
-import it.unimi.dsi.fastutil.ints.IntList;
+import com.simibubi.create.Create;
+
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class BlockTagIngredient extends AbstractIngredient {
+public class BlockTagIngredient implements CustomIngredient {
 	protected final TagKey<Block> tag;
-
-	@Nullable
-	protected ItemStack[] itemStacks;
-	@Nullable
-	protected IntList stackingIds;
 
 	protected BlockTagIngredient(TagKey<Block> tag) {
 		this.tag = tag;
@@ -37,100 +30,65 @@ public class BlockTagIngredient extends AbstractIngredient {
 		return new BlockTagIngredient(tag);
 	}
 
-	protected void dissolve() {
-		if (itemStacks == null) {
-			List<ItemStack> list = new ArrayList<>();
-			for (Holder<Block> block : Registry.BLOCK.getTag(tag).get()) {
-				ItemStack stack = new ItemStack(block.value());
-				if (!stack.isEmpty()) {
-					list.add(stack);
-				}
-			}
-			itemStacks = list.toArray(ItemStack[]::new);
-		}
-	}
-
-	@Override
-	public ItemStack[] getItems() {
-		dissolve();
-		return itemStacks;
-	}
-
-	@Override
-	public boolean test(@Nullable ItemStack stack) {
-		if (stack == null) {
-			return false;
-		}
-
-		dissolve();
-		if (itemStacks.length == 0) {
-			return stack.isEmpty();
-		}
-
-		for (ItemStack itemStack : itemStacks) {
-			if (itemStack.is(stack.getItem())) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	@Override
-	public IntList getStackingIds() {
-		if (stackingIds == null) {
-			dissolve();
-			stackingIds = new IntArrayList(itemStacks.length);
-
-			for (ItemStack stack : itemStacks) {
-				stackingIds.add(StackedContents.getStackingIndex(stack));
-			}
-
-			stackingIds.sort(IntComparators.NATURAL_COMPARATOR);
-		}
-
-		return stackingIds;
-	}
-
 	public TagKey<Block> getTag() {
 		return tag;
 	}
 
 	@Override
-	public IngredientDeserializer getDeserializer() {
+	public boolean requiresTesting() {
+		return false;
+	}
+
+	@Override
+	public List<ItemStack> getMatchingStacks() {
+		ImmutableList.Builder<ItemStack> stacks = ImmutableList.builder();
+		for (Holder<Block> block : BuiltInRegistries.BLOCK.getTagOrEmpty(tag)) {
+			stacks.add(new ItemStack(block.value().asItem()));
+		}
+		return stacks.build();
+	}
+
+	@Override
+	public boolean test(ItemStack stack) {
+		return Block.byItem(stack.getItem()).defaultBlockState().is(tag);
+	}
+
+	@Override
+	public CustomIngredientSerializer<?> getSerializer() {
 		return Serializer.INSTANCE;
 	}
 
-	@Override
-	public JsonElement toJson() {
-		JsonObject json = new JsonObject();
-		json.addProperty("type", CraftingHelper.getID(Serializer.INSTANCE).toString());
-		json.addProperty("tag", tag.location().toString());
-		return json;
-	}
-
-	@Override
-	public void toNetwork(FriendlyByteBuf buffer) {
-		buffer.writeResourceLocation(CraftingHelper.getID(Serializer.INSTANCE));
-		TagKey<Block> tag = getTag();
-		buffer.writeResourceLocation(tag.location());
-	}
-
-	public static class Serializer implements IngredientDeserializer {
+	public static class Serializer implements CustomIngredientSerializer<BlockTagIngredient> {
+		public static final ResourceLocation ID = Create.asResource("block_tag_ingredient");
 		public static final Serializer INSTANCE = new Serializer();
 
 		@Override
-		public BlockTagIngredient fromJson(JsonObject json) {
+		public ResourceLocation getIdentifier() {
+			return ID;
+		}
+
+		@Override
+		public BlockTagIngredient read(JsonObject json) {
 			ResourceLocation rl = new ResourceLocation(GsonHelper.getAsString(json, "tag"));
 			TagKey<Block> tag = TagKey.create(Registries.BLOCK, rl);
 			return new BlockTagIngredient(tag);
 		}
 
 		@Override
-		public BlockTagIngredient fromNetwork(FriendlyByteBuf buffer) {
+		public void write(JsonObject json, BlockTagIngredient ingredient) {
+			json.addProperty("tag", ingredient.tag.location().toString());
+		}
+
+		@Override
+		public BlockTagIngredient read(FriendlyByteBuf buffer) {
 			ResourceLocation rl = buffer.readResourceLocation();
 			TagKey<Block> tag = TagKey.create(Registries.BLOCK, rl);
 			return new BlockTagIngredient(tag);
+		}
+
+		@Override
+		public void write(FriendlyByteBuf buf, BlockTagIngredient ingredient) {
+			buf.writeResourceLocation(ingredient.tag.location());
 		}
 	}
 }
