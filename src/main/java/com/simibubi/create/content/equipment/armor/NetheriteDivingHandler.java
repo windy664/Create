@@ -46,7 +46,7 @@ public final class NetheriteDivingHandler {
 	}
 
 	public static void setBit(LivingEntity entity, EquipmentSlot slot) {
-		CompoundTag nbt = entity.getExtraCustomData();
+		CompoundTag nbt = entity.getCustomData();
 		byte bits = nbt.getByte(NETHERITE_DIVING_BITS_KEY);
 		if ((bits & 0b1111) == 0b1111) {
 			return;
@@ -61,7 +61,7 @@ public final class NetheriteDivingHandler {
 	}
 
 	public static void clearBit(LivingEntity entity, EquipmentSlot slot) {
-		CompoundTag nbt = entity.getExtraCustomData();
+		CompoundTag nbt = entity.getCustomData();
 		if (!nbt.contains(NETHERITE_DIVING_BITS_KEY)) {
 			return;
 		}
@@ -80,6 +80,6 @@ public final class NetheriteDivingHandler {
 	// The feature works without syncing because health and burning are calculated server-side and synced through vanilla code.
 	// This method will not be called when the entity is wearing a full diving set on creation because the NBT values are persistent.
 	public static void setFireImmune(LivingEntity entity, boolean fireImmune) {
-		entity.getExtraCustomData().putBoolean(FIRE_IMMUNE_KEY, fireImmune);
+		entity.getCustomData().putBoolean(FIRE_IMMUNE_KEY, fireImmune);
 	}
 }

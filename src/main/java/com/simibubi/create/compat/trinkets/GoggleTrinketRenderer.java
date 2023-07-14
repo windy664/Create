@@ -2,7 +2,7 @@ package com.simibubi.create.compat.trinkets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllItems;
 
 import dev.emi.trinkets.api.SlotReference;
@@ -18,9 +18,8 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Optional;
 
 public class GoggleTrinketRenderer implements TrinketRenderer {
 	@Override
@@ -39,17 +38,19 @@ public class GoggleTrinketRenderer implements TrinketRenderer {
 
 			// Translate and scale to our head
 			matrices.translate(0, 0, 0.3);
-			matrices.mulPose(Vector3f.ZP.rotationDegrees(180.0f));
+			matrices.mulPose(Axis.ZP.rotationDegrees(180.0f));
 			matrices.scale(0.625f, 0.625f, 0.625f);
 
 			if (headOccupied(entity)) {
-				matrices.mulPose(Vector3f.ZP.rotationDegrees(180.0f));
+				matrices.mulPose(Axis.ZP.rotationDegrees(180.0f));
 				matrices.translate(0, -0.25, 0);
 			}
 
 			// Render
-			Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.HEAD,
-					light, OverlayTexture.NO_OVERLAY, matrices, multiBufferSource, 0);
+			Minecraft mc = Minecraft.getInstance();
+			mc.getItemRenderer()
+					.renderStatic(stack, ItemDisplayContext.HEAD, light, OverlayTexture.NO_OVERLAY, matrices,
+							multiBufferSource, mc.level, 0);
 			matrices.popPose();
 		}
 	}

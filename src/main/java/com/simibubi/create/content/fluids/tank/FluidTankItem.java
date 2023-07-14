@@ -132,12 +132,12 @@ public class FluidTankItem extends BlockItem {
 				if (FluidTankBlock.isTank(blockState))
 					continue;
 				BlockPlaceContext context = BlockPlaceContext.at(ctx, offsetPos, face);
-				player.getExtraCustomData()
+				player.getCustomData()
 					.putBoolean("SilenceTankSound", true);
 				IS_PLACING_NBT = checkPlacingNbt(context);
 				super.place(context);
 				IS_PLACING_NBT = false;
-				player.getExtraCustomData()
+				player.getCustomData()
 					.remove("SilenceTankSound");
 			}
 		}

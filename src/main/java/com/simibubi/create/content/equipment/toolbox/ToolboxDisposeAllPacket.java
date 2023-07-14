@@ -49,7 +49,7 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 				return;
 			ToolboxBlockEntity toolbox = (ToolboxBlockEntity) blockEntity;
 
-			CompoundTag compound = player.getExtraCustomData()
+			CompoundTag compound = player.getCustomData()
 				.getCompound("CreateToolboxData");
 			MutableBoolean sendData = new MutableBoolean(false);
 

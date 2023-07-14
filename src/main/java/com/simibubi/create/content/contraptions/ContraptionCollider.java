@@ -512,7 +512,7 @@ public class ContraptionCollider {
 		if (!entity.onGround())
 			return entityMotion;
 
-		CompoundTag persistentData = entity.getExtraCustomData();
+		CompoundTag persistentData = entity.getCustomData();
 		if (persistentData.contains("ContraptionGrounded")) {
 			persistentData.remove("ContraptionGrounded");
 			return entityMotion;

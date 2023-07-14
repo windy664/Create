@@ -48,7 +48,7 @@ public class ContraptionHandlerClient {
 		if (!(player instanceof RemotePlayer))
 			return;
 		RemotePlayer remotePlayer = (RemotePlayer) player;
-		CompoundTag data = remotePlayer.getExtraCustomData();
+		CompoundTag data = remotePlayer.getCustomData();
 		if (!data.contains("LastOverrideLimbSwingUpdate"))
 			return;
 

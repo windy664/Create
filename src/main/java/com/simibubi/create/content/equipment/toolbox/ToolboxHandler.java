@@ -49,12 +49,12 @@ public class ToolboxHandler {
 			return;
 
 		ServerPlayer player = (ServerPlayer) entity;
-		if (!player.getExtraCustomData()
+		if (!player.getCustomData()
 			.contains("CreateToolboxData"))
 			return;
 
 		boolean sendData = false;
-		CompoundTag compound = player.getExtraCustomData()
+		CompoundTag compound = player.getCustomData()
 			.getCompound("CreateToolboxData");
 		for (int i = 0; i < 9; i++) {
 			String key = String.valueOf(i);
@@ -86,9 +86,9 @@ public class ToolboxHandler {
 	public static void playerLogin(Player player) {
 		if (!(player instanceof ServerPlayer))
 			return;
-		if (player.getExtraCustomData()
+		if (player.getCustomData()
 			.contains("CreateToolboxData")
-			&& !player.getExtraCustomData()
+			&& !player.getCustomData()
 				.getCompound("CreateToolboxData")
 				.isEmpty()) {
 			syncData(player);
@@ -114,7 +114,7 @@ public class ToolboxHandler {
 	}
 
 	public static void unequip(Player player, int hotbarSlot, boolean keepItems) {
-		CompoundTag compound = player.getExtraCustomData()
+		CompoundTag compound = player.getCustomData()
 			.getCompound("CreateToolboxData");
 		Level world = player.level();
 		String key = String.valueOf(hotbarSlot);

@@ -36,14 +36,14 @@ public interface ISyncPersistentData {
 		@Override
 		public void write(FriendlyByteBuf buffer) {
 			buffer.writeInt(entityId);
-			buffer.writeNbt(entity.getExtraCustomData());
+			buffer.writeNbt(entity.getCustomData());
 		}
 
 		@Override
 		public boolean handle(Context context) {
 			context.enqueueWork(() -> {
 				Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
-				CompoundTag data = entityByID.getExtraCustomData();
+				CompoundTag data = entityByID.getCustomData();
 				new HashSet<>(data.getAllKeys()).forEach(data::remove);
 				data.merge(readData);
 				if (!(entityByID instanceof ISyncPersistentData))

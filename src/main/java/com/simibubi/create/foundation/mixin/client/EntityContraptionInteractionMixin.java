@@ -141,7 +141,7 @@ public abstract class EntityContraptionInteractionMixin {
 			return;
 
 		self.setOnGround(true);
-		self.getExtraCustomData()
+		self.getCustomData()
 			.putBoolean("ContraptionGrounded", true);
 	}
 

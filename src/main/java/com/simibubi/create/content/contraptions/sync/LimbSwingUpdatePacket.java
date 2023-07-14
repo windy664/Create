@@ -45,7 +45,7 @@ public class LimbSwingUpdatePacket extends SimplePacketBase {
 			Entity entity = world.getEntity(entityId);
 			if (entity == null)
 				return;
-			CompoundTag data = entity.getExtraCustomData();
+			CompoundTag data = entity.getCustomData();
 			data.putInt("LastOverrideLimbSwingUpdate", 0);
 			data.putFloat("OverrideLimbSwing", limbSwing);
 			entity.lerpTo(position.x, position.y, position.z, entity.getYRot(),

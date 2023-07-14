@@ -139,7 +139,7 @@ public class ToolboxBlockEntity extends SmartBlockEntity implements MenuProvider
 
 				if (clear || !playerStack.isEmpty()
 					&& !ToolboxInventory.canItemsShareCompartment(playerStack, referenceItem)) {
-					player.getExtraCustomData()
+					player.getCustomData()
 						.getCompound("CreateToolboxData")
 						.remove(String.valueOf(hotbarSlot));
 					playerEntries.remove();

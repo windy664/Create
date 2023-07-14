@@ -182,7 +182,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		if (level().isClientSide)
 			return;
 		if (transformedVector != null)
-			passenger.getExtraCustomData()
+			passenger.getCustomData()
 				.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
 		contraption.getSeatMapping()
 			.remove(passenger.getUUID());
@@ -193,7 +193,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	@Override
 	public Vec3 getDismountLocationForPassenger(LivingEntity entityLiving) {
 		Vec3 position = super.getDismountLocationForPassenger(entityLiving);
-		CompoundTag data = entityLiving.getExtraCustomData();
+		CompoundTag data = entityLiving.getCustomData();
 		if (!data.contains("ContraptionDismountLocation"))
 			return position;
 

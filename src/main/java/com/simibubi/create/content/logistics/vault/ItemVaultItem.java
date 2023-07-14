@@ -124,12 +124,12 @@ public class ItemVaultItem extends BlockItem {
 				if (ItemVaultBlock.isVault(blockState))
 					continue;
 				BlockPlaceContext context = BlockPlaceContext.at(ctx, offsetPos, face);
-				player.getExtraCustomData()
+				player.getCustomData()
 					.putBoolean("SilenceVaultSound", true);
 				IS_PLACING_NBT = FluidTankItem.checkPlacingNbt(context);
 				super.place(context);
 				IS_PLACING_NBT = false;
-				player.getExtraCustomData()
+				player.getCustomData()
 					.remove("SilenceVaultSound");
 			}
 		}

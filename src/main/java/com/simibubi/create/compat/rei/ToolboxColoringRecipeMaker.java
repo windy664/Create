@@ -6,9 +6,8 @@ import java.util.stream.Stream;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.ItemValueAccessor;
-
-import io.github.fabricators_of_create.porting_lib.mixin.common.accessor.TagValueAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.ItemValueAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.TagValueAccessor;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +16,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
@@ -47,7 +47,7 @@ public final class ToolboxColoringRecipeMaker {
 					.get();
 				ItemStack output = new ItemStack(coloredShulkerBox);
 				ResourceLocation id = Create.asResource(group + "." + output.getDescriptionId());
-				return new ShapelessRecipe(id, group, output, inputs);
+				return new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
 			});
 	}
 

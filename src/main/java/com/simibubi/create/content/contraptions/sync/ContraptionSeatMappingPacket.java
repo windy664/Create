@@ -63,7 +63,7 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 						return;
 					Vec3 transformedVector = contraptionEntity.getPassengerPosition(dismountedByID, 1);
 					if (transformedVector != null)
-						dismountedByID.getExtraCustomData()
+						dismountedByID.getCustomData()
 							.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
 				}
 

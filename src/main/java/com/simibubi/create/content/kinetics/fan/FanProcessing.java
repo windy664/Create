@@ -65,9 +65,9 @@ public class FanProcessing {
 	private static final HauntingWrapper HAUNTING_WRAPPER = new HauntingWrapper();
 
 	public static boolean canProcess(ItemEntity entity, Type type) {
-		if (entity.getExtraCustomData()
+		if (entity.getCustomData()
 			.contains("CreateData")) {
-			CompoundTag compound = entity.getExtraCustomData()
+			CompoundTag compound = entity.getCustomData()
 				.getCompound("CreateData");
 			if (compound.contains("Processing")) {
 				CompoundTag processing = compound.getCompound("Processing");
@@ -194,7 +194,7 @@ public class FanProcessing {
 	}
 
 	private static int decrementProcessingTime(ItemEntity entity, Type type) {
-		CompoundTag nbt = entity.getExtraCustomData();
+		CompoundTag nbt = entity.getCustomData();
 
 		if (!nbt.contains("CreateData"))
 			nbt.put("CreateData", new CompoundTag());
@@ -316,14 +316,14 @@ public class FanProcessing {
 					livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
 				}
 				if (entity instanceof Horse horse) {
-					int progress = horse.getExtraCustomData()
+					int progress = horse.getCustomData()
 						.getInt("CreateHaunting");
 					if (progress < 100) {
 						if (progress % 10 == 0) {
 							level.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL,
 								1f, 1.5f * progress / 100f);
 						}
-						horse.getExtraCustomData()
+						horse.getCustomData()
 							.putInt("CreateHaunting", progress + 1);
 						return;
 					}

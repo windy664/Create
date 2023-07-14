@@ -333,13 +333,13 @@ public class BlueprintEntity extends HangingEntity
 		CompoundTag compound = new CompoundTag();
 		addAdditionalSaveData(compound);
 		buffer.writeNbt(compound);
-		buffer.writeNbt(getExtraCustomData());
+		buffer.writeNbt(getCustomData());
 	}
 
 	@Override
 	public void readSpawnData(FriendlyByteBuf additionalData) {
 		readAdditionalSaveData(additionalData.readNbt());
-		getExtraCustomData().merge(additionalData.readNbt());
+		getCustomData().merge(additionalData.readNbt());
 	}
 
 	@Override
@@ -484,7 +484,7 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	public CompoundTag getOrCreateRecipeCompound() {
-		CompoundTag persistentData = getExtraCustomData();
+		CompoundTag persistentData = getCustomData();
 		if (!persistentData.contains("Recipes"))
 			persistentData.put("Recipes", new CompoundTag());
 		return persistentData.getCompound("Recipes");

@@ -411,7 +411,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		super.addPassenger(pPassenger);
 		if (!(pPassenger instanceof Player player))
 			return;
-		player.getExtraCustomData()
+		player.getCustomData()
 			.put("ContraptionMountLocation", VecHelper.writeNBT(player.position()));
 	}
 

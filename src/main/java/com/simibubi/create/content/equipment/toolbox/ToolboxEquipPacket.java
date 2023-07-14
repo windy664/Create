@@ -94,7 +94,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 				});
 			}
 
-			CompoundTag compound = player.getExtraCustomData()
+			CompoundTag compound = player.getCustomData()
 				.getCompound("CreateToolboxData");
 			String key = String.valueOf(hotbarSlot);
 
@@ -103,7 +103,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			data.put("Pos", NbtUtils.writeBlockPos(toolboxPos));
 			compound.put(key, data);
 
-			player.getExtraCustomData()
+			player.getCustomData()
 				.put("CreateToolboxData", compound);
 
 			toolboxBlockEntity.connectPlayer(slot, player, hotbarSlot);

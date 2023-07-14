@@ -152,7 +152,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, IBE<ItemVaultB
 	@Override
 	public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
 		SoundType soundType = getSoundType(state);
-		if (entity != null && entity.getExtraCustomData()
+		if (entity != null && entity.getCustomData()
 			.contains("SilenceVaultSound"))
 			return SILENCED_METAL;
 		return soundType;

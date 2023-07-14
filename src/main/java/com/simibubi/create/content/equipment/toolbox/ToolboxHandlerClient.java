@@ -126,7 +126,7 @@ public class ToolboxHandlerClient {
 		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level(), player, 8);
 		toolboxes.sort(Comparator.comparing(ToolboxBlockEntity::getUniqueId));
 
-		CompoundTag compound = player.getExtraCustomData()
+		CompoundTag compound = player.getCustomData()
 			.getCompound("CreateToolboxData");
 
 		String slotKey = String.valueOf(player.getInventory().selected);
@@ -173,11 +173,11 @@ public class ToolboxHandlerClient {
 		RenderSystem.enableDepthTest();
 
 		Player player = mc.player;
-		CompoundTag persistentData = player.getExtraCustomData();
+		CompoundTag persistentData = player.getCustomData();
 		if (!persistentData.contains("CreateToolboxData"))
 			return;
 
-		CompoundTag compound = player.getExtraCustomData()
+		CompoundTag compound = player.getCustomData()
 			.getCompound("CreateToolboxData");
 
 		if (compound.isEmpty())
