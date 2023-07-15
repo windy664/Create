@@ -8,7 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 
 public class AllStructureProcessorTypes {
-	private static final LazyRegistrar<StructureProcessorType<?>> REGISTER = DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, Create.ID);
+	private static final LazyRegistrar<StructureProcessorType<?>> REGISTER = LazyRegistrar.create(Registries.STRUCTURE_PROCESSOR, Create.ID);
 
 	public static final RegistryObject<StructureProcessorType<SchematicProcessor>> SCHEMATIC = REGISTER.register("schematic", () -> () -> SchematicProcessor.CODEC);
 

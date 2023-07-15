@@ -99,7 +99,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 					if (!ingredient.test(stack)) continue;
 					// Catalyst items are never consumed
 					ItemStack remainder = stack.getRecipeRemainder();
-					if (!remainder.isEmpty() && remainder.sameItem(stack))
+					if (!remainder.isEmpty() && ItemStack.isSameItem(remainder, stack))
 						continue Ingredients;
 					long extracted = view.extract(var, 1, t);
 					if (extracted == 0) continue;

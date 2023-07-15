@@ -77,7 +77,7 @@ public class PotionMixingRecipes {
 			BottleType toBottleType = PotionFluidHandler.bottleTypeFromItem(to);
 			Ingredient ingredient = access.port_lib$ingredient();
 
-			for (Entry<ResourceKey<Potion>, Potion> entry : Registry.POTION.entrySet()) {
+			for (Entry<ResourceKey<Potion>, Potion> entry : BuiltInRegistries.POTION.entrySet()) {
 				Potion potion = entry.getValue();
 				if (potion == Potions.EMPTY) {
 					continue;

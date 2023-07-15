@@ -18,7 +18,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class ComputerBehaviour extends AbstractComputerBehaviour {
 

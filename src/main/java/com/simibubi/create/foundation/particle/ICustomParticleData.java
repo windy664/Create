@@ -32,7 +32,7 @@ public interface ICustomParticleData<T extends ParticleOptions> {
 
 	@Environment(EnvType.CLIENT)
 	public default void register(ParticleType<T> type, ParticleEngine particles) {
-		ParticleFactoryRegistry.getInstance().registerSpecial(type, getFactory());
+		ParticleFactoryRegistry.getInstance().register(type, getFactory());
 	}
 
 }

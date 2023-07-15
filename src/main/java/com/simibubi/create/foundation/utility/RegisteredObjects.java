@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -42,7 +43,7 @@ public final class RegisteredObjects {
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(EntityType<?> value) {
-		return getKeyOrThrow(Registry.ENTITY_TYPE, value);
+		return getKeyOrThrow(BuiltInRegistries.ENTITY_TYPE, value);
 	}
 
 	@NotNull
@@ -52,12 +53,12 @@ public final class RegisteredObjects {
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(Potion value) {
-		return getKeyOrThrow(Registry.POTION, value);
+		return getKeyOrThrow(BuiltInRegistries.POTION, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(ParticleType<?> value) {
-		return getKeyOrThrow(Registry.PARTICLE_TYPE, value);
+		return getKeyOrThrow(BuiltInRegistries.PARTICLE_TYPE, value);
 	}
 
 	@NotNull

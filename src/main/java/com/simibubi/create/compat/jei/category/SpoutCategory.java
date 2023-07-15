@@ -80,7 +80,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 				fluidCopy.setAmount(FluidConstants.BUCKET);
 				TransferUtil.insertFluid(storage, fluidCopy);
 				ItemVariant container = ctx.getItemVariant();
-				if (ItemHelper.sameItem(container, copy))
+				if (copy.is(container.getItem()))
 					continue;
 				if (container.isBlank())
 					continue;

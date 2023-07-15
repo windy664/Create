@@ -310,7 +310,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 					FluidStack potion = PotionFluidHandler.getFluidFromPotionItem(is);
 					Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
 					ResourceLocation iid = BuiltInRegistries.ITEM.getKey(i);
-					ResourceLocation pid = Registry.POTION.getKey(PotionUtils.getPotion(is));
+					ResourceLocation pid = BuiltInRegistries.POTION.getKey(PotionUtils.getPotion(is));
 					consumer.accept(new SpoutEmiRecipe(new ProcessingRecipeBuilder<>(FillingRecipe::new,
 						new ResourceLocation("emi", "create/potion_filling/" + pid.getNamespace() + "/" + pid.getPath()
 							+ "/from/" + iid.getNamespace() + "/" + iid.getPath()))

@@ -202,7 +202,7 @@ public class PonderWorld extends SchematicWorld {
 
 	public void tick() {
 		currentlyTickingEntities = true;
-		
+
 		particles.tick();
 
 		for (Iterator<Entity> iterator = entities.iterator(); iterator.hasNext();) {
@@ -213,14 +213,14 @@ public class PonderWorld extends SchematicWorld {
 			entity.yOld = entity.getY();
 			entity.zOld = entity.getZ();
 			entity.tick();
-			
+
 			if (entity.getY() <= -.5f)
 				entity.discard();
 
 			if (!entity.isAlive())
 				iterator.remove();
 		}
-		
+
 		currentlyTickingEntities = false;
 	}
 
@@ -238,7 +238,7 @@ public class PonderWorld extends SchematicWorld {
 	@SuppressWarnings("unchecked")
 	private <T extends ParticleOptions> Particle makeParticle(T data, double x, double y, double z, double mx, double my,
 		double mz) {
-		int id = Registry.PARTICLE_TYPE.getId(data.getType());
+		int id = BuiltInRegistries.PARTICLE_TYPE.getId(data.getType());
 		ParticleProvider<T> particleProvider = (ParticleProvider<T>) particleProviders.get(id);
 		return particleProvider == null ? null
 			: particleProvider.createParticle(data, asClientWorld.get(), x, y, z, mx, my, mz);

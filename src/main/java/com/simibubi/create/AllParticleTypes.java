@@ -21,6 +21,7 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 
 public enum AllParticleTypes {
@@ -65,7 +66,7 @@ public enum AllParticleTypes {
 	}
 
 	private static class ParticleEntry<D extends ParticleOptions> {
-		private static final LazyRegistrar<ParticleType<?>> REGISTER = LazyRegistrar.create(Registry.PARTICLE_TYPE, Create.ID);
+		private static final LazyRegistrar<ParticleType<?>> REGISTER = LazyRegistrar.create(BuiltInRegistries.PARTICLE_TYPE, Create.ID);
 
 		private final String name;
 		private final Supplier<? extends ICustomParticleData<D>> typeFactory;
