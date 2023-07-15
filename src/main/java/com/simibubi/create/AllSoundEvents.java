@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -430,6 +431,11 @@ public class AllSoundEvents {
 			return this;
 		}
 
+		// fabric: holders are not suppliers
+		public SoundEntryBuilder playExisting(Holder<SoundEvent> event, float volume, float pitch) {
+			return playExisting(event::value, volume, pitch);
+		}
+
 		public SoundEntryBuilder playExisting(SoundEvent event, float volume, float pitch) {
 			return playExisting(() -> event, volume, pitch);
 		}
@@ -439,7 +445,7 @@ public class AllSoundEvents {
 		}
 
 		public SoundEntryBuilder playExisting(Holder<SoundEvent> event) {
-			return playExisting(event::get, 1, 1);
+			return playExisting(event::value, 1, 1);
 		}
 
 		public SoundEntry build() {
@@ -550,7 +556,7 @@ public class AllSoundEvents {
 			for (int i = 0; i < wrappedEvents.size(); i++) {
 				ConfiguredSoundEvent wrapped = wrappedEvents.get(i);
 				ResourceLocation location = getIdOf(i);
-				SoundEvent event = new SoundEvent(location);
+				SoundEvent event = SoundEvent.createVariableRangeEvent(location);
 				compiledEvents.add(new CompiledSoundEvent(event, wrapped.volume(), wrapped.pitch()));
 			}
 		}
@@ -558,7 +564,7 @@ public class AllSoundEvents {
 		@Override
 		public void register() {
 			for (CompiledSoundEvent event : compiledEvents) {
-				Registry.register(Registry.SOUND_EVENT, event.event.getLocation(), event.event);
+				Registry.register(BuiltInRegistries.SOUND_EVENT, event.event.getLocation(), event.event);
 			}
 		}
 
@@ -628,12 +634,12 @@ public class AllSoundEvents {
 
 		@Override
 		public void prepare() {
-			 event = new SoundEvent(id);
+			 event = SoundEvent.createVariableRangeEvent(id);
 		}
 
 		@Override
 		public void register() {
-			Registry.register(Registry.SOUND_EVENT, event.getLocation(), event);
+			Registry.register(BuiltInRegistries.SOUND_EVENT, event.getLocation(), event);
 		}
 
 		@Override

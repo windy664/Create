@@ -136,7 +136,7 @@ public class ArrivalSoundQueue {
 			float f = (float) Math.pow(2, (state.getValue(NoteBlock.NOTE) - 12) / 12.0);
 			playSimple(entity, state.getValue(NoteBlock.INSTRUMENT)
 				.getSoundEvent()
-				.get(), 1, f);
+				.value(), 1, f);
 		}
 
 		if (state.getBlock() instanceof WhistleBlock && info.nbt() != null) {
