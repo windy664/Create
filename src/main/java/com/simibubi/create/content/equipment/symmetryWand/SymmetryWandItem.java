@@ -291,14 +291,14 @@ public class SymmetryWandItem extends Item {
 
 		targets.add(pos);
 		for (BlockPos position : blockSet.keySet()) {
-			BlockState blockstate = world.getBlockState(position);
-			if (!player.isCreative() && ogBlock.getBlock() != blockstate
-				.getBlock())
+			if (!player.isCreative() && ogBlock.getBlock() != world.getBlockState(position)
+					.getBlock())
 				continue;
 			if (position.equals(pos))
 				continue;
 
 			BlockState blockstate = world.getBlockState(position);
+			BlockEntity be = blockstate.hasBlockEntity() ? world.getBlockEntity(position) : null;
 			if (!blockstate.isAir()) {
 				if (handlePreEvent(world, player, position, blockstate, be))
 					continue;

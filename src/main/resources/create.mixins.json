@@ -23,7 +23,8 @@
     "fabric.EntityMixin",
     "fabric.ServerGamePacketListenerImplAccessor",
     "fabric.SortedArraySetAccessor",
-    "fabric.StructureUtilsMixin"
+    "fabric.StructureUtilsMixin",
+    "fabric.TagAppenderAccessor"
   ],
   "client": [
     "accessor.AgeableListModelAccessor",

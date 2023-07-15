@@ -50,8 +50,7 @@ public class BasinInventory extends SmartInventory {
 	}
 
 	@Override
-	protected void onFinalCommit() {
-		super.onFinalCommit();
+	protected void onContentsChanged(int slot) {
 		blockEntity.notifyChangeOfContents();
 	}
 }
