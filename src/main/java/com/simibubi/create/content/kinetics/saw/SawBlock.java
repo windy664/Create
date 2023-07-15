@@ -181,11 +181,6 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 		});
 	}
 
-	// fabric: unnecessary
-//	public PushReaction getPistonPushReaction(BlockState state) {
-//		return PushReaction.NORMAL;
-//	}
-
 	public static boolean isHorizontal(BlockState state) {
 		return state.getValue(FACING)
 			.getAxis()

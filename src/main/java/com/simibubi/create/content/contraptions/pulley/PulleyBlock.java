@@ -103,11 +103,6 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements IBE<Pulle
     		return false;
     	}
 
-        @Override
-        public PushReaction getPistonPushReaction(BlockState state) {
-            return PushReaction.BLOCK;
-        }
-
 		@Override
 		public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
 			return AllBlocks.ROPE_PULLEY.asStack();

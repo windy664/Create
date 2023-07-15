@@ -60,11 +60,6 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 	}
 
 	@Override
-	public PushReaction getPistonPushReaction(BlockState pState) {
-		return PushReaction.BLOCK;
-	}
-
-	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		return InteractionResult.PASS;
 	}

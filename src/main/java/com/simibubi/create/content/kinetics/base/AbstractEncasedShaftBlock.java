@@ -29,11 +29,6 @@ public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBloc
     public boolean shouldCheckWeakPower(BlockState state, SignalGetter level, BlockPos pos, Direction side) {
         return false;
     }
-    
-    @Override
-    public PushReaction getPistonPushReaction(@Nullable BlockState state) {
-        return PushReaction.NORMAL;
-    }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {

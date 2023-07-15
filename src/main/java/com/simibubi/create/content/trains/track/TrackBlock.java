@@ -185,11 +185,6 @@ public class TrackBlock extends Block implements IBE<TrackBlockEntity>, IWrencha
 		return stateForPlacement.setValue(SHAPE, best);
 	}
 
-	// fabric: moved to block setting
-//	public PushReaction getPistonPushReaction(BlockState pState) {
-//		return PushReaction.BLOCK;
-//	}
-
 	@Override
 	public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
 		super.playerWillDestroy(pLevel, pPos, pState, pPlayer);

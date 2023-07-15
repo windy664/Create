@@ -94,11 +94,6 @@ public class DrillBlock extends DirectionalKineticBlock implements IBE<DrillBloc
 			.getOpposite();
 	}
 
-	// fabric: unnecessary
-//	public PushReaction getPistonPushReaction(BlockState state) {
-//		return PushReaction.NORMAL;
-//	}
-
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

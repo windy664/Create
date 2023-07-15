@@ -53,11 +53,6 @@ public class PistonExtensionPoleBlock extends WrenchableDirectionalBlock impleme
     }
 
 	@Override
-	public PushReaction getPistonPushReaction(BlockState state) {
-		return PushReaction.NORMAL;
-	}
-
-	@Override
 	public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
 		Axis axis = state.getValue(FACING)
 			.getAxis();
@@ -150,7 +145,7 @@ public class PistonExtensionPoleBlock extends WrenchableDirectionalBlock impleme
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
-        if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+        if (state.getValue(BlockStateProperties.WATERLOGGED))
             world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         return state;
     }

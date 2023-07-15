@@ -48,11 +48,6 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
         super.createBlockStateDefinition(builder);
     }
 
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.NORMAL;
-    }
-
 	@Override
 	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
 		return AllBlocks.PISTON_EXTENSION_POLE.asStack();
