@@ -41,6 +41,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.server.level.ServerLevel;
@@ -92,7 +93,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	public void flipBlock(BlockPos pos) {
 		BlockState original = getBlockState(pos);
 		if (!original.hasProperty(BlockStateProperties.FACING))
-			fail("FACING property not in block: " + Registry.BLOCK.getId(original.getBlock()));
+			fail("FACING property not in block: " + BuiltInRegistries.BLOCK.getId(original.getBlock()));
 		Direction facing = original.getValue(BlockStateProperties.FACING);
 		BlockState reversed = original.setValue(BlockStateProperties.FACING, facing.getOpposite());
 		setBlock(pos, reversed);
@@ -324,7 +325,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 		Storage<ItemVariant> storage = itemStorageAt(pos);
 		Object2LongMap<Item> map = new Object2LongArrayMap<>();
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(storage)) {
+			for (StorageView<ItemVariant> view : storage.nonEmptyViews()) {
 				ItemVariant resource = view.getResource();
 				Item item = resource.getItem();
 				long amount = map.getLong(item);
@@ -397,7 +398,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	@Override
 	public void assertContainerEmpty(@NotNull BlockPos pos) {
 		Storage<ItemVariant> storage = itemStorageAt(pos);
-		TransferUtil.getNonEmpty(storage).forEach(view -> fail("Storage not empty"));
+		storage.nonEmptyViews().forEach(view -> fail("Storage not empty"));
 	}
 
 	/** @see CreateGameTestHelper#assertContainerContains(BlockPos, ItemStack) */

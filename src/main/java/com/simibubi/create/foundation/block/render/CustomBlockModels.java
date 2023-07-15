@@ -38,7 +38,7 @@ public class CustomBlockModels {
 	private void loadEntries() {
 		finalModelFuncs.clear();
 		modelFuncs.asMap().forEach((location, funcList) -> {
-			Block block = Registry.BLOCK.get(location);
+			Block block = BuiltInRegistries.BLOCK.get(location);
 			if (block == null) {
 				return;
 			}

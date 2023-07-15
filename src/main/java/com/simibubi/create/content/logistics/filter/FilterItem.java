@@ -93,7 +93,7 @@ public class FilterItem extends Item implements MenuProvider {
 			list.add((blacklist ? Lang.translateDirect("gui.filter.deny_list")
 				: Lang.translateDirect("gui.filter.allow_list")).withStyle(ChatFormatting.GOLD));
 			int count = 0;
-			for (int i = 0; i < filterItems.getSlots(); i++) {
+			for (int i = 0; i < filterItems.getSlotCount(); i++) {
 				if (count > 3) {
 					list.add(Components.literal("- ...")
 						.withStyle(ChatFormatting.DARK_GRAY));
@@ -219,7 +219,7 @@ public class FilterItem extends Item implements MenuProvider {
 				: filter.getTag()
 					.getBoolean("Blacklist");
 			boolean isEmpty = true;
-			for (int slot = 0; slot < filterItems.getSlots(); slot++) {
+			for (int slot = 0; slot < filterItems.getSlotCount(); slot++) {
 				ItemStack stackInSlot = filterItems.getStackInSlot(slot);
 				if (stackInSlot.isEmpty())
 					continue;
@@ -315,7 +315,7 @@ public class FilterItem extends Item implements MenuProvider {
 			boolean blacklist = defaults ? false
 				: filter.getTag()
 					.getBoolean("Blacklist");
-			for (int slot = 0; slot < filterItems.getSlots(); slot++) {
+			for (int slot = 0; slot < filterItems.getSlotCount(); slot++) {
 				ItemStack stackInSlot = filterItems.getStackInSlot(slot);
 				if (stackInSlot.isEmpty())
 					continue;

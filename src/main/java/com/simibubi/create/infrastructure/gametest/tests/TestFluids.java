@@ -212,7 +212,7 @@ public class TestFluids {
 
 	@GameTest(template = "waterwheel_materials", timeoutTicks = CreateGameTestHelper.FIFTEEN_SECONDS)
 	public static void waterwheelMaterials(CreateGameTestHelper helper) {
-		List<Item> planks = Registry.BLOCK.getOrCreateTag(BlockTags.PLANKS).stream()
+		List<Item> planks = BuiltInRegistries.BLOCK.getOrCreateTag(BlockTags.PLANKS).stream()
 				.map(Holder::value).map(ItemLike::asItem).collect(Collectors.toCollection(ArrayList::new));
 		List<BlockPos> chests = List.of(new BlockPos(6, 4, 2), new BlockPos(6, 4, 3));
 		List<BlockPos> deployers = chests.stream().map(pos -> pos.below(2)).toList();
@@ -228,16 +228,16 @@ public class TestFluids {
 		helper.succeedWhen(() -> {
 			Item plank = planks.get(0);
 			if (!(plank instanceof BlockItem blockItem))
-				throw new GameTestAssertException(Registry.ITEM.getKey(plank) + " is not a BlockItem");
+				throw new GameTestAssertException(BuiltInRegistries.ITEM.getKey(plank) + " is not a BlockItem");
 			Block block = blockItem.getBlock();
 
 			WaterWheelBlockEntity smallWheelBe = helper.getBlockEntity(AllBlockEntityTypes.WATER_WHEEL.get(), smallWheel);
 			if (!smallWheelBe.material.is(block))
-				helper.fail("Small waterwheel has not consumed " + Registry.ITEM.getKey(plank));
+				helper.fail("Small waterwheel has not consumed " + BuiltInRegistries.ITEM.getKey(plank));
 
 			WaterWheelBlockEntity largeWheelBe = helper.getBlockEntity(AllBlockEntityTypes.LARGE_WATER_WHEEL.get(), largeWheel);
 			if (!largeWheelBe.material.is(block))
-				helper.fail("Large waterwheel has not consumed " + Registry.ITEM.getKey(plank));
+				helper.fail("Large waterwheel has not consumed " + BuiltInRegistries.ITEM.getKey(plank));
 
 			// next item
 			planks.remove(0);

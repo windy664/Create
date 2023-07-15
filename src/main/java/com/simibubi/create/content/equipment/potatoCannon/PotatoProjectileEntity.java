@@ -330,11 +330,6 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return ExtraSpawnDataEntity.createExtraDataSpawnPacket(this);
-	}
-
-	@Override
 	public void writeSpawnData(FriendlyByteBuf buffer) {
 		CompoundTag compound = new CompoundTag();
 		addAdditionalSaveData(compound);

@@ -551,7 +551,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 //		if (clientPacket)
 //			airCurrent.rebuild();
 
-		if (hasLevel() && level != null && level.isClientSide && !ItemStackUtil.equals(previousItem, item, false) && !item.isEmpty()) {
+		if (hasLevel() && level != null && level.isClientSide && !ItemStack.matches(previousItem, item) && !item.isEmpty()) {
 			if (level.random.nextInt(3) != 0)
 				return;
 			Vec3 p = VecHelper.getCenterOf(worldPosition);

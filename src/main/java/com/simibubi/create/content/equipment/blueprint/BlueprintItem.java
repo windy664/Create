@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -123,7 +124,7 @@ public class BlueprintItem extends Item {
 			filterItem.getOrCreateTag()
 					.putInt("WhitelistMode", WhitelistMode.WHITELIST_DISJ.ordinal());
 			ListTag attributes = new ListTag();
-			ItemAttribute at = new ItemAttribute.InTag(TagKey.create(Registry.ITEM_REGISTRY, resourcelocation));
+			ItemAttribute at = new ItemAttribute.InTag(TagKey.create(Registries.ITEM, resourcelocation));
 			CompoundTag compoundNBT = new CompoundTag();
 			at.serializeNBT(compoundNBT);
 			compoundNBT.putBoolean("Inverted", false);

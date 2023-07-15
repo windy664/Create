@@ -39,7 +39,7 @@ public class FluidAmountDisplaySource extends SingleLineDisplaySource {
 
 		long collected = 0;
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<FluidVariant> view : TransferUtil.getNonEmpty(handler)) {
+			for (StorageView<FluidVariant> view : handler.nonEmptyViews()) {
 				FluidStack stack = new FluidStack(view);
 				if (!filteringBehaviour.test(stack))
 					continue;

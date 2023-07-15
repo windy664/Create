@@ -352,14 +352,14 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			return;
 
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(outputInventory)) {
+			for (StorageView<ItemVariant> view : outputInventory.nonEmptyViews()) {
 				ItemVariant variant = view.getResource();
 				ItemStack stack = variant.toStack(ItemHelper.truncateLong(view.getAmount()));
 				if (acceptOutputs(ImmutableList.of(stack), ImmutableList.of(), t)) {
 					view.extract(variant, stack.getCount(), t);
 				}
 			}
-			for (StorageView<FluidVariant> view : TransferUtil.getNonEmpty(outputTank.getCapability())) {
+			for (StorageView<FluidVariant> view : outputTank.getCapability().nonEmptyViews()) {
 				FluidVariant variant = view.getResource();
 				FluidStack stack = new FluidStack(view);
 				if (acceptOutputs(ImmutableList.of(), ImmutableList.of(stack), t)) {
@@ -782,7 +782,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		boolean isEmpty = true;
 
 		for (SmartInventory inventory : invs) {
-			for (int i = 0; i < inventory.getSlots(); i++) {
+			for (int i = 0; i < inventory.getSlotCount(); i++) {
 				ItemStack stackInSlot = inventory.getStackInSlot(i);
 				if (stackInSlot.isEmpty())
 					continue;

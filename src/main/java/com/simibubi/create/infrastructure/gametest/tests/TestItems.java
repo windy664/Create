@@ -324,7 +324,7 @@ public class TestItems {
 
 				DepotBlockEntity depot = depots.get(i);
 				ItemStack item = depot.getHeldItem();
-				String name = Registry.ITEM.getKey(item.getItem()).getPath();
+				String name = BuiltInRegistries.ITEM.getKey(item.getItem()).getPath();
 
 				if (!name.equals(text))
 					helper.fail("Text mismatch: wanted [" + name + "], got: " + text);

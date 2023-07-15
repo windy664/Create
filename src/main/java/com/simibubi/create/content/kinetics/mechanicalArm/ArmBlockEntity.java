@@ -308,7 +308,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 					continue;
 
 				ItemStack remainder = armInteractionPoint.insert(held, t);
-				if (ItemStackUtil.equals(remainder, heldItem, false))
+				if (ItemStack.matches(remainder, heldItem))
 					continue;
 
 				selectIndex(false, i);

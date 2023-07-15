@@ -139,7 +139,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 			return InteractionResult.PASS;
 
 		return onBlockEntityUse(worldIn, pos, be -> {
-			for (int i = 0; i < be.inventory.getSlots(); i++) {
+			for (int i = 0; i < be.inventory.getSlotCount(); i++) {
 				ItemStack heldItemStack = be.inventory.getStackInSlot(i);
 				if (!worldIn.isClientSide && !heldItemStack.isEmpty())
 					player.getInventory()

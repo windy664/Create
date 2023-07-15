@@ -185,7 +185,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 
 		for (SmartInventory inv : basin.get()
 			.getInvs()) {
-			for (int slot = 0; slot < inv.getSlots(); slot++) {
+			for (int slot = 0; slot < inv.getSlotCount(); slot++) {
 				ItemStack stackInSlot = inv.getItem(slot);
 				if (stackInSlot.isEmpty())
 					continue;
@@ -238,7 +238,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 			return matchingRecipes;
 
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(availableItems)) {
+			for (StorageView<ItemVariant> view : availableItems.nonEmptyViews()) {
 				List<MixingRecipe> list = PotionMixingRecipes.BY_ITEM.get(view.getResource().getItem());
 				if (list == null)
 					continue;

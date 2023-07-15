@@ -233,7 +233,7 @@ public class EjectorBlockEntity extends KineticBlockEntity implements SidedStora
 			}
 
 			ItemStackHandler outputs = depotBehaviour.processingOutputBuffer;
-			for (int i = 0; i < outputs.getSlots(); i++) {
+			for (int i = 0; i < outputs.getSlotCount(); i++) {
 				ItemStack stack = outputs.getStackInSlot(i);
 				if (stack.isEmpty())
 					continue;
@@ -265,7 +265,7 @@ public class EjectorBlockEntity extends KineticBlockEntity implements SidedStora
 
 		ItemStackHandler outputs = depotBehaviour.processingOutputBuffer;
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(outputs)) {
+			for (StorageView<ItemVariant> view : outputs.nonEmptyViews()) {
 				ItemVariant var = view.getResource();
 				long extracted = view.extract(view.getResource(), 64, t);
 				if (extracted != 0)

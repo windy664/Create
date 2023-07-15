@@ -88,7 +88,8 @@ public class SmartInventory extends ItemStackHandlerContainer implements INBTSer
 	private Runnable updateCallback;
 
 	@Override
-	protected void onFinalCommit() {
+	protected void onContentsChanged(int slot) {
+		super.onContentsChanged(slot);
 		if (updateCallback != null)
 			updateCallback.run();
 		blockEntity.notifyUpdate();

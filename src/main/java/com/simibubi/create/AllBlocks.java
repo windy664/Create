@@ -2001,7 +2001,7 @@ public class AllBlocks {
 
 	// Materials
 
-	static { REGISTRATE.useCreativeTab(AllCreativeModeTabs.BUILDING_BLOCKS_TAB); }
+	static { REGISTRATE.useCreativeTab(AllCreativeModeTabs.BUILDING_BLOCKS_TAB.key()); }
 
 	public static final BlockEntry<MetalLadderBlock> ANDESITE_LADDER =
 		REGISTRATE.block("andesite_ladder", MetalLadderBlock::new)

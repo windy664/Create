@@ -72,6 +72,6 @@ public enum Mods {
 	}
 
 	public Block getBlock(String id) {
-		return Registry.BLOCK.get(new ResourceLocation(asId(), id));
+		return BuiltInRegistries.BLOCK.get(new ResourceLocation(asId(), id));
 	}
 }

@@ -37,7 +37,7 @@ public class ItemHelper {
 
 	public static void dropContents(Level world, BlockPos pos, Storage<ItemVariant> inv) {
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(inv)) {
+			for (StorageView<ItemVariant> view : inv.nonEmptyViews()) {
 				ItemStack stack = view.getResource().toStack((int) view.getAmount());
 				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 			}
@@ -72,9 +72,9 @@ public class ItemHelper {
 //	public static boolean isSameInventory(Storage<ItemVariant> h1, Storage<ItemVariant> h2) {
 //		if (h1 == null || h2 == null)
 //			return false;
-//		if (h1.getSlots() != h2.getSlots())
+//		if (h1.getSlotCount() != h2.getSlotCount())
 //			return false;
-//		for (int slot = 0; slot < h1.getSlots(); slot++) {
+//		for (int slot = 0; slot < h1.getSlotCount(); slot++) {
 //			if (h1.getStackInSlot(slot) != h2.getStackInSlot(slot))
 //				return false;
 //		}
@@ -179,7 +179,7 @@ public class ItemHelper {
 
 		if (inv.supportsExtraction()) {
 			try (Transaction t = TransferUtil.getTransaction()) {
-				for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(inv)) {
+				for (StorageView<ItemVariant> view : inv.nonEmptyViews()) {
 					ItemVariant contained = view.getResource();
 					int maxStackSize = contained.getItem().getMaxStackSize();
 					// amount stored, amount needed, or max size, whichever is lowest.
@@ -246,7 +246,7 @@ public class ItemHelper {
 		int maxExtractionCount = 64;
 
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(inv)) {
+			for (StorageView<ItemVariant> view : inv.nonEmptyViews()) {
 				ItemVariant var = view.getResource();
 				ItemStack stackInSlot = var.toStack();
 				if (!test.test(stackInSlot))

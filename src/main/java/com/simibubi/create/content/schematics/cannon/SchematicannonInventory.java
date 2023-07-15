@@ -17,26 +17,27 @@ public class SchematicannonInventory extends ItemStackHandler {
 	}
 
 	@Override
-	protected void onFinalCommit() {
+	protected void onContentsChanged(int slot) {
+		super.onContentsChanged(slot);
 		blockEntity.setChanged();
 	}
 
 	@Override
-	public boolean isItemValid(int slot, ItemVariant stack, long amount) {
+	public boolean isItemValid(int slot, ItemVariant stack) {
 		switch (slot) {
 		case 0: // Blueprint Slot
 			return AllItems.SCHEMATIC.get() == stack.getItem();
 		case 1: // Blueprint output
 			return false;
 		case 2: // Book input
-			return AllBlocks.CLIPBOARD.isIn(stack) || stack.is(Items.BOOK)
-				|| stack.is(Items.WRITTEN_BOOK);
+			return AllBlocks.CLIPBOARD.is(stack.getItem()) || stack.isOf(Items.BOOK)
+				|| stack.isOf(Items.WRITTEN_BOOK);
 		case 3: // Material List output
 			return false;
 		case 4: // Gunpowder
-			return stack.is(Items.GUNPOWDER);
+			return stack.isOf(Items.GUNPOWDER);
 		default:
-			return super.isItemValid(slot, stack, amount);
+			return super.isItemValid(slot, stack);
 		}
 	}
 }

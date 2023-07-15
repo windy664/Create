@@ -60,7 +60,7 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 		withBlockEntityDo(worldIn, pos, millstone -> {
 			boolean emptyOutput = true;
 			ItemStackHandler inv = millstone.outputInv;
-			for (int slot = 0; slot < inv.getSlots(); slot++) {
+			for (int slot = 0; slot < inv.getSlotCount(); slot++) {
 				ItemStack stackInSlot = inv.getStackInSlot(slot);
 				if (!stackInSlot.isEmpty())
 					emptyOutput = false;
@@ -71,7 +71,7 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 
 			if (emptyOutput) {
 				inv = millstone.inputInv;
-				for (int slot = 0; slot < inv.getSlots(); slot++) {
+				for (int slot = 0; slot < inv.getSlotCount(); slot++) {
 					player.getInventory()
 						.placeItemBackInInventory(inv.getStackInSlot(slot));
 					inv.setStackInSlot(slot, ItemStack.EMPTY);

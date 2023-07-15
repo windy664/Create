@@ -43,6 +43,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -98,11 +99,6 @@ public class BlueprintEntity extends HangingEntity
 //		@SuppressWarnings("unchecked")
 //		EntityType.Builder<BlueprintEntity> entityBuilder = (EntityType.Builder<BlueprintEntity>) builder;
 		return builder;
-	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return ExtraSpawnDataEntity.createExtraDataSpawnPacket(this, new ClientboundAddEntityPacket(this, getId()));
 	}
 
 	@Override
@@ -276,7 +272,7 @@ public class BlueprintEntity extends HangingEntity
 		if (items.getStackInSlot(9)
 			.isEmpty())
 			return super.skipAttackInteraction(source);
-		for (int i = 0; i < items.getSlots(); i++)
+		for (int i = 0; i < items.getSlotCount(); i++)
 			items.setStackInSlot(i, ItemStack.EMPTY);
 		sectionAt.save(items);
 		return true;

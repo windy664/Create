@@ -56,9 +56,9 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		PonderRegistry.ALL.keySet()
 			.stream()
 			.map(key -> {
-				Item item = Registry.ITEM.get(key);
+				Item item = BuiltInRegistries.ITEM.get(key);
 				if (item == null) {
-					Block b = Registry.BLOCK.get(key);
+					Block b = BuiltInRegistries.BLOCK.get(key);
 					if (b != null)
 						item = b.asItem();
 				}
@@ -158,7 +158,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		int y = (int) (height * chapterYmult);
 
 		PoseStack ms = graphics.pose();
-		
+
 		if (!chapters.isEmpty()) {
 			ms.pushPose();
 			ms.translate(x, y, 0);

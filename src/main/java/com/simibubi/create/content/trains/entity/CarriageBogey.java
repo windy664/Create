@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
@@ -192,7 +193,7 @@ public class CarriageBogey {
 
 	public static CarriageBogey read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
 		ResourceLocation location = new ResourceLocation(tag.getString("Type"));
-		Block block = Registry.BLOCK.get(location);
+		Block block = BuiltInRegistries.BLOCK.get(location);
 		AbstractBogeyBlock<?> type = block instanceof AbstractBogeyBlock<?> bogey ? bogey : AllBlocks.SMALL_BOGEY.get();
 		boolean upsideDown = tag.getBoolean("UpsideDown");
 		Couple<TravellingPoint> points = Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND),

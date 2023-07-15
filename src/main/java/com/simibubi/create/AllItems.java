@@ -67,6 +67,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -76,8 +77,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
 public class AllItems {
-	
-	static { REGISTRATE.useCreativeTab(AllCreativeModeTabs.MAIN_TAB); }
+
+	static { REGISTRATE.useCreativeTab(AllCreativeModeTabs.MAIN_TAB.key()); }
 
 	public static final ItemEntry<Item> WHEAT_FLOUR =
 		taggedIngredient("wheat_flour", forgeItemTag("wheat_flour"), forgeItemTag("flour")),
@@ -145,7 +146,7 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<Item> RAW_ZINC =
-		taggedIngredient("raw_zinc", forgeItemTag("raw_zinc_ores"), TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("c", "raw_ores")));
+		taggedIngredient("raw_zinc", forgeItemTag("raw_zinc_ores"), TagKey.create(Registries.ITEM, new ResourceLocation("c", "raw_ores")));
 
 	public static final ItemEntry<Item> ANDESITE_ALLOY = taggedIngredient("andesite_alloy", CREATE_INGOTS.tag),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("zinc_ingots"), CREATE_INGOTS.tag),

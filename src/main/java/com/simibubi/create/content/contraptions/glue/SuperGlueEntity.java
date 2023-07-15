@@ -265,11 +265,6 @@ public class SuperGlueEntity extends Entity
 	}
 
 	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return ExtraSpawnDataEntity.createExtraDataSpawnPacket(this);
-	}
-
-	@Override
 	public void writeSpawnData(FriendlyByteBuf buffer) {
 		CompoundTag compound = new CompoundTag();
 		addAdditionalSaveData(compound);

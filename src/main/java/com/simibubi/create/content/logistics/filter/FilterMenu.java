@@ -68,7 +68,7 @@ public class FilterMenu extends AbstractFilterMenu {
 
 		if (respectNBT || blacklist)
 			return;
-		for (int i = 0; i < ghostInventory.getSlots(); i++)
+		for (int i = 0; i < ghostInventory.getSlotCount(); i++)
 			if (!ghostInventory.getStackInSlot(i)
 				.isEmpty())
 				return;

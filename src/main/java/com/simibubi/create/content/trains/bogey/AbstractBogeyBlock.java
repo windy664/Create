@@ -40,6 +40,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -269,7 +270,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 
 		while (index != indexOf) {
 			ResourceLocation id = bogeyCycle.get(index);
-			Block newBlock = Registry.BLOCK.get(id);
+			Block newBlock = BuiltInRegistries.BLOCK.get(id);
 			if (newBlock instanceof AbstractBogeyBlock<?> bogey) {
 				BlockState matchingBogey = bogey.getMatchingBogey(bogeyUpDirection, trackAxisAlongFirstCoordinate);
 				if (matchingBogey != null)

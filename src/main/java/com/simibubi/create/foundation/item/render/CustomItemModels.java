@@ -38,7 +38,7 @@ public class CustomItemModels {
 	private void loadEntries() {
 		finalModelFuncs.clear();
 		modelFuncs.asMap().forEach((location, funcList) -> {
-			Item item = Registry.ITEM.get(location);
+			Item item = BuiltInRegistries.ITEM.get(location);
 			if (item == null) {
 				return;
 			}

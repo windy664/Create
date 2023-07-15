@@ -308,7 +308,7 @@ public class BlueprintOverlayRenderer {
 			if (AllItems.FILTER.isIn(itemStack) && !tag.getBoolean("Blacklist")) {
 				ItemStackHandler filterItems = FilterItem.getFilterItems(itemStack);
 				List<ItemStack> list = new ArrayList<>();
-				for (int slot = 0; slot < filterItems.getSlots(); slot++) {
+				for (int slot = 0; slot < filterItems.getSlotCount(); slot++) {
 					ItemStack stackInSlot = filterItems.getStackInSlot(slot);
 					if (!stackInSlot.isEmpty())
 						list.add(stackInSlot);
@@ -322,9 +322,9 @@ public class BlueprintOverlayRenderer {
 				if (whitelistMode == WhitelistMode.WHITELIST_DISJ && attributes.size() == 1) {
 					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
 					if (fromNBT instanceof ItemAttribute.InTag inTag) {
-						if (Registry.ITEM.isKnownTagName(inTag.tag)) {
+						if (BuiltInRegistries.ITEM.isKnownTagName(inTag.tag)) {
 							List<ItemStack> stacks = new ArrayList<>();
-							for (Holder<Item> holder : Registry.ITEM.getTagOrEmpty(inTag.tag)) {
+							for (Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(inTag.tag)) {
 								stacks.add(new ItemStack(holder.value()));
 							}
 							return stacks.toArray(ItemStack[]::new);

@@ -20,6 +20,8 @@ import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -168,13 +170,13 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected void readInternal(FriendlyByteBuf buffer) {
-			fluid = Registry.FLUID.get(buffer.readResourceLocation());
+			fluid = BuiltInRegistries.FLUID.get(buffer.readResourceLocation());
 			tagToMatch = buffer.readNbt();
 		}
 
 		@Override
 		protected void writeInternal(FriendlyByteBuf buffer) {
-			buffer.writeResourceLocation(Registry.FLUID.getKey(fluid));
+			buffer.writeResourceLocation(BuiltInRegistries.FLUID.getKey(fluid));
 			buffer.writeNbt(tagToMatch);
 		}
 
@@ -237,7 +239,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected void readInternal(JsonObject json) {
 			ResourceLocation name = new ResourceLocation(GsonHelper.getAsString(json, "fluidTag"));
-			tag = TagKey.create(Registry.FLUID_REGISTRY, name);
+			tag = TagKey.create(Registries.FLUID, name);
 		}
 
 		@Override
@@ -249,7 +251,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected List<FluidStack> determineMatchingFluidStacks() {
 			List<FluidStack> stacks = new ArrayList<>();
-			for (Holder<Fluid> holder : Registry.FLUID.getTagOrEmpty(tag)) {
+			for (Holder<Fluid> holder : BuiltInRegistries.FLUID.getTagOrEmpty(tag)) {
 				Fluid f = holder.value();
 				if (f instanceof FlowingFluid flowing) f = flowing.getSource();
 				stacks.add(new FluidStack(f, amountRequired));

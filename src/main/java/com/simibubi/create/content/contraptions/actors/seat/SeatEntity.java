@@ -123,11 +123,6 @@ public class SeatEntity extends Entity implements ExtraSpawnDataEntity {
 	@Override
 	protected void addAdditionalSaveData(CompoundTag p_213281_1_) {}
 
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return ExtraSpawnDataEntity.createExtraDataSpawnPacket(this);
-	}
-
 	public static class Render extends EntityRenderer<SeatEntity> {
 
 		public Render(EntityRendererProvider.Context context) {

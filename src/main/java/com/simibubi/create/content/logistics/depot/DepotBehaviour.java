@@ -176,7 +176,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 		}
 
 		heldItem.locked = result == ProcessingResult.HOLD;
-		if (heldItem.locked != wasLocked || !ItemStackUtil.equals(previousItem, heldItem.stack, false))
+		if (heldItem.locked != wasLocked || !ItemStack.matches(previousItem, heldItem.stack))
 			blockEntity.sendData();
 	}
 
@@ -198,7 +198,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 		if (funnelFacing == null || !canFunnelsPullFrom.test(funnelFacing.getOpposite()))
 			return false;
 
-		for (int slot = 0; slot < processingOutputBuffer.getSlots(); slot++) {
+		for (int slot = 0; slot < processingOutputBuffer.getSlotCount(); slot++) {
 			ItemStack previousItem = processingOutputBuffer.getStackInSlot(slot);
 			if (previousItem.isEmpty())
 				continue;
@@ -290,7 +290,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 	public int getPresentStackSize() {
 		int cumulativeStackSize = 0;
 		cumulativeStackSize += getHeldItemStack().getCount();
-		for (int slot = 0; slot < processingOutputBuffer.getSlots(); slot++)
+		for (int slot = 0; slot < processingOutputBuffer.getSlotCount(); slot++)
 			cumulativeStackSize += processingOutputBuffer.getStackInSlot(slot)
 				.getCount();
 		return cumulativeStackSize;
@@ -440,7 +440,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 	}
 
 	public boolean isOutputEmpty() {
-		for (int i = 0; i < processingOutputBuffer.getSlots(); i++)
+		for (int i = 0; i < processingOutputBuffer.getSlotCount(); i++)
 			if (!processingOutputBuffer.getStackInSlot(i)
 				.isEmpty())
 				return false;

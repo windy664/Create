@@ -40,7 +40,7 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 
 	private void dump(MovementContext context, Vec3 facingVec) {
 		getOrReadInventory(context).forEach((key, itemStackHandler) -> {
-			for (int i = 0; i < itemStackHandler.getSlots(); i++) {
+			for (int i = 0; i < itemStackHandler.getSlotCount(); i++) {
 				if (itemStackHandler.getStackInSlot(i)
 					.isEmpty())
 					continue;

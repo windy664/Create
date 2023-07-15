@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.RegisteredObjects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -98,7 +99,7 @@ public class PoweredShaftBlockEntity extends GeneratingKineticBlockEntity {
 		if (compound.contains("EnginePos")) {
 			enginePos = NbtUtils.readBlockPos(compound.getCompound("EnginePos"));
 			engineEfficiency = compound.getFloat("EnginePower");
-			capacityKey = Registry.BLOCK.get(new ResourceLocation(compound.getString("EngineType")));
+			capacityKey = BuiltInRegistries.BLOCK.get(new ResourceLocation(compound.getString("EngineType")));
 		}
 	}
 

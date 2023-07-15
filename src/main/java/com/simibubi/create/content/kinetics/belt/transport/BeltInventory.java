@@ -199,7 +199,7 @@ public class BeltInventory {
 					continue;
 
 				ItemStack remainder = inputBehaviour.handleInsertion(currentItem, movementFacing, false);
-				if (ItemStackUtil.equals(remainder, currentItem.stack, false))
+				if (ItemStack.matches(remainder, currentItem.stack))
 					continue;
 
 				currentItem.stack = remainder;

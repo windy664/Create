@@ -90,9 +90,9 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 							return;
 
 						Ingredient bucket = Ingredient.of(stack);
-						ResourceLocation itemName = Registry.ITEM
+						ResourceLocation itemName = BuiltInRegistries.ITEM
 								.getKey(stack.getItem());
-						ResourceLocation fluidName = Registry.FLUID
+						ResourceLocation fluidName = BuiltInRegistries.FLUID
 								.getKey(fluidCopy.getFluid());
 						consumer.accept(new ProcessingRecipeBuilder<>(FillingRecipe::new,
 								Create.asResource("fill_" + itemName.getNamespace() + "_" + itemName.getPath()

@@ -96,7 +96,7 @@ public class BeltFunnelInteractionHandler {
 			}
 
 			ItemStack remainder = inserting.insert(toInsert);
-			if (ItemStackUtil.equals(remainder, toInsert, false))
+			if (ItemStack.matches(remainder, toInsert))
 				if (blocking)
 					return true;
 				else

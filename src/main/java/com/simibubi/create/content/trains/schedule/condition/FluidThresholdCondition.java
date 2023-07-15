@@ -54,7 +54,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 		for (Carriage carriage : train.carriages) {
 			CombinedTankWrapper fluids = carriage.storage.getFluids();
 			try (Transaction t = TransferUtil.getTransaction()) {
-				for (StorageView<FluidVariant> view : TransferUtil.getNonEmpty(fluids)) {
+				for (StorageView<FluidVariant> view : fluids.nonEmptyViews()) {
 					FluidStack fluidInTank = new FluidStack(view);
 					if (!FilterItem.test(level, fluidInTank, compareStack))
 						continue;

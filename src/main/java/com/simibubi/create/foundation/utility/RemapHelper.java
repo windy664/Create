@@ -244,7 +244,7 @@ public class RemapHelper {
 			String path = key.getPath();
 			ResourceLocation remappedId = reMap.get(path);
 			if (remappedId != null) {
-				Block remapped = Registry.BLOCK.get(remappedId);
+				Block remapped = BuiltInRegistries.BLOCK.get(remappedId);
 				if (remapped != null) {
 					Create.LOGGER.warn("Remapping block '{}' to '{}'", key, remappedId);
 					try {

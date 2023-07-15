@@ -20,6 +20,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
@@ -71,7 +72,7 @@ public class MountedStorage {
 			return false;
 
 		// There doesn't appear to be much of a standard for tagging chests/barrels
-		String blockId = Registry.BLOCK.getKey(blockState.getBlock())
+		String blockId = BuiltInRegistries.BLOCK.getKey(blockState.getBlock())
 			.getPath();
 		if (blockId.contains("ender"))
 			return false;
@@ -94,7 +95,7 @@ public class MountedStorage {
 				return;
 
 			handler = new ItemStackHandler(chest.getContainerSize());
-			for (int i = 0; i < handler.getSlots(); i++) {
+			for (int i = 0; i < handler.getSlotCount(); i++) {
 				handler.setStackInSlot(i, chest.getItem(i));
 			}
 			valid = true;
@@ -150,7 +151,7 @@ public class MountedStorage {
 
 		if (be instanceof ChestBlockEntity chest) {
 			for (int i = 0; i < chest.getContainerSize(); i++) {
-				ItemStack stack = i < handler.getSlots() ? handler.getStackInSlot(i) : ItemStack.EMPTY;
+				ItemStack stack = i < handler.getSlotCount() ? handler.getStackInSlot(i) : ItemStack.EMPTY;
 				chest.setItem(i, stack);
 			}
 			return;
@@ -166,7 +167,7 @@ public class MountedStorage {
 			try (Transaction t = TransferUtil.getTransaction()) {
 				// we need to remove whatever is in there to fill with our modified contents
 				TransferUtil.clearStorage(teHandler);
-				for (StorageView<ItemVariant> view : handler.nonEmptyIterable()) {
+				for (StorageView<ItemVariant> view : handler.nonEmptyViews()) {
 					teHandler.insert(view.getResource(), view.getAmount(), t);
 				}
 				t.commit();

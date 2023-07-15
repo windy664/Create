@@ -90,7 +90,7 @@ public enum AllPaletteStoneTypes {
 			paletteStoneVariants.baseBlock = baseBlock;
 			String id = Lang.asId(paletteStoneVariants.name());
 			paletteStoneVariants.materialTag =
-				AllTags.optionalTag(Registry.ITEM, Create.asResource("stone_types/" + id));
+				AllTags.optionalTag(BuiltInRegistries.ITEM, Create.asResource("stone_types/" + id));
 			paletteStoneVariants.variants = new PalettesVariantEntry(id, paletteStoneVariants);
 		}
 	}

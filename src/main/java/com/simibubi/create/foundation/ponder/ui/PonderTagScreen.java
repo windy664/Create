@@ -61,9 +61,9 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		PonderRegistry.TAGS.getItems(tag)
 			.stream()
 			.map(key -> {
-				Item item = Registry.ITEM.get(key);
+				Item item = BuiltInRegistries.ITEM.get(key);
 				if (item == null) {
-					Block b = Registry.BLOCK.get(key);
+					Block b = BuiltInRegistries.BLOCK.get(key);
 					if (b != null)
 						item = b.asItem();
 				}

@@ -251,7 +251,7 @@ public class MountedStorageManager {
 			}
 		}
 
-		int slotCount = primary.getSlots() + (secondary == null ? 0 : secondary.getSlots());
+		int slotCount = primary.getSlotCount() + (secondary == null ? 0 : secondary.getSlotCount());
 		if (slotCount == 0)
 			return false;
 		if (slotCount % 9 != 0)

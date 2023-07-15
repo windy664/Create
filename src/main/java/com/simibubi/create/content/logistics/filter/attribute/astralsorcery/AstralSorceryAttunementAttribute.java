@@ -24,7 +24,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
         String constellation = nbt.contains("constellation") ? nbt.getString("constellation") : nbt.getString("constellationName");
 
         // Special handling for shifting stars
-        ResourceLocation itemResource = Registry.ITEM.getKey(itemStack.getItem());
+        ResourceLocation itemResource = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
         if (itemResource != null && itemResource.toString().contains("shifting_star_")) {
             constellation = itemResource.toString().replace("shifting_star_", "");
         }
@@ -38,7 +38,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
         String constellation = nbt.contains("constellation") ? nbt.getString("constellation") : nbt.getString("constellationName");
 
         // Special handling for shifting stars
-        ResourceLocation itemResource = Registry.ITEM.getKey(itemStack.getItem());
+        ResourceLocation itemResource = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
         if (itemResource != null && itemResource.toString().contains("shifting_star_")) {
             constellation = itemResource.toString().replace("shifting_star_", "");
         }

@@ -57,7 +57,7 @@ public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 			return ItemStack.EMPTY;
 
 		ItemStack stack = clickedSlot.getItem();
-		int size = contentHolder.inventory.getSlots();
+		int size = contentHolder.inventory.getSlotCount();
 		boolean success = false;
 		if (index < size) {
 			success = !moveItemStackTo(stack, size, slots.size(), false);
@@ -75,7 +75,7 @@ public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 
 	@Override
 	public void clicked(int index, int flags, ClickType type, Player player) {
-		int size = contentHolder.inventory.getSlots();
+		int size = contentHolder.inventory.getSlotCount();
 
 		if (index >= 0 && index < size) {
 			ItemStack itemInClickedSlot = getSlot(index).getItem();
@@ -102,7 +102,7 @@ public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 
 	@Override
 	public boolean canDragTo(Slot slot) {
-		return slot.index > contentHolder.inventory.getSlots() && super.canDragTo(slot);
+		return slot.index > contentHolder.inventory.getSlotCount() && super.canDragTo(slot);
 	}
 
 	public ItemStack getFilter(int compartment) {

@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
@@ -118,7 +119,7 @@ public class FluidHelper {
 
 	public static FluidStack deserializeFluidStack(JsonObject json) {
 		ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(json, "fluid"));
-		Fluid fluid = Registry.FLUID.get(id);
+		Fluid fluid = BuiltInRegistries.FLUID.get(id);
 		if (fluid == null)
 			throw new JsonSyntaxException("Unknown fluid '" + id + "'");
 		int amount = GsonHelper.getAsInt(json, "amount");

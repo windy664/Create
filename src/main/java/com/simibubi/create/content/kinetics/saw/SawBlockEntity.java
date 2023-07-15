@@ -49,6 +49,7 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -81,7 +82,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements S
 
 	private static final Object cuttingRecipesKey = new Object();
 	public static final Supplier<RecipeType<?>> woodcuttingRecipeType =
-		Suppliers.memoize(() -> Registry.RECIPE_TYPE.get(new ResourceLocation("druidcraft", "woodcutting")));
+		Suppliers.memoize(() -> BuiltInRegistries.RECIPE_TYPE.get(new ResourceLocation("druidcraft", "woodcutting")));
 
 	public ProcessingInventory inventory;
 	private int recipeIndex;
@@ -196,7 +197,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements S
 			return;
 		inventory.remainingTime = 0;
 
-		for (int slot = 0; slot < inventory.getSlots(); slot++) {
+		for (int slot = 0; slot < inventory.getSlotCount(); slot++) {
 			ItemStack stack = inventory.getStackInSlot(slot);
 			if (stack.isEmpty())
 				continue;
@@ -221,12 +222,12 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements S
 				return;
 			if (level.isClientSide && !isVirtual())
 				return;
-			for (int slot = 0; slot < inventory.getSlots(); slot++) {
+			for (int slot = 0; slot < inventory.getSlotCount(); slot++) {
 				ItemStack stack = inventory.getStackInSlot(slot);
 				if (stack.isEmpty())
 					continue;
 				ItemStack remainder = behaviour.handleInsertion(stack, itemMovementFacing, false);
-				if (ItemStackUtil.equals(remainder, stack, false))
+				if (ItemStack.matches(remainder, stack))
 					continue;
 				inventory.setStackInSlot(slot, remainder);
 				changed = true;
@@ -244,7 +245,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements S
 				.add(0, .5, 0));
 		Vec3 outMotion = itemMovement.scale(.0625)
 			.add(0, .125, 0);
-		for (int slot = 0; slot < inventory.getSlots(); slot++) {
+		for (int slot = 0; slot < inventory.getSlotCount(); slot++) {
 			ItemStack stack = inventory.getStackInSlot(slot);
 			if (stack.isEmpty())
 				continue;
@@ -354,7 +355,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements S
 			}
 		}
 
-		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
+		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlotCount(); slot++)
 			inventory.setStackInSlot(slot + 1, list.get(slot));
 
 		award(AllAdvancements.SAW_PROCESSING);

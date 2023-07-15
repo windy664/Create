@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -111,10 +112,8 @@ public class PotatoCannonProjectileType {
 						JsonPrimitive primitive = element.getAsJsonPrimitive();
 						if (primitive.isString()) {
 							try {
-								Item item = Registry.ITEM.get(new ResourceLocation(primitive.getAsString()));
-								if (item != null) {
-									type.items.add(() -> item);
-								}
+								BuiltInRegistries.ITEM.getOptional(new ResourceLocation(primitive.getAsString()))
+										.ifPresent(item -> type.items.add(() -> item));
 							} catch (ResourceLocationException e) {
 								//
 							}
@@ -168,7 +167,7 @@ public class PotatoCannonProjectileType {
 		PotatoCannonProjectileType type = new PotatoCannonProjectileType();
 		int size = buffer.readVarInt();
 		for (int i = 0; i < size; i++) {
-			Item item = Registry.ITEM.get(buffer.readResourceLocation());
+			Item item = BuiltInRegistries.ITEM.get(buffer.readResourceLocation());
 			if (item != null) {
 				type.items.add(() -> item);
 			}

@@ -66,11 +66,11 @@ public class MountedStorageInteraction {
 		}
 
 		private ItemStackHandler handlerForSlot(int slot) {
-			return secondary == null || slot < primary.getSlots() ? primary : secondary;
+			return secondary == null || slot < primary.getSlotCount() ? primary : secondary;
 		}
 
 		private int actualSlot(int slot) {
-			return handlerForSlot(slot) == primary ? slot : slot - primary.getSlots();
+			return handlerForSlot(slot) == primary ? slot : slot - primary.getSlotCount();
 		}
 
 		private boolean oob(int slot) {
@@ -78,12 +78,12 @@ public class MountedStorageInteraction {
 				return true;
 			ItemStackHandler handler = handlerForSlot(slot);
 			slot = actualSlot(slot);
-			return slot >= handler.getSlots();
+			return slot >= handler.getSlotCount();
 		}
 
 		@Override
 		public int getContainerSize() {
-			return primary.getSlots() + (secondary == null ? 0 : secondary.getSlots());
+			return primary.getSlotCount() + (secondary == null ? 0 : secondary.getSlotCount());
 		}
 
 		@Override
@@ -157,9 +157,9 @@ public class MountedStorageInteraction {
 
 		@Override
 		public void clearContent() {
-			primary.setSize(primary.getSlots());
+			primary.setSize(primary.getSlotCount());
 			if (secondary != null)
-				secondary.setSize(secondary.getSlots());
+				secondary.setSize(secondary.getSlotCount());
 		}
 	}
 

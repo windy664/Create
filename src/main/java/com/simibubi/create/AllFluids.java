@@ -36,6 +36,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.FluidTags;
@@ -67,7 +68,7 @@ public class AllFluids {
 			.lang("Builder's Tea")
 			.tag(AllTags.forgeFluidTag("tea"))
 			.fluidAttributes(() -> new CreateAttributeHandler("fluid.create.tea"))
-			.onRegisterAfter(Registry.ITEM_REGISTRY, tea -> {
+			.onRegisterAfter(Registries.ITEM, tea -> {
 				Fluid still = tea.getSource();
 				FluidStorage.combinedItemApiProvider(AllItems.BUILDERS_TEA.get()).register(context ->
 						new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(still), FluidConstants.BOTTLE));
@@ -89,7 +90,7 @@ public class AllFluids {
 					.bucket()
 					.tag(AllTags.forgeItemTag("honey_buckets"))
 					.build()
-					.onRegisterAfter(Registry.ITEM_REGISTRY, honey -> {
+					.onRegisterAfter(Registries.ITEM, honey -> {
 						Fluid source = honey.getSource();
 						FluidStorage.combinedItemApiProvider(HONEY_BOTTLE).register(context ->
 								new FullItemFluidStorage(context, bottle -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(source), HONEY_BOTTLE_AMOUNT));
@@ -111,7 +112,7 @@ public class AllFluids {
 							.flowSpeed(3)
 							.blastResistance(100f))
 					.fluidAttributes(() -> new CreateAttributeHandler("block.create.chocolate", 1500, 1400))
-					.onRegisterAfter(Registry.ITEM_REGISTRY, chocolate -> {
+					.onRegisterAfter(Registries.ITEM, chocolate -> {
 						Fluid source = chocolate.getSource();
 						// transfer values
 						FluidStorage.combinedItemApiProvider(source.getBucket()).register(context ->

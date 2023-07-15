@@ -27,17 +27,17 @@ public final class RegisteredObjects {
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(Block value) {
-		return getKeyOrThrow(Registry.BLOCK, value);
+		return getKeyOrThrow(BuiltInRegistries.BLOCK, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(Item value) {
-		return getKeyOrThrow(Registry.ITEM, value);
+		return getKeyOrThrow(BuiltInRegistries.ITEM, value);
 	}
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(Fluid value) {
-		return getKeyOrThrow(Registry.FLUID, value);
+		return getKeyOrThrow(BuiltInRegistries.FLUID, value);
 	}
 
 	@NotNull
@@ -47,7 +47,7 @@ public final class RegisteredObjects {
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(BlockEntityType<?> value) {
-		return getKeyOrThrow(Registry.BLOCK_ENTITY_TYPE, value);
+		return getKeyOrThrow(BuiltInRegistries.BLOCK_ENTITY_TYPE, value);
 	}
 
 	@NotNull
@@ -62,6 +62,6 @@ public final class RegisteredObjects {
 
 	@NotNull
 	public static ResourceLocation getKeyOrThrow(RecipeSerializer<?> value) {
-		return getKeyOrThrow(Registry.RECIPE_SERIALIZER, value);
+		return getKeyOrThrow(BuiltInRegistries.RECIPE_SERIALIZER, value);
 	}
 }

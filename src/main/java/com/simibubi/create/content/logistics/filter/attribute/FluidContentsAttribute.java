@@ -52,7 +52,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 	public void writeNBT(CompoundTag nbt) {
 		if (fluid == null)
 			return;
-		ResourceLocation id = Registry.FLUID.getKey(fluid);
+		ResourceLocation id = BuiltInRegistries.FLUID.getKey(fluid);
 		if (id == null)
 			return;
 		nbt.putString("id", id.toString());
@@ -60,7 +60,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 
 	@Override
 	public ItemAttribute readNBT(CompoundTag nbt) {
-		return nbt.contains("id") ? new FluidContentsAttribute(Registry.FLUID.get(ResourceLocation.tryParse(nbt.getString("id")))) : EMPTY;
+		return nbt.contains("id") ? new FluidContentsAttribute(BuiltInRegistries.FLUID.get(ResourceLocation.tryParse(nbt.getString("id")))) : EMPTY;
 	}
 
 	private List<Fluid> extractFluids(ItemStack stack) {

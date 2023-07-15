@@ -84,6 +84,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.BlockItem;
@@ -308,7 +309,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 				if (i instanceof PotionItem) {
 					FluidStack potion = PotionFluidHandler.getFluidFromPotionItem(is);
 					Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
-					ResourceLocation iid = Registry.ITEM.getKey(i);
+					ResourceLocation iid = BuiltInRegistries.ITEM.getKey(i);
 					ResourceLocation pid = Registry.POTION.getKey(PotionUtils.getPotion(is));
 					consumer.accept(new SpoutEmiRecipe(new ProcessingRecipeBuilder<>(FillingRecipe::new,
 						new ResourceLocation("emi", "create/potion_filling/" + pid.getNamespace() + "/" + pid.getPath()
@@ -345,8 +346,8 @@ public class CreateEmiPlugin implements EmiPlugin {
 						ItemStack container = ctx.getItemVariant().toStack(ItemHelper.truncateLong(ctx.getAmount()));
 						if (inserted != 0 && !container.sameItemStackIgnoreDurability(copy) && !container.isEmpty()) {
 							Ingredient bucket = Ingredient.of(is);
-							ResourceLocation itemId = Registry.ITEM.getKey(is.getItem());
-							ResourceLocation fluidId = Registry.FLUID.getKey(fs.getFluid());
+							ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(is.getItem());
+							ResourceLocation fluidId = BuiltInRegistries.FLUID.getKey(fs.getFluid());
 							consumer.accept(new SpoutEmiRecipe(new ProcessingRecipeBuilder<>(FillingRecipe::new,
 							new ResourceLocation("emi", "create/filling/" + itemId.getNamespace() + "/" + itemId.getPath()
 									+ "/with/" + fluidId.getNamespace() + "/" + fluidId.getPath()))
@@ -364,8 +365,8 @@ public class CreateEmiPlugin implements EmiPlugin {
 					FluidStack extracted = TransferUtil.extractAnyFluid(storage, FluidConstants.BUCKET);
 					ItemStack result = ctx.getItemVariant().toStack(ItemHelper.truncateLong(ctx.getAmount()));
 					if (!extracted.isEmpty() && !result.isEmpty()) {
-						ResourceLocation itemId = Registry.ITEM.getKey(is.getItem());
-						ResourceLocation fluidId = Registry.FLUID.getKey(extracted.getFluid());
+						ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(is.getItem());
+						ResourceLocation fluidId = BuiltInRegistries.FLUID.getKey(extracted.getFluid());
 						consumer.accept(new DrainEmiRecipe(new ProcessingRecipeBuilder<>(EmptyingRecipe::new,
 							new ResourceLocation("emi", "create/draining/" + itemId.getNamespace() + "/" + itemId.getPath()
 								+ "/from/" + fluidId.getNamespace() + "/" + fluidId.getPath()))
@@ -394,8 +395,8 @@ public class CreateEmiPlugin implements EmiPlugin {
 				}
 			}
 			if (toolbox == null || dye == null) return;
-			ResourceLocation toolboxId = Registry.ITEM.getKey(toolbox.getItem());
-			ResourceLocation dyeId = Registry.ITEM.getKey(dye.getItem());
+			ResourceLocation toolboxId = BuiltInRegistries.ITEM.getKey(toolbox.getItem());
+			ResourceLocation dyeId = BuiltInRegistries.ITEM.getKey(dye.getItem());
 			String recipeName = "create/toolboxes/%s/%s/%s/%s"
 					.formatted(toolboxId.getNamespace(), toolboxId.getPath(), dyeId.getNamespace(), dyeId.getPath());
 			registry.addRecipe(new EmiCraftingRecipe(

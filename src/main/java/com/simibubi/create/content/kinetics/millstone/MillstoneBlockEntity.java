@@ -85,7 +85,7 @@ public class MillstoneBlockEntity extends KineticBlockEntity implements SidedSto
 
 		if (getSpeed() == 0)
 			return;
-		for (int i = 0; i < outputInv.getSlots(); i++)
+		for (int i = 0; i < outputInv.getSlotCount(); i++)
 			if (outputInv.getStackInSlot(i)
 				.getCount() == outputInv.getSlotLimit(i))
 				return;

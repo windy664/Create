@@ -398,7 +398,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (block == null)
 			return null;
 
-		ResourceLocation rl = Registry.BLOCK.getKey(block);
+		ResourceLocation rl = BuiltInRegistries.BLOCK.getKey(block);
 		String namespace = rl.getNamespace();
 		String blockName = rl.getPath();
 		int nameLength = blockName.length();
@@ -412,8 +412,8 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 			possibleSlabLocations.add(blockName.substring(0, nameLength - 7) + "_slab");
 
 		for (String locationAttempt : possibleSlabLocations) {
-			ResourceKey<Block> key = ResourceKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(namespace, locationAttempt));
-			Optional<Block> result = Registry.BLOCK.getHolder(key)
+			ResourceKey<Block> key = ResourceKey.create(BuiltInRegistries.BLOCK_REGISTRY, new ResourceLocation(namespace, locationAttempt));
+			Optional<Block> result = BuiltInRegistries.BLOCK.getHolder(key)
 				.map(slabHolder -> slabHolder.value());
 			if (result.isEmpty())
 				continue;

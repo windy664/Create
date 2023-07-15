@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -83,7 +84,7 @@ public class ProcessingOutput {
 		String itemId = GsonHelper.getAsString(json, "item");
 		int count = GsonHelper.getAsInt(json, "count", 1);
 		float chance = GsonHelper.isValidNode(json, "chance") ? GsonHelper.getAsFloat(json, "chance") : 1;
-		ItemStack itemstack = new ItemStack(Registry.ITEM.get(new ResourceLocation(itemId)), count);
+		ItemStack itemstack = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(itemId)), count);
 
 		if (GsonHelper.isValidNode(json, "nbt")) {
 			try {

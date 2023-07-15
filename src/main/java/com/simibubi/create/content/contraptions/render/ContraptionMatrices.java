@@ -93,7 +93,7 @@ public class ContraptionMatrices {
 		double x = Mth.lerp(partialTicks, entity.xOld, entity.getX());
 		double y = Mth.lerp(partialTicks, entity.yOld, entity.getY());
 		double z = Mth.lerp(partialTicks, entity.zOld, entity.getZ());
-		Matrix4fHelper.setTranslation(matrix, (float) x, (float) y, (float) z);
+		matrix.setTranslation((float) x, (float) y, (float) z);
 	}
 
 	public static void clearStack(PoseStack ms) {

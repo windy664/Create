@@ -1,10 +1,9 @@
 package com.simibubi.create.foundation.item;
 
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 public class TagDependentIngredientItem extends Item {
 
@@ -16,9 +15,10 @@ public class TagDependentIngredientItem extends Item {
 	}
 
 	public boolean shouldHide() {
-		boolean tagMissing = !Registry.ITEM.isKnownTagName(this.tag);
-		boolean tagEmpty = tagMissing || !Registry.ITEM.getTagOrEmpty(this.tag).iterator().hasNext();
-		return tagMissing || tagEmpty;
+		for (Holder<Item> ignored : BuiltInRegistries.ITEM.getTagOrEmpty(this.tag)) {
+			return false; // at least 1 present
+		}
+		return true; // none present
 	}
 
 }

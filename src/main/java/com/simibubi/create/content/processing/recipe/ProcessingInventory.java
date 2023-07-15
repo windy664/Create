@@ -40,7 +40,7 @@ public class ProcessingInventory extends ItemStackHandlerContainer {
 	}
 
 	public void clear() {
-		setSize(getSlots());
+		setSize(getSlotCount());
 		remainingTime = 0;
 		recipeDuration = 0;
 		appliedRecipe = false;
@@ -79,7 +79,7 @@ public class ProcessingInventory extends ItemStackHandlerContainer {
 	}
 
 	@Override
-	public boolean isItemValid(int slot, ItemVariant resource, long amount) {
+	public boolean isItemValid(int slot, ItemVariant resource) {
 		return slot == 0 && isEmpty();
 	}
 
@@ -89,17 +89,12 @@ public class ProcessingInventory extends ItemStackHandlerContainer {
 	}
 
 	@Override
-	public Iterator<? extends StorageView<ItemVariant>> nonEmptyViews() {
-		Iterator<? extends StorageView<ItemVariant>> original = super.nonEmptyViews();
-		return new AbstractIterator<>() {
-			@Nullable
-			@Override
-			protected StorageView<ItemVariant> computeNext() {
-				if (!original.hasNext())
-					return endOfData();
-				StorageView<ItemVariant> next = original.next();
-				return new ViewOnlyWrappedStorageView<>(next);
-			}
-		};
+	public Iterable<StorageView<ItemVariant>> nonEmptyViews() {
+		return this::nonEmptyIterator;
+	}
+
+	@Override
+	public Iterator<StorageView<ItemVariant>> nonEmptyIterator() {
+		return new ViewOnlyWrappedIterator<>(super.nonEmptyIterator());
 	}
 }

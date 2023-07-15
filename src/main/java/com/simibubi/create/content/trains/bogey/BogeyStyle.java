@@ -21,6 +21,7 @@ import com.simibubi.create.content.trains.entity.CarriageBogey;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -83,7 +84,7 @@ private Map<BogeySizes.BogeySize, ResourceLocation> sizes;
 	}
 
 	public Block getBlockOfSize(BogeySizes.BogeySize size) {
-		return Registry.BLOCK.get(sizes.get(size));
+		return BuiltInRegistries.BLOCK.get(sizes.get(size));
 	}
 
 	public Set<BogeySizes.BogeySize> validSizes() {

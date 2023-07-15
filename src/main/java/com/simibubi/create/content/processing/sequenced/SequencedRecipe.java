@@ -10,6 +10,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -73,7 +74,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 	public static SequencedRecipe<?> readFromBuffer(FriendlyByteBuf buffer) {
 		ResourceLocation resourcelocation = buffer.readResourceLocation();
 		ResourceLocation resourcelocation1 = buffer.readResourceLocation();
-		RecipeSerializer<?> serializer = Registry.RECIPE_SERIALIZER.get(resourcelocation);
+		RecipeSerializer<?> serializer = BuiltInRegistries.RECIPE_SERIALIZER.get(resourcelocation);
 		if (!(serializer instanceof ProcessingRecipeSerializer))
 			throw new JsonParseException("Not a supported recipe type");
 		@SuppressWarnings("rawtypes")

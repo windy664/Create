@@ -51,7 +51,7 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 			return new StationPeripheral(sbe);
 
 		throw new IllegalArgumentException(
-			"No peripheral available for " + Registry.BLOCK_ENTITY_TYPE.getKey(be.getType()));
+			"No peripheral available for " + BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(be.getType()));
 	}
 
 	@Override

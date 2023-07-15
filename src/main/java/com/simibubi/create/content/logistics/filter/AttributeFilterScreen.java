@@ -196,7 +196,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 	protected void containerTick() {
 		super.containerTick();
 		ItemStack stackInSlot = menu.ghostInventory.getStackInSlot(0);
-		if (!ItemStackUtil.equals(stackInSlot, lastItemScanned, false))
+		if (!ItemStack.matches(stackInSlot, lastItemScanned))
 			referenceItemChanged(stackInSlot);
 	}
 

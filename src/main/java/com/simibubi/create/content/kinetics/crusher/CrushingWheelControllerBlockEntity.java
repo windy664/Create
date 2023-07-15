@@ -66,8 +66,8 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 		inventory = new ProcessingInventory(this::itemInserted) {
 
 			@Override
-			public boolean isItemValid(int slot, ItemVariant stack, long amount) {
-				return super.isItemValid(slot, stack, amount) && processingEntity == null;
+			public boolean isItemValid(int slot, ItemVariant stack) {
+				return super.isItemValid(slot, stack) && processingEntity == null;
 			}
 
 		};
@@ -155,12 +155,12 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 					boolean changed = false;
 					if (!behaviour.canInsertFromSide(facing))
 						return;
-					for (int slot = 0; slot < inventory.getSlots(); slot++) {
+					for (int slot = 0; slot < inventory.getSlotCount(); slot++) {
 						ItemStack stack = inventory.getStackInSlot(slot);
 						if (stack.isEmpty())
 							continue;
 						ItemStack remainder = behaviour.handleInsertion(stack, facing, false);
-						if (ItemStackUtil.equals(stack, remainder, false))
+						if (ItemStack.matches(stack, remainder))
 							continue;
 						inventory.setStackInSlot(slot, remainder);
 						changed = true;
@@ -174,7 +174,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 			}
 
 			// Eject Items
-			for (int slot = 0; slot < inventory.getSlots(); slot++) {
+			for (int slot = 0; slot < inventory.getSlotCount(); slot++) {
 				ItemStack stack = inventory.getStackInSlot(slot);
 				if (stack.isEmpty())
 					continue;
@@ -307,7 +307,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 					ItemHelper.addToList(stack, list);
 				}
 			}
-			for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
+			for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlotCount(); slot++)
 				inventory.setStackInSlot(slot + 1, list.get(slot));
 		} else {
 			inventory.clear();

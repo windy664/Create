@@ -17,7 +17,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 public enum ContraptionMovementSetting {
 	MOVABLE, NO_PICKUP, UNMOVABLE;
 
-	private static final AttachedRegistry<Block, Supplier<ContraptionMovementSetting>> SETTING_SUPPLIERS = new AttachedRegistry<>(Registry.BLOCK);
+	private static final AttachedRegistry<Block, Supplier<ContraptionMovementSetting>> SETTING_SUPPLIERS = new AttachedRegistry<>(BuiltInRegistries.BLOCK);
 
 	public static void register(ResourceLocation block, Supplier<ContraptionMovementSetting> settingSupplier) {
 		SETTING_SUPPLIERS.register(block, settingSupplier);

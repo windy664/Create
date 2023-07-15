@@ -26,7 +26,7 @@ public class CountedItemStackList {
 
 	public CountedItemStackList(Storage<ItemVariant> inventory, FilteringBehaviour filteringBehaviour) {
 		try (Transaction t = TransferUtil.getTransaction()) {
-			for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(inventory)) {
+			for (StorageView<ItemVariant> view : inventory.nonEmptyViews()) {
 				ItemVariant resource = view.getResource();
 				ItemStack stack = resource.toStack();
 				if (!filteringBehaviour.test(stack))

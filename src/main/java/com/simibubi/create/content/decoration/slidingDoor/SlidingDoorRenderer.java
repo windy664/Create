@@ -51,7 +51,7 @@ public class SlidingDoorRenderer extends SafeBlockEntityRenderer<SlidingDoorBloc
 
 		if (((SlidingDoorBlock) blockState.getBlock()).isFoldingDoor()) {
 			Couple<PartialModel> partials =
-				AllPartialModels.FOLDING_DOORS.get(Registry.BLOCK.getKey(blockState.getBlock()));
+				AllPartialModels.FOLDING_DOORS.get(BuiltInRegistries.BLOCK.getKey(blockState.getBlock()));
 
 			boolean flip = blockState.getValue(DoorBlock.HINGE) == DoorHingeSide.RIGHT;
 			for (boolean left : Iterate.trueAndFalse) {

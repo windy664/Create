@@ -115,7 +115,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 	private static BlockState getLogBlockState(String namespace, String wood) {
 		for (String suffix : LOG_SUFFIXES) {
 			Optional<BlockState> state =
-				Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(namespace, wood + suffix)))
+				BuiltInRegistries.BLOCK.getHolder(ResourceKey.create(BuiltInRegistries.BLOCK_REGISTRY, new ResourceLocation(namespace, wood + suffix)))
 					.map(Holder::value)
 					.map(Block::defaultBlockState);
 			if (state.isPresent())

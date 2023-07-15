@@ -833,7 +833,7 @@ if (printer.isErrored())
 				Storage<ItemVariant> storage = entry.getValue().get(entry.getKey().getOpposite());
 				if (storage == null)
 					continue;
-				TransferUtil.getNonEmpty(storage).forEach(checklist::collect);
+				storage.nonEmptyViews().forEach(checklist::collect);
 			}
 		}
 		sendUpdate = true;

@@ -73,10 +73,10 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	AllRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier, Supplier<RecipeType<?>> typeSupplier, boolean registerType) {
 		String name = Lang.asId(name());
 		id = Create.asResource(name);
-		serializerObject = Registry.register(Registry.RECIPE_SERIALIZER, id, serializerSupplier.get());
+		serializerObject = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, serializerSupplier.get());
 		if (registerType) {
 			typeObject = typeSupplier.get();
-			Registry.register(Registry.RECIPE_TYPE, id, typeObject);
+			Registry.register(BuiltInRegistries.RECIPE_TYPE, id, typeObject);
 			type = typeSupplier;
 		} else {
 			typeObject = null;
@@ -87,9 +87,9 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	AllRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier) {
 		String name = Lang.asId(name());
 		id = Create.asResource(name);
-		serializerObject = Registry.register(Registry.RECIPE_SERIALIZER, id, serializerSupplier.get());
+		serializerObject = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, serializerSupplier.get());
 		typeObject = simpleType(id);
-		Registry.register(Registry.RECIPE_TYPE, id, typeObject);
+		Registry.register(BuiltInRegistries.RECIPE_TYPE, id, typeObject);
 		type = () -> typeObject;
 	}
 

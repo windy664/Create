@@ -22,7 +22,7 @@
 //		float occupied = 0;
 //		float totalSpace = 0;
 //
-//		for (int slot = 1; slot < inv.getSlots(); slot++) {
+//		for (int slot = 1; slot < inv.getSlotCount(); slot++) {
 //			ItemStack stackInSlot = inv.getStackInSlot(slot);
 //			int space = inv.getSlotLimit(slot);
 //			int count = stackInSlot.getCount();

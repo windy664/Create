@@ -1059,7 +1059,7 @@ public class Train {
 				continue;
 
 			try (Transaction t = TransferUtil.getTransaction()) {
-				for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(fuelItems)) {
+				for (StorageView<ItemVariant> view : fuelItems.nonEmptyViews()) {
 					ItemVariant held = view.getResource();
 					Integer burnTime = FuelRegistry.INSTANCE.get(held.getItem());
 					if (burnTime == null || burnTime <= 0)

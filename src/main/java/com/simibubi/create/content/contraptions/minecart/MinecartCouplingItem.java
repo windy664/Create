@@ -49,10 +49,10 @@ public class MinecartCouplingItem extends Item {
 
 		ItemStack heldItem = player.getItemInHand(hand);
 		if (AllItems.MINECART_COUPLING.isIn(heldItem)) {
-			if (!onCouplingInteractOnMinecart(player.level, minecart, player, controller))
+			if (!onCouplingInteractOnMinecart(player.level(), minecart, player, controller))
 				return InteractionResult.PASS;
 		} else if (AllItems.WRENCH.isIn(heldItem)) {
-			if (!onWrenchInteractOnMinecart(player.level, minecart, player, controller))
+			if (!onWrenchInteractOnMinecart(player.level(), minecart, player, controller))
 				return InteractionResult.PASS;
 		} else
 			return InteractionResult.PASS;

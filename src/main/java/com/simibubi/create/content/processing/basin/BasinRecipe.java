@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -92,7 +93,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 		try (Transaction t = TransferUtil.getTransaction()) {
 			Ingredients: for (Ingredient ingredient : ingredients) {
-				for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(availableItems)) {
+				for (StorageView<ItemVariant> view : availableItems.nonEmptyViews()) {
 					ItemVariant var = view.getResource();
 					ItemStack stack = var.toStack();
 					if (!ingredient.test(stack)) continue;
@@ -112,7 +113,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			boolean fluidsAffected = false;
 			FluidIngredients: for (FluidIngredient fluidIngredient : fluidIngredients) {
 			long amountRequired = fluidIngredient.getRequiredAmount();
-				for (StorageView<FluidVariant> view : TransferUtil.getNonEmpty(availableFluids)) {
+				for (StorageView<FluidVariant> view : availableFluids.nonEmptyViews()) {
 					FluidStack fluidStack = new FluidStack(view);
 					if (!fluidIngredient.test(fluidStack)) continue;
 					long drainedAmount = Math.min(amountRequired, fluidStack.getAmount());

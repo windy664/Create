@@ -95,7 +95,7 @@ public final class DoubleItemIcon implements EmiRenderable {
 
 	public static boolean isUnbatchable(ItemStack stack) {
 		return stack.hasFoil() ||
-				ColorProviderRegistry.ITEM.get(stack.getItem()) != null ||
+				ColorProviderBuiltInRegistries.ITEM.get(stack.getItem()) != null ||
 				Minecraft.getInstance().getItemRenderer().getModel(stack, null, null, 0).isCustomRenderer();
 	}
 

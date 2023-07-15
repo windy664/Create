@@ -34,6 +34,8 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -131,7 +133,7 @@ public interface ItemAttribute {
 		DUMMY(s -> false),
 		PLACEABLE(s -> s.getItem() instanceof BlockItem),
 		CONSUMABLE(ItemStack::isEdible),
-		FLUID_CONTAINER(s -> ContainerItemContext.withInitial(s).find(FluidStorage.ITEM) != null),
+		FLUID_CONTAINER(s -> ContainerItemContext.withConstant(s).find(FluidStorage.ITEM) != null),
 		ENCHANTED(ItemStack::isEnchanted),
 		MAX_ENCHANTED(StandardTraits::maxEnchanted),
 		RENAMED(ItemStack::hasCustomHoverName),
@@ -266,7 +268,7 @@ public interface ItemAttribute {
 
 		@Override
 		public ItemAttribute readNBT(CompoundTag nbt) {
-			return new InTag(TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(nbt.getString("space"), nbt.getString("path"))));
+			return new InTag(TagKey.create(Registries.ITEM, new ResourceLocation(nbt.getString("space"), nbt.getString("path"))));
 		}
 
 	}
@@ -281,12 +283,12 @@ public interface ItemAttribute {
 
 		@Override
 		public boolean appliesTo(ItemStack stack) {
-			return modId.equals(Registry.ITEM.getKey(stack.getItem()).getNamespace());
+			return modId.equals(BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace());
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			String id = Registry.ITEM.getKey(stack.getItem()).getNamespace();
+			String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace();
 			return id == null ? Collections.emptyList() : Arrays.asList(new AddedBy(id));
 		}
 

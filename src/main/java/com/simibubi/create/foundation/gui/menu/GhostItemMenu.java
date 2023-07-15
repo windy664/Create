@@ -34,7 +34,7 @@ public abstract class GhostItemMenu<T> extends MenuBase<T> implements IClearable
 
 	@Override
 	public void clearContents() {
-		for (int i = 0; i < ghostInventory.getSlots(); i++)
+		for (int i = 0; i < ghostInventory.getSlotCount(); i++)
 			ghostInventory.setStackInSlot(i, ItemStack.EMPTY);
 	}
 
@@ -87,7 +87,7 @@ public abstract class GhostItemMenu<T> extends MenuBase<T> implements IClearable
 	public ItemStack quickMoveStack(Player playerIn, int index) {
 		if (index < 36) {
 			ItemStack stackToInsert = playerInventory.getItem(index);
-			for (int i = 0; i < ghostInventory.getSlots(); i++) {
+			for (int i = 0; i < ghostInventory.getSlotCount(); i++) {
 				ItemStack stack = ghostInventory.getStackInSlot(i);
 				if (!allowRepeats() && ItemHandlerHelper.canItemStacksStack(stack, stackToInsert))
 					break;

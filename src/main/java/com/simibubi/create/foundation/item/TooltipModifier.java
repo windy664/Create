@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.item;
 
 import java.util.List;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.Player;
 
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public interface TooltipModifier {
-	AttachedRegistry<Item, TooltipModifier> REGISTRY = new AttachedRegistry<>(Registry.ITEM);
+	AttachedRegistry<Item, TooltipModifier> REGISTRY = new AttachedRegistry<>(BuiltInRegistries.ITEM);
 
 	TooltipModifier EMPTY = new TooltipModifier() {
 		@Override

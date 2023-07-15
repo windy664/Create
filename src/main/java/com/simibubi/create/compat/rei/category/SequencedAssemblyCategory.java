@@ -147,7 +147,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	}
 
 	private ReiSequencedAssemblySubCategory getSubCategory(SequencedRecipe<?> sequencedRecipe) {
-		return subCategories.computeIfAbsent(Registry.RECIPE_SERIALIZER.getKey(sequencedRecipe.getRecipe()
+		return subCategories.computeIfAbsent(BuiltInRegistries.RECIPE_SERIALIZER.getKey(sequencedRecipe.getRecipe()
 						.getSerializer()),
 				rl -> sequencedRecipe.getAsAssemblyRecipe()
 						.getJEISubCategory()
