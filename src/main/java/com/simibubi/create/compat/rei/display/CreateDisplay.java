@@ -1,5 +1,7 @@
 package com.simibubi.create.compat.rei.display;
 
+import static com.simibubi.create.compat.rei.category.CreateRecipeCategory.getResultItem;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class CreateDisplay<R extends Recipe<?>> implements Display {
 	}
 
 	public CreateDisplay(R recipe, CategoryIdentifier<CreateDisplay<R>> id) {
-		this(recipe, id, EntryIngredients.ofIngredients(recipe.getIngredients()), Collections.singletonList(EntryIngredients.of(recipe.getResultItem())));
+		this(recipe, id, EntryIngredients.ofIngredients(recipe.getIngredients()), Collections.singletonList(EntryIngredients.of(getResultItem(recipe))));
 	}
 
 	public R getRecipe() {

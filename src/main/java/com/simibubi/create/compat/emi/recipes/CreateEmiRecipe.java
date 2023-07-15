@@ -28,6 +28,8 @@ import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.TextureWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -65,7 +67,7 @@ public abstract class CreateEmiRecipe<T extends Recipe<?>> implements EmiRecipe 
 			this.input = input.build();
 			this.output = output.build();
 		} else if (recipe instanceof SequencedAssemblyRecipe sequenced) {
-			this.output = List.of(EmiStack.of(recipe.getResultItem()).setChance(sequenced.getOutputChance()));
+			this.output = List.of(getResultEmi(recipe).setChance(sequenced.getOutputChance()));
 			int loops = sequenced.getLoops();
 			ImmutableList.Builder<EmiIngredient> input = ImmutableList.builder();
 			input.add(EmiIngredient.of(sequenced.getIngredient()));
@@ -89,7 +91,7 @@ public abstract class CreateEmiRecipe<T extends Recipe<?>> implements EmiRecipe 
 				}
 				this.output = builder.build();
 			} else {
-				this.output = List.of(EmiStack.of(recipe.getResultItem()));
+				this.output = List.of(getResultEmi(recipe));
 			}
 		}
 	}
@@ -143,7 +145,7 @@ public abstract class CreateEmiRecipe<T extends Recipe<?>> implements EmiRecipe 
 	}
 
 	public static EmiStack fluidStack(FluidStack stack) {
-		return EmiStack.of(stack.getType(), stack.getAmount());
+		return EmiStack.of(stack.getFluid(), stack.getAmount());
 	}
 
 	public static TextureWidget addTexture(WidgetHolder widgets, AllGuiTextures texture, int x, int y) {
@@ -164,5 +166,16 @@ public abstract class CreateEmiRecipe<T extends Recipe<?>> implements EmiRecipe 
 
 	public static EmiStack firstResultOrEmpty(List<ProcessingOutput> outputs) {
 		return firstOrElse(outputs, EmiStack.EMPTY, output -> EmiStack.of(output.getStack()));
+	}
+
+	public static ItemStack getResultItem(Recipe<?> recipe) {
+		ClientLevel level = Minecraft.getInstance().level;
+		if (level == null)
+			return ItemStack.EMPTY;
+		return recipe.getResultItem(level.registryAccess());
+	}
+
+	public static EmiStack getResultEmi(Recipe<?> recipe) {
+		return EmiStack.of(getResultItem(recipe));
 	}
 }

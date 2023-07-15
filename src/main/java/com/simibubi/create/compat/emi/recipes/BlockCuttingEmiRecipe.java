@@ -97,12 +97,12 @@ public class BlockCuttingEmiRecipe extends CreateEmiRecipe<CondensedBlockCutting
 				}
 				for (CondensedBlockCuttingRecipe condensedRecipe : condensed) {
 					if (ItemHelper.matchIngredients(ingredient, condensedRecipe.getIngredients().get(0))) {
-						condensedRecipe.addOutput(recipe.getResultItem());
+						condensedRecipe.addOutput(CreateEmiRecipe.getResultItem(recipe));
 						continue outer;
 					}
 				}
 				CondensedBlockCuttingRecipe cr = new CondensedBlockCuttingRecipe(ingredient);
-				cr.addOutput(recipe.getResultItem());
+				cr.addOutput(CreateEmiRecipe.getResultItem(recipe));
 				condensed.add(cr);
 			}
 			return condensed;

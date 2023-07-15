@@ -17,6 +17,7 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -60,7 +61,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		CraftingRecipe recipe = display.getRecipe();
 
 		Slot result = Widgets.createSlot(new Point( pos.x + 134, pos.y + 81))
-				.entries(List.of(EntryStacks.of(recipe.getResultItem())))
+				.entries(List.of(EntryStacks.of(getResultItem(recipe))))
 				.disableBackground();
 		widgets.add(result);
 
@@ -88,7 +89,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	@Override
-	public void draw(CraftingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(CraftingRecipe recipe, GuiGraphics graphics, double mouseX, double mouseY) {
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(0, -4, 0); // why?
 		matrixStack.pushPose();
@@ -103,15 +105,15 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 				matrixStack.pushPose();
 				matrixStack.translate(col * 19 * scale, row * 19 * scale, 0);
 				matrixStack.scale(scale, scale, scale);
-				AllGuiTextures.JEI_SLOT.render(matrixStack, 0, 0);
+				AllGuiTextures.JEI_SLOT.render(graphics, 0, 0);
 				matrixStack.popPose();
 			}
 
 		matrixStack.popPose();
 
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 133, 80);
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 128, 59);
-		crafter.draw(matrixStack, 129, 25);
+		AllGuiTextures.JEI_SLOT.render(graphics, 133, 80);
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 128, 59);
+		crafter.draw(graphics, 129, 25);
 
 		matrixStack.pushPose();
 		matrixStack.translate(0, 0, 300);
@@ -123,7 +125,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			amount++;
 		}
 
-		Minecraft.getInstance().font.drawShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
+		graphics.drawString(Minecraft.getInstance().font, String.valueOf(amount), 142, 39, 0xFFFFFF, true);
 		matrixStack.popPose();
 		matrixStack.popPose();
 	}

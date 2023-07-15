@@ -6,6 +6,7 @@ import com.simibubi.create.compat.emi.CreateEmiPlugin;
 import com.simibubi.create.content.kinetics.fan.HauntingRecipe;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.Blocks;
 
 public class FanHauntingEmiRecipe extends FanEmiRecipe.MultiOutput<HauntingRecipe> {
@@ -15,11 +16,11 @@ public class FanHauntingEmiRecipe extends FanEmiRecipe.MultiOutput<HauntingRecip
 	}
 
 	@Override
-	protected void renderAttachedBlock(PoseStack matrices) {
+	protected void renderAttachedBlock(GuiGraphics graphics) {
 		GuiGameElement.of(Blocks.SOUL_FIRE.defaultBlockState())
 			.scale(SCALE)
 			.atLocal(0, 0, 2)
 			.lighting(CreateEmiAnimations.DEFAULT_LIGHTING)
-			.render(matrices);
+			.render(graphics);
 	}
 }

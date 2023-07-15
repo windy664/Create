@@ -7,6 +7,7 @@ import com.simibubi.create.compat.rei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.kinetics.fan.SplashingRecipe;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.material.Fluids;
 
 public class FanWashingCategory extends ProcessingViaFanCategory.MultiOutput<SplashingRecipe> {
@@ -16,12 +17,12 @@ public class FanWashingCategory extends ProcessingViaFanCategory.MultiOutput<Spl
 	}
 
 	@Override
-	protected void renderAttachedBlock(@NotNull PoseStack matrixStack) {
+	protected void renderAttachedBlock(@NotNull GuiGraphics graphics) {
 		GuiGameElement.of(Fluids.WATER)
 				.scale(SCALE)
 				.atLocal(0, 0, 2)
 				.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
-				.render(matrixStack);
+				.render(graphics);
 	}
 
 }

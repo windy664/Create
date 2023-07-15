@@ -36,7 +36,9 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -153,6 +155,13 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 	public static Slot basicSlot(int x, int y, Point origin) {
 		return Widgets.createSlot(point(origin.getX() + x, origin.getY() + y)).disableBackground();
+	}
+
+	public static ItemStack getResultItem(Recipe<?> recipe) {
+		ClientLevel level = Minecraft.getInstance().level;
+		if (level == null)
+			return ItemStack.EMPTY;
+		return recipe.getResultItem(level.registryAccess());
 	}
 
 	public static List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
@@ -286,8 +295,8 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 			PoseStack poseStack = graphics.pose();
 			poseStack.pushPose();
 			poseStack.translate(bounds.getX(), bounds.getY() + 4, 0);
-			draw(display.getRecipe(), graphics, poseStack, mouseX, mouseY);
-			draw(display.getRecipe(), display, graphics, poseStack, mouseX, mouseY);
+			draw(display.getRecipe(), graphics, mouseX, mouseY);
+			draw(display.getRecipe(), display, graphics, mouseX, mouseY);
 			poseStack.popPose();
 		}));
 		addWidgets(display, widgets, new Point(bounds.getX(), bounds.getY() + 4));
@@ -295,10 +304,10 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 		return widgets;
 	}
 
-	public void draw(T recipe, GuiGraphics graphics, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(T recipe, GuiGraphics graphics, double mouseX, double mouseY) {
 	}
 
-	public void draw(T recipe, CreateDisplay<T> display, GuiGraphics graphics, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(T recipe, CreateDisplay<T> display, GuiGraphics graphics, double mouseX, double mouseY) {
 	}
 
 	public record Info<T extends Recipe<?>>(CategoryIdentifier<CreateDisplay<T>> recipeType, Component title,

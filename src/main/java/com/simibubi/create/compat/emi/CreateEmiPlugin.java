@@ -16,6 +16,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.compat.emi.recipes.AutomaticPackingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.BlockCuttingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.BlockCuttingEmiRecipe.CondensedBlockCuttingRecipe;
+import com.simibubi.create.compat.emi.recipes.CreateEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.CrushingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.DeployingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.DrainEmiRecipe;
@@ -70,6 +71,7 @@ import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiRenderable;
+import dev.emi.emi.api.stack.Comparison;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
@@ -161,7 +163,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 
 		registerGeneratedRecipes(registry);
 
-		registry.setDefaultComparison(AllFluids.POTION.get().getSource(), c -> c.copy().nbt(true).build());
+		registry.setDefaultComparison(AllFluids.POTION.get().getSource(), c -> Comparison.compareNbt());
 
 		ALL.forEach((id, category) -> registry.addCategory(category));
 
@@ -344,7 +346,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 						}
 						fs.setAmount(inserted);
 						ItemStack container = ctx.getItemVariant().toStack(ItemHelper.truncateLong(ctx.getAmount()));
-						if (inserted != 0 && !container.sameItemStackIgnoreDurability(copy) && !container.isEmpty()) {
+						if (inserted != 0 && !ItemStack.isSameItemSameTags(container, copy) && !container.isEmpty()) {
 							Ingredient bucket = Ingredient.of(is);
 							ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(is.getItem());
 							ResourceLocation fluidId = BuiltInRegistries.FLUID.getKey(fs.getFluid());
@@ -401,7 +403,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 					.formatted(toolboxId.getNamespace(), toolboxId.getPath(), dyeId.getNamespace(), dyeId.getPath());
 			registry.addRecipe(new EmiCraftingRecipe(
 					r.getIngredients().stream().map(EmiIngredient::of).toList(),
-					EmiStack.of(r.getResultItem()), new ResourceLocation("emi", recipeName)));
+					CreateEmiRecipe.getResultEmi(r), new ResourceLocation("emi", recipeName)));
 		});
 		// for EMI we don't do this since it already has a category, World Interaction
 //		LogStrippingFakeRecipes.createRecipes().forEach(r -> {

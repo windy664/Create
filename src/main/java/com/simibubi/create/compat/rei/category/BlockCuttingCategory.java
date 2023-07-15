@@ -14,6 +14,7 @@ import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -46,17 +47,17 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	}
 
 	@Override
-	public void draw(CondensedBlockCuttingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 4, 4);
+	public void draw(CondensedBlockCuttingRecipe recipe, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SLOT.render(graphics, 4, 4);
 		int size = Math.min(recipe.getOutputs().size(), 15);
 		for (int i = 0; i < size; i++) {
 			int xOffset = (i % 5) * 19;
 			int yOffset = (i / 5) * -19;
-			AllGuiTextures.JEI_SLOT.render(matrixStack, 77 + xOffset, 47 + yOffset);
+			AllGuiTextures.JEI_SLOT.render(graphics, 77 + xOffset, 47 + yOffset);
 		}
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 31, 6);
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 33 - 17, 37 + 13);
-		saw.draw(matrixStack, 33, 37);
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 31, 6);
+		AllGuiTextures.JEI_SHADOW.render(graphics, 33 - 17, 37 + 13);
+		saw.draw(graphics, 33, 37);
 	}
 
 	public static class CondensedBlockCuttingRecipe extends StonecutterRecipe {
@@ -103,12 +104,12 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 				Ingredient i1 = recipe.getIngredients().get(0);
 				for (CondensedBlockCuttingRecipe condensedRecipe : condensed) {
 					if (ItemHelper.matchIngredients(i1, condensedRecipe.getIngredients().get(0))) {
-						condensedRecipe.addOutput(recipe.getResultItem());
+						condensedRecipe.addOutput(CreateRecipeCategory.getResultItem(recipe));
 						continue Recipes;
 					}
 				}
 				CondensedBlockCuttingRecipe cr = new CondensedBlockCuttingRecipe(i1);
-				cr.addOutput(recipe.getResultItem());
+				cr.addOutput(CreateRecipeCategory.getResultItem(recipe));
 				condensed.add(cr);
 			}
 			return condensed;

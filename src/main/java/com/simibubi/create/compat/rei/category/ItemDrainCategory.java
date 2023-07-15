@@ -32,6 +32,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -119,14 +120,14 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 	}
 
 	@Override
-	public void draw(EmptyingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 131, 7);
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 7);
-		getRenderedSlot(recipe, 0).render(matrixStack, 131, 26);
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 37);
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 73, 4);
+	public void draw(EmptyingRecipe recipe, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SLOT.render(graphics, 131, 7);
+		AllGuiTextures.JEI_SLOT.render(graphics, 26, 7);
+		getRenderedSlot(recipe, 0).render(graphics, 131, 26);
+		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 37);
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 73, 4);
 		drain.withFluid(recipe.getResultingFluid())
-			.draw(matrixStack, getDisplayWidth(null) / 2 - 13, 40);
+			.draw(graphics, getDisplayWidth(null) / 2 - 13, 40);
 	}
 
 }

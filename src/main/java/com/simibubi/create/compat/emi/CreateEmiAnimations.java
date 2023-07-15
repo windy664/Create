@@ -295,7 +295,7 @@ public class CreateEmiAnimations {
 		});
 	}
 
-	public static void addFan(WidgetHolder widgets, int x, int y, Consumer<PoseStack> renderAttachedBlock) {
+	public static void addFan(WidgetHolder widgets, int x, int y, Consumer<GuiGraphics> renderAttachedBlock) {
 		widgets.addDrawable(x, y, 0, 0, (graphics, mouseX, mouseY, delta) -> {
 			PoseStack matrices = graphics.pose();
 			matrices.translate(0, 0, 200);
@@ -314,7 +314,7 @@ public class CreateEmiAnimations {
 				.scale(scale)
 				.render(graphics);
 
-			renderAttachedBlock.accept(matrices);
+			renderAttachedBlock.accept(graphics);
 		});
 	}
 

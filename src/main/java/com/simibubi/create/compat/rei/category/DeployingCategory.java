@@ -15,6 +15,7 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.util.ClientEntryStacks;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationRecipe> {
 
@@ -42,19 +43,19 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 				.entries(EntryIngredients.ofIngredient(recipe.getRequiredHeldItem())));
 		Slot output = basicSlot(origin.getX() + 132, origin.getY() + 51)
 				.markOutput()
-				.entries(EntryIngredients.of(recipe.getResultItem()));
+				.entries(EntryIngredients.of(getResultItem(recipe)));
 		ingredients.add(output);
 		addStochasticTooltip(ingredients, recipe.getRollableResults(), 2);
 	}
 
 	@Override
-	public void draw(DeployerApplicationRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 50, 4);
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 50);
-		getRenderedSlot(recipe, 0).render(matrixStack, 131, 50);
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 57);
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 126, 29);
-		deployer.draw(matrixStack, getDisplayWidth(null) / 2 - 13, 22);
+	public void draw(DeployerApplicationRecipe recipe, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SLOT.render(graphics, 50, 4);
+		AllGuiTextures.JEI_SLOT.render(graphics, 26, 50);
+		getRenderedSlot(recipe, 0).render(graphics, 131, 50);
+		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
+		deployer.draw(graphics, getDisplayWidth(null) / 2 - 13, 22);
 	}
 
 }

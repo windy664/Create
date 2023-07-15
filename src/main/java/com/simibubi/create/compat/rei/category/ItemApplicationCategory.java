@@ -3,6 +3,7 @@ package com.simibubi.create.compat.rei.category;
 import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.simibubi.create.compat.rei.category.animations.AnimatedKinetics;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
 import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
@@ -17,6 +18,7 @@ import me.shedaniel.rei.api.client.util.ClientEntryStacks;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -57,13 +59,13 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 	}
 
 	@Override
-	public void draw(ItemApplicationRecipe recipe, CreateDisplay<ItemApplicationRecipe> display, PoseStack matrixStack,
+	public void draw(ItemApplicationRecipe recipe, CreateDisplay<ItemApplicationRecipe> display, GuiGraphics graphics,
 		double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 50, 4);
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 37);
-		getRenderedSlot(recipe, 0).render(matrixStack, 131, 37);
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 47);
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 74, 10);
+		AllGuiTextures.JEI_SLOT.render(graphics, 50, 4);
+		AllGuiTextures.JEI_SLOT.render(graphics, 26, 37);
+		getRenderedSlot(recipe, 0).render(graphics, 131, 37);
+		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 47);
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 74, 10);
 
 		EntryIngredient displayedIngredient = display.getInputEntries().get(0);
 		if (displayedIngredient.isEmpty())
@@ -76,6 +78,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 		BlockState state = blockItem.getBlock()
 			.defaultBlockState();
 
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(74, 51, 100);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
@@ -85,7 +88,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 		GuiGameElement.of(state)
 			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 
 		matrixStack.popPose();
 	}

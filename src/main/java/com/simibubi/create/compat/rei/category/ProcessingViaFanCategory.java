@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -44,9 +45,10 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 	}
 
 	@Override
-	public void draw(T recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		renderWidgets(matrixStack, recipe, mouseX, mouseY);
+	public void draw(T recipe, GuiGraphics graphics, double mouseX, double mouseY) {
+		renderWidgets(graphics, recipe, mouseX, mouseY);
 
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		translateFan(matrixStack);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(-12.5f));
@@ -55,24 +57,24 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		AnimatedKinetics.defaultBlockElement(AllPartialModels.ENCASED_FAN_INNER)
 			.rotateBlock(180, 0, AnimatedKinetics.getCurrentAngle() * 16)
 			.scale(SCALE)
-			.render(matrixStack);
+			.render(graphics);
 
 		AnimatedKinetics.defaultBlockElement(AllBlocks.ENCASED_FAN.getDefaultState())
 			.rotateBlock(0, 180, 0)
 			.atLocal(0, 0, 0)
 			.scale(SCALE)
-			.render(matrixStack);
+			.render(graphics);
 
-		renderAttachedBlock(matrixStack);
+		renderAttachedBlock(graphics);
 		matrixStack.popPose();
 	}
 
-	protected void renderWidgets(PoseStack matrixStack, T recipe, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 46, 29);
-		getBlockShadow().render(matrixStack, 65, 39);
-		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 54, 51);
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 20, 47);
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 140, 47);
+	protected void renderWidgets(GuiGraphics graphics, T recipe, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SHADOW.render(graphics, 46, 29);
+		getBlockShadow().render(graphics, 65, 39);
+		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 54, 51);
+		AllGuiTextures.JEI_SLOT.render(graphics, 20, 47);
+		AllGuiTextures.JEI_SLOT.render(graphics, 140, 47);
 	}
 
 	protected AllGuiTextures getBlockShadow() {
@@ -83,7 +85,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		matrixStack.translate(56, 33, 0);
 	}
 
-	protected abstract void renderAttachedBlock(PoseStack matrixStack);
+	protected abstract void renderAttachedBlock(GuiGraphics graphics);
 
 	public static abstract class MultiOutput<T extends ProcessingRecipe<?>> extends ProcessingViaFanCategory<T> {
 
@@ -115,22 +117,22 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		}
 
 		@Override
-		protected void renderWidgets(PoseStack matrixStack, T recipe, double mouseX, double mouseY) {
+		protected void renderWidgets(GuiGraphics graphics, T recipe, double mouseX, double mouseY) {
 			int size = recipe.getRollableResultsAsItemStacks()
 				.size();
 			int xOffsetAmount = 1 - Math.min(3, size);
 
-			AllGuiTextures.JEI_SHADOW.render(matrixStack, 46, 29);
-			getBlockShadow().render(matrixStack, 65, 39);
-			AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 7 * xOffsetAmount + 54, 51);
-			AllGuiTextures.JEI_SLOT.render(matrixStack, 5 * xOffsetAmount + 20, 47);
+			AllGuiTextures.JEI_SHADOW.render(graphics, 46, 29);
+			getBlockShadow().render(graphics, 65, 39);
+			AllGuiTextures.JEI_LONG_ARROW.render(graphics, 7 * xOffsetAmount + 54, 51);
+			AllGuiTextures.JEI_SLOT.render(graphics, 5 * xOffsetAmount + 20, 47);
 
 			int xOffsetOutput = 9 * xOffsetAmount;
 			boolean excessive = size > 9;
 			for (int i = 0; i < size; i++) {
 				int xOffset = (i % 3) * 19 + xOffsetOutput;
 				int yOffset = (i / 3) * -19 + (excessive ? 8 : 0);
-				getRenderedSlot(recipe, i).render(matrixStack, 140 + xOffset, 47 + yOffset);
+				getRenderedSlot(recipe, i).render(graphics, 140 + xOffset, 47 + yOffset);
 			}
 		}
 

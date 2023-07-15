@@ -25,6 +25,7 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 
 public abstract class ReiSequencedAssemblySubCategory {
 
@@ -46,7 +47,7 @@ public abstract class ReiSequencedAssemblySubCategory {
 		return 0;
 	}
 
-	public abstract void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index);
+	public abstract void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index);
 
 	public static class AssemblyPressing extends ReiSequencedAssemblySubCategory {
 
@@ -58,12 +59,13 @@ public abstract class ReiSequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+			PoseStack ms = graphics.pose();
 			press.offset = index;
 			ms.pushPose();
 			ms.translate(-5, 50, 0);
 			ms.scale(.6f, .6f, .6f);
-			press.draw(ms, getWidth() / 2, 0);
+			press.draw(graphics, getWidth() / 2, 0);
 			ms.popPose();
 		}
 
@@ -91,9 +93,10 @@ public abstract class ReiSequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+			PoseStack ms = graphics.pose();
 			spout.offset = index;
-			AllGuiTextures.JEI_SLOT.render(ms, 3, 14);
+			AllGuiTextures.JEI_SLOT.render(graphics, 3, 14);
 			ms.pushPose();
 			ms.translate(-7, 50, 0);
 			ms.scale(.75f, .75f, .75f);
@@ -101,7 +104,7 @@ public abstract class ReiSequencedAssemblySubCategory {
 				.getFluidIngredients()
 				.get(0)
 				.getMatchingFluidStacks())
-				.draw(ms, getWidth() / 2, 0);
+				.draw(graphics, getWidth() / 2, 0);
 			ms.popPose();
 		}
 
@@ -137,14 +140,15 @@ public abstract class ReiSequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+			PoseStack ms = graphics.pose();
 			deployer.offset = index;
 			ms.pushPose();
 			ms.translate(-7, 50, 0);
 			ms.scale(.75f, .75f, .75f);
-			deployer.draw(ms, getWidth() / 2, 0);
+			deployer.draw(graphics, getWidth() / 2, 0);
 			ms.popPose();
-			AllGuiTextures.JEI_SLOT.render(ms, 3, 14);
+			AllGuiTextures.JEI_SLOT.render(graphics, 3, 14);
 		}
 
 	}
@@ -159,11 +163,12 @@ public abstract class ReiSequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+			PoseStack ms = graphics.pose();
 			ms.pushPose();
 			ms.translate(0, 51.5f, 0);
 			ms.scale(.6f, .6f, .6f);
-			saw.draw(ms, getWidth() / 2, 30);
+			saw.draw(graphics, getWidth() / 2, 30);
 			ms.popPose();
 		}
 

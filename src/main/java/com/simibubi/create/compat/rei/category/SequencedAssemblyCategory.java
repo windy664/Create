@@ -34,8 +34,10 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -60,7 +62,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 
 		Slot output = basicSlot(origin.x + 132 + xOffset, origin.y + 91)
 				.markOutput()
-				.entries(EntryIngredients.of(display.getRecipe().getResultItem()));
+				.entries(EntryIngredients.of(getResultItem(display.getRecipe())));
 		ClientEntryStacks.setTooltipProcessor(output.getCurrentEntry(), (entryStack, tooltip) -> {
 			float chance = display.getRecipe().getOutputChance();
 			if (chance != 1)
@@ -109,7 +111,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			}
 
 			@Override
-			public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+			public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
 				TooltipContext context = TooltipContext.of(new Point(mouseX, mouseY));
 				Point mouse = context.getPoint();
 				if (containsMouse(mouse)) {
@@ -160,7 +162,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	final String[] romans = {"I", "II", "III", "IV", "V", "VI", "-"};
 
 	@Override
-	public void draw(SequencedAssemblyRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(SequencedAssemblyRecipe recipe, GuiGraphics graphics, double mouseX, double mouseY) {
+		PoseStack matrixStack = graphics.pose();
 		Font font = Minecraft.getInstance().font;
 
 		matrixStack.pushPose();
@@ -169,22 +172,22 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		matrixStack.translate(0, 15, 0);
 		boolean singleOutput = recipe.getOutputChance() == 1;
 		int xOffset = singleOutput ? 0 : -7;
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 26 + xOffset, 75);
-		(singleOutput ? AllGuiTextures.JEI_SLOT : AllGuiTextures.JEI_CHANCE_SLOT).render(matrixStack, 131 + xOffset, 75);
-		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52 + xOffset, 79);
+		AllGuiTextures.JEI_SLOT.render(graphics, 26 + xOffset, 75);
+		(singleOutput ? AllGuiTextures.JEI_SLOT : AllGuiTextures.JEI_CHANCE_SLOT).render(graphics, 131 + xOffset, 75);
+		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52 + xOffset, 79);
 		if (!singleOutput) {
-			AllGuiTextures.JEI_CHANCE_SLOT.render(matrixStack, 150 + xOffset, 75);
+			AllGuiTextures.JEI_CHANCE_SLOT.render(graphics, 150 + xOffset, 75);
 			Component component = Component.literal("?").withStyle(ChatFormatting.BOLD);
-			font.drawShadow(matrixStack, component, font.width(component) / -2 + 8 + 150 + xOffset, 2 + 78,
-					0xefefef);
+			graphics.drawString(font, component, font.width(component) / -2 + 8 + 150 + xOffset, 2 + 78,
+					0xefefef, true);
 		}
 
 		if (recipe.getLoops() > 1) {
 			matrixStack.pushPose();
 			matrixStack.translate(15, 9, 0);
-			AllIcons.I_SEQ_REPEAT.render(matrixStack, 50 + xOffset, 75);
+			AllIcons.I_SEQ_REPEAT.render(graphics, 50 + xOffset, 75);
 			Component repeat = Component.literal("x" + recipe.getLoops());
-			font.draw(matrixStack, repeat, 66 + xOffset, 80, 0x888888);
+			graphics.drawString(font, repeat, 66 + xOffset, 80, 0x888888);
 			matrixStack.popPose();
 		}
 
@@ -204,8 +207,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			ReiSequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
 			int subWidth = subCategory.getWidth();
 			Component component = Component.literal("" + romans[Math.min(i, 6)]);
-			font.draw(matrixStack, component, font.width(component) / -2 + subWidth / 2, 2, 0x888888);
-			subCategory.draw(sequencedRecipe, matrixStack, mouseX, mouseY, i);
+			graphics.drawString(font, component, font.width(component) / -2 + subWidth / 2, 2, 0x888888);
+			subCategory.draw(sequencedRecipe, graphics, mouseX, mouseY, i);
 			matrixStack.translate(subWidth + margin, 0, 0);
 		}
 		matrixStack.popPose();

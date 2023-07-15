@@ -8,6 +8,9 @@ import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -35,13 +38,14 @@ public class PolishingEmiRecipe extends CreateEmiRecipe<SandPaperPolishingRecipe
 			CompoundTag tag = stack.getOrCreateTag();
 			tag.put("Polishing", NBTSerializer.serializeNBT(matchingStacks[0]));
 			tag.putBoolean("JEI", true);
-			widgets.addDrawable(49, 4, 0, 0, (matrices, mouseX, mouseY, delta) -> {
+			widgets.addDrawable(49, 4, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+				PoseStack matrices = graphics.pose();
 				matrices.translate(0, 0, 100);
 				matrices.scale(2, 2, 1);
 				GuiGameElement.of(stack)
 						.<GuiGameElement.GuiRenderBuilder>at(0, 0, 1)
 						.scale(1)
-						.render(matrices);
+						.render(graphics);
 			});
 		}
 	}

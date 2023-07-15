@@ -1,6 +1,5 @@
 package com.simibubi.create.compat.emi.recipes.fan;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.emi.CreateEmiAnimations;
 import com.simibubi.create.compat.emi.recipes.CreateEmiRecipe;
@@ -11,6 +10,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.crafting.Recipe;
 
 public abstract class FanEmiRecipe<T extends Recipe<?>> extends CreateEmiRecipe<T> {
@@ -20,7 +20,7 @@ public abstract class FanEmiRecipe<T extends Recipe<?>> extends CreateEmiRecipe<
 		super(type, recipe, 134, 76);
 	}
 
-	protected abstract void renderAttachedBlock(PoseStack matrices);
+	protected abstract void renderAttachedBlock(GuiGraphics graphics);
 
 	@Override
 	public void addWidgets(WidgetHolder widgets) {

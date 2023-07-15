@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class EmptyBackground implements Renderer {
 
@@ -25,16 +26,6 @@ public class EmptyBackground implements Renderer {
 	}
 
 	@Override
-	public void render(PoseStack matrices, Rectangle bounds, int mouseX, int mouseY, float delta) {
-	}
-
-	@Override
-	public int getZ() {
-		return 0;
-	}
-
-	@Override
-	public void setZ(int z) {
-
+	public void render(GuiGraphics graphics, Rectangle bounds, int mouseX, int mouseY, float delta) {
 	}
 }

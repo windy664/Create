@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -62,31 +63,31 @@ public class PackingCategory extends BasinCategory {
 
 		ingredients.add(basicSlot(origin.x + 142, origin.y + 51)
 				.markOutput()
-				.entries(EntryIngredients.of(recipe.getResultItem())));
+				.entries(EntryIngredients.of(getResultItem(recipe))));
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(BasinRecipe recipe, GuiGraphics graphics, double mouseX, double mouseY) {
 		if (type == PackingType.COMPACTING) {
-			super.draw(recipe, matrixStack, mouseX, mouseY);
+			super.draw(recipe, graphics, mouseX, mouseY);
 
 		} else {
 			NonNullList<Ingredient> ingredients2 = recipe.getIngredients();
 			int size = ingredients2.size();
 			int rows = size == 4 ? 2 : 3;
 			for (int i = 0; i < size; i++)
-				AllGuiTextures.JEI_SLOT.render(matrixStack, (rows == 2 ? 26 : 17) + (i % rows) * 19,
+				AllGuiTextures.JEI_SLOT.render(graphics, (rows == 2 ? 26 : 17) + (i % rows) * 19,
 					50 - (i / rows) * 19);
-			AllGuiTextures.JEI_SLOT.render(matrixStack, 141, 50);
-			AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 136, 32);
-			AllGuiTextures.JEI_SHADOW.render(matrixStack, 81, 68);
+			AllGuiTextures.JEI_SLOT.render(graphics, 141, 50);
+			AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 136, 32);
+			AllGuiTextures.JEI_SHADOW.render(graphics, 81, 68);
 		}
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (requiredHeat != HeatCondition.NONE)
 			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
-				.draw(matrixStack, getDisplayWidth(null) / 2 + 3, 55);
-		press.draw(matrixStack, getDisplayWidth(null) / 2 + 3, 34);
+				.draw(graphics, getDisplayWidth(null) / 2 + 3, 55);
+		press.draw(graphics, getDisplayWidth(null) / 2 + 3, 34);
 	}
 
 }

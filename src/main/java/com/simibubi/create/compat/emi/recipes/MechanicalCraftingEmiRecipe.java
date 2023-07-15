@@ -12,6 +12,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -25,7 +26,7 @@ public class MechanicalCraftingEmiRecipe extends CreateEmiRecipe<CraftingRecipe>
 	public MechanicalCraftingEmiRecipe(EmiRecipeCategory category, CraftingRecipe recipe) {
 		super(category, recipe, 177, 109, c -> {});
 		this.input = recipe.getIngredients().stream().map(EmiIngredient::of).toList();
-		this.output = List.of(EmiStack.of(recipe.getResultItem()));
+		this.output = List.of(getResultEmi(recipe));
 		for (Ingredient ingredient : recipe.getIngredients()) {
 			if (!ingredient.isEmpty()) {
 				recipeAmount++;
@@ -105,10 +106,11 @@ public class MechanicalCraftingEmiRecipe extends CreateEmiRecipe<CraftingRecipe>
 		}
 
 		@Override
-		public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+		public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+			PoseStack matrices = graphics.pose();
 			matrices.pushPose();
 			hideStack = true;
-			super.render(matrices, mouseX, mouseY, delta);
+			super.render(graphics, mouseX, mouseY, delta);
 			hideStack = false;
 
 			float scale = getScale();
@@ -116,7 +118,7 @@ public class MechanicalCraftingEmiRecipe extends CreateEmiRecipe<CraftingRecipe>
 			matrices.scale(scale, scale, scale);
 			matrices.translate(-x, -y, 0);
 
-			getStack().render(matrices, bounds.x() + 1, bounds.y() + 1, delta);
+			getStack().render(graphics, bounds.x() + 1, bounds.y() + 1, delta);
 			matrices.popPose();
 		}
 	}

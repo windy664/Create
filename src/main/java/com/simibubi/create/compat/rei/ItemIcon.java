@@ -8,20 +8,20 @@ import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemIcon implements Renderer {
 
 	private Supplier<ItemStack> supplier;
 	private ItemStack stack;
-	private int z;
 
 	public ItemIcon(Supplier<ItemStack> stack) {
 		this.supplier = stack;
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, Rectangle bounds, int mouseX, int mouseY, float delta) {
+	public void render(GuiGraphics graphics, Rectangle bounds, int mouseX, int mouseY, float delta) {
 		if (stack == null) {
 			stack = supplier.get();
 		}
@@ -29,23 +29,14 @@ public class ItemIcon implements Renderer {
 		int xOffset = bounds.x;
 		int yOffset = bounds.y;
 
+		PoseStack matrixStack = graphics.pose();
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 0);
 
 		GuiGameElement.of(stack)
-				.render(matrixStack);
+				.render(graphics);
 
 		matrixStack.popPose();
-	}
-
-	@Override
-	public int getZ() {
-		return z;
-	}
-
-	@Override
-	public void setZ(int z) {
-		this.z = z;
 	}
 }

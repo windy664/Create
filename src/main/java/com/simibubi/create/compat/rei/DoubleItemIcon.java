@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 
 public class DoubleItemIcon implements Renderer {
@@ -30,42 +31,33 @@ public class DoubleItemIcon implements Renderer {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, Rectangle bounds, int mouseX, int mouseY, float delta) {
+	public void render(GuiGraphics graphics, Rectangle bounds, int mouseX, int mouseY, float delta) {
 		if (primaryStack == null) {
 			primaryStack = primarySupplier.get();
 			secondaryStack = secondarySupplier.get();
 		}
 
+		PoseStack matrixStack = graphics.pose();
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose();
 		if(pos == null)
-			matrixStack.translate(bounds.getCenterX() - 9, bounds.getCenterY() - 9, getZ());
+			matrixStack.translate(bounds.getCenterX() - 9, bounds.getCenterY() - 9, 0);
 		else
 			matrixStack.translate(pos.getX(), pos.getY(), 0);
 
 		matrixStack.pushPose();
 		matrixStack.translate(1, 1, 0);
 		GuiGameElement.of(primaryStack)
-			.render(matrixStack);
+			.render(graphics);
 		matrixStack.popPose();
 
 		matrixStack.pushPose();
 		matrixStack.translate(10, 10, 100);
 		matrixStack.scale(.5f, .5f, .5f);
 		GuiGameElement.of(secondaryStack)
-			.render(matrixStack);
+			.render(graphics);
 		matrixStack.popPose();
 
 		matrixStack.popPose();
-	}
-
-	@Override
-	public int getZ() {
-		return 0;
-	}
-
-	@Override
-	public void setZ(int i) {
-
 	}
 }

@@ -15,6 +15,9 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 
@@ -56,11 +59,12 @@ public abstract class EmiSequencedAssemblySubCategory {
 
 		@Override
 		public void addWidgets(WidgetHolder widgets, int x, int y, SequencedRecipe<?> recipe, int index) {
-			widgets.addDrawable(x, y, getWidth(), 96, (matrices, mouseX, mouseY, delta) -> {
+			widgets.addDrawable(x, y, getWidth(), 96, (graphics, mouseX, mouseY, delta) -> {
+				PoseStack matrices = graphics.pose();
 				float scale = 0.6f;
 				matrices.translate(3, 54, 0);
 				matrices.scale(scale, scale, scale);
-				CreateEmiAnimations.renderPress(matrices, index, false);
+				CreateEmiAnimations.renderPress(graphics, index, false);
 			}).tooltip(getTooltip(recipe, index));
 		}
 	}
@@ -81,11 +85,12 @@ public abstract class EmiSequencedAssemblySubCategory {
 		@Override
 		public void addWidgets(WidgetHolder widgets, int x, int y, SequencedRecipe<?> recipe, int index) {
 			CreateEmiRecipe.addSlot(widgets, getAppliedIngredient(recipe), x + 3, y + 13);
-			widgets.addDrawable(x, y, getWidth(), 96, (matrices, mouseX, mouseY, delta) -> {
+			widgets.addDrawable(x, y, getWidth(), 96, (graphics, mouseX, mouseY, delta) -> {
+				PoseStack matrices = graphics.pose();
 				float scale = 0.75f;
 				matrices.translate(3, 54, 0);
 				matrices.scale(scale, scale, scale);
-				CreateEmiAnimations.renderSpout(matrices, index, recipe.getRecipe()
+				CreateEmiAnimations.renderSpout(graphics, index, recipe.getRecipe()
 					.getFluidIngredients().get(0).getMatchingFluidStacks());
 			}).tooltip(getTooltip(recipe, index));
 		}
@@ -112,11 +117,12 @@ public abstract class EmiSequencedAssemblySubCategory {
 				}
 			}
 			CreateEmiRecipe.addSlot(widgets, ingredient, x + 3, y + 13);
-			widgets.addDrawable(x, y, getWidth(), 96, (matrices, mouseX, mouseY, delta) -> {
+			widgets.addDrawable(x, y, getWidth(), 96, (graphics, mouseX, mouseY, delta) -> {
+				PoseStack matrices = graphics.pose();
 				float scale = 0.75f;
 				matrices.translate(3, 54, 0);
 				matrices.scale(scale, scale, scale);
-				CreateEmiAnimations.renderDeployer(matrices, index);
+				CreateEmiAnimations.renderDeployer(graphics, index);
 			}).tooltip(getTooltip(recipe, index));
 		}
 	}
@@ -129,12 +135,13 @@ public abstract class EmiSequencedAssemblySubCategory {
 
 		@Override
 		public void addWidgets(WidgetHolder widgets, int x, int y, SequencedRecipe<?> recipe, int index) {
-			widgets.addDrawable(x, y, getWidth(), 96, (matrices, mouseX, mouseY, delta) -> {
+			widgets.addDrawable(x, y, getWidth(), 96, (graphics, mouseX, mouseY, delta) -> {
+				PoseStack matrices = graphics.pose();
 				matrices.translate(0, 54.5f, 0);
 				float scale = 0.6f;
 				matrices.scale(scale, scale, scale);
 				matrices.translate(getWidth() / 2, 30, 0);
-				CreateEmiAnimations.renderSaw(matrices, index);
+				CreateEmiAnimations.renderSaw(graphics, index);
 			}).tooltip(getTooltip(recipe, index));
 		}
 	}

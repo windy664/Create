@@ -13,6 +13,9 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.widget.WidgetHolder;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -72,19 +75,20 @@ public class SequencedAssemblyEmiRecipe extends CreateEmiRecipe<SequencedAssembl
 			x += category.getWidth() + margin;
 		}
 
-		widgets.addDrawable(0, 0, 0, 0, (matrices, mouseX, mouseY, delta) -> {
+		widgets.addDrawable(0, 0, 0, 0, (graphics, mouseX, mouseY, delta) -> {
+			PoseStack matrices = graphics.pose();
 			Minecraft client = Minecraft.getInstance();
 			matrices.pushPose();
 			matrices.translate(0, 15, 0);
 			if (recipe.getOutputChance() != 1) {
-				client.font.drawShadow(matrices, "?", mid + 69 + xOff - client.font.width("?") / 2, 80, 0xefefef);
+				graphics.drawString(client.font, "?", mid + 69 + xOff - client.font.width("?") / 2, 80, 0xefefef, true);
 			}
 
 			if (recipe.getLoops() > 1) {
 				matrices.pushPose();
 				matrices.translate(15, 9, 0);
-				AllIcons.I_SEQ_REPEAT.render(matrices, mid - 40 + xOff, 75);
-				client.font.drawShadow(matrices, "x" + recipe.getLoops(), mid - 24 + xOff, 80, 0x888888);
+				AllIcons.I_SEQ_REPEAT.render(graphics, mid - 40 + xOff, 75);
+				graphics.drawString(client.font, "x" + recipe.getLoops(), mid - 24 + xOff, 80, 0x888888, true);
 				matrices.popPose();
 			}
 			matrices.popPose();
@@ -94,7 +98,7 @@ public class SequencedAssemblyEmiRecipe extends CreateEmiRecipe<SequencedAssembl
 				String text = ROMAN[Math.min(i, ROMAN.length)];
 				int w = getSubCategory(recipe.getSequence().get(i)).getWidth();
 				int off = w / 2 - client.font.width(text) / 2;
-				client.font.drawShadow(matrices, text, cx + off, 2, 0x888888);
+				graphics.drawString(client.font, text, cx + off, 2, 0x888888, true);
 				cx += w + margin;
 			}
 		});

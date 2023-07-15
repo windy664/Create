@@ -119,7 +119,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, GuiGraphics graphics, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(BasinRecipe recipe, GuiGraphics graphics, double mouseX, double mouseY) {
 		List<Pair<Ingredient, MutableInt>> actualIngredients = ItemHelper.condenseIngredients(recipe.getIngredients());
 
 		int size = actualIngredients.size() + recipe.getFluidIngredients()

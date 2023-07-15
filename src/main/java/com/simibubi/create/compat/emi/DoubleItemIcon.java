@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import dev.emi.emi.api.render.EmiRenderable;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
@@ -31,7 +32,8 @@ public final class DoubleItemIcon implements EmiRenderable {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int xOffset, int yOffset, float delta) {
+	public void render(GuiGraphics graphics, int xOffset, int yOffset, float delta) {
+		PoseStack matrixStack = graphics.pose();
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose(); // note: this -1 is specific to EMI
 		matrixStack.translate(xOffset - 1, yOffset, 0);
@@ -39,14 +41,14 @@ public final class DoubleItemIcon implements EmiRenderable {
 		matrixStack.pushPose();
 		matrixStack.translate(1, 1, 0);
 		GuiGameElement.of(primaryStack)
-				.render(matrixStack);
+				.render(graphics);
 		matrixStack.popPose();
 
 		matrixStack.pushPose();
 		matrixStack.translate(10, 10, 100);
 		matrixStack.scale(.5f, .5f, .5f);
 		GuiGameElement.of(secondaryStack)
-				.render(matrixStack);
+				.render(graphics);
 		matrixStack.popPose();
 
 		matrixStack.popPose();

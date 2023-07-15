@@ -8,6 +8,7 @@ import com.simibubi.create.content.kinetics.fan.HauntingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.Blocks;
 
 public class FanHauntingCategory extends ProcessingViaFanCategory.MultiOutput<HauntingRecipe> {
@@ -22,12 +23,12 @@ public class FanHauntingCategory extends ProcessingViaFanCategory.MultiOutput<Ha
 	}
 
 	@Override
-	protected void renderAttachedBlock(@NotNull PoseStack matrixStack) {
+	protected void renderAttachedBlock(@NotNull GuiGraphics graphics) {
 		GuiGameElement.of(Blocks.SOUL_FIRE.defaultBlockState())
 			.scale(SCALE)
 			.atLocal(0, 0, 2)
 			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
-			.render(matrixStack);
+			.render(graphics);
 	}
 
 }

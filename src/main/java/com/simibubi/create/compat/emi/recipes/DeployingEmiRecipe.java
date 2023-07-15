@@ -22,7 +22,7 @@ public class DeployingEmiRecipe extends CreateEmiRecipe<DeployerApplicationRecip
 			}
 		}
 		this.input = List.of(EmiIngredient.of(recipe.getProcessedItem()), held);
-		this.output = List.of(EmiStack.of(recipe.getResultItem()));
+		this.output = List.of(getResultEmi(recipe));
 	}
 
 	@Override

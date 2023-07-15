@@ -35,6 +35,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -84,7 +85,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 						t.commit();
 					}
 						ItemStack container = ctx.getItemVariant().toStack(ItemHelper.truncateLong(ctx.getAmount()));
-						if (container.sameItem(copy))
+						if (ItemStack.isSameItem(container, copy))
 							return;
 						if (container.isEmpty())
 							return;
