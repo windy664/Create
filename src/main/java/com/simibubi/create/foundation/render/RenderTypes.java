@@ -12,7 +12,6 @@ import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.access
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback.RegistrationContext;
 
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -22,7 +21,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 // TODO 1.17: use custom shaders instead of vanilla ones
 public class RenderTypes extends RenderStateShard {
 
-	public static final RenderStateShard.ShaderStateShard GLOWING_SHADER = new RenderStateShard.ShaderStateShard(() -> ShadersModHandler.isShaderPackInUse() ? GameRenderer.getNewEntityShader() : Shaders.glowingShader);
+	public static final RenderStateShard.ShaderStateShard GLOWING_SHADER = new RenderStateShard.ShaderStateShard(() -> Shaders.glowingShader);
 
 	private static final RenderType OUTLINE_SOLID =
 		RenderTypeAccessor.port_lib$create(createLayerName("outline_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false,
