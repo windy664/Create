@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.gui.element.RenderElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
 import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AbstractWidgetAccessor;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class FlwBooleanEntry extends FlwValueEntry<Boolean> {
 	RenderElement enabled;
@@ -47,15 +48,15 @@ public class FlwBooleanEntry extends FlwValueEntry<Boolean> {
 	}
 
 	@Override
-	public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
+	public void render(GuiGraphics graphics, int index, int y, int x, int width, int height, int mouseX, int mouseY,
 					   boolean p_230432_9_, float partialTicks) {
-		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+		super.render(graphics, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		button.x = x + width - 80 - resetWidth;
-		button.y = y + 10;
+		button.setX(x + width - 80 - resetWidth);
+		button.setY(y + 10);
 		button.setWidth(35);
 		((AbstractWidgetAccessor) button).port_lib$setHeight(height - 20);
-		button.render(ms, mouseX, mouseY, partialTicks);
+		button.render(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.gui.element.TextStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.Locale;
 
@@ -78,28 +79,28 @@ public class FlwEnumEntry extends FlwValueEntry<Enum<?>> {
 	}
 
 	@Override
-	public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
+	public void render(GuiGraphics graphics, int index, int y, int x, int width, int height, int mouseX, int mouseY,
 					   boolean p_230432_9_, float partialTicks) {
-		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+		super.render(graphics, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		cycleLeft.x = x + getLabelWidth(width) + 4;
-		cycleLeft.y = y + 10;
-		cycleLeft.render(ms, mouseX, mouseY, partialTicks);
+		cycleLeft.setX(x + getLabelWidth(width) + 4);
+		cycleLeft.setY(y + 10);
+		cycleLeft.render(graphics, mouseX, mouseY, partialTicks);
 
-		valueText.at(cycleLeft.x + cycleWidth - 8, y + 10, 200)
+		valueText.at(cycleLeft.getX() + cycleWidth - 8, y + 10, 200)
 				.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth - 4, 16)
-				.render(ms);
+				.render(graphics);
 
-		cycleRight.x = x + width - cycleWidth * 2 - resetWidth + 10;
-		cycleRight.y = y + 10;
-		cycleRight.render(ms, mouseX, mouseY, partialTicks);
+		cycleRight.setX(x + width - cycleWidth * 2 - resetWidth + 10);
+		cycleRight.setY(y + 10);
+		cycleRight.render(graphics, mouseX, mouseY, partialTicks);
 
 		new BoxElement()
 				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 				.flatBorder(0x01_000000)
 				.withBounds(48, 6)
-				.at(cycleLeft.x + 22, cycleLeft.y + 5)
-				.render(ms);
+				.at(cycleLeft.getX() + 22, cycleLeft.getY() + 5)
+				.render(graphics);
 	}
 
 	@Override
