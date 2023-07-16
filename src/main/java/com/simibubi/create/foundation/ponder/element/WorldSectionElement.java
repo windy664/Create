@@ -434,12 +434,11 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 			if (state.getRenderShape() == RenderShape.MODEL) {
 				BakedModel model = dispatcher.getBlockModel(state);
-				if (((FabricBakedModel) model).isVanillaAdapter()) {
-					if (!FabricModelUtil.doesLayerMatch(state, layer)) {
+				if (model.isVanillaAdapter()) {
+					if (ItemBlockRenderTypes.getChunkRenderType(state) != layer) {
 						model = null;
 					}
 				} else {
-					model = CullingBakedModel.wrap(model);
 					model = LayerFilteringBakedModel.wrap(model, layer);
 				}
 				if (model != null) {

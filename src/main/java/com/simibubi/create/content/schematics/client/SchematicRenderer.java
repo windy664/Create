@@ -16,8 +16,8 @@ import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
@@ -120,12 +120,11 @@ public class SchematicRenderer {
 				BakedModel model = dispatcher.getBlockModel(state);
 				long seed = state.getSeed(pos);
 				random.setSeed(seed);
-				if (((FabricBakedModel) model).isVanillaAdapter()) {
-					if (!FabricModelUtil.doesLayerMatch(state, layer)) {
+				if (model.isVanillaAdapter()) {
+					if (ItemBlockRenderTypes.getChunkRenderType(state) != layer) {
 						continue;
 					}
 				} else {
-					model = CullingBakedModel.wrap(model);
 					model = LayerFilteringBakedModel.wrap(model, layer);
 				}
 				model = shadeSeparatingWrapper.wrapModel(model);
