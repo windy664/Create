@@ -2,6 +2,8 @@ package com.simibubi.create.content.equipment.symmetryWand;
 
 import java.util.Random;
 
+import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
+
 import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.PoseStack;

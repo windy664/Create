@@ -151,7 +151,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		ms.translate(0, 0, 400);
 		for (int i = 0; i < lines.size(); i++) {
 			graphics.drawString(screen.getFontRenderer(), lines.get(i)
-				.getString(), targetX - 10, 3 + 9 * i,
+				.getString(), (int) (targetX - 10), 3 + 9 * i,
 				new Color(brighterColor).scaleAlpha(fade)
 					.getRGB(),
 				false);

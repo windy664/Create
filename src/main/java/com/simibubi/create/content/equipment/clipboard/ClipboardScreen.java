@@ -525,7 +525,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		if (!pIsEndOfText) {
 			graphics.fill(pCursorPos.x, pCursorPos.y - 1, pCursorPos.x + 1, pCursorPos.y + 9, -16777216);
 		} else {
-			graphics.drawString(font, "_", (float) pCursorPos.x, (float) pCursorPos.y, 0, false);
+			graphics.drawString(font, "_", pCursorPos.x, pCursorPos.y, 0, false);
 		}
 	}
 
@@ -574,7 +574,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			return true;
 		if (pButton != 0)
 			return true;
-		
+
 		if (hoveredEntry != -1) {
 			if (hoveredCheck) {
 				editingIndex = -1;
@@ -607,7 +607,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			editingIndex = -1;
 			return false;
 		}
-		
+
 		long i = Util.getMillis();
 		DisplayCache cache = getDisplayCache();
 		int j = cache.getIndexAtPosition(font, convertScreenToLocal(new Pos2i((int) pMouseX, (int) pMouseY)));

@@ -119,7 +119,7 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 
 	protected FluidUnit getUnit(DisplayLinkContext context) {
 		int format = context.sourceConfig().getInt("Format");
-		return format == 2 ? FluidUnit.DROPLETS : FluidUnit.MILIBUCKETS;
+		return format == 2 ? FluidUnit.DROPLETS : FluidUnit.MILLIBUCKETS;
 	}
 
 	@Override

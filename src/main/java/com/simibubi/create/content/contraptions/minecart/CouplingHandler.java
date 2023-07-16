@@ -27,19 +27,19 @@ import net.minecraft.world.level.Level;
 
 public class CouplingHandler {
 
-	public static InteractionResult preventEntitiesFromMoutingOccupiedCart(Entity e, Entity mounting, boolean isMounting) {
-		if (e instanceof AbstractMinecart cart) {
+	public static boolean preventEntitiesFromMoutingOccupiedCart(Entity vehicle, Entity passenger) {
+		if (vehicle instanceof AbstractMinecart cart) {
 			LazyOptional<MinecartController> optional = cart.lazyController();
 			if (!optional.isPresent())
-				return InteractionResult.PASS;
-			if (mounting instanceof AbstractContraptionEntity)
-				return InteractionResult.PASS;
+				return true;
+			if (passenger instanceof AbstractContraptionEntity)
+				return true;
 			MinecartController controller = optional.orElse(null);
 			if (controller.isCoupledThroughContraption()) {
-				return InteractionResult.FAIL;
+				return false;
 			}
 		}
-		return InteractionResult.PASS;
+		return true;
 	}
 
 	public static void forEachLoadedCoupling(Level world, Consumer<Couple<MinecartController>> consumer) {

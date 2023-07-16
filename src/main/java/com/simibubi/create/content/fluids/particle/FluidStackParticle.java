@@ -41,7 +41,7 @@ public class FluidStackParticle extends TextureSheetParticle {
 		this.rCol = 0.8F;
 		this.gCol = 0.8F;
 		this.bCol = 0.8F;
-		int color = handler.getColor(fluid.getType(), world, new BlockPos(x, y, z));
+		int color = handler.getColor(fluid.getType(), world, BlockPos.containing(x, y, z));
 		multiplyColor(color);
 
 		this.xd = vx;

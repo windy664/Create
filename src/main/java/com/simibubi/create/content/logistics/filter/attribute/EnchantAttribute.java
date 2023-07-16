@@ -9,6 +9,7 @@ import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -51,7 +52,7 @@ public class EnchantAttribute implements ItemAttribute {
     public void writeNBT(CompoundTag nbt) {
         if (enchantment == null)
             return;
-        ResourceLocation id = Registry.ENCHANTMENT.getKey(enchantment);
+        ResourceLocation id = BuiltInRegistries.ENCHANTMENT.getKey(enchantment);
         if (id == null)
             return;
         nbt.putString("id", id.toString());
@@ -59,6 +60,6 @@ public class EnchantAttribute implements ItemAttribute {
 
     @Override
     public ItemAttribute readNBT(CompoundTag nbt) {
-        return nbt.contains("id") ? new EnchantAttribute(Registry.ENCHANTMENT.get(ResourceLocation.tryParse(nbt.getString("id")))) : EMPTY;
+        return nbt.contains("id") ? new EnchantAttribute(BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.tryParse(nbt.getString("id")))) : EMPTY;
     }
 }

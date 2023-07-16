@@ -43,6 +43,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -412,7 +414,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 			possibleSlabLocations.add(blockName.substring(0, nameLength - 7) + "_slab");
 
 		for (String locationAttempt : possibleSlabLocations) {
-			ResourceKey<Block> key = ResourceKey.create(BuiltInRegistries.BLOCK_REGISTRY, new ResourceLocation(namespace, locationAttempt));
+			ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, new ResourceLocation(namespace, locationAttempt));
 			Optional<Block> result = BuiltInRegistries.BLOCK.getHolder(key)
 				.map(slabHolder -> slabHolder.value());
 			if (result.isEmpty())

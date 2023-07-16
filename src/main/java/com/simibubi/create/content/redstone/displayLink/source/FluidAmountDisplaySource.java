@@ -64,7 +64,7 @@ public class FluidAmountDisplaySource extends SingleLineDisplaySource {
 
 	protected FluidUnit getUnit(DisplayLinkContext context) {
 		int format = context.sourceConfig().getInt("FluidUnit");
-		return format == 0 ? FluidUnit.MILIBUCKETS : FluidUnit.DROPLETS;
+		return format == 0 ? FluidUnit.MILLIBUCKETS : FluidUnit.DROPLETS;
 	}
 
 	@Override

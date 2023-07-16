@@ -20,6 +20,7 @@
     "accessor.NbtAccounterAccessor",
     "accessor.ServerLevelAccessor",
     "fabric.AbstractMinecartMixin",
+    "fabric.EntityAccessor",
     "fabric.EntityMixin",
     "fabric.ServerGamePacketListenerImplAccessor",
     "fabric.SortedArraySetAccessor",

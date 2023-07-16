@@ -154,7 +154,7 @@ public abstract class EntityContraptionInteractionMixin {
 		forCollision(worldPos, (contraption, state, pos) -> {
 			boolean particles = state.getRenderShape() != RenderShape.INVISIBLE;
 			if (state.getBlock() instanceof CustomRunningEffectsBlock custom &&
-					custom.addRunningEffects(state, self.level, pos, self)) {
+					custom.addRunningEffects(state, self.level(), pos, self)) {
 				particles = false;
 			}
 			if (particles) {

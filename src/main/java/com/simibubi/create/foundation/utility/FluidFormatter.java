@@ -13,7 +13,7 @@ public class FluidFormatter {
 	}
 
 	public static Couple<MutableComponent> asComponents(long amount, boolean shorten, FluidUnit unit) {
-		if (shorten && amount >= FluidConstants.BUCKET && unit == FluidUnit.MILIBUCKETS) {
+		if (shorten && amount >= FluidConstants.BUCKET && unit == FluidUnit.MILLIBUCKETS) {
 			return Couple.create(
 					Components.literal(String.format("%.1f" , amount / (double) FluidConstants.BUCKET)),
 					Lang.translateDirect("generic.unit.buckets")

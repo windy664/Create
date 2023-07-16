@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +38,7 @@ public class FabricPonderProcessing {
 			.codec();
 
 	public static final StructureProcessorType<Processor> PROCESSOR_TYPE = Registry.register(
-			Registry.STRUCTURE_PROCESSOR,
+			BuiltInRegistries.STRUCTURE_PROCESSOR,
 			Create.asResource("fabric_ponder_processor"),
 			() -> PROCESSOR_CODEC
 	);
@@ -101,10 +102,9 @@ public class FabricPonderProcessing {
 			if (predicate == null) // do nothing
 				return relativeBlockInfo;
 
-			CompoundTag nbt = relativeBlockInfo.nbt;
-			//noinspection ConstantValue - nbt is nullable
+			CompoundTag nbt = relativeBlockInfo.nbt();
 			if (nbt != null
-					&& AllBlocks.FLUID_TANK.has(relativeBlockInfo.state)
+					&& AllBlocks.FLUID_TANK.has(relativeBlockInfo.state())
 					&& nbt.contains("TankContent", Tag.TAG_COMPOUND)
 					&& predicate.shouldApplyProcess(structureId, Process.FLUID_TANK_AMOUNTS)) {
 
@@ -116,7 +116,7 @@ public class FabricPonderProcessing {
 
 				CompoundTag newNbt = nbt.copy();
 				newNbt.put("TankContent", content.writeToNBT(new CompoundTag()));
-				return new StructureBlockInfo(relativeBlockInfo.pos, relativeBlockInfo.state, newNbt);
+				return new StructureBlockInfo(relativeBlockInfo.pos(), relativeBlockInfo.state(), newNbt);
 			}
 
 			// no processes were applied

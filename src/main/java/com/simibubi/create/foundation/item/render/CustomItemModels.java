@@ -10,6 +10,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
@@ -39,9 +40,6 @@ public class CustomItemModels {
 		finalModelFuncs.clear();
 		modelFuncs.asMap().forEach((location, funcList) -> {
 			Item item = BuiltInRegistries.ITEM.get(location);
-			if (item == null) {
-				return;
-			}
 
 			NonNullFunction<BakedModel, ? extends BakedModel> finalFunc = null;
 			for (NonNullFunction<BakedModel, ? extends BakedModel> func : funcList) {

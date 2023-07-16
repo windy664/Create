@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.tterrag.registrate.util.DataIngredient;
 
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
 import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
 import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
@@ -130,6 +131,11 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 	public ProcessingRecipeBuilder<T> require(Ingredient ingredient) {
 		params.ingredients.add(ingredient);
 		return this;
+	}
+
+	// fabric: custom ingredient support
+	public ProcessingRecipeBuilder<T> require(CustomIngredient ingredient) {
+		return require(ingredient.toVanilla());
 	}
 
 	public ProcessingRecipeBuilder<T> require(Mods mod, String id) {

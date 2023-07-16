@@ -481,7 +481,7 @@ public class ContraptionCollider {
 		AABB bb = entity.getBoundingBox()
 			.deflate(1 / 4f, 0, 1 / 4f);
 		double shortestDistance = Double.MAX_VALUE;
-		double yStart = entity.getStepHeight() + contraptionEntity.getY() + yStartOffset;
+		double yStart = entity.maxUpStep() + contraptionEntity.getY() + yStartOffset;
 		double rayLength = Math.max(5, Math.abs(entity.getY() - yStart));
 
 		for (int rayIndex = 0; rayIndex < 4; rayIndex++) {

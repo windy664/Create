@@ -68,10 +68,14 @@ import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
+import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.gui.OpenCreateMenuButton;
 
+import io.github.fabricators_of_create.porting_lib.client_events.event.client.RenderArmCallback;
+import io.github.fabricators_of_create.porting_lib.entity.events.EntityDataEvents;
+import io.github.fabricators_of_create.porting_lib.entity.events.EntityMountEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.player.PlayerTickEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback.CameraInfo;
@@ -82,6 +86,7 @@ import io.github.fabricators_of_create.porting_lib.event.client.FogEvents.ColorD
 import io.github.fabricators_of_create.porting_lib.event.client.InteractEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.ParticleManagerRegistrationCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderHandCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.RenderHandCallback.RenderHandEvent;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTooltipBorderColorCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.AttackAirCallback;
@@ -96,6 +101,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -287,21 +293,15 @@ public class ClientEvents {
 		TurntableHandler.gameRenderTick();
 	}
 
-	public static InteractionResult onMount(Entity mounted, Entity mounting, boolean isMounting) {
-		if (mounting != Minecraft.getInstance().player)
-			return InteractionResult.PASS;
+	public static boolean onMount(Entity vehicle, Entity passenger) {
+		if (passenger == Minecraft.getInstance().player && vehicle instanceof CarriageContraptionEntity)
+			CameraDistanceModifier.zoomOut();
+		return true;
+	}
 
-		if (!isMounting) {
-			CameraDistanceModifier.reset();
-			return InteractionResult.PASS;
-		}
-
-		if (!isMounting || !(mounted instanceof CarriageContraptionEntity carriage)) {
-			return InteractionResult.PASS;
-		}
-
-		CameraDistanceModifier.zoomOut();
-		return InteractionResult.PASS;
+	public static boolean onDismount(Entity vehicle, Entity passenger) {
+		CameraDistanceModifier.reset();
+		return true;
 	}
 
 	protected static boolean isGameActive() {
@@ -413,13 +413,16 @@ public class ClientEvents {
 		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
 		AttackAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
 		UseBlockCallback.EVENT.register(TrackBlockItem::sendExtenderPacket);
-		MountEntityCallback.EVENT.register(ClientEvents::onMount);
+		EntityMountEvents.MOUNT.register(ClientEvents::onMount);
+		EntityMountEvents.DISMOUNT.register(ClientEvents::onDismount);
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register(ClientEvents::addEntityRendererLayers);
 		CameraSetupCallback.EVENT.register(ClientEvents::onCameraSetup);
 		DrawSelectionEvents.BLOCK.register(ClipboardValueSettingsHandler::drawCustomBlockSelection);
 
 		// External Events
 
+		ClientEntityEvents.ENTITY_LOAD.register(AbstractMinecartExtensions::minecartSpawn);
+		ClientEntityEvents.ENTITY_UNLOAD.register(AbstractMinecartExtensions::minecartRemove);
 		ClientTickEvents.END_CLIENT_TICK.register(SymmetryHandler::onClientTick);
 		WorldRenderEvents.AFTER_TRANSLUCENT.register(SymmetryHandler::render);
 		UseBlockCallback.EVENT.register(ArmInteractionPointHandler::rightClickingBlocksSelectsThem);

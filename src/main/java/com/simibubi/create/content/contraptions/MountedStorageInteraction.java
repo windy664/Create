@@ -88,8 +88,8 @@ public class MountedStorageInteraction {
 
 		@Override
 		public boolean isEmpty() {
-			boolean primaryEmpty = Iterators.size(primary.nonEmptyViews()) == 0;
-			boolean secondaryEmpty = secondary == null || Iterators.size(secondary.nonEmptyViews()) == 0;
+			boolean primaryEmpty = Iterators.size(primary.nonEmptyIterator()) == 0;
+			boolean secondaryEmpty = secondary == null || Iterators.size(secondary.nonEmptyIterator()) == 0;
 			return primaryEmpty && secondaryEmpty;
 		}
 
@@ -134,13 +134,6 @@ public class MountedStorageInteraction {
 
 		@Override
 		public void setChanged() {
-			// invoke onFinalCommit
-			try (Transaction t = TransferUtil.getTransaction()) {
-				primary.updateSnapshots(t);
-				if (secondary != null)
-					secondary.updateSnapshots(t);
-				t.commit();
-			}
 		}
 
 		@Override
@@ -152,7 +145,7 @@ public class MountedStorageInteraction {
 		public boolean canPlaceItem(int slot, ItemStack stack) {
 			ItemStackHandler handler = handlerForSlot(slot);
 			slot = actualSlot(slot);
-			return handler.isItemValid(slot, ItemVariant.of(stack), stack.getCount());
+			return handler.isItemValid(slot, ItemVariant.of(stack));
 		}
 
 		@Override

@@ -10,6 +10,8 @@ import com.simibubi.create.foundation.item.render.CustomItemModels;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItems;
 
+import io.github.fabricators_of_create.porting_lib.models.events.ModelEvents;
+
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -39,7 +41,7 @@ public class ModelSwapper {
 	}
 
 	public void registerListeners() {
-		ModelsBakedCallback.EVENT.register(this::onModelBake);
+		ModelEvents.MODELS_BAKED.register(this::onModelBake);
 	}
 
 	public static <T extends BakedModel> void swapModels(Map<ResourceLocation, BakedModel> modelRegistry,

@@ -172,7 +172,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 		float x = (float) (Mth.lerp(pt, entity.xOld, entity.getX()) - camX);
 		float y = (float) (Mth.lerp(pt, entity.yOld, entity.getY()) - camY);
 		float z = (float) (Mth.lerp(pt, entity.zOld, entity.getZ()) - camZ);
-		Matrix4fHelper.setTranslation(matrix, x, y, z);
+		matrix.setTranslation(x, y, z);
 		matrix.mul(modelMatrix);
 	}
 

@@ -124,20 +124,20 @@ public class CreateClient implements ClientModInitializer {
 	}
 
 	private static void registerOverlays() {
-		OverlayRenderCallback.EVENT.register(((stack, partialTicks, window, type) -> {
+		OverlayRenderCallback.EVENT.register(((graphics, partialTicks, window, type) -> {
 			if (type == OverlayRenderCallback.Types.AIR) {
-				RemainingAirOverlay.render(stack, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Remaining Air
+				RemainingAirOverlay.render(graphics, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Remaining Air
 			} else {
-				TrainHUD.renderOverlay(stack, partialTicks, window); // Create's Train Driver HUD
-				GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window); // Create's Goggle Information
-				BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window); // Create's Blueprints
-				LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window); // Create's Linked Controller
-				SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window); // Create's Schematics
-				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window); // Create's Toolboxes
-				VALUE_SETTINGS_HANDLER.render(stack, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Value Settings
-				TrackPlacementOverlay.renderOverlay(Minecraft.getInstance().gui, stack); // Create's Track Placement
+				TrainHUD.renderOverlay(graphics, partialTicks, window); // Create's Train Driver HUD
+				GoggleOverlayRenderer.renderOverlay(graphics, partialTicks, window); // Create's Goggle Information
+				BlueprintOverlayRenderer.renderOverlay(graphics, partialTicks, window); // Create's Blueprints
+				LinkedControllerClientHandler.renderOverlay(graphics, partialTicks, window); // Create's Linked Controller
+				SCHEMATIC_HANDLER.renderOverlay(graphics, partialTicks, window); // Create's Schematics
+				ToolboxHandlerClient.renderOverlay(graphics, partialTicks, window); // Create's Toolboxes
+				VALUE_SETTINGS_HANDLER.render(graphics, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Value Settings
+				TrackPlacementOverlay.renderOverlay(Minecraft.getInstance().gui, graphics); // Create's Track Placement
 
-				PlacementHelpers.afterRenderOverlayLayer(stack, partialTicks, window, type);
+				PlacementHelpers.afterRenderOverlayLayer(graphics, partialTicks, window, type);
 			}
 			return false;
 		}));

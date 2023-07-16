@@ -7,6 +7,7 @@ import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -54,7 +55,7 @@ public class AstralSorceryAmuletAttribute implements ItemAttribute {
     public Object[] getTranslationParameters() {
         String something = "";
 
-        Enchantment enchant = Registry.ENCHANTMENT.get(ResourceLocation.tryParse(enchName));
+        Enchantment enchant = BuiltInRegistries.ENCHANTMENT.get(ResourceLocation.tryParse(enchName));
         if(enchant != null) {
             something = Components.translatable(enchant.getDescriptionId()).getString();
         }

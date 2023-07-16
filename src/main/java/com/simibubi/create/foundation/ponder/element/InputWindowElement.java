@@ -126,7 +126,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 		ms.translate(0, 0, 100);
 
 		if (hasText)
-			graphics.drawString(font, text, 2, (height - font.lineHeight) / 2f + 2,
+			graphics.drawString(font, text, 2, (int) ((height - font.lineHeight) / 2f + 2),
 				PonderPalette.WHITE.getColorObject().scaleAlpha(fade).getRGB(), false);
 
 		if (hasIcon) {

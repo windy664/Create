@@ -52,6 +52,7 @@ import com.tterrag.registrate.fabric.RegistryObject;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class PonderIndex {
 

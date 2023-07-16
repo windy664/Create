@@ -3,6 +3,7 @@ package com.simibubi.create.content.equipment.toolbox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import io.github.fabricators_of_create.porting_lib.util.TagUtil;
+import me.alphamode.forgetags.Tags;
 
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;

@@ -20,6 +20,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -56,13 +57,9 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		PonderRegistry.ALL.keySet()
 			.stream()
 			.map(key -> {
-				Item item = BuiltInRegistries.ITEM.get(key);
-				if (item == null) {
-					Block b = BuiltInRegistries.BLOCK.get(key);
-					if (b != null)
-						item = b.asItem();
-				}
-				return item;
+				return BuiltInRegistries.ITEM.getOptional(key)
+						.or(() -> BuiltInRegistries.BLOCK.getOptional(key).map(Block::asItem))
+						.orElse(null);
 			})
 			.filter(Objects::nonNull)
 			.filter(PonderIndexScreen::exclusions)

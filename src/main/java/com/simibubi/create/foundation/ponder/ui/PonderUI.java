@@ -598,8 +598,7 @@ public class PonderUI extends NavigatableSimiScreen {
 							((MutableComponent) minecraft.options.keyDrop.getTranslatedKeyMessage())
 								.withStyle(ChatFormatting.WHITE))
 						.withStyle(ChatFormatting.GRAY);
-					graphics.renderTooltip(font, font.getSplitter()
-							.splitLines(text, width / 3, Style.EMPTY).stream().map(formatted -> (Component) Component.literal(formatted.getString())).toList(), 0, 0);
+					graphics.renderTooltip(font, font.split(text, width / 3), 0, 0);
 				} else
 					graphics.renderTooltip(font, hoveredTooltipItem, 0, 0);
 				if (hoveredBlockPos != null && PonderIndex.editingModeActive() && !userViewMode) {
@@ -1049,7 +1048,7 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	public void drawRightAlignedString(GuiGraphics graphics, PoseStack ms, String string, int x, int y, int color) {
-		graphics.drawString(font, string, (float) (x - font.width(string)), (float) y, color, false);
+		graphics.drawString(font, string, x - font.width(string), y, color, false);
 	}
 
 	public boolean isComfyReadingEnabled() {

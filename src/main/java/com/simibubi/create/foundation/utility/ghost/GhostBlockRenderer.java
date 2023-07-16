@@ -10,6 +10,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
+import io.github.fabricators_of_create.porting_lib.models.virtual.FixedLightBakedModel;
+import io.github.fabricators_of_create.porting_lib.models.virtual.TranslucentBakedModel;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;

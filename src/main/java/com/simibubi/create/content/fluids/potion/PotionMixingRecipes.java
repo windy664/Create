@@ -21,6 +21,7 @@ import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import me.shedaniel.rei.plugin.common.displays.brewing.BrewingRecipe;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

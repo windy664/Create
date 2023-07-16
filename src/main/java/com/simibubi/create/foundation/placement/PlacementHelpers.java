@@ -151,7 +151,7 @@ public class PlacementHelpers {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void afterRenderOverlayLayer(PoseStack stack, float partialTicks, Window res, Types type) {
+	public static void afterRenderOverlayLayer(GuiGraphics graphics, float partialTicks, Window res, Types type) {
 		if (type != OverlayRenderCallback.Types.CROSSHAIRS)
 			return;
 
@@ -163,7 +163,7 @@ public class PlacementHelpers {
 			float screenX = res.getGuiScaledWidth() / 2f;
 			float progress = getCurrentAlpha();
 
-			drawDirectionIndicator(event.getGuiGraphics(), event.getPartialTick(), screenX, screenY, progress);
+			drawDirectionIndicator(graphics, partialTicks, screenX, screenY, progress);
 		}
 	}
 

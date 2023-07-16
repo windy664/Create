@@ -59,11 +59,6 @@ public class NoShadowFontWrapper extends Font {
 	}
 
 	@Override
-	public FormattedText ellipsize(FormattedText text, int maxWidth) {
-		return wrapped.ellipsize(text, maxWidth);
-	}
-
-	@Override
 	public int wordWrapHeight(FormattedText pText, int pMaxWidth) {
 		return wrapped.wordWrapHeight(pText, pMaxWidth);
 	}

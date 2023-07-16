@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEntityDamageEvents.HurtEvent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -213,17 +214,16 @@ public class ExtendoGripItem extends Item  {
 		return AllConfigs.server().equipment.maxExtendoGripActions.get();
 	}
 
-	public static float bufferLivingAttackEvent(DamageSource source, LivingEntity damaged, float amount) {
+	public static void bufferLivingAttackEvent(HurtEvent event) {
 		// Workaround for removed patch to get the attacking entity.
-		lastActiveDamageSource = source;
+		lastActiveDamageSource = event.damageSource;
 
-		Entity trueSource = source.getEntity();
+		Entity trueSource = event.damageSource.getEntity();
 		if (trueSource instanceof Player)
 			findAndDamageExtendoGrip((Player) trueSource);
-		return amount;
 	}
 
-	public static double attacksByExtendoGripHaveMoreKnockback(double strength, Player player) {
+	public static double attacksByExtendoGripHaveMoreKnockback(LivingEntity attacked, double strength) {
 		if (lastActiveDamageSource == null)
 			return strength;
 		Entity entity = lastActiveDamageSource.getDirectEntity();

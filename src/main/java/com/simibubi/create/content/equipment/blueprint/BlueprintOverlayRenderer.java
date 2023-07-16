@@ -35,6 +35,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -322,13 +323,11 @@ public class BlueprintOverlayRenderer {
 				if (whitelistMode == WhitelistMode.WHITELIST_DISJ && attributes.size() == 1) {
 					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
 					if (fromNBT instanceof ItemAttribute.InTag inTag) {
-						if (BuiltInRegistries.ITEM.isKnownTagName(inTag.tag)) {
-							List<ItemStack> stacks = new ArrayList<>();
-							for (Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(inTag.tag)) {
-								stacks.add(new ItemStack(holder.value()));
-							}
-							return stacks.toArray(ItemStack[]::new);
+						List<ItemStack> stacks = new ArrayList<>();
+						for (Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(inTag.tag)) {
+							stacks.add(new ItemStack(holder.value()));
 						}
+						return stacks.toArray(ItemStack[]::new);
 					}
 				}
 			}

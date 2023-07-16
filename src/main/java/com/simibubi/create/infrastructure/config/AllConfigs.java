@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
+import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
 import fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -59,7 +60,7 @@ public class AllConfigs {
 		server = register(CServer::new, ModConfig.Type.SERVER);
 
 		for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
-			ModLoadingContext.registerConfig(Create.ID, pair.getKey(), pair.getValue().specification);
+			ForgeConfigRegistry.INSTANCE.register(Create.ID, pair.getKey(), pair.getValue().specification);
 
 		BlockStressValues.registerProvider(Create.ID, server().kinetics.stressValues);
 

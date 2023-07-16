@@ -23,7 +23,7 @@ archivesBaseName = "create-fabric"
 repositories {
     maven { url = "https://maven.quiltmc.org/repository/release" } // QM
     maven { url = "https://maven.parchmentmc.org" } // Parchment
-
+    maven { url = "https://maven.ladysnake.org/releases" } // CCA, for Trinkets
     maven { url = "https://maven.fabricmc.net/" } // FAPI, Loader
     maven { url = "https://mvn.devos.one/snapshots/" } // Registrate, Porting Lib, Forge Tags, Milk Lib
     maven { url = "https://jitpack.io/" } // for Porting Lib: Mixin Extras, Fabric ASM
@@ -105,8 +105,10 @@ def compat(DependencyHandler deps) {
     deps.modCompileOnly("maven.modrinth:sandwichable:$sandwichable_version")
     deps.modCompileOnly("maven.modrinth:sodium:$sodium_version")
 
-    deps.modCompileOnly("dev.emi:trinkets:$trinkets_version") { transitive = false }
-    deps.modCompileOnly("maven.modrinth:cardinal-components-api:$cca_version") // for trinkets
+    deps.modCompileOnly("dev.emi:trinkets:$trinkets_version")
+    // for Trinkets
+    deps.modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-base:$cca_version")
+    deps.modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:$cca_version")
 
     recipeViewers(deps)
 }
@@ -213,7 +215,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = Integer.parseInt(sourceCompatibility)
+    it.options.release.set(17)
 }
 
 java {

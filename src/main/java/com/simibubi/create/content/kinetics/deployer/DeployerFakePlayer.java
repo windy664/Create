@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents.EntitySizeEvent;
 import io.github.fabricators_of_create.porting_lib.util.UsernameCache;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -104,10 +105,9 @@ public class DeployerFakePlayer extends FakePlayer {
 		return owner == null ? super.getUUID() : owner;
 	}
 
-	public static float deployerHasEyesOnHisFeet(Entity entity, float height) {
-		if (entity instanceof DeployerFakePlayer)
-			return 0;
-		return height;
+	public static void deployerHasEyesOnHisFeet(EntitySizeEvent event) {
+		if (event.entity instanceof DeployerFakePlayer)
+			event.eyeHeight = 0;
 	}
 
 	public static boolean deployerCollectsDropsFromKilledEntities(LivingEntity target, DamageSource source, Collection<ItemEntity> drops, int lootingLevel, boolean recentlyHit) {

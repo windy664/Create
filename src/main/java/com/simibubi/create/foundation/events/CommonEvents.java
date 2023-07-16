@@ -2,7 +2,16 @@ package com.simibubi.create.foundation.events;
 
 import java.util.concurrent.Executor;
 
+import io.github.fabricators_of_create.porting_lib.entity.events.AdditionalEntityTrackingEvents;
+import io.github.fabricators_of_create.porting_lib.entity.events.EntityDataEvents;
+import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
+import io.github.fabricators_of_create.porting_lib.entity.events.EntityMountEvents;
+import io.github.fabricators_of_create.porting_lib.entity.events.EntityMoveEvents;
+import io.github.fabricators_of_create.porting_lib.entity.events.EntityMoveEvents.ChunkSectionChangeContext;
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEntityDamageEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEntityEvents;
+
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEntityLootEvents;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -141,8 +150,8 @@ public class CommonEvents {
 		AllCommands.register(dispatcher);
 	}
 
-	public static void onEntityEnterSection(Entity entity, long packedOldPos, long packedNewPos) {
-		CarriageEntityHandler.onEntityEnterSection(entity, packedOldPos, packedNewPos);
+	public static void onEntityEnterSection(ChunkSectionChangeContext ctx) {
+		CarriageEntityHandler.onEntityEnterSection(ctx.entity(), ctx.oldPackedPos(), ctx.newPackedPos());
 	}
 
 	public static void addReloadListeners() {
@@ -214,8 +223,8 @@ public class CommonEvents {
 		ServerPlayConnectionEvents.DISCONNECT.register(CommonEvents::playerLoggedOut);
 		AttackEntityCallback.EVENT.register(CommonEvents::onEntityAttackedByPlayer);
 		CommandRegistrationCallback.EVENT.register(CommonEvents::registerCommands);
-		EntityEvents.START_TRACKING_TAIL.register(CommonEvents::startTracking);
-		EntityEvents.ENTERING_SECTION.register(CommonEvents::onEntityEnterSection);
+		AdditionalEntityTrackingEvents.AFTER_START_TRACKING.register(CommonEvents::startTracking);
+		EntityMoveEvents.CHUNK_SECTION_CHANGE.register(CommonEvents::onEntityEnterSection);
 		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
 		ServerPlayConnectionEvents.JOIN.register(CommonEvents::playerLoggedIn);
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(CommonEvents::onDatapackSync);
@@ -242,27 +251,27 @@ public class CommonEvents {
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		UseEntityCallback.EVENT.register(ScheduleItemEntityInteraction::interactWithConductor);
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
-		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);
-		MountEntityCallback.EVENT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
-		LivingEntityEvents.EXPERIENCE_DROP_WITH_ENTITY.register(DeployerFakePlayer::deployerKillsDoNotSpawnXP);
-		LivingEntityEvents.ACTUALLY_HURT.register(ExtendoGripItem::bufferLivingAttackEvent);
-		LivingEntityEvents.KNOCKBACK_STRENGTH.register(ExtendoGripItem::attacksByExtendoGripHaveMoreKnockback);
+		LivingEntityEvents.SET_TARGET.register(DeployerFakePlayer::entitiesDontRetaliate);
+		EntityMountEvents.MOUNT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
+		LivingEntityLootEvents.EXPERIENCE_DROP.register(DeployerFakePlayer::deployerKillsDoNotSpawnXP);
+		LivingEntityDamageEvents.HURT.register(ExtendoGripItem::bufferLivingAttackEvent);
+		LivingEntityDamageEvents.KNOCKBACK_STRENGTH.register(ExtendoGripItem::attacksByExtendoGripHaveMoreKnockback);
 		LivingEntityEvents.TICK.register(ExtendoGripItem::holdingExtendoGripIncreasesRange);
 		LivingEntityEvents.TICK.register(DivingBootsItem::accellerateDescentUnderwater);
 		LivingEntityEvents.TICK.register(DivingHelmetItem::breatheUnderwater);
-		LivingEntityEvents.DROPS_WITH_LEVEL.register(CrushingWheelBlockEntity::handleCrushedMobDrops);
-		LivingEntityEvents.LOOTING_LEVEL.register(CrushingWheelBlockEntity::crushingIsFortunate);
-		LivingEntityEvents.DROPS_WITH_LEVEL.register(DeployerFakePlayer::deployerCollectsDropsFromKilledEntities);
-		LivingEntityEvents.EQUIPMENT_CHANGE.register(NetheriteDivingHandler::onLivingEquipmentChange);
-		EntityEvents.EYE_HEIGHT.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
+		LivingEntityLootEvents.DROPS.register(CrushingWheelBlockEntity::handleCrushedMobDrops);
+		LivingEntityLootEvents.LOOTING_LEVEL.register(CrushingWheelBlockEntity::crushingIsFortunate);
+		LivingEntityLootEvents.DROPS.register(DeployerFakePlayer::deployerCollectsDropsFromKilledEntities);
+		ServerEntityEvents.EQUIPMENT_CHANGE.register(NetheriteDivingHandler::onLivingEquipmentChange);
+		EntityEvents.SIZE.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
 		BlockEvents.AFTER_PLACE.register(SymmetryHandler::onBlockPlaced);
 		BlockEvents.AFTER_PLACE.register(SuperGlueHandler::glueListensForBlockPlacement);
-		ProjectileImpactCallback.EVENT.register(BlazeBurnerHandler::onThrowableImpact);
-		EntityReadExtraDataCallback.EVENT.register(ExtendoGripItem::addReachToJoiningPlayersHoldingExtendo);
-		MinecartEvents.SPAWN.register(AbstractMinecartExtensions::minecartSpawn);
-		MinecartEvents.READ.register(AbstractMinecartExtensions::minecartRead);
-		MinecartEvents.WRITE.register(AbstractMinecartExtensions::minecartWrite);
-		MinecartEvents.REMOVE.register(AbstractMinecartExtensions::minecartRemove);
+		EntityEvents.PROJECTILE_IMPACT.register(BlazeBurnerHandler::onThrowableImpact);
+		EntityDataEvents.LOAD.register(ExtendoGripItem::addReachToJoiningPlayersHoldingExtendo);
+		ServerEntityEvents.ENTITY_LOAD.register(AbstractMinecartExtensions::minecartSpawn);
+		EntityDataEvents.LOAD.register(AbstractMinecartExtensions::minecartRead);
+		EntityDataEvents.SAVE.register(AbstractMinecartExtensions::minecartWrite);
+		ServerEntityEvents.ENTITY_UNLOAD.register(AbstractMinecartExtensions::minecartRemove);
 		PlayerBlockBreakEvents.BEFORE.register(SymmetryHandler::onBlockDestroyed);
 	}
 }

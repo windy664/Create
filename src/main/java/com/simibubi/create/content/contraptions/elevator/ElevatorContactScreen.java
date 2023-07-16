@@ -127,7 +127,7 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 
 		FormattedCharSequence formattedcharsequence = title.getVisualOrderText();
 		graphics.drawString(font, formattedcharsequence,
-			(float) (x + (background.width - 8) / 2 - font.width(formattedcharsequence) / 2), (float) y + 6, 0x2F3738, false);
+			x + (background.width - 8) / 2 - font.width(formattedcharsequence) / 2, y + 6, 0x2F3738, false);
 
 		GuiGameElement.of(AllBlocks.ELEVATOR_CONTACT.asStack()).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 56, -200)

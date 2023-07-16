@@ -12,7 +12,6 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -31,7 +30,7 @@ public interface LayeredArmorItem extends CustomRenderedArmorItem {
 		if (!(stack.getItem() instanceof ArmorItem item)) {
 			return;
 		}
-		if (!item.canEquip(stack, slot, entity)) {
+		if (LivingEntity.getEquipmentSlotForItem(stack) != slot) {
 			return;
 		}
 
@@ -56,10 +55,10 @@ public interface LayeredArmorItem extends CustomRenderedArmorItem {
 
 	// fabric: forge patches! yay!
 	@Environment(EnvType.CLIENT)
-	static void renderModel(PoseStack poseStack, MultiBufferSource buffers, int light, boolean glint,
-							Model pModel, float r, float g, float b, ResourceLocation armorResource) {
-		VertexConsumer consumer = ItemRenderer.getArmorFoilBuffer(buffers, RenderType.armorCutoutNoCull(armorResource), false, glint);
-		pModel.renderToBuffer(poseStack, consumer, light, OverlayTexture.NO_OVERLAY, r, g, b, 1.0F);
+	private static void renderModel(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, ArmorItem pArmorItem,
+									Model pModel, boolean pWithGlint, float pRed, float pGreen, float pBlue, ResourceLocation armorResource) {
+		VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.armorCutoutNoCull(armorResource));
+		pModel.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, pRed, pGreen, pBlue, 1.0F);
 	}
 
 	String getArmorTextureLocation(LivingEntity entity, EquipmentSlot slot, ItemStack stack, int layer);

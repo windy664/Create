@@ -7,6 +7,7 @@ import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +26,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
 
         // Special handling for shifting stars
         ResourceLocation itemResource = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
-        if (itemResource != null && itemResource.toString().contains("shifting_star_")) {
+        if (itemResource.toString().contains("shifting_star_")) {
             constellation = itemResource.toString().replace("shifting_star_", "");
         }
 
@@ -39,7 +40,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
 
         // Special handling for shifting stars
         ResourceLocation itemResource = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
-        if (itemResource != null && itemResource.toString().contains("shifting_star_")) {
+        if (itemResource.toString().contains("shifting_star_")) {
             constellation = itemResource.toString().replace("shifting_star_", "");
         }
 

@@ -35,7 +35,7 @@ public class CClient extends ConfigBase {
 	public final ConfigBool ignoreFabulousWarning = b(false, "ignoreFabulousWarning",
 		Comments.ignoreFabulousWarning);
 	// Fabric
-	public final ConfigEnum<FluidUnit> fluidUnitType = e(FluidUnit.MILIBUCKETS, "fluidUnitType",
+	public final ConfigEnum<FluidUnit> fluidUnitType = e(FluidUnit.MILLIBUCKETS, "fluidUnitType",
 			Comments.fluidUnit);
 	public final ConfigBool simplifyFluidUnit = b(true, "simplifyFluidUnit",
 			Comments.simplifyFluidUnit);

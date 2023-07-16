@@ -11,6 +11,8 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ScreenAccessor;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -1032,8 +1034,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		AllGuiTextures.SCHEDULE.render(graphics, leftPos, topPos);
 		FormattedCharSequence formattedcharsequence = title.getVisualOrderText();
 		int center = leftPos + (AllGuiTextures.SCHEDULE.width - 8) / 2;
-		graphics.drawString(font, formattedcharsequence, (float) (center - font.width(formattedcharsequence) / 2),
-			(float) topPos + 4, 0x505050, false);
+		graphics.drawString(font, formattedcharsequence, center - font.width(formattedcharsequence) / 2,
+			topPos + 4, 0x505050, false);
 		renderSchedule(graphics, pMouseX, pMouseY, pPartialTick);
 
 		if (editingCondition == null && editingDestination == null)
@@ -1048,8 +1050,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 			.getVisualOrderText()
 			: Lang.translateDirect("schedule.condition.editor")
 				.getVisualOrderText();
-		graphics.drawString(font, formattedcharsequence, (float) (center - font.width(formattedcharsequence) / 2),
-			(float) topPos + 44, 0x505050, false);
+		graphics.drawString(font, formattedcharsequence, center - font.width(formattedcharsequence) / 2,
+			topPos + 44, 0x505050, false);
 
 		IScheduleInput rendered = editingCondition == null ? editingDestination : editingCondition;
 
