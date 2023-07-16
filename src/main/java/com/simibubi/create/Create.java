@@ -158,6 +158,7 @@ public class Create implements ModInitializer {
 		BuiltinPotatoProjectileTypes.register();
 
 //		event.enqueueWork(() -> {
+			AllAdvancements.register();
 			AllTriggers.register();
 			BoilerHeaters.registerDefaults();
 			AllFluids.registerFluidInteractions();
