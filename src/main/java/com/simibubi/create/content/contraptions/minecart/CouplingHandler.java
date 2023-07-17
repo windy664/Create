@@ -29,12 +29,9 @@ public class CouplingHandler {
 
 	public static boolean preventEntitiesFromMoutingOccupiedCart(Entity vehicle, Entity passenger) {
 		if (vehicle instanceof AbstractMinecart cart) {
-			LazyOptional<MinecartController> optional = cart.lazyController();
-			if (!optional.isPresent())
-				return true;
 			if (passenger instanceof AbstractContraptionEntity)
 				return true;
-			MinecartController controller = optional.orElse(null);
+			MinecartController controller = cart.create$getController();
 			if (controller.isCoupledThroughContraption()) {
 				return false;
 			}

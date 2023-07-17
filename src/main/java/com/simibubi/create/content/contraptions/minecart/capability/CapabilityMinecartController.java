@@ -104,7 +104,7 @@ public class CapabilityMinecartController implements INBTSerializable<CompoundTa
 
 			cartsWithCoupling.remove(uniqueID);
 
-			MinecartController controller = cart.getController();
+			MinecartController controller = cart.create$getController();
 //			capability.addListener(new MinecartRemovalListener(world, cart)); // fabric: handled via AbstractMinecartMixin
 			carts.put(uniqueID, controller);
 
@@ -195,55 +195,14 @@ public class CapabilityMinecartController implements INBTSerializable<CompoundTa
 		return carts.get(cartId);
 	}
 
-	/* Capability management */
-
-//	public static Capability<MinecartController> MINECART_CONTROLLER_CAPABILITY =
-//		CapabilityManager.get(new CapabilityToken<>() {
-//		});
-
 	public static void attach(AbstractMinecart entity) {
-		CapabilityMinecartController capability = new CapabilityMinecartController((AbstractMinecart) entity);
-//		ResourceLocation id = Create.asResource("minecart_controller");
-		((AbstractMinecartExtensions) entity).setCap(capability);
-//		((AbstractMinecartExtensions) entity).addListener((cart) -> { // fabric: handled via AbstractMinecartMixin
-//			if (capability.cap.isPresent())
-//				capability.cap.invalidate();
-//		});
 		queuedAdditions.get(entity.getCommandSenderWorld())
-			.add((AbstractMinecart) entity);
+			.add(entity);
 	}
 
 	public static void startTracking(Entity entity) {
 		if (!(entity instanceof AbstractMinecart cart))
 			return;
-		cart.getController().sendData();
+		cart.create$getController().sendData();
 	}
-
-	/* Capability provider */
-
-	public final LazyOptional<MinecartController> cap;
-	public MinecartController handler;
-
-	public CapabilityMinecartController(AbstractMinecart minecart) {
-		handler = new MinecartController(minecart);
-		cap = LazyOptional.of(() -> handler);
-	}
-
-//	@Override
-//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-//		if (cap == MINECART_CONTROLLER_CAPABILITY)
-//			return this.cap.cast();
-//		return LazyOptional.empty();
-//	}
-
-	@Override
-	public CompoundTag serializeNBT() {
-		return handler.serializeNBT();
-	}
-
-	@Override
-	public void deserializeNBT(CompoundTag nbt) {
-		handler.deserializeNBT(nbt);
-	}
-
 }

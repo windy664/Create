@@ -42,10 +42,7 @@ public class MinecartCouplingItem extends Item {
 		AbstractMinecart minecart = (AbstractMinecart) interacted;
 		if (player == null)
 			return InteractionResult.PASS;
-		LazyOptional<MinecartController> capability = minecart.lazyController();
-		if (!capability.isPresent())
-			return InteractionResult.PASS;
-		MinecartController controller = capability.orElse(null);
+		MinecartController controller = minecart.create$getController();
 
 		ItemStack heldItem = player.getItemInHand(hand);
 		if (AllItems.MINECART_COUPLING.isIn(heldItem)) {

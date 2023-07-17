@@ -119,8 +119,7 @@ public class CartAssemblerBlockEntity extends SmartBlockEntity implements IDispl
 			.isEmpty())
 			return;
 
-		LazyOptional<MinecartController> optional = cart.lazyController();
-		if (optional.isPresent() && optional.orElse(null)
+		if (cart.create$getController()
 			.isCoupledThroughContraption())
 			return;
 

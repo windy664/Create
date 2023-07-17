@@ -68,13 +68,11 @@ import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.gui.OpenCreateMenuButton;
 
 import io.github.fabricators_of_create.porting_lib.client_events.event.client.RenderArmCallback;
-import io.github.fabricators_of_create.porting_lib.entity.events.EntityDataEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityMountEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.player.PlayerTickEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.CameraSetupCallback;
@@ -86,7 +84,6 @@ import io.github.fabricators_of_create.porting_lib.event.client.FogEvents.ColorD
 import io.github.fabricators_of_create.porting_lib.event.client.InteractEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.ParticleManagerRegistrationCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderHandCallback;
-import io.github.fabricators_of_create.porting_lib.event.client.RenderHandCallback.RenderHandEvent;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTooltipBorderColorCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.AttackAirCallback;
@@ -421,8 +418,6 @@ public class ClientEvents {
 
 		// External Events
 
-		ClientEntityEvents.ENTITY_LOAD.register(AbstractMinecartExtensions::minecartSpawn);
-		ClientEntityEvents.ENTITY_UNLOAD.register(AbstractMinecartExtensions::minecartRemove);
 		ClientTickEvents.END_CLIENT_TICK.register(SymmetryHandler::onClientTick);
 		WorldRenderEvents.AFTER_TRANSLUCENT.register(SymmetryHandler::render);
 		UseBlockCallback.EVENT.register(ArmInteractionPointHandler::rightClickingBlocksSelectsThem);

@@ -50,8 +50,7 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 		Entity entityByID = world.getEntity(entityID);
 		if (entityByID == null)
 			return;
-		((AbstractMinecart) entityByID).lazyController()
-				.ifPresent(mc -> mc.deserializeNBT(nbt));
+		((AbstractMinecart) entityByID).create$getController().deserializeNBT(nbt);
 	}
 
 }

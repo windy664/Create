@@ -102,14 +102,7 @@ public class CouplingCommand {
 							if (!(cart2 instanceof AbstractMinecart))
 								throw ONLY_MINECARTS_ALLOWED.create();
 
-							LazyOptional<MinecartController> cart1Capability = ((AbstractMinecart) cart1).lazyController();
-							if (!cart1Capability.isPresent()) {
-								ctx.getSource()
-									.sendSuccess(() -> Components.literal("Minecart has no Couplings Attached"), true);
-								return 0;
-							}
-
-							MinecartController cart1Controller = cart1Capability.orElse(null);
+							MinecartController cart1Controller = ((AbstractMinecart) cart1).create$getController();
 
 							int cart1Couplings = (cart1Controller.isConnectedToCoupling() ? 1 : 0)
 								+ (cart1Controller.isLeadingCoupling() ? 1 : 0);
@@ -149,14 +142,7 @@ public class CouplingCommand {
 						if (!(cart instanceof AbstractMinecart))
 							throw ONLY_MINECARTS_ALLOWED.create();
 
-						LazyOptional<MinecartController> capability = ((AbstractMinecart) cart).lazyController();
-						if (!capability.isPresent()) {
-							ctx.getSource()
-								.sendSuccess(() -> Components.literal("Minecart has no Couplings Attached"), true);
-							return 0;
-						}
-
-						MinecartController controller = capability.orElse(null);
+						MinecartController controller = ((AbstractMinecart) cart).create$getController();
 
 						int couplings =
 							(controller.isConnectedToCoupling() ? 1 : 0) + (controller.isLeadingCoupling() ? 1 : 0);
@@ -169,7 +155,7 @@ public class CouplingCommand {
 						controller.decouple();
 
 						ctx.getSource()
-							.sendSuccess(() -> 
+							.sendSuccess(() ->
 								Components.literal("Removed " + couplings + " couplings from the Minecart"), true);
 
 						return couplings;

@@ -55,7 +55,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction.Edge
 import com.simibubi.create.foundation.recipe.RecipeFinder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
-import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 import com.simibubi.create.infrastructure.command.AllCommands;
 
 import io.github.fabricators_of_create.porting_lib.event.common.BlockEvents;
@@ -180,9 +179,9 @@ public class CommonEvents {
 	}
 
 	// handled by AbstractMinecartMixin
-	public static void attachCapabilities(AbstractMinecart cart) {
-		CapabilityMinecartController.attach(cart);
-	}
+//	public static void attachCapabilities(AbstractMinecart cart) {
+//		CapabilityMinecartController.attach(cart);
+//	}
 
 	public static void startTracking(Entity target, ServerPlayer player) {
 		CapabilityMinecartController.startTracking(target);
@@ -268,10 +267,6 @@ public class CommonEvents {
 		BlockEvents.AFTER_PLACE.register(SuperGlueHandler::glueListensForBlockPlacement);
 		EntityEvents.PROJECTILE_IMPACT.register(BlazeBurnerHandler::onThrowableImpact);
 		EntityDataEvents.LOAD.register(ExtendoGripItem::addReachToJoiningPlayersHoldingExtendo);
-		ServerEntityEvents.ENTITY_LOAD.register(AbstractMinecartExtensions::minecartSpawn);
-		EntityDataEvents.LOAD.register(AbstractMinecartExtensions::minecartRead);
-		EntityDataEvents.SAVE.register(AbstractMinecartExtensions::minecartWrite);
-		ServerEntityEvents.ENTITY_UNLOAD.register(AbstractMinecartExtensions::minecartRemove);
 		PlayerBlockBreakEvents.BEFORE.register(SymmetryHandler::onBlockDestroyed);
 	}
 }
