@@ -1,5 +1,4 @@
 {
-  "type": "create:crushing",
   "fabric:load_conditions": [
     {
       "condition": "fabric:tags_populated",
@@ -8,6 +7,7 @@
       ]
     }
   ],
+  "type": "create:crushing",
   "ingredients": [
     {
       "tag": "c:raw_uranium_ores"

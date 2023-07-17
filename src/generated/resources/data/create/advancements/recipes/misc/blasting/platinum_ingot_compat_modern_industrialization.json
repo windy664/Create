@@ -30,5 +30,6 @@
     "recipes": [
       "create:blasting/platinum_ingot_compat_modern_industrialization"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

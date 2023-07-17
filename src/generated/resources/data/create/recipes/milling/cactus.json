@@ -1,5 +1,4 @@
 {
-  "type": "create:milling",
   "fabric:load_conditions": [
     {
       "condition": "fabric:not",
@@ -11,6 +10,7 @@
       }
     }
   ],
+  "type": "create:milling",
   "ingredients": [
     {
       "item": "minecraft:cactus"

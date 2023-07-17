@@ -61,12 +61,18 @@ public class TagLangGen {
 
 		common.auto("honey_buckets");
 
+		common.auto("chocolate");
+		common.auto("honey");
+		common.auto("tea");
+
 		TagLangHelper create = new TagLangHelper(Create.ID, prov);
 		create.subDir("blaze_burner_fuel")
 				.plural("regular")
 				.plural("special");
 		create.plural("casing");
 		create.put("contraption_controlled", "Actors");
+		create.put("bottomless/allow", "Potentially Infinite Fluids");
+		create.auto("diving_fluids");
 		create.auto("create_ingots");
 		create.auto("crushed_raw_materials");
 		create.plural("deployable_drink");

@@ -1,0 +1,4 @@
+// 1.20.1	2023-07-17T00:09:04.3183487	Create/Tags for minecraft:damage_type
+d17cbaf115b5714550eb14a9155b5b34f32471f3 data\minecraft\tags\damage_type\is_explosion.json
+1fca74344d62cbfad090fa56a9c12484de899ff8 data\minecraft\tags\damage_type\bypasses_armor.json
+26ff06a2186b8ea8773c6e958e11ce9aafa45792 data\minecraft\tags\damage_type\is_fire.json

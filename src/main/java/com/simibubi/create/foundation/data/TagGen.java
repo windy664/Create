@@ -18,6 +18,13 @@ import com.tterrag.registrate.providers.RegistrateTagsProvider;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import me.alphamode.forgetags.Tags;
+
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.FabricTagBuilder;
+
+import org.jetbrains.annotations.NotNull;
+
 import net.minecraft.core.Holder;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.data.tags.TagsProvider.TagAppender;
@@ -144,7 +151,7 @@ public class TagGen {
 
 		for (AllBlockTags tag : AllBlockTags.values()) {
 			if (tag.alwaysDatagen) {
-				prov.getOrCreateRawBuilder(tag.tag);
+				prov.tag(tag.tag);
 			}
 		}
 	}
@@ -197,7 +204,7 @@ public class TagGen {
 
 		for (AllItemTags tag : AllItemTags.values()) {
 			if (tag.alwaysDatagen) {
-				prov.getOrCreateRawBuilder(tag.tag);
+				prov.tag(tag.tag);
 			}
 		}
 	}
@@ -244,7 +251,7 @@ public class TagGen {
 
 		for (AllFluidTags tag : AllFluidTags.values()) {
 			if (tag.alwaysDatagen) {
-				prov.getOrCreateRawBuilder(tag.tag);
+				prov.tag(tag.tag);
 			}
 		}
 	}
@@ -256,7 +263,7 @@ public class TagGen {
 
 		for (AllEntityTags tag : AllEntityTags.values()) {
 			if (tag.alwaysDatagen) {
-				prov.getOrCreateRawBuilder(tag.tag);
+				prov.tag(tag.tag);
 			}
 		}
 	}
@@ -291,22 +298,20 @@ public class TagGen {
 		}
 
 		public CreateTagAppender<T> tag(TagKey<T> tag) {
-			TagBuilder tagbuilder = getOrCreateRawBuilder(tag);
-			return new CreateTagAppender<>(tagbuilder, keyExtractor);
+			FabricTagProvider<T>.FabricTagBuilder fabricBuilder = provider.addTag(tag);
+			return new CreateTagAppender<>(fabricBuilder, keyExtractor);
 		}
-
-		public TagBuilder getOrCreateRawBuilder(TagKey<T> tag) {
-			return ((TagAppenderAccessor) provider.addTag(tag)).getBuilder();
-		}
-
 	}
 
 	public static class CreateTagAppender<T> extends TagsProvider.TagAppender<T> {
 
 		private Function<T, ResourceKey<T>> keyExtractor;
+		private FabricTagProvider<T>.FabricTagBuilder fabricBuilder;
 
-		public CreateTagAppender(TagBuilder pBuilder, Function<T, ResourceKey<T>> pKeyExtractor) {
-			super(pBuilder);
+		public CreateTagAppender(FabricTagProvider<T>.FabricTagBuilder fabricBuilder, Function<T, ResourceKey<T>> pKeyExtractor) {
+			//noinspection DataFlowIssue
+			super(((TagAppenderAccessor) (Object) fabricBuilder).getBuilder());
+			this.fabricBuilder = fabricBuilder;
 			this.keyExtractor = pKeyExtractor;
 		}
 
@@ -323,6 +328,13 @@ public class TagGen {
 			return this;
 		}
 
+		@Override
+		@NotNull
+		public TagAppender<T> addTag(@NotNull TagKey<T> tag) {
+			// fabric: need to force add, since the vanilla tag validation doesn't work
+			fabricBuilder.forceAddTag(tag);
+			return this;
+		}
 	}
 
 }
