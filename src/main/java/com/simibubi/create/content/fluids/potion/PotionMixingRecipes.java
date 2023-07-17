@@ -94,7 +94,6 @@ public class PotionMixingRecipes {
 			}
 		}
 
-		// fabric: no brewing API
 		recipeIndex = 0;
 		for (IBrewingRecipe recipe : BrewingRecipeRegistry.getRecipes()) {
 			if (recipe instanceof BrewingRecipe recipeImpl) {
