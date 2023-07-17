@@ -34,14 +34,14 @@ public class ModelSwapper {
 		return customItemModels;
 	}
 
-	public void onModelBake(ModelManager manager, Map<ResourceLocation, BakedModel> modelRegistry, ModelBakery loader) {
+	public void onModelBake(Map<ResourceLocation, BakedModel> modelRegistry, ModelBakery modelBakery) {
 		customBlockModels.forEach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
 		customItemModels.forEach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
 		CustomRenderedItems.forEach(item -> swapModels(modelRegistry, getItemModelLocation(item), CustomRenderedItemModel::new));
 	}
 
 	public void registerListeners() {
-		ModelEvents.MODELS_BAKED.register(this::onModelBake);
+		ModelEvents.MODIFY_BAKING_RESULT.register(this::onModelBake);
 	}
 
 	public static <T extends BakedModel> void swapModels(Map<ResourceLocation, BakedModel> modelRegistry,
