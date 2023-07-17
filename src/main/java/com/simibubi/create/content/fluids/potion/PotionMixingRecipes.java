@@ -15,10 +15,12 @@ import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 
+import io.github.fabricators_of_create.porting_lib.brewing.BrewingRecipe;
+import io.github.fabricators_of_create.porting_lib.brewing.BrewingRecipeRegistry;
+import io.github.fabricators_of_create.porting_lib.brewing.IBrewingRecipe;
 import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.PotionBrewing$MixAccessor;
 import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.PotionBrewingAccessor;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-import me.shedaniel.rei.plugin.common.displays.brewing.BrewingRecipe;
 import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistry;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.Registry;
@@ -93,28 +95,28 @@ public class PotionMixingRecipes {
 		}
 
 		// fabric: no brewing API
-//		recipeIndex = 0;
-//		for (IBrewingRecipe recipe : BrewingRecipeRegistry.getRecipes()) {
-//			if (recipe instanceof BrewingRecipe recipeImpl) {
-//				ItemStack output = recipeImpl.getOutput();
-//				if (!SUPPORTED_CONTAINERS.contains(output.getItem())) {
-//					continue;
-//				}
-//
-//				Ingredient input = recipeImpl.getInput();
-//				Ingredient ingredient = recipeImpl.getIngredient();
-//				FluidStack outputFluid = null;
-//				for (ItemStack stack : supportedContainerStacks) {
-//					if (input.test(stack)) {
-//						FluidStack inputFluid = PotionFluidHandler.getFluidFromPotionItem(stack);
-//						if (outputFluid == null) {
-//							outputFluid = PotionFluidHandler.getFluidFromPotionItem(output);
-//						}
-//						mixingRecipes.add(createRecipe("potion_mixing_modded_" + recipeIndex++, ingredient, inputFluid, outputFluid));
-//					}
-//				}
-//			}
-//		}
+		recipeIndex = 0;
+		for (IBrewingRecipe recipe : BrewingRecipeRegistry.getRecipes()) {
+			if (recipe instanceof BrewingRecipe recipeImpl) {
+				ItemStack output = recipeImpl.getOutput();
+				if (!SUPPORTED_CONTAINERS.contains(output.getItem())) {
+					continue;
+				}
+
+				Ingredient input = recipeImpl.getInput();
+				Ingredient ingredient = recipeImpl.getIngredient();
+				FluidStack outputFluid = null;
+				for (ItemStack stack : supportedContainerStacks) {
+					if (input.test(stack)) {
+						FluidStack inputFluid = PotionFluidHandler.getFluidFromPotionItem(stack);
+						if (outputFluid == null) {
+							outputFluid = PotionFluidHandler.getFluidFromPotionItem(output);
+						}
+						mixingRecipes.add(createRecipe("potion_mixing_modded_" + recipeIndex++, ingredient, inputFluid, outputFluid));
+					}
+				}
+			}
+		}
 
 		return mixingRecipes;
 	}
