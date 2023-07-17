@@ -231,6 +231,8 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		if (!(entity instanceof GantryContraptionEntity))
 			return;
 		GantryContraptionEntity ce = (GantryContraptionEntity) entity;
+		if (ce.movementAxis == null)
+			return; // fabric: packet ordering makes this null for a short period
 		ce.axisMotion = packet.motion;
 		ce.clientOffsetDiff = packet.coord - ce.getAxisCoord();
 		ce.sequencedOffsetLimit = packet.sequenceLimit;
