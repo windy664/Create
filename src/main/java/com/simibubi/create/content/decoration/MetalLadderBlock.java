@@ -92,7 +92,6 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
 			int range = AllConfigs.server().equipment.placementAssistRange.get();
 			if (player != null) {
-				// TODO PORT 1.20
 				AttributeInstance reach = player.getAttribute(ReachEntityAttributes.REACH);
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))
 					range += 4;

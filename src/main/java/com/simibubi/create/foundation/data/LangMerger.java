@@ -62,19 +62,6 @@ public class LangMerger implements DataProvider {
 		populateLangIgnore();
 	}
 
-	// TODO PORT 1.20: do we need this?
-//	public static void attachToRegistrateProvider(DataGenerator gen, PackOutput output) {
-//		Map<String, DataProvider> providers =
-//			ObfuscationReflectionHelper.getPrivateValue(DataGenerator.class, gen, "providersToRun");
-//		Entry<String, DataProvider> entryToReplace = null;
-//		for (Entry<String, DataProvider> entry : providers.entrySet())
-//			if (entry.getValue() instanceof RegistrateDataProvider rdp)
-//				entryToReplace = entry;
-//		if (entryToReplace != null)
-//			providers.put(entryToReplace.getKey(), new ChainedDataProvider(entryToReplace.getValue(),
-//				new LangMerger(output, Create.ID, Create.NAME, AllLangPartials.values())));
-//	}
-
 	protected void populateLangIgnore() {
 		// Key prefixes added here will NOT be transferred to lang templates
 		langIgnore.add("create.ponder.debug_"); // Ponder debug scene text

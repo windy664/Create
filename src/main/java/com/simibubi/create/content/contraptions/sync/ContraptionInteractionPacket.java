@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.utility.fabric.ReachUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -56,8 +57,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
 			AABB bb = contraptionEntity.getBoundingBox();
 			double boundsExtra = Math.max(bb.getXsize(), bb.getYsize());
-			// TODO PORT 1.20
-			double d = sender.getAttribute(ReachEntityAttributes.REACH).getValue() + 10 + boundsExtra;
+			double d = ReachUtil.reach(sender) + 10 + boundsExtra;
 			if (!sender.hasLineOfSight(entityByID))
 				d -= 3;
 			d *= d;

@@ -3,10 +3,11 @@ package com.simibubi.create.content.redstone.link.controller;
 import java.util.List;
 import java.util.UUID;
 
-import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+
+import com.simibubi.create.foundation.utility.fabric.ReachUtil;
 
 import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import net.fabricmc.api.EnvType;
@@ -172,8 +173,7 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 
 	public static boolean playerInRange(Player player, Level world, BlockPos pos) {
 		//double modifier = world.isRemote ? 0 : 1.0;
-		// TODO PORT 1.20
-		double reach = 0.4*ReachEntityAttributes.getReachDistance(player, player.isCreative() ? 5 : 4.5);// + modifier;
+		double reach = 0.4* ReachUtil.reach(player);// + modifier;
 		return player.distanceToSqr(Vec3.atCenterOf(pos)) < reach*reach;
 	}
 

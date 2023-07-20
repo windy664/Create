@@ -94,7 +94,6 @@ public class SymmetryHandler {
 		return true;
 	}
 
-	// TODO PORT 1.20
 	@Environment(EnvType.CLIENT)
 	public static void render(WorldRenderContext context) {
 		Minecraft mc = Minecraft.getInstance();

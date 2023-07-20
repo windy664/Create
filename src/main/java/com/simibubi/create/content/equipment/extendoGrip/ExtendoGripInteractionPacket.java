@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.utility.fabric.ReachUtil;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -60,9 +61,7 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 			Entity entityByID = sender.level()
 				.getEntity(target);
 			if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
-				// TODO PORT 1.20
-				double d = sender.getAttribute(ReachEntityAttributes.REACH)
-					.getValue();
+				double d = ReachUtil.reach(sender);
 				if (!sender.hasLineOfSight(entityByID))
 					d -= 3;
 				d *= d;

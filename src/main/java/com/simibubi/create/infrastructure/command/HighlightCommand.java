@@ -9,6 +9,7 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.IDisplayAssemblyExceptions;
 import com.simibubi.create.foundation.utility.Components;
+import com.simibubi.create.foundation.utility.fabric.ReachUtil;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -63,9 +64,7 @@ public class HighlightCommand {
 	}
 
 	private static int highlightAssemblyExceptionFor(ServerPlayer player, CommandSourceStack source) {
-		// TODO PORT 1.20
-		double distance = player.getAttribute(ReachEntityAttributes.REACH)
-			.getValue();
+		double distance = ReachUtil.reach(player);
 		Vec3 start = player.getEyePosition(1);
 		Vec3 look = player.getViewVector(1);
 		Vec3 end = start.add(look.x * distance, look.y * distance, look.z * distance);
