@@ -20,10 +20,9 @@ public class CustomRenderedItemModel extends ForwardingBakedModel implements Tra
 
 	@Override
 	public BakedModel applyTransform(ItemDisplayContext cameraItemDisplayContext, PoseStack mat,
-									 boolean leftHand) {
-		// Super call returns originalModel, but we want to return this, else BEWLR
-		// won't be used.
-		TransformTypeDependentItemBakedModel.maybeApplyTransform(wrapped, cameraItemDisplayContext, mat, leftHand);
+									 boolean leftHand, DefaultTransform defaultTransform) {
+		// fabric: apply the wrapped model transforms, but render this model
+		defaultTransform.apply(wrapped);
 		return this;
 	}
 

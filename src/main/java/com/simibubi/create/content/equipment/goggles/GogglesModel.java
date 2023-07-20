@@ -9,19 +9,20 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;
 
 public class GogglesModel extends ForwardingBakedModel implements TransformTypeDependentItemBakedModel {
+	protected BakedModel itemModel;
 
 	public GogglesModel(BakedModel template) {
-		wrapped = template;
+		this.itemModel = wrapped = template;
 	}
 
 	@Override
-	public BakedModel applyTransform(ItemDisplayContext cameraItemDisplayContext, PoseStack mat, boolean leftHanded) {
+	public BakedModel applyTransform(ItemDisplayContext cameraItemDisplayContext, PoseStack mat, boolean leftHanded, DefaultTransform defaultTransform) {
 		if (cameraItemDisplayContext == ItemDisplayContext.HEAD) {
-			return TransformTypeDependentItemBakedModel.maybeApplyTransform(
-					AllPartialModels.GOGGLES.get(), cameraItemDisplayContext, mat, leftHanded
-			);
+			BakedModel headGoggles = AllPartialModels.GOGGLES.get();
+			defaultTransform.apply(headGoggles);
+			return headGoggles;
 		}
-		return TransformTypeDependentItemBakedModel.super.applyTransform(cameraItemDisplayContext, mat, leftHanded);
+		defaultTransform.apply(this);
+		return this;
 	}
-
 }
