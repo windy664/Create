@@ -103,7 +103,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 		buffer.writeVarInt(outputs.size());
 		outputs.forEach(o -> o.write(buffer));
 		buffer.writeVarInt(fluidOutputs.size());
-		fluidOutputs.forEach(o -> o.toBuffer(buffer));
+		fluidOutputs.forEach(o -> o.writeToPacket(buffer));
 
 		buffer.writeVarInt(recipe.getProcessingDuration());
 		buffer.writeVarInt(recipe.getRequiredHeat()
@@ -132,7 +132,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
-			fluidResults.add(FluidStack.fromBuffer(buffer));
+			fluidResults.add(FluidStack.readFromPacket(buffer));
 
 		T recipe = new ProcessingRecipeBuilder<>(factory, recipeId).withItemIngredients(ingredients)
 			.withItemOutputs(results)

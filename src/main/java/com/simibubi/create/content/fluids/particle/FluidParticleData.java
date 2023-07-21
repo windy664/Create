@@ -53,7 +53,7 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 
 	@Override
 	public void writeToNetwork(FriendlyByteBuf buffer) {
-		fluid.toBuffer(buffer);
+		fluid.writeToPacket(buffer);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 			}
 
 			public FluidParticleData fromNetwork(ParticleType<FluidParticleData> particleTypeIn, FriendlyByteBuf buffer) {
-				return new FluidParticleData(particleTypeIn, FluidStack.fromBuffer(buffer));
+				return new FluidParticleData(particleTypeIn, FluidStack.readFromPacket(buffer));
 			}
 		};
 

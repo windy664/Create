@@ -24,14 +24,14 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 	public ContraptionFluidPacket(FriendlyByteBuf buffer) {
 		entityId = buffer.readInt();
 		localPos = buffer.readBlockPos();
-		containedFluid = FluidStack.fromBuffer(buffer);
+		containedFluid = FluidStack.readFromPacket(buffer);
 	}
 
 	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityId);
 		buffer.writeBlockPos(localPos);
-		containedFluid.toBuffer(buffer);
+		containedFluid.writeToPacket(buffer);
 	}
 
 	@Override

@@ -224,7 +224,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 			int size = buffer.readVarInt();
 			matchingFluidStacks = new ArrayList<>(size);
 			for (int i = 0; i < size; i++)
-				matchingFluidStacks.add(FluidStack.fromBuffer(buffer));
+				matchingFluidStacks.add(FluidStack.readFromPacket(buffer));
 		}
 
 		@Override
@@ -233,7 +233,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 			List<FluidStack> matchingFluidStacks = getMatchingFluidStacks();
 			buffer.writeVarInt(matchingFluidStacks.size());
 			matchingFluidStacks.stream()
-				.forEach(stack -> stack.toBuffer(buffer));
+				.forEach(stack -> stack.writeToPacket(buffer));
 		}
 
 		@Override

@@ -41,8 +41,9 @@ repositories {
 
 configurations.configureEach {
     resolutionStrategy.eachDependency {
-        if (requested.module.name == "fabric-loader") {
-            useVersion(loader_version)
+        switch (requested.module.name) { // some dependencies pull in broken, outdated versions of these.
+            case "fabric-loader": useVersion(loader_version); break
+            case "fabric-api": useVersion(fabric_version); break
         }
     }
 }
@@ -97,6 +98,8 @@ def devEnv(DependencyHandler deps) {
         deps.modLocalRuntime("maven.modrinth:cc-restitched:$cc_version")
         deps.modLocalRuntime("maven.modrinth:cloth-config:$cloth_version")
     }
+    // have deprecated modules present at runtime only
+    deps.modLocalRuntime("net.fabricmc.fabric-api:fabric-api-deprecated:$fabric_version")
 }
 
 // setup mods that are available for compatibility reasons

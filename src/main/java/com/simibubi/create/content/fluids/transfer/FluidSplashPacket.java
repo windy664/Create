@@ -24,13 +24,13 @@ public class FluidSplashPacket extends SimplePacketBase {
 
 	public FluidSplashPacket(FriendlyByteBuf buffer) {
 		pos = buffer.readBlockPos();
-		fluid =FluidStack.fromBuffer(buffer);
+		fluid =FluidStack.readFromPacket(buffer);
 	}
 
 	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
-		fluid.toBuffer(buffer);
+		fluid.writeToPacket(buffer);
 	}
 
 	@Override
