@@ -167,7 +167,7 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 	}
 
 	@Override
-	public boolean applyCustomDestroyEffects(BlockState state, ClientLevel Level, BlockPos pos, ParticleEngine manager) {
+	public boolean addDestroyEffects(BlockState state, ClientLevel Level, BlockPos pos, ParticleEngine manager) {
 		return true;
 	}
 

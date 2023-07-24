@@ -17,7 +17,7 @@ public interface ReducedDestroyEffects extends CustomDestroyEffectsBlock {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	default boolean applyCustomDestroyEffects(BlockState state, ClientLevel world, BlockPos pos, ParticleEngine manager) {
+	default boolean addDestroyEffects(BlockState state, ClientLevel world, BlockPos pos, ParticleEngine manager) {
 		VoxelShape voxelshape = state.getShape(world, pos);
 		MutableInt amtBoxes = new MutableInt(0);
 		voxelshape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> amtBoxes.increment());
