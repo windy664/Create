@@ -1,6 +1,6 @@
 {
 	"parent": "create:block/flywheel/flywheel",
-	"loader": "porting_lib:obj",
+	"porting_lib:loader": "porting_lib:obj",
 	"flip_v": true,
 	"model": "create:models/block/flywheel/flywheel.obj",
 	"display": {

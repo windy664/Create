@@ -23,7 +23,6 @@ archivesBaseName = "create-fabric"
 repositories {
     maven { url = "https://maven.quiltmc.org/repository/release" } // QM
     maven { url = "https://maven.parchmentmc.org" } // Parchment
-    maven { url = "https://maven.ladysnake.org/releases" } // CCA, for Trinkets
     maven { url = "https://maven.fabricmc.net/" } // FAPI, Loader
     maven { url = "https://mvn.devos.one/snapshots/" } // Registrate, Porting Lib, Forge Tags, Milk Lib
     maven { url = "https://jitpack.io/" } // for Porting Lib: Mixin Extras, Fabric ASM
@@ -37,6 +36,7 @@ repositories {
         url = "https://maven.jamieswhiteshirt.com/libs-release"
         content { includeGroup("com.jamieswhiteshirt") }
     }
+    maven { url = "https://maven.ladysnake.org/releases" } // CCA, for Trinkets
 }
 
 configurations.configureEach {

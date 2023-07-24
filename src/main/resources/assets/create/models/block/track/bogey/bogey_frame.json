@@ -1,6 +1,6 @@
 {
 	"parent": "create:block/track/bogey/textures",
-	"loader": "porting_lib:obj",
+	"porting_lib:loader": "porting_lib:obj",
 	"flip_v": true,
 	"model": "create:models/block/track/bogey/bogey_frame.obj"
 }
