@@ -31,6 +31,7 @@ repositories {
     maven { url = "https://maven.shedaniel.me/" } // REI and deps
     maven { url = "https://api.modrinth.com/maven" } // LazyDFU, Sodium, Sandwichable
     maven { url = "https://maven.terraformersmc.com/" } // Mod Menu, Trinkets
+    maven { url = "https://squiddev.cc/maven" } // CC:T
     maven { url = "https://modmaven.dev" } // Botania
     maven { // Reach Entity Attributes
         url = "https://maven.jamieswhiteshirt.com/libs-release"
@@ -95,7 +96,7 @@ def devEnv(DependencyHandler deps) {
     deps.modLocalRuntime("dev.onyxstudios.cardinal-components-api:cardinal-components-base:$cca_version")
     deps.modLocalRuntime("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:$cca_version")
     if (Boolean.valueOf(cc_enabled)) {
-        deps.modLocalRuntime("maven.modrinth:cc-restitched:$cc_version")
+        deps.modLocalRuntime("cc.tweaked:cc-tweaked-$minecraft_version-fabric:$cc_version")
         deps.modLocalRuntime("maven.modrinth:cloth-config:$cloth_version")
     }
     // have deprecated modules present at runtime only
@@ -104,7 +105,7 @@ def devEnv(DependencyHandler deps) {
 
 // setup mods that are available for compatibility reasons
 def compat(DependencyHandler deps) {
-    deps.modCompileOnly("maven.modrinth:cc-restitched:$cc_version")
+    deps.modCompileOnly("cc.tweaked:cc-tweaked-$minecraft_version-fabric-api:$cc_version")
 
     deps.modCompileOnly("vazkii.botania:Botania:$botania_version") { transitive = false }
     deps.modCompileOnly("com.terraformersmc:modmenu:$modmenu_version")
