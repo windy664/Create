@@ -92,7 +92,6 @@ public class BakedModelHelper {
 	}
 
 	public static BakedModel generateModel(BakedModel template, UnaryOperator<TextureAtlasSprite> spriteSwapper) {
-		if (true) return template; // TODO: convert this to use emitBlockQuads
 		RandomSource random = RandomSource.create();
 
 		Map<Direction, List<BakedQuad>> culledFaces = new EnumMap<>(Direction.class);
