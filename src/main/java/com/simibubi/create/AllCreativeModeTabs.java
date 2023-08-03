@@ -19,7 +19,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import dev.architectury.registry.registries.DeferredRegister;
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
@@ -27,8 +27,6 @@ import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -41,7 +39,6 @@ import net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator;
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import net.minecraft.world.item.CreativeModeTab.Output;
 import net.minecraft.world.item.CreativeModeTab.TabVisibility;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -237,7 +234,6 @@ public class AllCreativeModeTabs {
 
 		@Override
 		public void accept(ItemDisplayParameters pParameters, Output output) {
-			ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 			Predicate<Item> exclusionPredicate = makeExclusionPredicate();
 			List<ItemOrdering> orderings = makeOrderings();
 			Function<Item, ItemStack> stackFunc = makeStackFunc();
@@ -245,9 +241,13 @@ public class AllCreativeModeTabs {
 			ResourceKey<CreativeModeTab> tab = mainTab ? MAIN_TAB.key : BUILDING_BLOCKS_TAB.key;
 
 			List<Item> items = new LinkedList<>();
-			items.addAll(collectItems(tab, itemRenderer, true, exclusionPredicate));
+			Predicate<Item> is3d = EnvExecutor.unsafeRunForDist(
+					() -> () -> item -> Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(item), null, null, 0).isGui3d(),
+					() -> () -> item -> false // don't crash servers
+			);
+			items.addAll(collectItems(tab, is3d, true, exclusionPredicate));
 			items.addAll(collectBlocks(tab, exclusionPredicate));
-			items.addAll(collectItems(tab, itemRenderer, false, exclusionPredicate));
+			items.addAll(collectItems(tab, is3d, false, exclusionPredicate));
 
 			applyOrderings(items, orderings);
 			outputAll(output, items, stackFunc, visibilityFunc);
@@ -269,7 +269,7 @@ public class AllCreativeModeTabs {
 			return items;
 		}
 
-		private List<Item> collectItems(ResourceKey<CreativeModeTab> tab, ItemRenderer itemRenderer, boolean special,
+		private List<Item> collectItems(ResourceKey<CreativeModeTab> tab, Predicate<Item> is3d, boolean special,
 			Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
 
@@ -282,8 +282,7 @@ public class AllCreativeModeTabs {
 				Item item = entry.get();
 				if (item instanceof BlockItem)
 					continue;
-				BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
-				if (model.isGui3d() != special)
+				if (is3d.test(item) != special)
 					continue;
 				if (!exclusionPredicate.test(item))
 					items.add(item);
