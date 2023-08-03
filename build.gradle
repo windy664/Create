@@ -32,12 +32,12 @@ repositories {
     maven { url = "https://maven.shedaniel.me/" } // REI and deps
     maven { url = "https://api.modrinth.com/maven" } // LazyDFU, Sodium, Sandwichable
     maven { url = "https://maven.terraformersmc.com/" } // Mod Menu, Trinkets
-    maven { url = "https://ladysnake.jfrog.io/artifactory/mods" } // CCA, for Trinkets
     maven { url = "https://modmaven.dev" } // Botania
     maven { // Reach Entity Attributes
         url = "https://maven.jamieswhiteshirt.com/libs-release"
         content { includeGroup("com.jamieswhiteshirt") }
     }
+    maven { url = "https://maven.ladysnake.org/releases" } // CCA, for Trinkets
 }
 
 configurations.configureEach {
