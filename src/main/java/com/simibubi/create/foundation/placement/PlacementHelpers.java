@@ -149,10 +149,7 @@ public class PlacementHelpers {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void afterRenderOverlayLayer(PoseStack stack, float partialTicks, Window res, Types type) {
-		if (type != OverlayRenderCallback.Types.CROSSHAIRS)
-			return;
-
+	public static void afterRenderOverlayLayer(PoseStack stack, float partialTicks, Window res) {
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
 
