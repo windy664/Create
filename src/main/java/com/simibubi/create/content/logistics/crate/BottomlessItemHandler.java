@@ -40,10 +40,14 @@ public class BottomlessItemHandler extends ItemStackHandler implements SingleSlo
 		return 0;
 	}
 
+	protected ItemStack getStack() {
+		ItemStack stack = suppliedItemStack.get();
+		return stack == null || stack.isEmpty() ? ItemStack.EMPTY : stack;
+	}
+
 	@Override
 	public boolean isResourceBlank() {
-		ItemStack stack = suppliedItemStack.get();
-		return stack == null || stack.isEmpty();
+		return getStack().isEmpty();
 	}
 
 	@Override
@@ -62,6 +66,16 @@ public class BottomlessItemHandler extends ItemStackHandler implements SingleSlo
 	}
 
 	// avoid the slot list
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		return getStack();
+	}
+
+	@Override
+	public ItemVariant getVariantInSlot(int slot) {
+		return getResource();
+	}
 
 	@Override
 	public Iterator<StorageView<ItemVariant>> iterator() {
