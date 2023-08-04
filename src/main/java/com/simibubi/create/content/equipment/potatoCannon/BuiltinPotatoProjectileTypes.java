@@ -17,7 +17,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.event.common.EntityEvents.Teleport.EntityTeleportEvent;
 import io.github.fabricators_of_create.porting_lib.fake_players.FakePlayer;
-import io.github.fabricators_of_create.porting_lib.util.PlantUtil;
+import io.github.fabricators_of_create.porting_lib.util.IPlantable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -332,7 +332,7 @@ public class BuiltinPotatoProjectileTypes {
 				.getMaterial()
 				.isReplaceable())
 				return false;
-			if (!(PlantUtil.isPlant(cropBlock.get())))
+			if (!(cropBlock.get() instanceof IPlantable))
 				return false;
 			BlockState blockState = world.getBlockState(hitPos);
 			if (!(blockState.getBlock() instanceof FarmBlock))

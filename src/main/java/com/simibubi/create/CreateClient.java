@@ -44,9 +44,12 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
-import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
 import io.github.fabricators_of_create.porting_lib.util.ArmorTextureRegistry;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+
+import com.mojang.blaze3d.platform.Window;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
@@ -124,23 +127,22 @@ public class CreateClient implements ClientModInitializer {
 	}
 
 	private static void registerOverlays() {
-		OverlayRenderCallback.EVENT.register(((stack, partialTicks, window, type) -> {
-			if (type == OverlayRenderCallback.Types.AIR) {
-				RemainingAirOverlay.render(stack, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Remaining Air
-			} else {
-				TrainHUD.renderOverlay(stack, partialTicks, window); // Create's Train Driver HUD
-				GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window); // Create's Goggle Information
-				BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window); // Create's Blueprints
-				LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window); // Create's Linked Controller
-				SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window); // Create's Schematics
-				ToolboxHandlerClient.renderOverlay(stack, partialTicks, window); // Create's Toolboxes
-				VALUE_SETTINGS_HANDLER.render(stack, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Value Settings
-				TrackPlacementOverlay.renderOverlay(Minecraft.getInstance().gui, stack); // Create's Track Placement
+		HudRenderCallback.EVENT.register((stack, partialTicks) -> {
+			Window window = Minecraft.getInstance().getWindow();
 
-				PlacementHelpers.afterRenderOverlayLayer(stack, partialTicks, window, type);
-			}
-			return false;
-		}));
+			RemainingAirOverlay.render(stack, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Remaining Air
+			TrainHUD.renderOverlay(stack, partialTicks, window); // Create's Train Driver HUD
+			GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window); // Create's Goggle Information
+			BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window); // Create's Blueprints
+			LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window); // Create's Linked Controller
+			SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window); // Create's Schematics
+			ToolboxHandlerClient.renderOverlay(stack, partialTicks, window); // Create's Toolboxes
+			VALUE_SETTINGS_HANDLER.render(stack, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Value Settings
+			TrackPlacementOverlay.renderOverlay(Minecraft.getInstance().gui, stack); // Create's Track Placement
+
+			// fabric: normally a separate event listener
+			PlacementHelpers.afterRenderOverlayLayer(stack, partialTicks, window);
+		});
 	}
 
 	public static void invalidateRenderers() {
