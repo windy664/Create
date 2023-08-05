@@ -34,10 +34,21 @@ public final class NBTProcessors {
 	}
 
 	static {
+		String[] signSides = new String[] { "front_text", "back_text" };
 		addProcessor(BlockEntityType.SIGN, data -> {
-			for (int i = 0; i < 4; ++i) {
-				if (textComponentHasClickEvent(data.getString("Text" + (i + 1))))
-					return null;
+			for (String side : signSides) {
+				if (data.contains(side, Tag.TAG_COMPOUND)) {
+					CompoundTag sideData = data.getCompound(side);
+					if (sideData.contains("messages", Tag.TAG_LIST)) {
+						ListTag messages = sideData.getList("messages", Tag.TAG_STRING);
+						for (int i = 0; i < messages.size(); i++) {
+							String string = messages.getString(i);
+							if (textComponentHasClickEvent(string)) {
+								return null;
+							}
+						}
+					}
+				}
 			}
 			return data;
 		});
