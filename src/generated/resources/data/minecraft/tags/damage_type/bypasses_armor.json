@@ -2,11 +2,7 @@
   "replace": false,
   "values": [
     {
-      "id": "create:mechanical_drill",
-      "required": false
-    },
-    {
-      "id": "create:crush",
+      "id": "create:mechanical_saw",
       "required": false
     },
     {
@@ -18,7 +14,11 @@
       "required": false
     },
     {
-      "id": "create:mechanical_saw",
+      "id": "create:crush",
+      "required": false
+    },
+    {
+      "id": "create:mechanical_drill",
       "required": false
     }
   ]

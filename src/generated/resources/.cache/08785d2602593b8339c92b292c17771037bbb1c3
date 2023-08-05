@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-17T00:09:04.3228525	Create/Create's Standard Recipes
+// 1.20.1	2023-08-05T05:44:34.4869285	Create/Create's Standard Recipes
 40d8bca20f7dcd8c4751161a7248bc72546d6936 data\create\advancements\recipes\misc\crafting\kinetics\mechanical_drill.json
 8c72f6440c1c6911b063d67a079e7940db192dc9 data\create\advancements\recipes\misc\smelting\uranium_ingot_compat_modern_industrialization.json
 4defe740963f64be169996722794bc8b26c3d456 data\create\advancements\recipes\misc\crafting\materials\experience_nugget_from_block.json
@@ -64,8 +64,8 @@ d88c5c8b6751f389d9eea30acbd566c120e77705 data\create\advancements\recipes\misc\b
 25649f2e6100e79af99cc0f565ae894a1853ad11 data\create\recipes\crafting\kinetics\controller_rail.json
 67c1143c7aac88a9cc91b98dbca60770cb1422a5 data\create\recipes\smelting\glass_pane_from_vertical_framed_glass_pane.json
 8eca7b132f53c805ef71bbe148a4b6eb482d5d0d data\create\advancements\recipes\misc\crafting\kinetics\vertical_gearboxfrom_conversion.json
-1b50ed47c37e48d1112c76059574eed71ecea4e5 data\create\advancements\recipes\misc\crafting\logistics\redstone_link.json
 8384b63525d3412a00dbc8f4cd61b4f585d67c1d data\create\recipes\crafting\kinetics\nozzle.json
+1b50ed47c37e48d1112c76059574eed71ecea4e5 data\create\advancements\recipes\misc\crafting\logistics\redstone_link.json
 28d1dabd689b855964151100a80247b2ea150bd4 data\create\recipes\crafting\appliances\clipboard_clear.json
 580183a6695e0b62c17d15b3be13f254b854cabc data\create\recipes\smelting\osmium_ingot_compat_mythicmetals.json
 409b5d70ee1ef9164c327d79472e6d66ce55dec6 data\create\recipes\crafting\appliances\filter_clear.json
@@ -307,8 +307,8 @@ b5a2ad992b86d7c9a34876a3dd4ce3a2aa7d8d10 data\create\recipes\crafting\kinetics\c
 46c7b78356837785af8a5fa18c9eba0758ac0c33 data\create\recipes\crafting\kinetics\wrench.json
 5a702087cb9657d72b7ebf448394df71a078c6cd data\create\advancements\recipes\misc\blasting\lead_ingot_compat_techreborn.json
 1e22edba76fc82d3d06d72e3325fa015259561cb data\create\advancements\recipes\misc\smelting\zinc_ingot_from_crushed.json
-7b2eee412370c5d4d8dd7cc41c94399476f8f263 data\create\recipes\crafting\kinetics\mechanical_saw.json
 87b2748fc56826ec62b0200e943feb30002c4b12 data\create\advancements\recipes\misc\crafting\kinetics\mechanical_saw.json
+7b2eee412370c5d4d8dd7cc41c94399476f8f263 data\create\recipes\crafting\kinetics\mechanical_saw.json
 32086aec6acc2e236ccd1bdcad8077355cfbc801 data\create\advancements\recipes\misc\crafting\kinetics\track_observer.json
 6418408e9fe53c03eae1e2b17b2229a548abc226 data\create\advancements\recipes\misc\blasting\copper_ingot_from_crushed.json
 76bcdecacf540457a752952eb29dcca3db8836a1 data\create\recipes\crafting\kinetics\minecart_from_contraption_cart.json
@@ -357,8 +357,8 @@ f0c804438124b6f8c382e6b6b4a06564b3c7d268 data\create\recipes\blasting\platinum_i
 7b77758972dc4739493b65a11d882ce7e26bc00d data\create\advancements\recipes\misc\smelting\glass_from_vertical_framed_glass.json
 471da96bdc50929e50a4255998c365f6dd74f66b data\create\advancements\recipes\misc\smelting\ingot_osmium_compat_mekanism.json
 d05bf9eb0708fd08727414a05432119547683c82 data\create\advancements\recipes\misc\crafting\kinetics\track_station.json
-795a165b040e3476d45ddd8afda8ab97a515c0f2 data\create\advancements\recipes\misc\crafting\kinetics\mechanical_plough.json
 7cbb3fa60dabefa29b6cd916e03c249241fc99fc data\create\advancements\recipes\misc\crafting\kinetics\mechanical_harvester.json
+795a165b040e3476d45ddd8afda8ab97a515c0f2 data\create\advancements\recipes\misc\crafting\kinetics\mechanical_plough.json
 49c5868d82135e3a4db04dfbe86dc235dccb3a02 data\create\recipes\crafting\materials\zinc_ingot_from_compacting.json
 96b4998626e624fb79c79fb754c28b21ddc27254 data\create\advancements\recipes\misc\crafting\logistics\redstone_contact.json
 1ac5571d7ab216bba9c6e0bdcfeb69349cf74926 data\create\recipes\smelting\uranium_ingot_compat_modern_industrialization.json

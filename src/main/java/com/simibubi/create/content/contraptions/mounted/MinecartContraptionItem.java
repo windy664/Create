@@ -31,6 +31,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
@@ -83,6 +84,9 @@ public class MinecartContraptionItem extends Item {
 
 		@Override
 		public ItemStack execute(BlockSource source, ItemStack stack) {
+			if (!canPlace())
+				return behaviourDefaultDispenseItem.dispense(source, stack);
+
 			Direction direction = source.getBlockState()
 				.getValue(DispenserBlock.FACING);
 			Level world = source.getLevel();
@@ -146,6 +150,13 @@ public class MinecartContraptionItem extends Item {
 		BlockState blockstate = world.getBlockState(blockpos);
 		if (!blockstate.is(BlockTags.RAILS)) {
 			return InteractionResult.FAIL;
+		} else if (!canPlace()) {
+			Player player = context.getPlayer();
+			if (player != null) {
+				Component message = Lang.translateDirect("contraption.minecart_contraption_illegal_placement").withStyle(ChatFormatting.RED);
+				player.displayClientMessage(message, true);
+			}
+			return InteractionResult.FAIL;
 		} else {
 			ItemStack itemstack = context.getItemInHand();
 			if (!world.isClientSide) {
@@ -171,6 +182,11 @@ public class MinecartContraptionItem extends Item {
 			itemstack.shrink(1);
 			return InteractionResult.SUCCESS;
 		}
+	}
+
+	// fabric: temp fix for command smuggling for Blanketcon
+	private static boolean canPlace() {
+		return AllConfigs.server().kinetics.contraptionPlacing.get();
 	}
 
 	public static void addContraptionToMinecart(Level world, ItemStack itemstack, AbstractMinecart cart,

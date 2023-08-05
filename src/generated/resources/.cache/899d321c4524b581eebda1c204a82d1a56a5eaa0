@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-17T00:09:04.3188494	Create/Create's Processing Recipes
+// 1.20.1	2023-08-05T05:44:34.4829251	Create/Create's Processing Recipes
 5066b4461aff3a480eebfa7627cdd0e4256662db data\create\recipes\cutting\compat\botania\livingwood_log.json
 97beb27a8fb05f799c215a4cb5691d4e03a6820e data\create\recipes\crushing\tuff.json
 a883796342143a5f2b5bc68d230b725964abdb8f data\create\recipes\splashing\white_concrete_powder.json
@@ -119,8 +119,8 @@ f0d1abc7ad682269e14378497a73829ec46cb3e6 data\create\recipes\cutting\compat\byg\
 b90e5b0a18d6d2e7eae62d0caf41fb3dd597c1e9 data\create\recipes\cutting\stripped_crimson_hyphae.json
 eacdbdea1b8f75e49b9d4f3abdaf02d47fde41ed data\create\recipes\cutting\compat\byg\redwood_wood.json
 78e12ee50b74d7d909c09b6fe649c2a9df77f652 data\create\recipes\cutting\compat\ecologics\stripped_coconut_wood.json
-8908b452e6bc1290ebb8cfefc2c066460de93bff data\create\recipes\splashing\green_concrete_powder.json
 3ce6bc6cfbdeb52c2514f5620db9f0b95ee18d3a data\create\recipes\splashing\brown_concrete_powder.json
+8908b452e6bc1290ebb8cfefc2c066460de93bff data\create\recipes\splashing\green_concrete_powder.json
 8d787ccbb817d773616405afc255e298803c9573 data\create\recipes\splashing\magma_block.json
 9922535a4b41d6af68df94168276abf308ea432c data\create\recipes\crushing\deepslate_gold_ore.json
 196870f2fa2d5b3d2d450949006b8c8fc4a58e73 data\create\recipes\cutting\compat\biomesoplenty\stripped_mahogany_wood.json
@@ -144,10 +144,10 @@ daf5c0c9e3f13d2004d53c54f4c1c36ae098d1ae data\create\recipes\pressing\path.json
 c9a47b29ba75ba29c8cb630fe32c4bf2f1f1d1ae data\create\recipes\crushing\iron_ore.json
 774d56f10c684cec58333a46d4519895bf714dcf data\create\recipes\cutting\compat\byg\baobab_wood.json
 c26b9f1ea42b0fab2d4f6389034fc940f350087d data\create\recipes\cutting\compat\biomesoplenty\jacaranda_wood.json
-29b1755e48b902c1123eafa75a8fa00325bd3b8b data\create\recipes\crushing\raw_zinc.json
-2833601a45709b33c60d49e5647831df542db7f3 data\create\recipes\milling\dripstone_block.json
-c43034dd47f9b7a07e267003e6b0ae240573cb39 data\create\recipes\cutting\compat\byg\stripped_cherry_log.json
 afeeb81e6f5fb9372f2137bf08ebf6693d3b9f22 data\create\recipes\cutting\compat\quark\blossom_log.json
+c43034dd47f9b7a07e267003e6b0ae240573cb39 data\create\recipes\cutting\compat\byg\stripped_cherry_log.json
+2833601a45709b33c60d49e5647831df542db7f3 data\create\recipes\milling\dripstone_block.json
+29b1755e48b902c1123eafa75a8fa00325bd3b8b data\create\recipes\crushing\raw_zinc.json
 35e615209129746a6b5a92b63653ff7c6935b310 data\create\recipes\filling\honeyed_apple.json
 1230f449873262e79585752d3430e5f7f383bcb2 data\create\recipes\deploying\large_cogwheel.json
 0130258652f73a3cad7ec1b1c55aa34a4e2ad062 data\create\recipes\milling\cornflower.json
@@ -423,9 +423,9 @@ a4bf7012091fefc0d71faf469fe71c4c96abb327 data\create\recipes\cutting\compat\byg\
 9d30d68a77d532d10f2e5c26f38d0b5acaa8396f data\create\recipes\item_application\copper_casing_from_wood.json
 7d1962d65899ebb5e9794820d408b36e459b196b data\create\recipes\cutting\compat\biomesoplenty\fir_log.json
 52533dc96e6cf37d3566a34952d1b222218599e2 data\create\recipes\cutting\compat\byg\cika_wood.json
-ebf6a615a4b8397c04239ee50b17f69b64f63da9 data\create\recipes\cutting\compat\integrateddynamics\menril_wood_stripped.json
-e9181e434b163e4f693767c72588542424515463 data\create\recipes\cutting\compat\byg\stripped_baobab_wood.json
 851801ee490682a26c9a3b756f2493693c130070 data\create\recipes\cutting\compat\byg\palm_wood.json
+e9181e434b163e4f693767c72588542424515463 data\create\recipes\cutting\compat\byg\stripped_baobab_wood.json
+ebf6a615a4b8397c04239ee50b17f69b64f63da9 data\create\recipes\cutting\compat\integrateddynamics\menril_wood_stripped.json
 399a61d9ed416a5c5ce310f8e2575a05f91af35f data\create\recipes\cutting\compat\tconstruct\greenheart_wood.json
 cbfe10af00c5da0158de3ad675691c089cda8980 data\create\recipes\cutting\compat\biomesoplenty\dead_wood.json
 cc939ba59b95db1c7a034df6f9e656772074a5fd data\create\recipes\crushing\gravel.json

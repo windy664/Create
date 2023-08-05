@@ -37,6 +37,7 @@ public class CKinetics extends ConfigBase {
 	public final ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
 	public final ConfigInt rollerFillDepth = i(12, 1, "rollerFillDepth", Comments.rollerFillDepth);
 	public final ConfigBool survivalContraptionPickup = b(true, "survivalContraptionPickup", Comments.survivalContraptionPickup);
+	public final ConfigBool contraptionPlacing = b(true, "contraptionPlacing", Comments.contraptionPlacing);
 	public final ConfigEnum<ContraptionMovementSetting> spawnerMovement =
 		e(ContraptionMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
 	public final ConfigEnum<ContraptionMovementSetting> amethystMovement =
@@ -114,6 +115,7 @@ public class CKinetics extends ConfigBase {
 		static String ejectorScanInterval =
 			"Time in ticks until the next item launched by an ejector scans blocks for potential collisions";
 		static String survivalContraptionPickup = "Whether minecart contraptions can be picked up in survival mode.";
+		static String contraptionPlacing = "Whether minecart contraptions can be placed from items.";
 		static String spawnerMovement = "Configure how Spawner blocks can be moved by contraptions.";
 		static String amethystMovement = "Configure how Budding Amethyst can be moved by contraptions.";
 		static String obsidianMovement = "Configure how Obsidian blocks can be moved by contraptions.";
