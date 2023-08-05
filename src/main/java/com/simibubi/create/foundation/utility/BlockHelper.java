@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.blockEntity.IMergeableBE;
 
 import io.github.fabricators_of_create.porting_lib.common.util.PlantUtil;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib.util.IPlantable;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
@@ -255,8 +256,8 @@ public class BlockHelper {
 
 		if (state.getBlock() == Blocks.COMPOSTER)
 			state = Blocks.COMPOSTER.defaultBlockState();
-		else if (state.getBlock() != Blocks.SEA_PICKLE && PlantUtil.isPlant(state.getBlock()))
-			state = PlantUtil.getPlant(state.getBlock());
+		else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
+			state = ((IPlantable) state.getBlock()).getPlant(world, target);
 		else if (state.is(BlockTags.CAULDRONS))
 			state = Blocks.CAULDRON.defaultBlockState();
 

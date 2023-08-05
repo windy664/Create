@@ -18,6 +18,7 @@ import io.github.fabricators_of_create.porting_lib.common.util.PlantUtil;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityMoveEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityMoveEvents.EntityTeleportEvent;
 import io.github.fabricators_of_create.porting_lib.fake_players.FakePlayer;
+import io.github.fabricators_of_create.porting_lib.util.IPlantable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -331,7 +332,7 @@ public class BuiltinPotatoProjectileTypes {
 			if (!world.getBlockState(placePos)
 				.canBeReplaced())
 				return false;
-			if (!(PlantUtil.isPlant(cropBlock.get())))
+			if (!(cropBlock.get() instanceof IPlantable))
 				return false;
 			BlockState blockState = world.getBlockState(hitPos);
 			if (!(blockState.getBlock() instanceof FarmBlock))

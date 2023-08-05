@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.actors.harvester;
 
 import javax.annotation.Nullable;
 
-import io.github.fabricators_of_create.porting_lib.common.util.PlantUtil;
+import io.github.fabricators_of_create.porting_lib.util.IPlantable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -170,7 +170,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 				return false;
 			}
 
-			if (PlantUtil.isPlant(state.getBlock()))
+			if (state.getBlock() instanceof IPlantable)
 				return true;
 		}
 
