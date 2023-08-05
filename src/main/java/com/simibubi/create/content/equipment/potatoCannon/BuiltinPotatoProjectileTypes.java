@@ -14,11 +14,10 @@ import com.simibubi.create.foundation.utility.WorldAttached;
 
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.common.util.PlantUtil;
+import io.github.fabricators_of_create.porting_lib.common.util.IPlantable;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityMoveEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityMoveEvents.EntityTeleportEvent;
 import io.github.fabricators_of_create.porting_lib.fake_players.FakePlayer;
-import io.github.fabricators_of_create.porting_lib.util.IPlantable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
