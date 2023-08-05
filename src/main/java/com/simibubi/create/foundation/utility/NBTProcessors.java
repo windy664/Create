@@ -35,7 +35,7 @@ public final class NBTProcessors {
 
 	static {
 		String[] signSides = new String[] { "front_text", "back_text" };
-		addProcessor(BlockEntityType.SIGN, data -> {
+		UnaryOperator<CompoundTag> signProcessor = data -> {
 			for (String side : signSides) {
 				if (data.contains(side, Tag.TAG_COMPOUND)) {
 					CompoundTag sideData = data.getCompound(side);
@@ -51,7 +51,10 @@ public final class NBTProcessors {
 				}
 			}
 			return data;
-		});
+		};
+		addProcessor(BlockEntityType.SIGN, signProcessor);
+		addProcessor(BlockEntityType.HANGING_SIGN, signProcessor);
+
 		addProcessor(BlockEntityType.LECTERN, data -> {
 			if (!data.contains("Book", Tag.TAG_COMPOUND))
 				return data;
