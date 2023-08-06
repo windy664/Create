@@ -47,11 +47,8 @@ public class ProcessingInventory extends ItemStackHandlerContainer {
 	}
 
 	@Override
-	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		long inserted = super.insert(resource, maxAmount, transaction);
-		if (inserted != 0)
-			TransactionCallback.onSuccess(transaction, () -> callback.accept(resource.toStack((int) inserted)));
-		return inserted;
+	protected void onContentsChanged(int slot) {
+		callback.accept(getStackInSlot(slot));
 	}
 
 	@Override
