@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandlerSlot;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
@@ -23,6 +24,12 @@ public class BottomlessItemHandler extends ItemStackHandler implements SingleSlo
 	public BottomlessItemHandler(Supplier<ItemStack> suppliedItemStack) {
 		super(0);
 		this.suppliedItemStack = suppliedItemStack;
+		setSize(1); // create slot after setting supplier
+	}
+
+	@Override
+	protected ItemStackHandlerSlot makeSlot(int index, ItemStack stack) {
+		return new BottomlessSlot();
 	}
 
 	@Override
@@ -32,8 +39,8 @@ public class BottomlessItemHandler extends ItemStackHandler implements SingleSlo
 
 	@Override
 	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		ItemStack stack = suppliedItemStack.get();
-		if (stack == null || !resource.matches(stack))
+		ItemStack stack = getStack();
+		if (!resource.matches(stack))
 			return 0;
 		if (!stack.isEmpty())
 			return Math.min(stack.getMaxStackSize(), maxAmount);
@@ -52,7 +59,7 @@ public class BottomlessItemHandler extends ItemStackHandler implements SingleSlo
 
 	@Override
 	public ItemVariant getResource() {
-		return isResourceBlank() ? ItemVariant.blank() : ItemVariant.of(suppliedItemStack.get());
+		return ItemVariant.of(getStack());
 	}
 
 	@Override
@@ -65,17 +72,7 @@ public class BottomlessItemHandler extends ItemStackHandler implements SingleSlo
 		return Long.MAX_VALUE;
 	}
 
-	// avoid the slot list
-
-	@Override
-	public ItemStack getStackInSlot(int slot) {
-		return getStack();
-	}
-
-	@Override
-	public ItemVariant getVariantInSlot(int slot) {
-		return getResource();
-	}
+	// shortcuts
 
 	@Override
 	public Iterator<StorageView<ItemVariant>> iterator() {
@@ -90,5 +87,34 @@ public class BottomlessItemHandler extends ItemStackHandler implements SingleSlo
 	@Override
 	public Iterator<StorageView<ItemVariant>> nonEmptyIterator() {
 		return isResourceBlank() ? Collections.emptyIterator() : iterator();
+	}
+
+	private class BottomlessSlot extends ItemStackHandlerSlot {
+		public BottomlessSlot() {
+			super(0, BottomlessItemHandler.this, ItemStack.EMPTY);
+		}
+
+		@Override
+		public ItemStack getStack() {
+			return BottomlessItemHandler.this.getStack();
+		}
+
+		@Override
+		public ItemVariant getResource() {
+			return BottomlessItemHandler.this.getResource();
+		}
+
+		@Override
+		public long getAmount() {
+			return BottomlessItemHandler.this.getAmount();
+		}
+
+		@Override
+		protected void setStack(ItemStack stack) {
+		}
+
+		@Override
+		protected void onFinalCommit() {
+		}
 	}
 }
