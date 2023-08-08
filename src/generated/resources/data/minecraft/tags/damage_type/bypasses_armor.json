@@ -2,7 +2,7 @@
   "replace": false,
   "values": [
     {
-      "id": "create:mechanical_saw",
+      "id": "create:mechanical_drill",
       "required": false
     },
     {
@@ -10,7 +10,7 @@
       "required": false
     },
     {
-      "id": "create:fan_lava",
+      "id": "create:mechanical_saw",
       "required": false
     },
     {
@@ -18,7 +18,7 @@
       "required": false
     },
     {
-      "id": "create:mechanical_drill",
+      "id": "create:fan_lava",
       "required": false
     }
   ]

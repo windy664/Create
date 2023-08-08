@@ -207,7 +207,7 @@ public class PaletteBlockPattern {
 
 	// Utility
 
-	protected String createName(String variant) {
+	public String createName(String variant) {
 		if (nameType == WRAP) {
 			String[] split = id.split("_");
 			if (split.length == 2) {
@@ -219,7 +219,7 @@ public class PaletteBlockPattern {
 		return nameType == SUFFIX ? String.format(formatString, variant, id) : String.format(formatString, id, variant);
 	}
 
-	protected static ResourceLocation toLocation(String variant, String texture) {
+	public static ResourceLocation toLocation(String variant, String texture) {
 		return Create.asResource(
 			String.format(TEXTURE_LOCATION, texture, variant + (texture.equals("cut") ? "_" : "_cut_") + texture));
 	}
