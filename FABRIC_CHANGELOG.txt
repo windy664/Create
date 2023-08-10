@@ -9,3 +9,4 @@ Change logging starts below:
 - fix overlays rendering twice, noticeable with Double Hotbar (#790)
 - stop the rogue Deployer uprising, for now (#1013)
 - fix plant-ness not being checked properly in some places (#1032)
+- fix crash breaking blocks with wand of symmetry (#1048)

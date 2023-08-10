@@ -67,7 +67,7 @@ public class SymmetryHandler {
 	}
 
 	public static boolean onBlockDestroyed(Level world, Player player, BlockPos pos, BlockState state, /* Nullable */ BlockEntity blockEntity) {
-		if (handlingSymmetry && AdventureUtil.isAdventure(player))
+		if (handlingSymmetry || AdventureUtil.isAdventure(player))
 			return true;
 
 		if (world
