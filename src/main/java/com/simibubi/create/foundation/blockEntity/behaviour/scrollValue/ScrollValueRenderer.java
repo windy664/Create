@@ -89,7 +89,7 @@ public class ScrollValueRenderer {
 			box = new TextValueBox(label, bb, pos, Components.literal(behaviour.formatValue()));
 		}
 
-		if (AdventureUtil.isAdventure(Minecraft.getInstance().player))
+		if (!AdventureUtil.isAdventure(Minecraft.getInstance().player))
 			box.passive(!highlight)
 			.wideOutline();
 
