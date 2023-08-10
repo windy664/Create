@@ -10,3 +10,4 @@ Change logging starts below:
 - stop the rogue Deployer uprising, for now (#1013)
 - fix plant-ness not being checked properly in some places (#1032)
 - fix crash breaking blocks with wand of symmetry (#1048)
+- fix performance issues with pipe connections (#935)

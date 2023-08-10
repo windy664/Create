@@ -49,14 +49,19 @@ public abstract class FlowSource {
 
 	public static class FluidHandler extends FlowSource {
 		StorageProvider<FluidVariant> provider;
+		private Level level;
 
 		public FluidHandler(BlockFace location) {
 			super(location);
-			provider = null;
+			this.provider = null;
+			this.level = null;
 		}
 
 		public void manageSource(Level world) {
-			provider = StorageProvider.createForFluids(world, location.getConnectedPos());
+			if (world != this.level) {
+				this.level = world;
+				this.provider = StorageProvider.createForFluids(world, location.getConnectedPos());
+			}
 		}
 
 		@Override
