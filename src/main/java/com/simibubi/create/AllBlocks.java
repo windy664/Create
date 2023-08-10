@@ -1067,6 +1067,7 @@ public class AllBlocks {
 			.initialProperties(() -> Blocks.PISTON_HEAD)
 			.properties(p -> p.sound(SoundType.SCAFFOLDING))
 			.properties(p -> p.mapColor(MapColor.DIRT))
+			.properties(p -> p.pushReaction(PushReaction.NORMAL)) // fabric: inherits BLOCK from piston head, handled by a method override on forge
 			.transform(axeOrPickaxe())
 			.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(false))
 			.simpleItem()
