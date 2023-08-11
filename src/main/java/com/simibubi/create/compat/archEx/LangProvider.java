@@ -5,11 +5,11 @@ import java.util.function.BiConsumer;
 
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 
-public record LangProvider(List<ArchExGroup> groups, BiConsumer<String, String> langConsumer) {
+public record LangProvider(String modId, List<ArchExGroup> groups, BiConsumer<String, String> langConsumer) {
 	public static final String LANG_PREFIX = "architecture_extensions.grouped_block.";
 	public void run() {
 		groups.forEach(group -> {
-			String key = LANG_PREFIX + group.name();
+			String key = LANG_PREFIX + modId + '.' + group.name();
 			String translated = RegistrateLangProvider.toEnglishName(group.name());
 			langConsumer.accept(key, translated);
 		});
