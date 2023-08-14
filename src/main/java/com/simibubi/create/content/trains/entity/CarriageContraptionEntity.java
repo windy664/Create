@@ -39,6 +39,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -142,6 +143,20 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 	public void sendCarriageDataUpdate() {
 		AllPackets.getChannel().sendToClientsTracking(new CarriageDataUpdatePacket(this), this);
+	}
+
+	// fabric: initial carriageData sync since that's not handled by tracked data anymore
+
+	@Override
+	public void writeSpawnData(FriendlyByteBuf buffer) {
+		super.writeSpawnData(buffer);
+		carriageData.write(buffer);
+	}
+
+	@Override
+	public void readSpawnData(FriendlyByteBuf additionalData) {
+		super.readSpawnData(additionalData);
+		carriageData.read(additionalData);
 	}
 
 	public CarriageSyncData getCarriageData() {
