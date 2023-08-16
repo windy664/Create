@@ -175,6 +175,11 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	@Override
 	protected void removePassenger(Entity passenger) {
+		// fabric: when a passenger is present, passengers are synced too early. Everything seems to behave fine anyway if this is ignored.
+		// This is not an issue on forge because extra data is directly part of the spawn packet.
+		// there's some ordering weirdness that I spent a couple hours debugging and gave up on.
+		if (this.contraption == null)
+			return;
 		Vec3 transformedVector = getPassengerPosition(passenger, 1);
 		super.removePassenger(passenger);
 		if (passenger instanceof TamableAnimal ta)
