@@ -11,6 +11,8 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 
+import com.simibubi.create.foundation.utility.AdventureUtil;
+
 import io.github.fabricators_of_create.porting_lib.block.CustomFrictionBlock;
 import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
 import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
@@ -105,7 +107,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
 
-		if (pPlayer == null)
+		if (pPlayer == null || AdventureUtil.isAdventure(pPlayer))
 			return InteractionResult.PASS;
 
 		Direction face = pHit.getDirection();
