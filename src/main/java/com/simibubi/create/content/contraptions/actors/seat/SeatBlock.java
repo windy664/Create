@@ -9,6 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import io.github.fabricators_of_create.porting_lib.util.TagUtil;
@@ -142,7 +143,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 		if (!seats.isEmpty()) {
 			SeatEntity seatEntity = seats.get(0);
 			List<Entity> passengers = seatEntity.getPassengers();
-			if (!passengers.isEmpty() && passengers.get(0) instanceof Player)
+			if (!passengers.isEmpty() && !canReplaceSeatedEntity(passengers.get(0), player))
 				return InteractionResult.PASS;
 			if (!world.isClientSide) {
 				seatEntity.ejectPassengers();
@@ -155,6 +156,10 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 			return InteractionResult.SUCCESS;
 		sitDown(world, pos, getLeashed(world, player).or(player));
 		return InteractionResult.SUCCESS;
+	}
+
+	public static boolean canReplaceSeatedEntity(Entity seated, Player player) {
+		return !(seated instanceof Player) && !AdventureUtil.isAdventure(player);
 	}
 
 	public static boolean isSeatOccupied(Level world, BlockPos pos) {
