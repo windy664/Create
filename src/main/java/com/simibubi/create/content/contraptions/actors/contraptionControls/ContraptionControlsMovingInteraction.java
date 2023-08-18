@@ -32,8 +32,6 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
-		if (AdventureUtil.isAdventure(player))
-			return false;
 		Contraption contraption = contraptionEntity.getContraption();
 
 		MutablePair<StructureBlockInfo, MovementContext> actor = contraption.getActorAt(localPos);
@@ -44,6 +42,10 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 			return false;
 		if (contraption instanceof ElevatorContraption ec)
 			return elevatorInteraction(localPos, contraptionEntity, ec, ctx);
+
+		if (AdventureUtil.isAdventure(player))
+			return false;
+
 		if (contraptionEntity.level().isClientSide()) {
 			if (contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
 				cbe.pressButton();
