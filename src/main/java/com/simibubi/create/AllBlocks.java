@@ -1077,6 +1077,7 @@ public class AllBlocks {
 		REGISTRATE.block("mechanical_piston_head", MechanicalPistonHeadBlock::new)
 			.initialProperties(() -> Blocks.PISTON_HEAD)
 			.properties(p -> p.mapColor(MapColor.DIRT))
+			.properties(p -> p.pushReaction(PushReaction.NORMAL)) // fabric: inherits BLOCK from piston head, handled by a method override on forge
 			.transform(axeOrPickaxe())
 			.loot((p, b) -> p.dropOther(b, PISTON_EXTENSION_POLE.get()))
 			.blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, state -> p.models()
