@@ -48,7 +48,8 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 		if (bogeys == null) {
 			if (entity.isReadyForRender())
 				init();
-			return;
+			if (bogeys == null)
+				return;
 		}
 
 		float partialTicks = AnimationTickHolder.getPartialTicks();
