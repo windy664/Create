@@ -46,9 +46,15 @@ public class ProcessingInventory extends ItemStackHandlerContainer {
 		appliedRecipe = false;
 	}
 
+	// moved from insertItem
 	@Override
 	protected void onContentsChanged(int slot) {
-		callback.accept(getStackInSlot(slot));
+		if (slot == 0) {
+			ItemStack stack = getStackInSlot(0);
+			if (!stack.isEmpty()) {
+				callback.accept(stack);
+			}
+		}
 	}
 
 	@Override
