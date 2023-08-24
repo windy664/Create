@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandlerSlot;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -143,10 +145,9 @@ public class MillstoneBlockEntity extends KineticBlockEntity implements SidedSto
 			lastRecipe = recipe.get();
 		}
 
-		ItemStack stackInSlot = inputInv.getStackInSlot(0);
-		stackInSlot.shrink(1);
-		inputInv.setStackInSlot(0, stackInSlot);
 		try (Transaction t = TransferUtil.getTransaction()) {
+			ItemStackHandlerSlot slot = inputInv.getSlot(0);
+			slot.extract(slot.getResource(), 1, t);
 			lastRecipe.rollResults().forEach(stack -> outputInv.insert(ItemVariant.of(stack), stack.getCount(), t));
 			t.commit();
 		}
