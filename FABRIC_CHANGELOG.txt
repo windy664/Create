@@ -5,7 +5,7 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- updated to 1.20.1
+- updated to 1.20.1 and patch D
 - hopefully fix overlays rendering out of order (#783)
 - fix overlays rendering twice, noticeable with Double Hotbar (#790)
 - stop the rogue Deployer uprising, for now (#1013)
