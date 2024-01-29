@@ -11,13 +11,12 @@ import com.google.gson.JsonObject;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class SimpleCreateTrigger extends CriterionTriggerBase<SimpleCreateTrigger.Instance> implements ITriggerable {
+public class SimpleCreateTrigger extends CriterionTriggerBase<SimpleCreateTrigger.Instance> {
 
 	public SimpleCreateTrigger(String id) {
 		super(id);

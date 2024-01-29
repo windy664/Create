@@ -11,8 +11,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -26,15 +24,20 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.tterrag.registrate.providers.RegistrateDataProvider;
+import com.tterrag.registrate.AbstractRegistrate;
+import com.tterrag.registrate.providers.ProviderType;
 
 import net.minecraft.Util;
 import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
+/**
+ * @deprecated Use {@link AbstractRegistrate#addRawLang} or {@link AbstractRegistrate#addDataGenerator} with {@link ProviderType#LANG} instead.
+ */
+@Deprecated(forRemoval = true)
 public class LangMerger implements DataProvider {
 
 	static final Gson GSON = new GsonBuilder().setPrettyPrinting()
@@ -45,14 +48,16 @@ public class LangMerger implements DataProvider {
 
 	private final String modid;
 	private final String displayName;
+	@SuppressWarnings("removal")
 	private final LangPartial[] langPartials;
 
 	private List<Object> mergedLangData;
 	private List<String> langIgnore;
 	private PackOutput output;
 
+	@SuppressWarnings("removal")
 	public <T extends LangPartial> LangMerger(PackOutput output, String modid, String displayName,
-		AllLangPartials[] allLangPartials) {
+		T[] allLangPartials) {
 		this.output = output;
 		this.modid = modid;
 		this.displayName = displayName;
@@ -190,6 +195,7 @@ public class LangMerger implements DataProvider {
 		return !split[0].equals(split2[0]);
 	}
 
+	@SuppressWarnings("removal")
 	private void collectEntries() {
 		for (LangPartial partial : langPartials)
 			addAll(partial.getDisplayName(), partial.provide()
