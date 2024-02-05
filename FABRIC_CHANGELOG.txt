@@ -6,4 +6,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 Change logging starts below:
 ----------
 - update to patch F
-
+- fix schematic-printing deployers consuming double the resources they should (#1273)
