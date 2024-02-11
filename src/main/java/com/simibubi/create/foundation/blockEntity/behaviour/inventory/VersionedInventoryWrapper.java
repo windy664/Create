@@ -30,6 +30,13 @@ public class VersionedInventoryWrapper implements Storage<ItemVariant> {
 	}
 
 	@Override
+	public long getVersion() {
+		return inventory.getVersion();
+	}
+
+	//
+
+	@Override
 	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
 		return inventory.insert(resource, maxAmount, transaction);
 	}
@@ -72,10 +79,5 @@ public class VersionedInventoryWrapper implements Storage<ItemVariant> {
 	@Override
 	public @Nullable StorageView<ItemVariant> exactView(TransactionContext transaction, ItemVariant resource) {
 		return inventory.exactView(transaction, resource);
-	}
-
-	@Override
-	public long getVersion() {
-		return inventory.getVersion();
 	}
 }

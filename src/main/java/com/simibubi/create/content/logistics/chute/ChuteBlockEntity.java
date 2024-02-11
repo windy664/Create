@@ -349,6 +349,8 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			return;
 		if (invVersionTracker.stillWaiting(inv))
 			return;
+		if (invVersionTracker.stillWaiting(inv))
+			return;
 		Predicate<ItemStack> canAccept = this::canAcceptItem;
 		int count = getExtractionAmount();
 		ExtractionCountMode mode = getExtractionMode();
@@ -375,6 +377,10 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			if (level.isClientSide && !isVirtual())
 				return false;
 
+			IItemHandler inv = capBelow.orElse(null);
+			if (invVersionTracker.stillWaiting(inv))
+				return false;
+
 			try (Transaction t = TransferUtil.getTransaction()) {
 				long inserted = below.insert(ItemVariant.of(item), item.getCount(), t);
 				if (inserted != 0 && !simulate) t.commit();
@@ -386,6 +392,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 				}
 				if (inserted != 0)
 					return true;
+				invVersionTracker.awaitNewVersion(inv);
 				if (direction == Direction.DOWN)
 					return false;
 			}
@@ -435,6 +442,9 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 				if (level.isClientSide && !isVirtual() && !ChuteBlock.isChute(stateAbove))
 					return false;
 
+				if (invVersionTracker.stillWaiting(above))
+					return false;
+
 				try (Transaction t = TransferUtil.getTransaction()) {
 					long inserted = above.insert(ItemVariant.of(item), item.getCount(), t);
 					if (!simulate) {
@@ -444,7 +454,10 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 						sendData();
 						t.commit();
 					}
-					return inserted != 0;
+					if (inserted != 0)
+						return true;
+					invVersionTracker.awaitNewVersion(inv);
+					return false;
 				}
 			}
 		}
@@ -529,6 +542,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		item = stack;
 		itemPosition.startWithValue(insertionPos);
 		itemHandler.update();
+		invVersionTracker.reset();
 		if (!level.isClientSide) {
 			notifyUpdate();
 			award(AllAdvancements.CHUTE);

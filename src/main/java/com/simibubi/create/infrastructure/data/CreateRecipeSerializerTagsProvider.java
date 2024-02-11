@@ -14,9 +14,9 @@ public class CreateRecipeSerializerTagsProvider extends TagsProvider<RecipeSeria
 
 	@Override
 	protected void addTags() {
-//		tag(AllRecipeSerializerTags.AUTOMATION_IGNORE.tag)
-//			.addOptional(Mods.OCCULTISM.rl("spirit_trade"))
-//			.addOptional(Mods.OCCULTISM.rl("ritual"));
+		tag(AllRecipeSerializerTags.AUTOMATION_IGNORE.tag)
+			.addOptional(Mods.OCCULTISM.rl("spirit_trade"))
+			.addOptional(Mods.OCCULTISM.rl("ritual"));
 
 		// VALIDATE
 

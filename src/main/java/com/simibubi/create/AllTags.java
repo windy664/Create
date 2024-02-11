@@ -268,6 +268,7 @@ public class AllTags {
 	}
 
 	public enum AllEntityTags {
+
 		BLAZE_BURNER_CAPTURABLE,
 		IGNORE_SEAT,
 

@@ -16,8 +16,36 @@ import com.simibubi.create.infrastructure.ponder.PonderIndex;
 import com.simibubi.create.infrastructure.ponder.SharedText;
 import com.tterrag.registrate.providers.ProviderType;
 
+import net.minecraft.data.DataGenerator;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+
 public class CreateDatagen {
-	public static void addExtraRegistrateData() {
+	public static void gatherData(GatherDataEvent event) {
+		addExtraRegistrateData();
+
+		DataGenerator generator = event.getGenerator();
+		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+
+		if (event.includeClient()) {
+			generator.addProvider(AllSoundEvents.provider(generator));
+		}
+
+		if (event.includeServer()) {
+			generator.addProvider(new CreateRecipeSerializerTagsProvider(generator, existingFileHelper));
+
+			generator.addProvider(new AllAdvancements(generator));
+
+			generator.addProvider(new StandardRecipeGen(generator));
+			generator.addProvider(new MechanicalCraftingRecipeGen(generator));
+			generator.addProvider(new SequencedAssemblyRecipeGen(generator));
+			ProcessingRecipeGen.registerAll(generator);
+
+//			AllOreFeatureConfigEntries.gatherData(event);
+		}
+	}
+
+	private static void addExtraRegistrateData() {
 		CreateRegistrateTags.addGenerators();
 
 		Create.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> {
