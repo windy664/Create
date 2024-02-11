@@ -8,6 +8,11 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.data.TagLangGen;
+import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
+import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
+import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
+import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.infrastructure.ponder.AllPonderTags;
@@ -16,23 +21,30 @@ import com.simibubi.create.infrastructure.ponder.PonderIndex;
 import com.simibubi.create.infrastructure.ponder.SharedText;
 import com.tterrag.registrate.providers.ProviderType;
 
-import net.minecraft.data.DataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
-public class CreateDatagen {
-	public static void gatherData(GatherDataEvent event) {
+public class CreateDatagen implements DataGeneratorEntrypoint {
+	@Override
+	public void onInitializeDataGenerator(FabricDataGenerator generator) {
+		ExistingFileHelper helper = ExistingFileHelper.withResourcesFromArg();
+		Create.REGISTRATE.setupDatagen(generator, helper);
+		gatherData(generator, helper);
+	}
+
+	public static void gatherData(FabricDataGenerator generator, ExistingFileHelper existingFileHelper) {
 		addExtraRegistrateData();
 
-		DataGenerator generator = event.getGenerator();
-		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+		// fabric: tag lang
+		TagLangGen.datagen();
 
-		if (event.includeClient()) {
+//		if (event.includeClient()) {
 			generator.addProvider(AllSoundEvents.provider(generator));
-		}
+//		}
 
-		if (event.includeServer()) {
-			generator.addProvider(new CreateRecipeSerializerTagsProvider(generator, existingFileHelper));
+//		if (event.includeServer()) {
+			generator.addProvider(new CreateRecipeSerializerTagsProvider(generator));
 
 			generator.addProvider(new AllAdvancements(generator));
 
@@ -42,7 +54,7 @@ public class CreateDatagen {
 			ProcessingRecipeGen.registerAll(generator);
 
 //			AllOreFeatureConfigEntries.gatherData(event);
-		}
+//		}
 	}
 
 	private static void addExtraRegistrateData() {

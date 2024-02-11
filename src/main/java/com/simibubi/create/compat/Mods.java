@@ -23,8 +23,6 @@ public enum Mods {
 	STORAGEDRAWERS,
 	TCONSTRUCT,
 	XLPACKETS,
-	CONNECTIVITY,
-	OCCULTISM,
 
 	// fabric mods
 	SANDWICHABLE,
@@ -39,21 +37,7 @@ public enum Mods {
 
 	Mods() {
 		id = Lang.asId(name());
-		loaded = FabricLoader.getInstance().isModLoaded(asId());
-	}
-
-	public ResourceLocation rl(String path) {
-		return new ResourceLocation(asId(), path);
-	}
-
-	public Block getBlock(String id) {
-		return Registry.BLOCK.get(new ResourceLocation(asId(), id));
-	}
-
-	private final String id;
-
-	Mods() {
-		id = Lang.asId(name());
+		loaded = FabricLoader.getInstance().isModLoaded(id);
 	}
 
 	/**
@@ -68,7 +52,7 @@ public enum Mods {
 	}
 
 	public Block getBlock(String id) {
-		return ForgeRegistries.BLOCKS.getValue(rl(id));
+		return Registry.BLOCK.get(rl(id));
 	}
 
 	/**

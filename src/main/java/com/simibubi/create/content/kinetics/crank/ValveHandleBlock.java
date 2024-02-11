@@ -58,8 +58,6 @@ public class ValveHandleBlock extends HandCrankBlock {
 		BlockState blockState = level.getBlockState(pos);
 
 		if (!(blockState.getBlock() instanceof ValveHandleBlock vhb))
-			return;
-		if (!player.mayBuild())
 			return InteractionResult.PASS;
 		if (!player.mayBuild())
 			return InteractionResult.PASS;

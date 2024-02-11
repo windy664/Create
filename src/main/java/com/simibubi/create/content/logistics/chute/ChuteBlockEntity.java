@@ -344,10 +344,8 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		handleInput(storage, 0);
 	}
 
-	private void handleInput(Storage<ItemVariant> inv, float startLocation) {
+	private void handleInput(@Nullable Storage<ItemVariant> inv, float startLocation) {
 		if (inv == null)
-			return;
-		if (invVersionTracker.stillWaiting(inv))
 			return;
 		if (invVersionTracker.stillWaiting(inv))
 			return;
@@ -372,17 +370,16 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 		if (level == null || direction == null || !this.canOutputItems())
 			return false;
-		Storage<ItemVariant> below = grabCapability(Direction.DOWN);
-		if (below != null) {
+		Storage<ItemVariant> inv = grabCapability(Direction.DOWN);
+		if (inv != null) {
 			if (level.isClientSide && !isVirtual())
 				return false;
 
-			IItemHandler inv = capBelow.orElse(null);
 			if (invVersionTracker.stillWaiting(inv))
 				return false;
 
 			try (Transaction t = TransferUtil.getTransaction()) {
-				long inserted = below.insert(ItemVariant.of(item), item.getCount(), t);
+				long inserted = inv.insert(ItemVariant.of(item), item.getCount(), t);
 				if (inserted != 0 && !simulate) t.commit();
 				ItemStack held = getItem();
 				if (!simulate) {
@@ -437,16 +434,16 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			return false;
 
 		if (AbstractChuteBlock.isOpenChute(getBlockState())) {
-			Storage<ItemVariant> above = grabCapability(Direction.UP);
-			if (above != null) {
+			Storage<ItemVariant> inv = grabCapability(Direction.UP);
+			if (inv != null) {
 				if (level.isClientSide && !isVirtual() && !ChuteBlock.isChute(stateAbove))
 					return false;
 
-				if (invVersionTracker.stillWaiting(above))
+				if (invVersionTracker.stillWaiting(inv))
 					return false;
 
 				try (Transaction t = TransferUtil.getTransaction()) {
-					long inserted = above.insert(ItemVariant.of(item), item.getCount(), t);
+					long inserted = inv.insert(ItemVariant.of(item), item.getCount(), t);
 					if (!simulate) {
 						item = item.copy();
 						item.shrink(ItemHelper.truncateLong(inserted));
@@ -522,6 +519,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		return true;
 	}
 
+	@Nullable
 	private Storage<ItemVariant> grabCapability(Direction side) {
 		if (level == null)
 			return null;

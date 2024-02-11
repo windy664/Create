@@ -1,6 +1,7 @@
 package com.simibubi.create.infrastructure.data;
 
 import com.simibubi.create.AllTags.AllRecipeSerializerTags;
+import com.simibubi.create.compat.Mods;
 
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
