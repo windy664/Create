@@ -9,3 +9,4 @@ Change logging starts below:
 - fix schematic-printing deployers consuming double the resources they should (#1273)
 - fix invalid auto-shapeless recipes from appearing in EMI (#1148)
 - potential fix for a rare belt-related crash (#941)
+- potential fix for errors/crashes due to a missing locale (#1120)
