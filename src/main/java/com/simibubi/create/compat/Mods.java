@@ -23,9 +23,6 @@ public enum Mods {
 	STORAGEDRAWERS,
 	TCONSTRUCT,
 	XLPACKETS,
-	CONNECTIVITY,
-	OCCULTISM,
-	PACKETFIXER,
 
 	// fabric mods
 	SANDWICHABLE,
@@ -56,14 +53,6 @@ public enum Mods {
 
 	public Block getBlock(String id) {
 		return Registry.BLOCK.get(rl(id));
-	}
-
-	public ResourceLocation rl(String path) {
-		return new ResourceLocation(asId(), path);
-	}
-
-	public Block getBlock(String id) {
-		return Registry.BLOCK.get(new ResourceLocation(asId(), id));
 	}
 
 	/**

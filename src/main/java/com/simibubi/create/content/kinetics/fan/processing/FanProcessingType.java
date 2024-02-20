@@ -3,6 +3,8 @@ package com.simibubi.create.content.kinetics.fan.processing;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.util.RandomSource;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;

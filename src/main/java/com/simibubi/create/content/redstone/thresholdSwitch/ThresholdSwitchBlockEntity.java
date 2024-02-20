@@ -110,6 +110,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 
 //		} else if (StorageDrawers.isDrawer(targetBlockEntity) && observedInventory.hasInventory()) {
 //			currentLevel = StorageDrawers.getTrueFillLevel(observedInventory.getInventory(), filtering);
+
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
 
@@ -121,23 +122,15 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 
 				} else {
 					invVersionTracker.awaitNewVersion(inv);
-					try (Transaction t = TransferUtil.getTransaction()) {
-						if (invVersionTracker.stillWaiting(inv)) {
-						occupied = prevLevel;
-						totalSpace = 1f;
+					for (StorageView<ItemVariant> view : inv) {
+						long space = view.getCapacity();
+						long count = view.getAmount();
+						if (space == 0)
+							continue;
 
-					} else {
-						invVersionTracker.awaitNewVersion(inv);
-						for (StorageView<ItemVariant> view : inv) {
-							long space = view.getCapacity();
-							long count = view.getAmount();
-							if (space == 0)
-								continue;
-
-							totalSpace += 1;
-							if (filtering.test(view.getResource().toStack()))
-								occupied += count * (1f / space);
-						}
+						totalSpace += 1;
+						if (filtering.test(view.getResource().toStack()))
+							occupied += count * (1f / space);
 					}
 				}
 			}
