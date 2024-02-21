@@ -40,17 +40,17 @@ public class CreateDatagen implements DataGeneratorEntrypoint {
 		TagLangGen.datagen();
 
 //		if (event.includeClient()) {
-			generator.addProvider(AllSoundEvents.provider(generator));
+			generator.addProvider(true, AllSoundEvents.provider(generator));
 //		}
 
 //		if (event.includeServer()) {
-			generator.addProvider(new CreateRecipeSerializerTagsProvider(generator));
+			generator.addProvider(true, new CreateRecipeSerializerTagsProvider(generator));
 
-			generator.addProvider(new AllAdvancements(generator));
+			generator.addProvider(true, new AllAdvancements(generator));
 
-			generator.addProvider(new StandardRecipeGen(generator));
-			generator.addProvider(new MechanicalCraftingRecipeGen(generator));
-			generator.addProvider(new SequencedAssemblyRecipeGen(generator));
+			generator.addProvider(true, new StandardRecipeGen(generator));
+			generator.addProvider(true, new MechanicalCraftingRecipeGen(generator));
+			generator.addProvider(true, new SequencedAssemblyRecipeGen(generator));
 			ProcessingRecipeGen.registerAll(generator);
 
 //			AllOreFeatureConfigEntries.gatherData(event);

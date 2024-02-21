@@ -1,7 +1,6 @@
 package com.simibubi.create.content.kinetics.fan.processing;
 
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.util.RandomSource;
 
@@ -10,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;

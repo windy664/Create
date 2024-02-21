@@ -78,7 +78,7 @@ public class CreateRegistrateTags {
 			.forceAddTag(BlockTags.SIGNS);
 
 		prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag)
-			.add(Blocks.BEE_NEST, Blocks.COCOA, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT, Blocks.VINE);
+			.add(Blocks.BEE_NEST, Blocks.COCOA, Blocks.MANGROVE_PROPAGULE, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT, Blocks.VINE);
 
 		prov.tag(AllBlockTags.WINDMILL_SAILS.tag)
 			.forceAddTag(BlockTags.WOOL);

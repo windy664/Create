@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Block;
  * For compatibility with and without another mod present, we have to define load conditions of the specific code
  */
 public enum Mods {
+	AETHER,
 	COMPUTERCRAFT,
 	CONNECTIVITY,
 	CURIOS,
