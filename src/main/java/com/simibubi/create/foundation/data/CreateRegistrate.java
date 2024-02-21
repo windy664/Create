@@ -83,8 +83,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return currentTooltipModifierFactory;
 	}
 
-	private static Map<RegistryEntry<?>, ResourceKey<CreativeModeTab>> tabLookup = new IdentityHashMap<>();
-
 	public CreateRegistrate setCreativeTab(ResourceKey<CreativeModeTab> tab) {
 		this.currentTab = tab;
 		return this;

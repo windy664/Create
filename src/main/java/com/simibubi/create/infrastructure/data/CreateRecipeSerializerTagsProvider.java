@@ -3,8 +3,10 @@ package com.simibubi.create.infrastructure.data;
 import com.simibubi.create.AllTags.AllRecipeSerializerTags;
 import com.simibubi.create.compat.Mods;
 
-import net.minecraft.core.Registry;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
@@ -14,10 +16,9 @@ public class CreateRecipeSerializerTagsProvider extends TagsProvider<RecipeSeria
 	}
 
 	@Override
-	protected void addTags() {
-		tag(AllRecipeSerializerTags.AUTOMATION_IGNORE.tag)
-			.addOptional(Mods.OCCULTISM.rl("spirit_trade"))
-			.addOptional(Mods.OCCULTISM.rl("ritual"));
+	protected void addTags(Provider pProvider) {
+		tag(AllRecipeSerializerTags.AUTOMATION_IGNORE.tag).addOptional(Mods.OCCULTISM.rl("spirit_trade"))
+		.addOptional(Mods.OCCULTISM.rl("ritual"));
 
 		// VALIDATE
 
@@ -26,6 +27,7 @@ public class CreateRecipeSerializerTagsProvider extends TagsProvider<RecipeSeria
 				getOrCreateRawBuilder(tag.tag);
 			}
 		}
+
 	}
 
 	@Override

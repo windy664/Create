@@ -52,11 +52,6 @@ import com.simibubi.create.infrastructure.worldgen.AllBiomeModifiers;
 import com.simibubi.create.infrastructure.worldgen.AllFeatures;
 import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
 
-import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
-import io.github.tropheusj.milk.Milk;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -100,6 +95,7 @@ public class Create implements ModInitializer {
 	public void onInitialize() { // onCtor
 		AllSoundEvents.prepare();
 		AllTags.init();
+		AllCreativeModeTabs.register(modEventBus);
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();

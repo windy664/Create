@@ -12,6 +12,7 @@ import io.github.fabricators_of_create.porting_lib.entity.ITeleporter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -69,7 +70,7 @@ public class AllPortalTracks {
 
 	private static Pair<ServerLevel, BlockFace> aether(Pair<ServerLevel, BlockFace> inbound) {
 		ResourceKey<Level> aetherLevelKey =
-			ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("aether", "the_aether"));
+			ResourceKey.create(Registries.DIMENSION, new ResourceLocation("aether", "the_aether"));
 		return standardPortalProvider(inbound, Level.OVERWORLD, aetherLevelKey, level -> {
 			try {
 				return (ITeleporter) Class.forName("com.aetherteam.aether.block.portal.AetherPortalForcer")
