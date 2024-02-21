@@ -110,12 +110,18 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 
 //		} else if (StorageDrawers.isDrawer(targetBlockEntity) && observedInventory.hasInventory()) {
 //			currentLevel = StorageDrawers.getTrueFillLevel(observedInventory.getInventory(), filtering);
+
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
 
 				// Item inventory
-				try (Transaction t = TransferUtil.getTransaction()) {
-					Storage<ItemVariant> inv = observedInventory.getInventory();
+				Storage<ItemVariant> inv = observedInventory.getInventory();
+				if (invVersionTracker.stillWaiting(inv)) {
+					occupied = prevLevel;
+					totalSpace = 1f;
+
+				} else {
+					invVersionTracker.awaitNewVersion(inv);
 					if (invVersionTracker.stillWaiting(inv)) {
 						occupied = prevLevel;
 						totalSpace = 1f;

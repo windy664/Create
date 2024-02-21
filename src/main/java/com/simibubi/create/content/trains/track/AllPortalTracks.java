@@ -59,10 +59,27 @@ public class AllPortalTracks {
 
 	public static void registerDefaults() {
 		registerIntegration(Blocks.NETHER_PORTAL, AllPortalTracks::nether);
+		if (Mods.AETHER.isLoaded())
+			registerIntegration(new ResourceLocation("aether", "aether_portal"), AllPortalTracks::aether);
 	}
 
 	private static Pair<ServerLevel, BlockFace> nether(Pair<ServerLevel, BlockFace> inbound) {
 		return standardPortalProvider(inbound, Level.OVERWORLD, Level.NETHER, ServerLevel::getPortalForcer);
+	}
+
+	private static Pair<ServerLevel, BlockFace> aether(Pair<ServerLevel, BlockFace> inbound) {
+		ResourceKey<Level> aetherLevelKey =
+			ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("aether", "the_aether"));
+		return standardPortalProvider(inbound, Level.OVERWORLD, aetherLevelKey, level -> {
+			try {
+				return (ITeleporter) Class.forName("com.aetherteam.aether.block.portal.AetherPortalForcer")
+					.getDeclaredConstructor(ServerLevel.class, boolean.class)
+					.newInstance(level, true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return level.getPortalForcer();
+		});
 	}
 
 	public static Pair<ServerLevel, BlockFace> standardPortalProvider(Pair<ServerLevel, BlockFace> inbound,

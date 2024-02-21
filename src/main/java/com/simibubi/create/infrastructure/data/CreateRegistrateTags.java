@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
+// fabric: all uses of addTag must be replaced with forceAddTag.
 public class CreateRegistrateTags {
 	public static void addGenerators() {
 		Create.REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, CreateRegistrateTags::genBlockTags);
@@ -31,21 +32,19 @@ public class CreateRegistrateTags {
 		Create.REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, CreateRegistrateTags::genEntityTags);
 	}
 
-	private static void genBlockTags(RegistrateTagsProvider<Block> provIn) {
-		CreateTagsProvider<Block> prov = new CreateTagsProvider<>(provIn, Block::builtInRegistryHolder);
-
+	private static void genBlockTags(RegistrateTagsProvider<Block> prov) {
 		prov.tag(AllBlockTags.BRITTLE.tag)
 			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT)
-			.addTag(BlockTags.BEDS)
-			.addTag(BlockTags.DOORS);
+			.forceAddTag(BlockTags.BEDS)
+			.forceAddTag(BlockTags.DOORS);
 
 		prov.tag(AllBlockTags.COPYCAT_ALLOW.tag)
 			.add(Blocks.BARREL);
 
 		prov.tag(AllBlockTags.COPYCAT_DENY.tag)
-			.addTag(BlockTags.CAULDRONS)
-			.addTag(BlockTags.SAPLINGS)
-			.addTag(BlockTags.CLIMBABLE);
+			.forceAddTag(BlockTags.CAULDRONS)
+			.forceAddTag(BlockTags.SAPLINGS)
+			.forceAddTag(BlockTags.CLIMBABLE);
 
 		prov.tag(AllBlockTags.FAN_PROCESSING_CATALYSTS_HAUNTING.tag)
 			.add(Blocks.SOUL_FIRE)
@@ -58,46 +57,47 @@ public class CreateRegistrateTags {
 		prov.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 			.add(Blocks.IRON_BARS)
 			.add(Blocks.MANGROVE_ROOTS)
-			.addTag(BlockTags.CAMPFIRES)
-			.addTag(BlockTags.FENCES)
-			.addTag(BlockTags.LEAVES);
+			.forceAddTag(BlockTags.CAMPFIRES)
+			.forceAddTag(BlockTags.FENCES)
+			.forceAddTag(BlockTags.LEAVES);
 
 		prov.tag(AllBlockTags.MOVABLE_EMPTY_COLLIDER.tag)
 			.add(Blocks.COBWEB, Blocks.POWDER_SNOW, Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK)
-			.addTag(BlockTags.FENCE_GATES);
+			.forceAddTag(BlockTags.FENCE_GATES);
 
 		prov.tag(AllBlockTags.ORE_OVERRIDE_STONE.tag)
-			.addTag(BlockTags.STONE_ORE_REPLACEABLES);
+			.forceAddTag(BlockTags.STONE_ORE_REPLACEABLES);
 
 		prov.tag(AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
 			.add(Blocks.MAGMA_BLOCK, Blocks.LAVA)
-			.addTag(BlockTags.CAMPFIRES)
-			.addTag(BlockTags.FIRE);
+			.forceAddTag(BlockTags.CAMPFIRES)
+			.forceAddTag(BlockTags.FIRE);
 
 		prov.tag(AllBlockTags.SAFE_NBT.tag)
-			.addTag(BlockTags.BANNERS)
-			.addTag(BlockTags.SIGNS);
+			.forceAddTag(BlockTags.BANNERS)
+			.forceAddTag(BlockTags.SIGNS);
 
 		prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag)
 			.add(Blocks.BEE_NEST, Blocks.COCOA, Blocks.MANGROVE_PROPAGULE, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT, Blocks.VINE);
 
 		prov.tag(AllBlockTags.WINDMILL_SAILS.tag)
-			.addTag(BlockTags.WOOL);
+			.forceAddTag(BlockTags.WOOL);
 
 		prov.tag(AllBlockTags.WRENCH_PICKUP.tag)
 			.add(Blocks.REDSTONE_WIRE, Blocks.REDSTONE_TORCH, Blocks.REPEATER, Blocks.LEVER,
 					Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
 					Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET, Blocks.HOPPER)
-			.addTag(BlockTags.BUTTONS)
-			.addTag(BlockTags.PRESSURE_PLATES)
-			.addTag(BlockTags.RAILS);
+			.forceAddTag(BlockTags.BUTTONS)
+			.forceAddTag(BlockTags.PRESSURE_PLATES)
+			.forceAddTag(BlockTags.RAILS);
 
 		// COMPAT
 
 		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE,
 				"connector_lv", "connector_lv_relay", "connector_mv", "connector_mv_relay",
 				"connector_hv", "connector_hv_relay", "connector_bundled", "connector_structural",
-				"connector_redstone", "connector_probe", "breaker_switch");
+				"connector_redstone", "connector_probe", "breaker_switch")
+				.addOptional(Mods.BC.asResource("bits_block")); // fabric: Causes Problems last I checked. TODO: re-evaluate
 
 		// VALIDATE
 
@@ -108,19 +108,17 @@ public class CreateRegistrateTags {
 		}
 	}
 
-	private static void genItemTags(RegistrateTagsProvider<Item> provIn) {
-		CreateTagsProvider<Item> prov = new CreateTagsProvider<>(provIn, Item::builtInRegistryHolder);
-
+	private static void genItemTags(RegistrateTagsProvider<Item> prov) {
 		prov.tag(AllItemTags.SLEEPERS.tag)
 			.add(Items.STONE_SLAB, Items.SMOOTH_STONE_SLAB, Items.ANDESITE_SLAB);
 
 		prov.tag(AllItemTags.STRIPPED_LOGS.tag)
-			.addTag(AllItemTags.VANILLA_STRIPPED_LOGS.tag)
-			.addTag(AllItemTags.MODDED_STRIPPED_LOGS.tag);
+			.forceAddTag(AllItemTags.VANILLA_STRIPPED_LOGS.tag)
+			.forceAddTag(AllItemTags.MODDED_STRIPPED_LOGS.tag);
 
 		prov.tag(AllItemTags.STRIPPED_WOOD.tag)
-			.addTag(AllItemTags.VANILLA_STRIPPED_WOOD.tag)
-			.addTag(AllItemTags.MODDED_STRIPPED_WOOD.tag);
+			.forceAddTag(AllItemTags.VANILLA_STRIPPED_WOOD.tag)
+			.forceAddTag(AllItemTags.MODDED_STRIPPED_WOOD.tag);
 
 		prov.tag(AllItemTags.DEPLOYABLE_DRINK.tag)
 			.add(Items.MILK_BUCKET, Items.POTION);
@@ -135,18 +133,18 @@ public class CreateRegistrateTags {
 		prov.tag(AllItemTags.VANILLA_STRIPPED_LOGS.tag)
 			.add(Items.STRIPPED_ACACIA_LOG, Items.STRIPPED_BIRCH_LOG, Items.STRIPPED_CRIMSON_STEM,
 				Items.STRIPPED_DARK_OAK_LOG, Items.STRIPPED_JUNGLE_LOG, Items.STRIPPED_MANGROVE_LOG,
-				Items.STRIPPED_OAK_LOG, Items.STRIPPED_SPRUCE_LOG, Items.STRIPPED_WARPED_STEM, Items.STRIPPED_CHERRY_LOG, Items.STRIPPED_BAMBOO_BLOCK);
+				Items.STRIPPED_OAK_LOG, Items.STRIPPED_SPRUCE_LOG, Items.STRIPPED_WARPED_STEM);
 
 		prov.tag(AllItemTags.VANILLA_STRIPPED_WOOD.tag)
 			.add(Items.STRIPPED_ACACIA_WOOD, Items.STRIPPED_BIRCH_WOOD, Items.STRIPPED_CRIMSON_HYPHAE,
 				Items.STRIPPED_DARK_OAK_WOOD, Items.STRIPPED_JUNGLE_WOOD, Items.STRIPPED_MANGROVE_WOOD,
-				Items.STRIPPED_OAK_WOOD, Items.STRIPPED_SPRUCE_WOOD, Items.STRIPPED_WARPED_HYPHAE, Items.STRIPPED_CHERRY_WOOD);
+				Items.STRIPPED_OAK_WOOD, Items.STRIPPED_SPRUCE_WOOD, Items.STRIPPED_WARPED_HYPHAE);
 
 		prov.tag(ItemTags.BEACON_PAYMENT_ITEMS)
-			.addTag(AllItemTags.CREATE_INGOTS.tag);
+			.forceAddTag(AllItemTags.CREATE_INGOTS.tag);
 
 		prov.tag(Tags.Items.INGOTS)
-			.addTag(AllItemTags.CREATE_INGOTS.tag);
+			.forceAddTag(AllItemTags.CREATE_INGOTS.tag);
 
 		// COMPAT
 
@@ -161,7 +159,7 @@ public class CreateRegistrateTags {
 		}
 	}
 
-	private static void genStrippedWoodItemTags(CreateTagsProvider<Item> prov) {
+	private static void genStrippedWoodItemTags(RegistrateTagsProvider<Item> prov) {
 		TagAppender<Item> logAppender = prov.tag(AllItemTags.MODDED_STRIPPED_LOGS.tag);
 		TagAppender<Item> woodAppender = prov.tag(AllItemTags.MODDED_STRIPPED_WOOD.tag);
 		StrippedWoodHelper helper = new StrippedWoodHelper(logAppender, woodAppender);
@@ -197,9 +195,7 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(woodAppender, Mods.BYG, "stripped_bulbis_wood");
 	}
 
-	private static void genFluidTags(RegistrateTagsProvider<Fluid> provIn) {
-		CreateTagsProvider<Fluid> prov = new CreateTagsProvider<>(provIn, Fluid::builtInRegistryHolder);
-
+	private static void genFluidTags(RegistrateTagsProvider<Fluid> prov) {
 		prov.tag(AllFluidTags.BOTTOMLESS_ALLOW.tag)
 			.add(Fluids.WATER, Fluids.LAVA);
 
@@ -208,6 +204,11 @@ public class CreateRegistrateTags {
 
 		prov.tag(AllFluidTags.FAN_PROCESSING_CATALYSTS_SPLASHING.tag)
 			.add(Fluids.WATER, Fluids.FLOWING_WATER);
+
+		// fabric: this was requested by TelepathicGrunt for swimming in Bumblezone honey.
+		// This is not needed on Forge as FluidType is sufficient.
+		prov.tag(AllFluidTags.DIVING_FLUIDS.tag)
+				.forceAddTag(FluidTags.WATER);
 
 		// VALIDATE
 
@@ -218,9 +219,7 @@ public class CreateRegistrateTags {
 		}
 	}
 
-	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> provIn) {
-		CreateTagsProvider<EntityType<?>> prov = new CreateTagsProvider<>(provIn, EntityType::builtInRegistryHolder);
-
+	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> prov) {
 		prov.tag(AllEntityTags.BLAZE_BURNER_CAPTURABLE.tag)
 			.add(EntityType.BLAZE);
 

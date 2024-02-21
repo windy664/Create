@@ -558,20 +558,20 @@
 	"create.tooltip.keyShift": "Shift",
 	"create.tooltip.keyCtrl": "Ctrl",
 
-	"create.tooltip.speedRequirement": "Speed Requirement:",
+	"create.tooltip.speedRequirement": "Speed Requirement: %1$s",
 	"create.tooltip.speedRequirement.none": "None",
 	"create.tooltip.speedRequirement.slow": "Slow",
 	"create.tooltip.speedRequirement.medium": "Moderate",
 	"create.tooltip.speedRequirement.fast": "Fast",
 
-	"create.tooltip.stressImpact": "Kinetic Stress Impact:",
+	"create.tooltip.stressImpact": "Kinetic Stress Impact: %1$s",
 	"create.tooltip.stressImpact.low": "Low",
 	"create.tooltip.stressImpact.medium": "Moderate",
 	"create.tooltip.stressImpact.high": "High",
 	"create.tooltip.stressImpact.overstressed": "Overstressed",
 
 	"create.tooltip.up_to": "Up to %1$s",
-	"create.tooltip.capacityProvided": "Kinetic Stress Capacity:",
+	"create.tooltip.capacityProvided": "Kinetic Stress Capacity: %1$s",
 	"create.tooltip.capacityProvided.low": "Small",
 	"create.tooltip.capacityProvided.medium": "Medium",
 	"create.tooltip.capacityProvided.high": "Large",
@@ -1040,8 +1040,6 @@
 
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
 	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
-
-  "create.contraption.minecart_contraption_illegal_placement": "Placement of minecart contraptions is currently disabled.",
 
 	"enchantment.create.capacity.desc": "Increases Backtank air capacity.",
 	"enchantment.create.potato_recovery.desc": "Potato Cannon projectiles have a chance to be reused.",
