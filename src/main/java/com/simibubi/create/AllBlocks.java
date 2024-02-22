@@ -1049,6 +1049,7 @@ public class AllBlocks {
 		REGISTRATE.block("piston_extension_pole", PistonExtensionPoleBlock::new)
 			.initialProperties(() -> Blocks.PISTON_HEAD)
 			.properties(p -> p.sound(SoundType.SCAFFOLDING).mapColor(MapColor.DIRT).forceSolidOn())
+			.properties(p -> p.pushReaction(PushReaction.NORMAL)) // fabric: inherits BLOCK from piston head, handled by a method override on forge
 			.transform(axeOrPickaxe())
 			.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(false))
 			.simpleItem()

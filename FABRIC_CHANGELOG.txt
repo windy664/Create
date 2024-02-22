@@ -10,3 +10,4 @@ Change logging starts below:
 - fix invalid auto-shapeless recipes from appearing in EMI (#1148)
 - potential fix for a rare belt-related crash (#941)
 - potential fix for errors/crashes due to a missing locale (#1120)
+- fix piston extension poles being considered unmovable (#1307)
