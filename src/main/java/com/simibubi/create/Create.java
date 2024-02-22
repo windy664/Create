@@ -2,6 +2,11 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import io.github.tropheusj.milk.Milk;
+import net.fabricmc.api.ModInitializer;
+
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -95,7 +100,7 @@ public class Create implements ModInitializer {
 	public void onInitialize() { // onCtor
 		AllSoundEvents.prepare();
 		AllTags.init();
-		AllCreativeModeTabs.register(modEventBus);
+		AllCreativeModeTabs.register();
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();
@@ -105,7 +110,6 @@ public class Create implements ModInitializer {
 		AllBlockEntityTypes.register();
 		AllEnchantments.register();
 		AllRecipeTypes.register();
-		AllIngredients.register();
 
 		// fabric exclusive, squeeze this in here to register before stuff is used
 		REGISTRATE.register();
@@ -114,10 +118,8 @@ public class Create implements ModInitializer {
 		AllStructureProcessorTypes.register();
 		AllEntityDataSerializers.register();
 		AllPackets.registerPackets();
-		AllOreFeatureConfigEntries.init();
 		AllFeatures.register();
 		AllPlacementModifiers.register();
-		AllCreativeModeTabs.register();
 
 		AllConfigs.register();
 
@@ -148,6 +150,7 @@ public class Create implements ModInitializer {
 		Mods.TRINKETS.executeIfInstalled(() -> () -> Trinkets.init());
 
 		// fabric exclusive
+		AllIngredients.register();
 		CommonEvents.register();
 		AllPackets.getChannel().initServerListener();
 		FabricPonderProcessing.init();

@@ -84,23 +84,29 @@ public class TagGen {
 		}
 
 		public CreateTagAppender<T> tag(TagKey<T> tag) {
-			TagBuilder tagbuilder = getOrCreateRawBuilder(tag);
-			return new CreateTagAppender<>(tagbuilder, keyExtractor, Create.ID);
+			return new CreateTagAppender<>(provider.addTag(tag), keyExtractor);
 		}
-
-		public TagBuilder getOrCreateRawBuilder(TagKey<T> tag) {
-			return provider.addTag(tag).getInternalBuilder();
+		
+		// fabric: this is just used to force datagen of tags
+		public void getOrCreateRawBuilder(TagKey<T> tag) {
+			this.tag(tag);
 		}
-
 	}
 
 	public static class CreateTagAppender<T> extends TagsProvider.TagAppender<T> {
 
 		private Function<T, ResourceKey<T>> keyExtractor;
+		// fabric: take the fabric builder, use it to call forceAddTag instead of addTag
+		private final FabricTagProvider<T>.FabricTagBuilder fabricBuilder;
 
-		public CreateTagAppender(TagBuilder pBuilder, Function<T, ResourceKey<T>> pKeyExtractor, String modId) {
-			super(pBuilder, modId);
+		public CreateTagAppender(FabricTagProvider<T>.FabricTagBuilder fabricBuilder, Function<T, ResourceKey<T>> pKeyExtractor) {
+			super(getBuilder(fabricBuilder));
 			this.keyExtractor = pKeyExtractor;
+			this.fabricBuilder = fabricBuilder;
+		}
+
+		private static TagBuilder getBuilder(TagAppender<?> appender) {
+			return ((TagAppenderAccessor) appender).getBuilder();
 		}
 
 		public CreateTagAppender<T> add(T entry) {
@@ -116,5 +122,11 @@ public class TagGen {
 			return this;
 		}
 
+		@Override
+		@NotNull
+		public TagAppender<T> addTag(@NotNull TagKey<T> tag) {
+			this.fabricBuilder.forceAddTag(tag);
+			return this;
+		}
 	}
 }

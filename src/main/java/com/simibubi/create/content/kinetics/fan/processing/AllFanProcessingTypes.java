@@ -8,8 +8,6 @@ import java.util.Optional;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
 
-import io.github.fabricators_of_create.porting_lib.util.DamageSourceHelper;
-
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
 import net.minecraft.util.RandomSource;

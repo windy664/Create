@@ -3,16 +3,21 @@ package com.simibubi.create.infrastructure.data;
 import com.simibubi.create.AllTags.AllRecipeSerializerTags;
 import com.simibubi.create.compat.Mods;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
+import java.util.concurrent.CompletableFuture;
+
 public class CreateRecipeSerializerTagsProvider extends TagsProvider<RecipeSerializer<?>> {
-	public CreateRecipeSerializerTagsProvider(DataGenerator generator) {
-		super(generator, Registry.RECIPE_SERIALIZER);
+	public CreateRecipeSerializerTagsProvider(FabricDataOutput generator, CompletableFuture<Provider> lookupProvider) {
+		super(generator, Registries.RECIPE_SERIALIZER, lookupProvider);
 	}
 
 	@Override

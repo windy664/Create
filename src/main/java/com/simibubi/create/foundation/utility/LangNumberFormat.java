@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.LanguageInfo;
+import net.minecraft.client.resources.language.LanguageManager;
 import net.minecraft.util.Mth;
 
 public class LangNumberFormat {
@@ -17,14 +18,13 @@ public class LangNumberFormat {
 	}
 
 	public void update() {
-		LanguageInfo lang = Minecraft.getInstance()
-				.getLanguageManager()
-				.getSelected();
-		Locale locale = lang.getJavaLocale();
+		LanguageManager manager = Minecraft.getInstance()
+				.getLanguageManager();
+		Locale locale = manager.getSelectedJavaLocale();
 
 		// fabric: clear error if this is somehow null.
 		if (locale == null) {
-			throw new IllegalStateException("LanguageInfo's javaLocale is null! info: " + lang);
+			throw new IllegalStateException("Locale is null! selected: " + manager.getSelected());
 		}
 
 		format = NumberFormat.getInstance(locale);

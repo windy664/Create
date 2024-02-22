@@ -8,7 +8,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.archEx.ArchExCompat;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.data.DamageTypeTagGen;
 import com.simibubi.create.foundation.data.TagLangGen;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
@@ -22,48 +24,47 @@ import com.simibubi.create.infrastructure.ponder.PonderIndex;
 import com.simibubi.create.infrastructure.ponder.SharedText;
 import com.tterrag.registrate.providers.ProviderType;
 
+import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class CreateDatagen implements DataGeneratorEntrypoint {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator generator) {
 		ExistingFileHelper helper = ExistingFileHelper.withResourcesFromArg();
-		Create.REGISTRATE.setupDatagen(generator, helper);
-		gatherData(generator, helper);
+		FabricDataGenerator.Pack pack = generator.createPack();
+		Create.REGISTRATE.setupDatagen(pack, helper);
+		gatherData(pack, helper);
 	}
 
-	public static void gatherData(FabricDataGenerator generator, ExistingFileHelper existingFileHelper) {
+	public static void gatherData(FabricDataGenerator.Pack pack, ExistingFileHelper existingFileHelper) {
 		addExtraRegistrateData();
 
 		// fabric: tag lang
 		TagLangGen.datagen();
+		// fabric: archex compat
+		ArchExCompat.init(pack);
 
-		DataGenerator generator = event.getGenerator();
-		PackOutput output = generator.getPackOutput();
-		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+		// fabric: pretty much redone, make sure all providers make it through merges
 
-//		if (event.includeClient()) {
-			generator.addProvider(true, AllSoundEvents.provider(generator));
-//		}
+		pack.addProvider(AllSoundEvents::provider);
+		pack.addProvider(GeneratedEntriesProvider::new);
+		pack.addProvider(CreateRecipeSerializerTagsProvider::new);
+		pack.addProvider(DamageTypeTagGen::new);
+		pack.addProvider(AllAdvancements::new);
+		pack.addProvider(StandardRecipeGen::new);
+		pack.addProvider(MechanicalCraftingRecipeGen::new);
+		pack.addProvider(SequencedAssemblyRecipeGen::new);
+		pack.addProvider(ProcessingRecipeGen::registerAll);
+	}
 
-//		if (event.includeServer()) {
-			GeneratedEntriesProvider generatedEntriesProvider = new GeneratedEntriesProvider(output, lookupProvider);
-			lookupProvider = generatedEntriesProvider.getRegistryProvider();
-			generator.addProvider(true, generatedEntriesProvider);
-
-			generator.addProvider(true, new CreateRecipeSerializerTagsProvider(output, lookupProvider, existingFileHelper));
-			generator.addProvider(true, new DamageTypeTagGen(output, lookupProvider, existingFileHelper));
-			generator.addProvider(true, new AllAdvancements(output));
-			generator.addProvider(true, new StandardRecipeGen(output));
-			generator.addProvider(true, new MechanicalCraftingRecipeGen(output));
-			generator.addProvider(true, new SequencedAssemblyRecipeGen(output));
-			ProcessingRecipeGen.registerAll(generator, output);
-//		}
+	@Override
+	public void buildRegistry(RegistrySetBuilder registryBuilder) {
+		GeneratedEntriesProvider.addBootstraps(registryBuilder);
 	}
 
 	private static void addExtraRegistrateData() {

@@ -4,6 +4,9 @@ import java.util.concurrent.CompletableFuture;
 
 import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllDamageTypes;
@@ -16,8 +19,8 @@ import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;
 
-public class DamageTypeTagGen extends TagsProvider<DamageType> {
-	public DamageTypeTagGen(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+public class DamageTypeTagGen extends FabricTagProvider<DamageType> {
+	public DamageTypeTagGen(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
 		super(output, Registries.DAMAGE_TYPE, lookupProvider);
 	}
 
