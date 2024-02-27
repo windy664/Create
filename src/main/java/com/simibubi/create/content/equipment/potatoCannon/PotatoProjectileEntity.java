@@ -2,6 +2,8 @@ package com.simibubi.create.content.equipment.potatoCannon;
 
 import io.github.fabricators_of_create.porting_lib.entity.IEntityAdditionalSpawnData;
 
+import io.github.fabricators_of_create.porting_lib.entity.PortingLibEntity;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllEnchantments;
@@ -328,6 +330,11 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	public static FabricEntityTypeBuilder<?> build(FabricEntityTypeBuilder<?> builder) {
 //		EntityType.Builder<PotatoProjectileEntity> entityBuilder = (EntityType.Builder<PotatoProjectileEntity>) builder;
 		return builder.dimensions(EntityDimensions.fixed(0.25f, 0.25f));
+	}
+
+	@Override
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
+		return PortingLibEntity.getEntitySpawningPacket(this);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import java.util.UUID;
 import com.simibubi.create.foundation.utility.AdventureUtil;
 
 import io.github.fabricators_of_create.porting_lib.entity.IEntityAdditionalSpawnData;
+import io.github.fabricators_of_create.porting_lib.entity.PortingLibEntity;
 import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.EntityAccessor;
 import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 
@@ -605,6 +606,11 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected void defineSynchedData() {
 		this.entityData.define(STALLED, false);
 		this.entityData.define(CONTROLLED_BY, Optional.empty());
+	}
+
+	@Override
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
+		return PortingLibEntity.getEntitySpawningPacket(this);
 	}
 
 	@Override

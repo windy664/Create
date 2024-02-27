@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.actors.seat;
 import com.simibubi.create.AllEntityTypes;
 
 import io.github.fabricators_of_create.porting_lib.entity.IEntityAdditionalSpawnData;
+import io.github.fabricators_of_create.porting_lib.entity.PortingLibEntity;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -123,6 +124,11 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	@Override
 	protected void addAdditionalSaveData(CompoundTag p_213281_1_) {}
+
+	@Override
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
+		return PortingLibEntity.getEntitySpawningPacket(this);
+	}
 
 	public static class Render extends EntityRenderer<SeatEntity> {
 

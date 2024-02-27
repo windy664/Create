@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import io.github.fabricators_of_create.porting_lib.entity.IEntityAdditionalSpawnData;
 
+import io.github.fabricators_of_create.porting_lib.entity.PortingLibEntity;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 
 import org.apache.commons.lang3.Validate;
@@ -103,6 +104,11 @@ public class BlueprintEntity extends HangingEntity
 //		@SuppressWarnings("unchecked")
 //		EntityType.Builder<BlueprintEntity> entityBuilder = (EntityType.Builder<BlueprintEntity>) builder;
 		return builder;
+	}
+
+	@Override
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
+		return PortingLibEntity.getEntitySpawningPacket(this);
 	}
 
 	@Override
