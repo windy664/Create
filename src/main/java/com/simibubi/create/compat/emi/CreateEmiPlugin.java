@@ -38,6 +38,7 @@ import com.simibubi.create.compat.emi.recipes.fan.FanSmokingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanWashingEmiRecipe;
 import com.simibubi.create.compat.rei.ConversionRecipe;
 import com.simibubi.create.compat.rei.ToolboxColoringRecipeMaker;
+import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.content.equipment.blueprint.BlueprintScreen;
 import com.simibubi.create.content.equipment.toolbox.ToolboxBlock;
 import com.simibubi.create.content.fluids.VirtualFluid;
@@ -69,6 +70,7 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -102,8 +104,12 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.item.crafting.SmokingRecipe;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+
+import org.jetbrains.annotations.NotNull;
 
 public class CreateEmiPlugin implements EmiPlugin {
 	public static final Map<ResourceLocation, EmiRecipeCategory> ALL = new LinkedHashMap<>();
@@ -275,6 +281,12 @@ public class CreateEmiPlugin implements EmiPlugin {
 		addAll(registry, AllRecipeTypes.ITEM_APPLICATION, ManualItemApplicationEmiRecipe::new);
 		addAll(registry, AllRecipeTypes.MECHANICAL_CRAFTING, MECHANICAL_CRAFTING, MechanicalCraftingEmiRecipe::new);
 
+		// In World Interaction recipes
+		addFluidInteractionRecipe(registry, "create/limestone", AllFluids.HONEY.get(),
+				Fluids.LAVA, AllPaletteStoneTypes.LIMESTONE.getBaseBlock().get());
+		addFluidInteractionRecipe(registry, "create/chocolate", AllFluids.CHOCOLATE.get(),
+				Fluids.LAVA, AllPaletteStoneTypes.SCORIA.getBaseBlock().get());
+
 		// Introspective recipes based on present stacks need to make sure
 		// all stacks are populated by other plugins
 		registry.addDeferredRecipes(this::addDeferredRecipes);
@@ -293,6 +305,26 @@ public class CreateEmiPlugin implements EmiPlugin {
 		for (T recipe : (List<T>) registry.getRecipeManager().getAllRecipesFor(type.getType())) {
 			registry.addRecipe(constructor.apply(category, recipe));
 		}
+	}
+
+	/**
+	 * Register an In World Interaction recipe
+	 *
+	 * @param registry EmiRegistry
+	 * @param outputId The block being outputted in the form of `modid/block` an example for stone would be `minecraft/stone`
+	 * @param left The stack that will be shown in the left input
+	 * @param right The stack that will be shown in the right input
+	 * @param output The stack that will be outputted from this interaction recipe
+	 */
+	private void addFluidInteractionRecipe(@NotNull EmiRegistry registry, String outputId, Fluid left, Fluid right, Block output) {
+		// fabric: 27000 droplets = 1000 mb
+		registry.addRecipe(EmiWorldInteractionRecipe.builder()
+				.id(Create.asResource("/world/fluid_interaction/" + outputId))
+				.leftInput(EmiStack.of(left, 81000))
+				.rightInput(EmiStack.of(right, 81000), false)
+				.output(EmiStack.of(output))
+				.build()
+		);
 	}
 
 	private void addDeferredRecipes(Consumer<EmiRecipe> consumer) {
