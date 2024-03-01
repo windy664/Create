@@ -64,6 +64,9 @@ import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 
+import com.tterrag.registrate.fabric.SimpleFlowableFluid;
+import com.tterrag.registrate.util.nullness.NonnullType;
+
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
@@ -317,6 +320,12 @@ public class CreateEmiPlugin implements EmiPlugin {
 	 * @param output The stack that will be outputted from this interaction recipe
 	 */
 	private void addFluidInteractionRecipe(@NotNull EmiRegistry registry, String outputId, Fluid left, Fluid right, Block output) {
+		// EmiStack doesnt accept flowing fluids, must always be a source
+		if (left instanceof SimpleFlowableFluid.Flowing flowing)
+			left = flowing.getSource();
+		if (right instanceof SimpleFlowableFluid.Flowing flowing)
+			right = flowing.getSource();
+
 		// fabric: 81000 droplets = 1000 mb
 		registry.addRecipe(EmiWorldInteractionRecipe.builder()
 				.id(Create.asResource("/world/fluid_interaction/" + outputId))
