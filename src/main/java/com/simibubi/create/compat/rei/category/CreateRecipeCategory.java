@@ -128,10 +128,10 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 			Slot slot = (Slot) widget;
 
 			int slotIndex = itemStacks.indexOf(widget);
-			
+
 			ClientEntryStacks.setTooltipProcessor(slot.getCurrentEntry(), (entryStack, tooltip) -> {
 				if (slotIndex < startIndex)
-					return;
+					return tooltip;
 				ProcessingOutput output = results.get(slotIndex - startIndex);
 				float chance = output.getChance();
 				if (chance != 1)
