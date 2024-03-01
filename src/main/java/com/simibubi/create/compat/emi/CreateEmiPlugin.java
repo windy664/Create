@@ -317,7 +317,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 	 * @param output The stack that will be outputted from this interaction recipe
 	 */
 	private void addFluidInteractionRecipe(@NotNull EmiRegistry registry, String outputId, Fluid left, Fluid right, Block output) {
-		// fabric: 27000 droplets = 1000 mb
+		// fabric: 81000 droplets = 1000 mb
 		registry.addRecipe(EmiWorldInteractionRecipe.builder()
 				.id(Create.asResource("/world/fluid_interaction/" + outputId))
 				.leftInput(EmiStack.of(left, 81000))
