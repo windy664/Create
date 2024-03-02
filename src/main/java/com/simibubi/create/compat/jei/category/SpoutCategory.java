@@ -64,7 +64,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 				continue;
 			}
 
-			MutableContainerItemContext testCtx = new MutableContainerItemContext(stack);
+			ContainerItemContext testCtx = ContainerItemContext.withInitial(stack);
 			Storage<FluidVariant> testStorage = testCtx.find(FluidStorage.ITEM);
 			if (testStorage == null)
 				continue;
