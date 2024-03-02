@@ -3,8 +3,10 @@ repositories {
 }
 
 String sodiumVersion = project.sodium_version
+String indiumVersion = project.indium_version
 
 dependencies {
     modLocalRuntime("maven.modrinth:sodium:$sodiumVersion")
     modLocalRuntime("org.joml:joml:1.10.2")
+    modLocalRuntime("maven.modrinth:indium:$indiumVersion")
 }
