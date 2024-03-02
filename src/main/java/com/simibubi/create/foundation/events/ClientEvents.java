@@ -333,14 +333,6 @@ public class ClientEvents {
 		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
 		if (!divingHelmet.isEmpty()) {
 			if (FluidHelper.isWater(fluid)) {
-				// fabric: sodium needs this to be inverted.
-				// only occurs on 1.19 probably due to something fixed in sodium 0.5?
-				if (Mods.SODIUM.isLoaded()) {
-					float far = fogData.getFarPlaneDistance();
-					float near = fogData.getNearPlaneDistance();
-					fogData.setNearPlaneDistance(far);
-					fogData.setFarPlaneDistance(near);
-				}
 				fogData.scaleFarPlaneDistance(6.25f);
 				return true;
 			} else if (FluidHelper.isLava(fluid) && NetheriteDivingHandler.isNetheriteDivingHelmet(divingHelmet)) {
