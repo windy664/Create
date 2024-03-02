@@ -78,13 +78,12 @@ import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
+import io.github.fabricators_of_create.porting_lib.transfer.MutableContainerItemContext;
 import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib.util.FluidStack;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
@@ -337,14 +336,13 @@ public class CreateEmiPlugin implements EmiPlugin {
 	}
 
 	private void addDeferredRecipes(Consumer<EmiRecipe> consumer) {
-		List<FluidVariant> fluids = EmiApi.getIndexStacks().stream()
-			.filter(s -> s.getKey() instanceof FluidVariant)
-			.map(s -> (FluidVariant) s.getKey())
+		List<Fluid> fluids = EmiApi.getIndexStacks().stream()
+			.filter(s -> s.getKey() instanceof Fluid)
+			.map(s -> (Fluid) s.getKey())
 			.distinct()
 			.toList();
 		for (EmiStack stack : EmiApi.getIndexStacks()) {
-			if (stack.getKey() instanceof ItemVariant iv) {
-				Item i = iv.getItem();
+			if (stack.getKey() instanceof Item i) {
 				ItemStack is = stack.getItemStack();
 				if (i instanceof PotionItem) {
 					FluidStack potion = PotionFluidHandler.getFluidFromPotionItem(is);
@@ -367,14 +365,14 @@ public class CreateEmiPlugin implements EmiPlugin {
 								.build()));
 					continue;
 				}
-				for (FluidVariant fluid : fluids) {
-					if (i == Items.GLASS_BOTTLE && fluid.getFluid() == Fluids.WATER) {
+				for (Fluid fluid : fluids) {
+					if (i == Items.GLASS_BOTTLE && fluid == Fluids.WATER) {
 						continue;
 					}
 					// This will miss fluid containers that hold a minimum of over 1000 L, but perhaps that's preferable.
 					FluidStack fs = new FluidStack(fluid, FluidConstants.BUCKET);
 					ItemStack copy = is.copy();
-					ContainerItemContext ctx = ContainerItemContext.withInitial(copy);
+					MutableContainerItemContext ctx = new MutableContainerItemContext(copy);
 					Storage<FluidVariant> storage = ctx.find(FluidStorage.ITEM);
 					if (storage != null && GenericItemFilling.isFluidHandlerValid(copy, storage)) {
 						long inserted = 0;
@@ -399,7 +397,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 					}
 				}
 				ItemStack copy = is.copy();
-				ContainerItemContext ctx = ContainerItemContext.withInitial(copy);
+				MutableContainerItemContext ctx = new MutableContainerItemContext(copy);
 				Storage<FluidVariant> storage = ctx.find(FluidStorage.ITEM);
 				if (storage != null) {
 					FluidStack extracted = TransferUtil.extractAnyFluid(storage, FluidConstants.BUCKET);
