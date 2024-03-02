@@ -65,7 +65,7 @@ public class AllPortalTracks {
 	}
 
 	private static Pair<ServerLevel, BlockFace> nether(Pair<ServerLevel, BlockFace> inbound) {
-		return standardPortalProvider(inbound, Level.OVERWORLD, Level.NETHER, ServerLevel::getPortalForcer);
+		return standardPortalProvider(inbound, Level.OVERWORLD, Level.NETHER, AllPortalTracks::getTeleporter);
 	}
 
 	private static Pair<ServerLevel, BlockFace> aether(Pair<ServerLevel, BlockFace> inbound) {
@@ -79,8 +79,12 @@ public class AllPortalTracks {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return level.getPortalForcer();
+			return getTeleporter(level);
 		});
+	}
+
+	private static ITeleporter getTeleporter(ServerLevel level) {
+		return (ITeleporter) level.getPortalForcer();
 	}
 
 	public static Pair<ServerLevel, BlockFace> standardPortalProvider(Pair<ServerLevel, BlockFace> inbound,
