@@ -13,6 +13,7 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
 import com.simibubi.create.content.contraptions.ContraptionHandlerClient;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsHandler;
@@ -332,6 +333,14 @@ public class ClientEvents {
 		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
 		if (!divingHelmet.isEmpty()) {
 			if (FluidHelper.isWater(fluid)) {
+				// fabric: sodium needs this to be inverted.
+				// only occurs on 1.19 probably due to something fixed in sodium 0.5?
+				if (Mods.SODIUM.isLoaded()) {
+					float far = fogData.getFarPlaneDistance();
+					float near = fogData.getNearPlaneDistance();
+					fogData.setNearPlaneDistance(far);
+					fogData.setFarPlaneDistance(near);
+				}
 				fogData.scaleFarPlaneDistance(6.25f);
 				return true;
 			} else if (FluidHelper.isLava(fluid) && NetheriteDivingHandler.isNetheriteDivingHelmet(divingHelmet)) {
