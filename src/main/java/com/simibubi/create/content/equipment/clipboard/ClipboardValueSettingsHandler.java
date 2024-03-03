@@ -121,12 +121,12 @@ public class ClipboardValueSettingsHandler {
 		CreateClient.VALUE_SETTINGS_HANDLER.showHoverTip(tip);
 	}
 
-	public static InteractionResult rightClickToCopy(Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction) {
-		return interact(player.getItemInHand(hand), pos, world, player, direction, false);
+	public static InteractionResult rightClickToCopy(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+		return interact(player.getItemInHand(hand), hitResult.getBlockPos(), world, player, hitResult.getDirection(), false);
 	}
 
-	public static InteractionResult leftClickToPaste(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
-		return interact(player.getItemInHand(hand), hitResult.getBlockPos(), world, player, hitResult.getDirection(), true);
+	public static InteractionResult leftClickToPaste(Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction) {
+		return interact(player.getItemInHand(hand), pos, world, player, direction, true);
 	}
 
 	private static InteractionResult interact(ItemStack itemStack, BlockPos pos, Level world, Player player, Direction face, boolean paste) {
