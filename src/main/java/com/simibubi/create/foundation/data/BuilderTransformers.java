@@ -115,10 +115,8 @@ public class BuilderTransformers {
 			.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.noOcclusion()
 				.mapColor(MapColor.NONE))
-			.addLayer(() -> RenderType::solid)
+			// fabric: only render base model on cutout. When rendering the wrapped model's material is copied.
 			.addLayer(() -> RenderType::cutout)
-			.addLayer(() -> RenderType::cutoutMipped)
-			.addLayer(() -> RenderType::translucent)
 			.color(() -> CopycatBlock::wrappedColor)
 			.transform(TagGen.axeOrPickaxe());
 	}

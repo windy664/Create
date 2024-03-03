@@ -245,9 +245,9 @@ public class CommonEvents {
 		UseBlockCallback.EVENT.register(SuperGlueItem::glueItemAlwaysPlacesWhenUsed);
 		UseBlockCallback.EVENT.register(ManualApplicationRecipe::manualApplicationRecipesApplyInWorld);
 		UseBlockCallback.EVENT.register(ValueSettingsInputHandler::onBlockActivated);
-		UseBlockCallback.EVENT.register(ClipboardValueSettingsHandler::leftClickToPaste);
 		UseBlockCallback.EVENT.register(ValveHandleBlock::onBlockActivated);
-		AttackBlockCallback.EVENT.register(ClipboardValueSettingsHandler::rightClickToCopy);
+		UseBlockCallback.EVENT.register(ClipboardValueSettingsHandler::rightClickToCopy);
+		AttackBlockCallback.EVENT.register(ClipboardValueSettingsHandler::leftClickToPaste);
 		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
 		UseEntityCallback.EVENT.register(ScheduleItemEntityInteraction::interactWithConductor);
 		ServerTickEvents.END_WORLD_TICK.register(HauntedBellPulser::hauntedBellCreatesPulse);
