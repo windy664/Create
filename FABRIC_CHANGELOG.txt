@@ -18,3 +18,4 @@ Change logging starts below:
 - fix the Wand of Symmetry always placing double slabs (#1086)
 - fix switched inputs in clipboard tooltip (#1212)
 - fix copycats having bad translucency (#1167)
+- fix backtanks being damageable (#1217)
