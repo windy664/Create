@@ -20,3 +20,4 @@ Change logging starts below:
 - fix copycats having bad translucency (#1167)
 - fix intense fog underwater with Sodium (#1045)
 - fix piston extension poles being considered unmovable (#1307)
+- fix running on the edge of copycats producing missing texture particles (#1084)
