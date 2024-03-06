@@ -153,8 +153,7 @@ public abstract class CopycatModel extends ForwardingBakedModel implements Custo
 	private record MaterialFixer(RenderMaterial materialDefault) implements QuadTransform {
 		@Override
 		public boolean transform(MutableQuadView quad) {
-			BlendMode quadBlendMode = FabricModelUtil.getBlendMode(quad);
-			if (quadBlendMode == BlendMode.DEFAULT) {
+			if (quad.material().blendMode() == BlendMode.DEFAULT) {
 				// default needs to be changed from the Copycat's default (cutout) to the wrapped material's default.
 				quad.material(materialDefault);
 			}
