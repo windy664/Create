@@ -21,3 +21,4 @@ Change logging starts below:
 - fix intense fog underwater with Sodium (#1045)
 - fix piston extension poles being considered unmovable (#1307)
 - fix running on the edge of copycats producing missing texture particles (#1084)
+- fix backtanks being damageable (#1217)
