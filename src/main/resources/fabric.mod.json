@@ -89,7 +89,8 @@
     "copycats": "<=1.1.1",
     "sliceanddice": "<=3.0.0",
     "create_jetpack": "<=4.1.1",
-    "createorigins": "<=1.2.1"
+    "createorigins": "<=1.2.1",
+    "exposure": "<=1.4.0"
   },
 
   "custom": {
