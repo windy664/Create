@@ -74,7 +74,8 @@
     "iris": "<=1.2.5",
 
     "railways": "<1.5.3",
-    "create_interactive": "<=1.0.1-beta.2"
+    "create_interactive": "<=1.0.1-beta.2",
+    "create_jetpack": "<=3.4.1"
   },
 
   "custom": {
