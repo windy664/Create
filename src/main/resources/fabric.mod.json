@@ -76,8 +76,20 @@
     "sodium": "<=0.4.10",
 
     "railways": "<1.5.3",
-    "create_interactive": "<=1.0.1-beta.2",
-    "create_jetpack": "<=3.4.1"
+    "create_interactive": "<=1.0.2-beta.1",
+    "create_enchantment_industry": "<1.2.16",
+    "createfabricfixes": "<=0.0.1",
+    "garnished": "<=1.6.3",
+    "extendedgears": "<=2.1.0",
+    "missions": "<=0.3",
+    "create_so": "<=1.6",
+    "createdieselgenerators": "<=2.1.3",
+    "create_power_loader": "<=1.4.2",
+    "createbigcannons": "<=0.5.3",
+    "copycats": "<=1.1.1",
+    "sliceanddice": "<=3.0.0",
+    "create_jetpack": "<=4.1.1",
+    "createorigins": "<=1.2.1"
   },
 
   "custom": {
