@@ -131,7 +131,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements Displ
 
 			ClientEntryStacks.setTooltipProcessor(slot.getCurrentEntry(), (entryStack, tooltip) -> {
 				int outputIndex = slotIndex - startIndex;
-				if (slotIndex < startIndex || outputIndex > results.size())
+				if (slotIndex < startIndex || outputIndex >= results.size())
 					return tooltip;
 				ProcessingOutput output = results.get(outputIndex);
 				float chance = output.getChance();
