@@ -26,9 +26,10 @@ public class MapRendererMapInstanceMixin {
 	private MapItemSavedData data;
 
 //	@Group(name = "custom_decoration_rendering", min = 1, max = 1)
-	@Inject(method = "draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ZI)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void onDraw(PoseStack poseStack, MultiBufferSource bufferSource, boolean active, int packedLight, CallbackInfo ci, int i, int j, float f, Matrix4f matrix4f, VertexConsumer vertexConsumer, int index, Iterator<MapDecoration> iterator, MapDecoration decoration) {
-		if (decoration instanceof CustomRenderedMapDecoration renderer) {
+	@Inject(method = "draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ZI)V", at = @At(value = "INVOKE", target = "Ljava/util/Iterator;hasNext()Z"), locals = LocalCapture.CAPTURE_FAILHARD)
+	// fabric: we inject in a different place to call our method before porting lib returns
+	private void onDraw(PoseStack poseStack, MultiBufferSource bufferSource, boolean active, int packedLight, CallbackInfo ci, int i, int j, float f, Matrix4f matrix4f, VertexConsumer vertexConsumer, int index, Iterator<MapDecoration> iterator) {
+		if (iterator.next() instanceof CustomRenderedMapDecoration renderer) {
 			renderer.render(poseStack, bufferSource, active, packedLight, data, index);
 		}
 	}
