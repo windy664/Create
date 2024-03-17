@@ -26,9 +26,7 @@ public class MapRendererMapInstanceMixin {
 	private MapItemSavedData data;
 
 //	@Group(name = "custom_decoration_rendering", min = 1, max = 1)
-	// fabric: we inject in a different place compared to forge as otherwise porting lib will skip our rendering entirely
-	// heads up the warnings aren't real, this injects in a location that exists at runtime but not compile time so mcdev will lie
-	@Inject(method = "draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ZI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/saveddata/maps/MapDecoration;render(I)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
+	@Inject(method = "draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ZI)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void onDraw(PoseStack poseStack, MultiBufferSource bufferSource, boolean active, int packedLight, CallbackInfo ci, int i, int j, float f, Matrix4f matrix4f, VertexConsumer vertexConsumer, int index, Iterator<MapDecoration> iterator, MapDecoration decoration) {
 		if (decoration instanceof CustomRenderedMapDecoration renderer) {
 			renderer.render(poseStack, bufferSource, active, packedLight, data, index);
