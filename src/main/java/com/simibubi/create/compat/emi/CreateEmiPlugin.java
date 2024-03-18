@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
@@ -291,18 +292,18 @@ public class CreateEmiPlugin implements EmiPlugin {
 		EmiStack honeyCatalyst = honey.copy().setRemainder(honey);
 		EmiStack chocolateCatalyst = chocolate.copy().setRemainder(chocolate);
 		EmiStack lavaCatalyst = lava.copy().setRemainder(lava);
-		
+
 		addRecipeSafe(registry, () -> EmiWorldInteractionRecipe.builder()
 				.id(synthetic("world/fluid_interaction", "create/limestone"))
 				.leftInput(honeyCatalyst)
 				.rightInput(lavaCatalyst, false)
-				.output(EmiStack.of(AllPaletteStoneTypes.LIMESTONE.getBaseblock().get()))
+				.output(EmiStack.of(AllPaletteStoneTypes.LIMESTONE.getBaseBlock().get()))
 				.build());
 		addRecipeSafe(registry, () -> EmiWorldInteractionRecipe.builder()
 				.id(synthetic("world/fluid_interaction", "create/scoria"))
 				.leftInput(chocolateCatalyst)
 				.rightInput(lavaCatalyst, false)
-				.output(EmiStack.of(AllPaletteStoneTypes.SCORIA.getBaseblock().get()))
+				.output(EmiStack.of(AllPaletteStoneTypes.SCORIA.getBaseBlock().get()))
 				.build());
 
 		// Introspective recipes based on present stacks need to make sure
@@ -325,20 +326,15 @@ public class CreateEmiPlugin implements EmiPlugin {
 		}
 	}
 
-	// dev/emi/emi/VanillaPlugin.addRecipeSafe(EMIregistry, supplier<EMIRecipe)
 	private static void addRecipeSafe(EmiRegistry registry, Supplier<EmiRecipe> supplier) {
 		try {
 			registry.addRecipe(supplier.get());
 		} catch (Throwable e) {
-			// EmiReloadLog may be unavailable
 			Create.LOGGER.warn("[Create] Exception thrown when parsing EMI recipe (no ID available)");
-			Create.LOGGER.error(String.valueOf(e));
-			// EmiReloadLog.warn("Exception thrown when parsing EMI recipe (no ID available)");
-			// EmiReloadLog.error(e);
+			Create.LOGGER.error(e.toString());
 		}
 	}
 
-	// dev/emi/emi/VanillaPlugin.synthetic(string, string)
 	private static ResourceLocation synthetic(String type, String name) {
 		return new ResourceLocation("emi", "/" + type + "/" + name);
 	}
