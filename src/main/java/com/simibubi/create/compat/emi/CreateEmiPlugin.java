@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
@@ -288,7 +289,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 		// In World Interaction recipes
 		addFluidInteractionRecipe(registry, "create/limestone", AllFluids.HONEY.get(),
 				Fluids.LAVA, AllPaletteStoneTypes.LIMESTONE.getBaseBlock().get());
-		addFluidInteractionRecipe(registry, "create/chocolate", AllFluids.CHOCOLATE.get(),
+		addFluidInteractionRecipe(registry, "create/scoria", AllFluids.CHOCOLATE.get(),
 				Fluids.LAVA, AllPaletteStoneTypes.SCORIA.getBaseBlock().get());
 
 		// Introspective recipes based on present stacks need to make sure
@@ -321,20 +322,32 @@ public class CreateEmiPlugin implements EmiPlugin {
 	 * @param output The stack that will be outputted from this interaction recipe
 	 */
 	private void addFluidInteractionRecipe(@NotNull EmiRegistry registry, String outputId, Fluid left, Fluid right, Block output) {
-		// EmiStack doesnt accept flowing fluids, must always be a source
+		// EmiStack doesn't accept flowing fluids, must always be a source
 		if (left instanceof SimpleFlowableFluid.Flowing flowing)
 			left = flowing.getSource();
 		if (right instanceof SimpleFlowableFluid.Flowing flowing)
 			right = flowing.getSource();
 
+		EmiStack leftInput = EmiStack.of(left, 81000);
+		EmiStack rightInput = EmiStack.of(right, 81000);
+
 		// fabric: 81000 droplets = 1000 mb
-		registry.addRecipe(EmiWorldInteractionRecipe.builder()
-				.id(Create.asResource("/world/fluid_interaction/" + outputId))
-				.leftInput(EmiStack.of(left, 81000))
-				.rightInput(EmiStack.of(right, 81000), false)
+		addRecipeSafe(registry, () -> EmiWorldInteractionRecipe.builder()
+				.id(new ResourceLocation("emi", "/world/fluid_interaction/" + outputId))
+				.leftInput(leftInput.copy().setRemainder(leftInput))
+				.rightInput(rightInput.copy().setRemainder(rightInput), false)
 				.output(EmiStack.of(output))
 				.build()
 		);
+	}
+
+	private static void addRecipeSafe(EmiRegistry registry, Supplier<EmiRecipe> supplier) {
+		try {
+			registry.addRecipe(supplier.get());
+		} catch (Throwable e) {
+			Create.LOGGER.warn("[Create] Exception thrown when parsing EMI recipe (no ID available)");
+			Create.LOGGER.error(e.toString());
+		}
 	}
 
 	private void addDeferredRecipes(Consumer<EmiRecipe> consumer) {
