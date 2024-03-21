@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.model.WrapperBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -121,8 +122,16 @@ public class MultiRenderTypeModel extends ForwardingBakedModel {
 		}
 
 		public BakedModel build(BakedModel wrapped) {
-			if (!(wrapped instanceof Baked baked))
-				throw new IllegalArgumentException("Cannot create a MultiRenderTypeModel for a wrapped model that isn't CompositeModel.Baked");
+			// Sometimes mod's like continuity wrap models, in which case they won't be a CompositeModel.Baked anymore
+			// this just unwraps it, so we get the true model.
+			while (!(wrapped instanceof Baked baked)) {
+				if (wrapped instanceof WrapperBakedModel wrapperModel) {
+					wrapped = wrapperModel.getWrappedModel();
+				} else {
+					throw new IllegalArgumentException("Cannot create a MultiRenderTypeModel for a wrapped model that isn't CompositeModel.Baked");
+				}
+			}
+
 			if (isInvalid())
 				return wrapped;
 
