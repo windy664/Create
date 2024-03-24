@@ -9,3 +9,4 @@ Change logging starts below:
 - fix crashes viewing recipes in REI (#1378, #1379, #1380, #1382, #1395)
 - fix ingredients of sequenced assembly recipes not being properly linked to their uses (#1394)
 - marked known outdated broken addon versions as incompatible
+- marked Sound Physics Remastered as broken due to calling non thread safe code off thread
