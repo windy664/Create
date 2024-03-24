@@ -17,6 +17,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.recipeViewerCommon.HiddenItems;
 import com.simibubi.create.compat.rei.category.BlockCuttingCategory;
 import com.simibubi.create.compat.rei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.rei.category.CreateRecipeCategory;
@@ -57,6 +58,8 @@ import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
 import com.simibubi.create.content.kinetics.saw.SawBlockEntity;
+import com.simibubi.create.content.legacy.ChromaticCompoundItem;
+import com.simibubi.create.content.legacy.NoGravMagicalDohickyItem;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
@@ -85,6 +88,7 @@ import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
@@ -292,7 +296,7 @@ public class CreateREI implements REIClientPlugin {
 				.emptyBackground(177, 107)
 				.build("automatic_shaped", MechanicalCraftingCategory::new),
 
-	mechanicalCrafting = builder(CraftingRecipe.class)
+		mechanicalCrafting = builder(CraftingRecipe.class)
 			.addTypedRecipes(AllRecipeTypes.MECHANICAL_CRAFTING)
 			.catalyst(AllBlocks.MECHANICAL_CRAFTER::get).itemIcon(AllBlocks.MECHANICAL_CRAFTER.get())
 				.emptyBackground(177, 107)
@@ -372,12 +376,14 @@ public class CreateREI implements REIClientPlugin {
 	@Override
 	public void registerEntries(EntryRegistry registry) {
 		registry.removeEntryIf(entryStack -> {
-			if(entryStack.getType() == VanillaEntryTypes.ITEM) {
+			if (entryStack.getType() == VanillaEntryTypes.ITEM) {
 				ItemStack itemStack = entryStack.castValue();
-				if(itemStack.getItem() instanceof TagDependentIngredientItem tagItem) {
+				Item item = itemStack.getItem();
+				if (item instanceof TagDependentIngredientItem tagItem) {
 					return tagItem.shouldHide();
 				}
-			} else if(entryStack.getType() == VanillaEntryTypes.FLUID) {
+                return HiddenItems.getHiddenPredicate().test(item);
+			} else if (entryStack.getType() == VanillaEntryTypes.FLUID) {
 				FluidStack fluidStack = entryStack.castValue();
 				return fluidStack.getFluid() instanceof VirtualFluid;
 			}
