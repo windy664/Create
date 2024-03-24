@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
@@ -66,8 +65,7 @@ import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 
-import com.tterrag.registrate.fabric.SimpleFlowableFluid;
-import com.tterrag.registrate.util.nullness.NonnullType;
+import com.tterrag.registrate.util.entry.FluidEntry;
 
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiPlugin;
@@ -113,8 +111,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-
-import org.jetbrains.annotations.NotNull;
 
 public class CreateEmiPlugin implements EmiPlugin {
 	public static final Map<ResourceLocation, EmiRecipeCategory> ALL = new LinkedHashMap<>();
@@ -287,10 +283,8 @@ public class CreateEmiPlugin implements EmiPlugin {
 		addAll(registry, AllRecipeTypes.MECHANICAL_CRAFTING, MECHANICAL_CRAFTING, MechanicalCraftingEmiRecipe::new);
 
 		// In World Interaction recipes
-		addFluidInteractionRecipe(registry, "create/limestone", AllFluids.HONEY.get(),
-				Fluids.LAVA, AllPaletteStoneTypes.LIMESTONE.getBaseBlock().get());
-		addFluidInteractionRecipe(registry, "create/scoria", AllFluids.CHOCOLATE.get(),
-				Fluids.LAVA, AllPaletteStoneTypes.SCORIA.getBaseBlock().get());
+		addLavaCollision(registry, AllFluids.HONEY, AllPaletteStoneTypes.LIMESTONE);
+		addLavaCollision(registry, AllFluids.CHOCOLATE, AllPaletteStoneTypes.SCORIA);
 
 		// Introspective recipes based on present stacks need to make sure
 		// all stacks are populated by other plugins
@@ -313,41 +307,34 @@ public class CreateEmiPlugin implements EmiPlugin {
 	}
 
 	/**
-	 * Register an In World Interaction recipe
-	 *
-	 * @param registry EmiRegistry
-	 * @param outputId The block being outputted in the form of `modid/block` an example for stone would be `minecraft/stone`
-	 * @param left The stack that will be shown in the left input
-	 * @param right The stack that will be shown in the right input
-	 * @param output The stack that will be outputted from this interaction recipe
+	 * Register an In World Interaction recipe for a fluid colliding with lava.
 	 */
-	private void addFluidInteractionRecipe(@NotNull EmiRegistry registry, String outputId, Fluid left, Fluid right, Block output) {
-		// EmiStack doesn't accept flowing fluids, must always be a source
-		if (left instanceof SimpleFlowableFluid.Flowing flowing)
-			left = flowing.getSource();
-		if (right instanceof SimpleFlowableFluid.Flowing flowing)
-			right = flowing.getSource();
+	private void addLavaCollision(EmiRegistry registry, FluidEntry<?> fluid, AllPaletteStoneTypes outputType) {
+		EmiStack lava = EmiStack.of(Fluids.LAVA, FluidConstants.BUCKET);
+		lava = lava.setRemainder(lava);
 
-		EmiStack leftInput = EmiStack.of(left, 81000);
-		EmiStack rightInput = EmiStack.of(right, 81000);
+		EmiStack fluidStack = EmiStack.of(fluid.get().getSource(), FluidConstants.BUCKET);
+		fluidStack = fluidStack.setRemainder(fluidStack);
 
-		// fabric: 81000 droplets = 1000 mb
-		addRecipeSafe(registry, () -> EmiWorldInteractionRecipe.builder()
-				.id(new ResourceLocation("emi", "/world/fluid_interaction/" + outputId))
-				.leftInput(leftInput.copy().setRemainder(leftInput))
-				.rightInput(rightInput.copy().setRemainder(rightInput), false)
-				.output(EmiStack.of(output))
-				.build()
+		Block block = outputType.getBaseBlock().get();
+		EmiStack output = EmiStack.of(block);
+		String blockName = Registry.BLOCK.getKey(block).getPath();
+
+		registry.addRecipe(
+				EmiWorldInteractionRecipe.builder()
+						.id(synthetic("emi/fluid_interaction/" + blockName))
+						.leftInput(fluidStack)
+						.rightInput(lava, false)
+						.output(output)
+						.build()
 		);
 	}
 
-	private static void addRecipeSafe(EmiRegistry registry, Supplier<EmiRecipe> supplier) {
-		try {
-			registry.addRecipe(supplier.get());
-		} catch (Throwable e) {
-			Create.LOGGER.warn("[Create] Exception thrown when parsing EMI recipe (no ID available)");
-			Create.LOGGER.error(e.toString());
-		}
+	private static ResourceLocation synthetic(String path) {
+		if (path.startsWith("/"))
+			throw new IllegalArgumentException("Starting slash is added automatically");
+		// EMI recommends starting synthetic IDs with a slash so that they can't possibly conflict with data packs.
+		return Create.asResource('/' + path);
 	}
 
 	private void addDeferredRecipes(Consumer<EmiRecipe> consumer) {

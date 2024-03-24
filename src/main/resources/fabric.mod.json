@@ -75,6 +75,8 @@
     "iris": "<=1.2.5",
     "sodium": "<=0.4.10",
 
+    "sound_physics_remastered": "*",
+
     "railways": "<1.5.3",
     "create_enchantment_industry": "<1.2.16",
     "create_interactive": "<=1.0.2-beta.1",

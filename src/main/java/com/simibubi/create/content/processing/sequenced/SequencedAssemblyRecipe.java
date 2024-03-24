@@ -284,6 +284,9 @@ public class SequencedAssemblyRecipe implements Recipe<Container> {
 		if (ingredientList == null) {
 			ingredientList = NonNullList.create();
 			ingredientList.add(ingredient);
+			for (SequencedRecipe<?> recipe : this.sequence) {
+				ingredientList.addAll(recipe.getRecipe().getIngredients());
+			}
 		}
 		return ingredientList;
 	}
