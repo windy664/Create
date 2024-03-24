@@ -5,17 +5,7 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- update to patch F
-- fix schematic-printing deployers consuming double the resources they should (#1273)
-- fix invalid auto-shapeless recipes from appearing in EMI (#1148)
-- potential fix for a rare belt-related crash (#941)
-- potential fix for errors/crashes due to a missing locale (#1120)
-- fix emptying and filling recipes across JEI, REI, and EMI
-- fix crash with belts and funnels (#1246)
-- add in-world interaction EMI recipes for Create's fluid interactions (#1170)
-- fix some errors in REI with chanced recipe outputs (#646, #902)
-- fix a crash with Jade and Deployers (#1139)
-- fix the Wand of Symmetry always placing double slabs (#1086)
-- fix switched inputs in clipboard tooltip (#1212)
-- fix copycats having bad translucency (#1167)
-- fix backtanks being damageable (#1217)
+- fix crashes with fluid and item schedule conditions (#1363, #1391, #1392)
+- fix crashes viewing recipes in REI (#1378, #1379, #1380, #1382, #1395)
+- fix ingredients of sequenced assembly recipes not being properly linked to their uses (#1394)
+- marked known outdated broken addon versions as incompatible
