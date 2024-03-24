@@ -1,15 +1,14 @@
 package com.simibubi.create.compat.emi;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import dev.emi.emi.api.widget.DrawableWidget.DrawableWidgetConsumer;
+import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.List;
 
 public record CyclingDrawable(List<? extends DrawableWidgetConsumer> children) implements DrawableWidgetConsumer {
 	@Override
-	public void render(PoseStack matrices, int x, int y, float delta) {
-		this.choose().render(matrices, x, y, delta);
+	public void render(GuiGraphics guiGraphics, int x, int y, float delta) {
+		this.choose().render(guiGraphics, x, y, delta);
 	}
 
 	private DrawableWidgetConsumer choose() {
