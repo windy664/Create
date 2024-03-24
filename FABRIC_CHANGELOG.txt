@@ -10,3 +10,4 @@ Change logging starts below:
 - fix ingredients of sequenced assembly recipes not being properly linked to their uses (#1394)
 - marked known outdated broken addon versions as incompatible
 - marked Sound Physics Remastered as broken due to calling non thread safe code off thread
+- add cycling to the block displayed in manual item application in EMI
