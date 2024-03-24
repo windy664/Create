@@ -26,6 +26,9 @@ public class ManualItemApplicationEmiRecipe extends CreateEmiRecipe<ItemApplicat
 		EmiIngredient base = input.get(0);
 		addSlot(widgets, base, 27, 38);
 
+		addTexture(widgets, AllGuiTextures.JEI_SHADOW, 62, 47);
+		addTexture(widgets, AllGuiTextures.JEI_DOWN_ARROW, 74, 10);
+
 		List<? extends DrawableWidgetConsumer> blocks = base.getEmiStacks().stream()
 				.map(RenderedBlock::of)
 				.filter(Objects::nonNull)
@@ -43,8 +46,5 @@ public class ManualItemApplicationEmiRecipe extends CreateEmiRecipe<ItemApplicat
 		}
 
 		addSlot(widgets, output.get(0), 132, 38);
-
-		addTexture(widgets, AllGuiTextures.JEI_SHADOW, 62, 47);
-		addTexture(widgets, AllGuiTextures.JEI_DOWN_ARROW, 74, 10);
 	}
 }

@@ -11,3 +11,4 @@ Change logging starts below:
 - marked known outdated broken addon versions as incompatible
 - marked Sound Physics Remastered as broken due to calling non thread safe code off thread
 - add cycling to the block displayed in manual item application in EMI
+- fix manual item application recipes in emi rendering the shadow in front (#1383)
