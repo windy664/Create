@@ -12,3 +12,4 @@ Change logging starts below:
 - marked Sound Physics Remastered as broken due to calling non thread safe code off thread
 - add cycling to the block displayed in manual item application in EMI
 - make hidden items not show up in REI & EMI
+- fix backtanks not updating neighboring blocks (#1396)
