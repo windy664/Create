@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.util.UsernameCache;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -146,22 +147,22 @@ public class DeployerFakePlayer extends FakePlayer {
 		return i;
 	}
 
-	public static void entitiesDontRetaliate(LivingEntity entityLiving, LivingEntity target) {
-		if (!(target instanceof DeployerFakePlayer))
+	public static void entitiesDontRetaliate(LivingEntityEvents.ChangeTarget.ChangeTargetEvent event) {
+		if (!(event.getOriginalTarget() instanceof DeployerFakePlayer))
 			return;
-		if (!(entityLiving instanceof Mob))
+		LivingEntity entityLiving = (LivingEntity) event.getEntity();
+		if (!(entityLiving instanceof Mob mob))
 			return;
-		Mob mob = (Mob) entityLiving;
 
 		CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
 
 		switch (setting) {
 		case ALL:
-			mob.setTarget(null);
+			event.setCanceled(true);
 			break;
 		case CREEPERS:
 			if (mob instanceof Creeper)
-				mob.setTarget(null);
+				event.setCanceled(true);
 			break;
 		case NONE:
 		default:
