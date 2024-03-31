@@ -14,3 +14,4 @@ Change logging starts below:
 - make hidden items not show up in REI & EMI
 - fix backtanks not updating neighboring blocks (#1396)
 - fix basin tooltips not updating when removing fluid (#1411)
+- fix outputs of draining recipes not being indexed (#1409)
