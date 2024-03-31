@@ -68,6 +68,7 @@ public class VersionedInventoryWrapper implements Storage<ItemVariant> {
 		return inventory.insert(resource, maxAmount, transaction);
 	}
 
+	@SuppressWarnings("removal")
 	@Override
 	public long simulateInsert(ItemVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
 		this.listen(transaction);
@@ -80,6 +81,7 @@ public class VersionedInventoryWrapper implements Storage<ItemVariant> {
 		return inventory.extract(resource, maxAmount, transaction);
 	}
 
+	@SuppressWarnings("removal")
 	@Override
 	public long simulateExtract(ItemVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
 		this.listen(transaction);
@@ -93,16 +95,19 @@ public class VersionedInventoryWrapper implements Storage<ItemVariant> {
 	}
 
 	@Override
-	@Nullable
-	public StorageView<ItemVariant> exactView(ItemVariant resource) {
-		return new ListeningStorageView<>(Storage.super.exactView(resource), this::incrementVersion);
+	public Iterator<StorageView<ItemVariant>> nonEmptyIterator() {
+		return new ProcessingIterator<>(inventory.nonEmptyIterator(), view -> new ListeningStorageView<>(view, this::incrementVersion));
+	}
+
+	@Override
+	public Iterable<StorageView<ItemVariant>> nonEmptyViews() {
+		return this::nonEmptyIterator;
 	}
 
 	@SuppressWarnings("removal")
 	@Override
 	@Nullable
-	public StorageView<ItemVariant> exactView(TransactionContext transaction, ItemVariant resource) {
-		this.listen(transaction);
-		return inventory.exactView(transaction, resource);
+	public StorageView<ItemVariant> exactView(ItemVariant resource) {
+		return new ListeningStorageView<>(Storage.super.exactView(resource), this::incrementVersion);
 	}
 }
