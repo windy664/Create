@@ -16,6 +16,8 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import me.shedaniel.rei.api.common.entry.EntryStack;
+import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
@@ -108,12 +110,20 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 				int xOffset = (outputIndex % 3) * 19 + xOffsetOutput;
 				int yOffset = (outputIndex / 3) * -19 + (excessive ? 8 : 0);
 
+				ProcessingOutput output = results.get(outputIndex);
+				EntryStack<ItemStack> stack = EntryStack.of(VanillaEntryTypes.ITEM, output.getStack());
+				float chance = output.getChance();
+
+				if (chance != 1) {
+					Component component = Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+							.withStyle(ChatFormatting.GOLD);
+					stack.tooltip(component);
+				}
+
 				ingredients.add(basicSlot(origin.x + 141 + xOffset, origin.y + 48 + yOffset)
 						.markOutput()
-						.entries(EntryIngredients.of(results.get(outputIndex).getStack())));
+						.entries(List.of(stack)));
 			}
-
-			addStochasticTooltip(ingredients, results);
 		}
 
 		@Override

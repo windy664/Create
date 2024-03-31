@@ -37,6 +37,7 @@ import com.simibubi.create.compat.emi.recipes.fan.FanEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanHauntingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanSmokingEmiRecipe;
 import com.simibubi.create.compat.emi.recipes.fan.FanWashingEmiRecipe;
+import com.simibubi.create.compat.recipeViewerCommon.HiddenItems;
 import com.simibubi.create.compat.rei.ConversionRecipe;
 import com.simibubi.create.compat.rei.ToolboxColoringRecipeMaker;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
@@ -54,17 +55,19 @@ import com.simibubi.create.content.kinetics.millstone.MillingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
 import com.simibubi.create.content.kinetics.saw.SawBlockEntity;
+import com.simibubi.create.content.legacy.ChromaticCompoundItem;
+import com.simibubi.create.content.legacy.NoGravMagicalDohickyItem;
 import com.simibubi.create.content.logistics.filter.AttributeFilterScreen;
 import com.simibubi.create.content.logistics.filter.FilterScreen;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerScreen;
+import com.simibubi.create.content.trains.schedule.ScheduleItem;
 import com.simibubi.create.content.trains.schedule.ScheduleScreen;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
-
 import com.tterrag.registrate.util.entry.FluidEntry;
 
 import dev.emi.emi.api.EmiApi;
@@ -146,7 +149,10 @@ public class CreateEmiPlugin implements EmiPlugin {
 	public void register(EmiRegistry registry) {
 		registry.removeEmiStacks(s -> {
 			Object key = s.getKey();
+			Item item = s.getItemStack().getItem();
 			if (key instanceof TagDependentIngredientItem tagDependent && tagDependent.shouldHide())
+				return true;
+			if (HiddenItems.getHiddenPredicate().test(item))
 				return true;
 			return key instanceof VirtualFluid;
 		});

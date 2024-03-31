@@ -802,10 +802,9 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		boolean simplify = AllConfigs.client().simplifyFluidUnit.get();
 		for (SmartFluidTankBehaviour behaviour : tanks) {
 			for (TankSegment tank : behaviour.getTanks()) {
-				FluidStack fluidStack = tank.getRenderedFluid();
-				if (fluidStack.isEmpty()) {
+				FluidStack fluidStack = tank.getTank().getFluid();
+				if (fluidStack.isEmpty())
 					continue;
-				}
 				Lang.text("")
 						.add(Lang.fluidName(fluidStack)
 								.add(Lang.text(" "))

@@ -116,6 +116,11 @@ public class BacktankBlock extends HorizontalKineticBlock
 				be.setEnchantmentTag(stack.getEnchantmentTags());
 			if (stack.hasCustomHoverName())
 				be.setCustomName(stack.getHoverName());
+			// fabric: forge mangles item placement logic, so this isn't needed there.
+			// here, we need to do this manually so neighboring blocks are updated (comparators, #1396)
+			// this isn't needed for other items with block entity data (ex. chests) since they use the BlockEntityTag
+			// nbt, and that system calls this after updating it.
+			be.setChanged();
 		});
 	}
 
