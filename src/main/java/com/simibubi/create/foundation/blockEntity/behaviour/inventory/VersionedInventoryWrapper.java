@@ -3,6 +3,9 @@ package com.simibubi.create.foundation.blockEntity.behaviour.inventory;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.simibubi.create.foundation.utility.fabric.ListeningStorageView;
+import com.simibubi.create.foundation.utility.fabric.ProcessingIterator;
+
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -83,17 +86,18 @@ public class VersionedInventoryWrapper implements Storage<ItemVariant> {
 	}
 
 	@Override
-	public Iterator<? extends StorageView<ItemVariant>> iterator(TransactionContext transaction) {
-		this.listen(transaction);
-		return inventory.iterator(transaction);
+	@NotNull
+	public Iterator<StorageView<ItemVariant>> iterator() {
+		return new ProcessingIterator<>(inventory.iterator(), view -> new ListeningStorageView<>(view, this::incrementVersion));
 	}
 
 	@Override
-	public Iterable<? extends StorageView<ItemVariant>> iterable(TransactionContext transaction) {
-		this.listen(transaction);
-		return inventory.iterable(transaction);
+	@Nullable
+	public StorageView<ItemVariant> exactView(ItemVariant resource) {
+		return new ListeningStorageView<>(Storage.super.exactView(resource), this::incrementVersion);
 	}
 
+	@SuppressWarnings("removal")
 	@Override
 	@Nullable
 	public StorageView<ItemVariant> exactView(TransactionContext transaction, ItemVariant resource) {
