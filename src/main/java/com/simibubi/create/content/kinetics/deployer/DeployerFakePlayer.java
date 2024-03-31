@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
+import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.util.UsernameCache;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
@@ -141,22 +142,22 @@ public class DeployerFakePlayer extends FakePlayer {
 		return i;
 	}
 
-	public static boolean entitiesDontRetaliate(LivingEntity target, DamageSource source, float amount) {
-		if (!(target instanceof DeployerFakePlayer))
-			return false;
-		if (!(source.getEntity() instanceof Mob))
-			return false;
-		Mob mob = (Mob) source.getEntity();
+	public static void entitiesDontRetaliate(LivingEntityEvents.ChangeTarget.ChangeTargetEvent event) {
+		if (!(event.getOriginalTarget() instanceof DeployerFakePlayer))
+			return;
+		LivingEntity entityLiving = (LivingEntity) event.getEntity();
+		if (!(entityLiving instanceof Mob mob))
+			return;
 
 		CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
 
 		switch (setting) {
 		case ALL:
-			mob.setTarget(null);
+			event.setCanceled(true);
 			break;
 		case CREEPERS:
 			if (mob instanceof Creeper)
-				mob.setTarget(null);
+				event.setCanceled(true);
 			break;
 		case NONE:
 		default:

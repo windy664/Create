@@ -263,6 +263,7 @@ public class CommonEvents {
 		LivingEntityEvents.LOOTING_LEVEL.register(CrushingWheelBlockEntity::crushingIsFortunate);
 		LivingEntityEvents.DROPS.register(DeployerFakePlayer::deployerCollectsDropsFromKilledEntities);
 		ServerEntityEvents.EQUIPMENT_CHANGE.register(NetheriteDivingHandler::onLivingEquipmentChange);
+		LivingEntityEvents.CHANGE_TARGET.register(DeployerFakePlayer::entitiesDontRetaliate);
 		EntityEvents.SIZE.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
 		BlockEvents.POST_PROCESS_PLACE.register(SymmetryHandler::onBlockPlaced);
 		BlockEvents.POST_PROCESS_PLACE.register(SuperGlueHandler::glueListensForBlockPlacement);
