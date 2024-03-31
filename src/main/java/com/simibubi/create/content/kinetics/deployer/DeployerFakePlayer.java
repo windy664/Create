@@ -8,7 +8,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
-import io.github.fabricators_of_create.porting_lib.event.common.LivingEntityEvents;
+import io.github.fabricators_of_create.porting_lib.entity.events.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.util.UsernameCache;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
@@ -162,7 +162,6 @@ public class DeployerFakePlayer extends FakePlayer {
 		case NONE:
 		default:
 		}
-		return false; // true would short-circuit the event
 	}
 
 	// Credit to Mekanism for this approach. Helps fake players get past claims and
