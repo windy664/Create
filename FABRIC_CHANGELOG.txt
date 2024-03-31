@@ -14,3 +14,7 @@ Change logging starts below:
 - fix manual item application recipes in emi rendering the shadow in front (#1383)
 - make hidden items not show up in REI & EMI
 - fix log spam with Continuity  (#1370)
+- fix backtanks not updating neighboring blocks (#1396)
+- fix basin tooltips not updating when removing fluid (#1411)
+- fix outputs of draining recipes not being indexed (#1409)
+- fix incorrect chances being shown on fan recipes (#1393)

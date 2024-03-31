@@ -4,7 +4,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.LanguageInfo;
 import net.minecraft.util.Mth;
 
 public class LangNumberFormat {
@@ -17,17 +16,10 @@ public class LangNumberFormat {
 	}
 
 	public void update() {
-		LanguageInfo lang = Minecraft.getInstance()
+		format = NumberFormat.getInstance(Minecraft.getInstance()
 				.getLanguageManager()
-				.getSelected();
-		Locale locale = lang.getJavaLocale();
-
-		// fabric: clear error if this is somehow null.
-		if (locale == null) {
-			throw new IllegalStateException("LanguageInfo's javaLocale is null! info: " + lang);
-		}
-
-		format = NumberFormat.getInstance(locale);
+				.getSelected()
+				.getJavaLocale());
 		format.setMaximumFractionDigits(2);
 		format.setMinimumFractionDigits(0);
 		format.setGroupingUsed(true);

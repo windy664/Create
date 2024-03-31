@@ -282,6 +282,10 @@ public class SmartFluidTankBehaviour extends BlockEntityBehaviour {
 			return false;
 		}
 
+		// fabric: expose for basin tooltips
+		public SmartFluidTank getTank() {
+			return tank;
+		}
 	}
 
 	@Override
