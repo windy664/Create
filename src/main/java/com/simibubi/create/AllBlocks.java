@@ -261,7 +261,6 @@ import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
-import com.simibubi.create.foundation.render.MultiRenderTypeModel;
 import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
@@ -1751,7 +1750,6 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
 			.item(DisplayLinkBlockItem::new)
 			.transform(customItemModel("_", "block"))
-			.onRegister(CreateRegistrate.blockModel(() -> MultiRenderTypeModel::forDisplayLink))
 			.register();
 
 	public static final BlockEntry<FlapDisplayBlock> DISPLAY_BOARD =
@@ -1777,7 +1775,6 @@ public class AllBlocks {
 			.addLayer(() -> RenderType::translucent)
 			.item()
 			.transform(customItemModel())
-			.onRegister(CreateRegistrate.blockModel(() -> MultiRenderTypeModel::forNixieTube))
 			.register();
 
 	public static final DyedBlockList<NixieTubeBlock> NIXIE_TUBES = new DyedBlockList<>(colour -> {
@@ -1791,7 +1788,6 @@ public class AllBlocks {
 			.blockstate(new NixieTubeGenerator()::generate)
 			.loot((p, b) -> p.dropOther(b, ORANGE_NIXIE_TUBE.get()))
 			.addLayer(() -> RenderType::translucent)
-			.onRegister(CreateRegistrate.blockModel(() -> MultiRenderTypeModel::forNixieTube))
 			.register();
 	});
 
