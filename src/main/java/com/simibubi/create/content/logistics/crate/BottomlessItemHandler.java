@@ -12,7 +12,11 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 @MethodsReturnNonnullByDefault
@@ -111,6 +115,12 @@ public class BottomlessItemHandler extends ItemStackHandler implements SingleSlo
 
 		@Override
 		protected void setStack(ItemStack stack) {
+		}
+
+		@Override
+		@Nullable
+		public CompoundTag save() {
+			return null;
 		}
 
 		@Override
