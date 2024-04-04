@@ -6,6 +6,7 @@ import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.simibubi.create.content.decoration.copycat.CopycatModel;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
@@ -84,7 +85,11 @@ public abstract class GhostBlockRenderer {
 			ms.scale(.85f, .85f, .85f);
 			ms.translate(-.5, -.5, -.5);
 
-			model = DefaultLayerFilteringBakedModel.wrap(model);
+			// fabric: https://github.com/Fabricators-of-Create/Create/commit/3db14dfda90bba726514855f2d4f46dab0be40d6
+			// due to the changes in that commit this needs to be done otherwise DefaultLayerFilteringBakedModel's
+			// hasDefaultBlendMode will return true on copycat's making placement helpers for any copycat block fail to appear.
+			if (!(model instanceof CopycatModel))
+				model = DefaultLayerFilteringBakedModel.wrap(model);
 			model = FixedLightBakedModel.wrap(model, LevelRenderer.getLightColor(mc.level, pos));
 			model = TranslucentBakedModel.wrap(model, () -> params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha());
 			dispatcher.getModelRenderer()
