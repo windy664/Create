@@ -87,7 +87,7 @@ public abstract class GhostBlockRenderer {
 
 			// fabric: https://github.com/Fabricators-of-Create/Create/commit/3db14dfda90bba726514855f2d4f46dab0be40d6
 			// due to the changes in that commit this needs to be done otherwise DefaultLayerFilteringBakedModel's
-			// hasDefaultBlendMode will return true on copycat's making placement helpers for any copycat block fail to appear.
+			// hasDefaultBlendMode will return false on copycats making placement helpers for any copycat block fail to appear.
 			if (!(model instanceof CopycatModel))
 				model = DefaultLayerFilteringBakedModel.wrap(model);
 			model = FixedLightBakedModel.wrap(model, LevelRenderer.getLightColor(mc.level, pos));
