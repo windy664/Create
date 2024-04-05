@@ -24,6 +24,7 @@
     "accessor.SystemReportAccessor",
     "fabric.AbstractMinecartMixin",
     "fabric.EntityMixin",
+    "fabric.RegistryMixin",
     "fabric.ServerGamePacketListenerImplAccessor",
     "fabric.SortedArraySetAccessor",
     "fabric.StructureUtilsMixin"
