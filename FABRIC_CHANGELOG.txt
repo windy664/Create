@@ -13,4 +13,7 @@ Change logging starts below:
 - add cycling to the block displayed in manual item application in EMI
 - make hidden items not show up in REI & EMI
 - fix backtanks not updating neighboring blocks (#1396)
+- fix basin tooltips not updating when removing fluid (#1411)
+- fix outputs of draining recipes not being indexed (#1409)
+- fix incorrect chances being shown on fan recipes (#1393)
 - fix stress tooltips not being shown until entering singleplayer (#1265)

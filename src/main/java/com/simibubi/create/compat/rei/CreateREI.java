@@ -42,6 +42,7 @@ import com.simibubi.create.compat.rei.category.SequencedAssemblyCategory;
 import com.simibubi.create.compat.rei.category.SpoutCategory;
 import com.simibubi.create.compat.rei.display.BasinDisplay;
 import com.simibubi.create.compat.rei.display.CreateDisplay;
+import com.simibubi.create.compat.rei.display.DrainDisplay;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.content.fluids.VirtualFluid;
 import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
@@ -281,6 +282,7 @@ public class CreateREI implements REIClientPlugin {
 				.catalyst(AllBlocks.ITEM_DRAIN::get)
 				.doubleItemIcon(AllBlocks.ITEM_DRAIN.get(), Items.WATER_BUCKET)
 				.emptyBackground(177, 56)
+				.displayFactory(DrainDisplay::new)
 				.build("draining", ItemDrainCategory::new),
 
 		autoShaped = builder(CraftingRecipe.class)
