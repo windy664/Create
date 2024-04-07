@@ -169,8 +169,7 @@ public class Create implements ModInitializer {
 			AllFluids.registerFluidInteractions();
 //		--
 
-			// fabric: registration not done yet, do it later
-			ServerLifecycleEvents.SERVER_STARTING.register(server -> AttachedRegistry.unwrapAll());
+			// fabric: AttachedRegistry.unwrapAll moved to RegistryMixin
 			AllAdvancements.register();
 			AllTriggers.register();
 //		});

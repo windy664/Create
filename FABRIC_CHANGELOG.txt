@@ -18,4 +18,5 @@ Change logging starts below:
 - fix basin tooltips not updating when removing fluid (#1411)
 - fix outputs of draining recipes not being indexed (#1409)
 - fix incorrect chances being shown on fan recipes (#1393)
+- fix stress tooltips not being shown until entering singleplayer (#1265)
 - fix creative crates on contraptions causing crashes
