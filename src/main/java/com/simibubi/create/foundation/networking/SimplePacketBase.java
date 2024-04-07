@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.networking;
 
-import java.util.concurrent.Executor;
+import com.simibubi.create.foundation.mixin.fabric.BlockableEventLoopAccessor;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +15,7 @@ import net.minecraft.network.PacketListener;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.util.thread.BlockableEventLoop;
 
 public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 
@@ -42,9 +43,16 @@ public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 		PLAY_TO_SERVER
 	}
 
-	public record Context(Executor exec, PacketListener listener, @Nullable ServerPlayer sender) {
+	public record Context(BlockableEventLoop<? extends Runnable> executor, PacketListener listener, @Nullable ServerPlayer sender) {
 		public void enqueueWork(Runnable runnable) {
-			exec().execute(runnable);
+			// Matches Forge's enqueueWork behavior.
+			// MC will sometimes defer tasks even if already on the right thread.
+			if (executor.isSameThread()) {
+				runnable.run();
+			} else {
+				// skip extra checks
+				((BlockableEventLoopAccessor) executor).callSubmitAsync(runnable);
+			}
 		}
 
 		@Nullable
