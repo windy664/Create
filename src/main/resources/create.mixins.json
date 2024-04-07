@@ -22,7 +22,9 @@
     "accessor.ServerLevelAccessor",
     "accessor.SystemReportAccessor",
     "fabric.AbstractMinecartMixin",
+    "fabric.BlockableEventLoopAccessor",
     "fabric.EntityMixin",
+    "fabric.RegistryMixin",
     "fabric.ServerGamePacketListenerImplAccessor",
     "fabric.SortedArraySetAccessor",
     "fabric.StructureUtilsMixin"

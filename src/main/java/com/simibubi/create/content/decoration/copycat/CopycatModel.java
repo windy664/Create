@@ -81,13 +81,18 @@ public abstract class CopycatModel extends ForwardingBakedModel implements Custo
 			}
 		}
 
+		// fabric: If it is the default state do not push transformations, will cause issues with GhostBlockRenderer
+		boolean shouldTransform = material != AllBlocks.COPYCAT_BASE.getDefaultState();
+
 		// fabric: need to change the default render material
-		context.pushTransform(MaterialFixer.create(material));
+		if (shouldTransform)
+			context.pushTransform(MaterialFixer.create(material));
 
 		emitBlockQuadsInner(blockView, state, pos, randomSupplier, context, material, cullFaceRemovalData, occlusionData);
 
 		// fabric: pop the material changer transform
-		context.popTransform();
+		if (shouldTransform)
+			context.popTransform();
 	}
 
 	protected abstract void emitBlockQuadsInner(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context, BlockState material, CullFaceRemovalData cullFaceRemovalData, OcclusionData occlusionData);
