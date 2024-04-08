@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -122,40 +123,32 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 
 				} else {
 					invVersionTracker.awaitNewVersion(inv);
-					if (invVersionTracker.stillWaiting(inv)) {
-						occupied = prevLevel;
-						totalSpace = 1f;
+					for (StorageView<ItemVariant> view : inv) {
+						ItemStack stackInSlot = view.getResource().toStack();
+						long space = Math.min(stackInSlot.getMaxStackSize(), view.getCapacity());
+						long count = view.getAmount();
+						if (space == 0)
+							continue;
 
-					} else {
-						invVersionTracker.awaitNewVersion(inv);
-						for (StorageView<ItemVariant> view : inv) {
-							long space = view.getCapacity();
-							long count = view.getAmount();
-							if (space == 0)
-								continue;
-
-							totalSpace += 1;
-							if (filtering.test(view.getResource().toStack()))
-								occupied += count * (1f / space);
-						}
+						totalSpace += 1;
+						if (filtering.test(stackInSlot))
+							occupied += count * (1f / space);
 					}
 				}
 			}
 
 			if (observedTank.hasInventory()) {
 				// Fluid inventory
-				try (Transaction t = TransferUtil.getTransaction()) {
-					Storage<FluidVariant> tank = observedTank.getInventory();
-					for (StorageView<FluidVariant> view : tank) {
-						long space = view.getCapacity();
-						long count = view.getAmount();
-						if (space == 0)
-							continue;
+				Storage<FluidVariant> tank = observedTank.getInventory();
+				for (StorageView<FluidVariant> view : tank) {
+					long space = view.getCapacity();
+					long count = view.getAmount();
+					if (space == 0)
+						continue;
 
-						totalSpace += 1;
-						if (filtering.test(new FluidStack(view)))
-							occupied += count * (1f / space);
-					}
+					totalSpace += 1;
+					if (filtering.test(new FluidStack(view)))
+						occupied += count * (1f / space);
 				}
 			}
 
