@@ -2,6 +2,9 @@ package com.simibubi.create.foundation.networking;
 
 import com.simibubi.create.foundation.mixin.fabric.BlockableEventLoopAccessor;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import org.jetbrains.annotations.Nullable;
 
 import me.pepperbell.simplenetworking.C2SPacket;
@@ -29,6 +32,7 @@ public abstract class SimplePacketBase implements C2SPacket, S2CPacket {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public void handle(Minecraft client, ClientPacketListener listener, PacketSender responseSender, SimpleChannel channel) {
 		handle(new Context(client, listener, null));
 	}
