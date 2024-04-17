@@ -62,6 +62,9 @@ def dependencies(DependencyHandler deps) {
         exclude(group: "io.github.fabricators_of_create") // avoid duplicate Porting Lib
     }
 
+    // Stub mod to allow addons to depend on a constant version between sub-patches
+    deps.include(project(":stubMod"))
+
     deps.modApi(deps.include("me.alphamode:ForgeTags:$forge_tags_version"))
     deps.modApi(deps.include("com.electronwill.night-config:core:$night_config_version"))
     deps.modApi(deps.include("com.electronwill.night-config:toml:$night_config_version"))
