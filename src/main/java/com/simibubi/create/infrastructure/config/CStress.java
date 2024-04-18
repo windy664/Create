@@ -11,11 +11,10 @@ import com.simibubi.create.foundation.config.ConfigBase;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
-import net.minecraft.core.Registry;
+import io.github.fabricators_of_create.porting_lib.config.ModConfigSpec.Builder;
+import io.github.fabricators_of_create.porting_lib.config.ModConfigSpec.ConfigValue;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public class CStress extends ConfigBase implements IStressValueProvider {
 

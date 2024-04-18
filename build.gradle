@@ -62,9 +62,6 @@ def dependencies(DependencyHandler deps) {
         exclude(group: "io.github.fabricators_of_create") // avoid duplicate Porting Lib
     }
 
-    deps.modApi(deps.include("com.electronwill.night-config:core:$night_config_version"))
-    deps.modApi(deps.include("com.electronwill.night-config:toml:$night_config_version"))
-    deps.modApi(deps.include("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:$forge_config_api_port_version"))
     deps.modApi(deps.include("com.jozufozu.flywheel:flywheel-fabric-$flywheel_minecraft_version:$flywheel_version"))
     deps.modApi(deps.include("com.jamieswhiteshirt:reach-entity-attributes:$reach_entity_attributes_version"))
     deps.modApi(deps.include("io.github.tropheusj:milk-lib:$milk_lib_version"))
@@ -194,7 +191,6 @@ processResources {
             "minecraft_version": minecraft_version,
             "loader_version": loader_version,
             "fabric_version": fabric_version,
-            "forge_config_version": forge_config_api_port_version,
             "milk_lib_version": milk_lib_version,
             "reach_entity_attributes_version": reach_entity_attributes_version
     ]
