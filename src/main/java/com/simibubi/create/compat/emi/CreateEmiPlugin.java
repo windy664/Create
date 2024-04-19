@@ -178,6 +178,7 @@ public class CreateEmiPlugin implements EmiPlugin {
 		registry.addWorkstation(MILLING, EmiStack.of(AllBlocks.MILLSTONE.get()));
 		registry.addWorkstation(CRUSHING, EmiStack.of(AllBlocks.CRUSHING_WHEEL.get()));
 		registry.addWorkstation(SANDPAPER_POLISHING, EmiStack.of(AllItems.SAND_PAPER.get()));
+		registry.addWorkstation(SANDPAPER_POLISHING, EmiStack.of(AllItems.RED_SAND_PAPER.get()));
 		registry.addWorkstation(PRESSING, EmiStack.of(AllBlocks.MECHANICAL_PRESS.get()));
 		registry.addWorkstation(FAN_WASHING, FanEmiRecipe.getFan("fan_washing"));
 		registry.addWorkstation(FAN_SMOKING, FanEmiRecipe.getFan("fan_smoking"));

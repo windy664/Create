@@ -5,15 +5,4 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- fix crashes with fluid and item schedule conditions (#1363, #1391, #1392)
-- fix crashes viewing recipes in REI (#1378, #1379, #1380, #1382, #1395)
-- fix ingredients of sequenced assembly recipes not being properly linked to their uses (#1394)
-- marked known outdated broken addon versions as incompatible
-- marked Sound Physics Remastered as broken due to calling non thread safe code off thread
-- add cycling to the block displayed in manual item application in EMI
-- make hidden items not show up in REI & EMI
-- fix backtanks not updating neighboring blocks (#1396)
-- fix basin tooltips not updating when removing fluid (#1411)
-- fix outputs of draining recipes not being indexed (#1409)
-- fix incorrect chances being shown on fan recipes (#1393)
-- fix stress tooltips not being shown until entering singleplayer (#1265)
+- added red sandpaper as a polishing workstation to EMI
