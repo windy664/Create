@@ -562,6 +562,7 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(BlockStateGen.mapToAir(p), WaterWheelStructuralBlock.FACING))
 			.properties(p -> p.noOcclusion().mapColor(MapColor.DIRT))
+			.properties(p -> p.pushReaction(PushReaction.BLOCK)) // fabric: handled by method override on forge
 			.transform(axeOrPickaxe())
 			.lang("Large Water Wheel")
 			.register();

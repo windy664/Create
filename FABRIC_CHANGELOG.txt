@@ -7,3 +7,4 @@ Change logging starts below:
 ----------
 - switched from Forge Config API Port to Porting Lib Config
 - updated Porting Lib, fixing config syncing
+- fix waterwheels failing to assemble (#1424)
