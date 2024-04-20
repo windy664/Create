@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
+import net.fabricmc.fabric.api.renderer.v1.model.WrapperBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -53,6 +54,13 @@ public class CopycatPanelModel extends CopycatModel {
 		if (specialCopycatModelState != null) {
 			BakedModel blockModel = blockRenderer
 				.getBlockModel(specialCopycatModelState.setValue(DirectionalBlock.FACING, facing));
+
+			// fabric: extra handling for wrapped models, see: #1176
+			while (blockModel instanceof WrapperBakedModel wbm) {
+				if (blockModel instanceof CopycatModel) break;
+				blockModel = wbm.getWrappedModel();
+			}
+
 			if (blockModel instanceof CopycatModel cm) {
 				cm.emitBlockQuadsInner(blockView, state, pos, randomSupplier, context, material, cullFaceRemovalData, occlusionData);
 				return;
