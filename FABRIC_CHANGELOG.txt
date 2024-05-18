@@ -7,4 +7,4 @@ Change logging starts below:
 ----------
 - added red sandpaper as a polishing workstation to EMI (#1453)
 - fix a possible error in EMI init (#1439)
-- - fix deploying in EMI missing sandpaper and item application recipes (#1397)
+- fix deploying in EMI missing sandpaper and item application recipes (#1397)
