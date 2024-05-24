@@ -73,6 +73,8 @@
     "colormatic": "<=3.1.1",
     "iris": "<=1.2.5",
 
+    "sound_physics_remastered": ">1.19.2-1.4.0 <1.19.3-1.0.0",
+
     "railways": "<1.5.3",
     "create_interactive": "<=1.0.1-beta.2",
     "create_jetpack": "<=3.4.1",
