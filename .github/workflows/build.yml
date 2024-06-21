@@ -24,6 +24,9 @@ jobs:
             PATCH_NUMBER: ${{ github.event.inputs.patch }}
             PUBLISHING: ${{ github.event.inputs.publish }}
         steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v4
+
             -   name: Setup Java
                 run: echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
 
