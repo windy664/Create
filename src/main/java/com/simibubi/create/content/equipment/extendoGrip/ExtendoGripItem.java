@@ -19,6 +19,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,6 +32,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -117,6 +122,14 @@ public class ExtendoGripItem extends Item  {
 		else if (persistentData.contains(EXTENDO_MARKER))
 			player.getAttributes()
 				.addTransientAttributeModifiers(rangeModifier.get());
+	}
+
+	public static void consumeDurabilityOnBlockBreak(Level level, Player player, BlockPos blockPos, BlockState blockState, BlockEntity blockEntity) {
+		findAndDamageExtendoGrip(player);
+	}
+
+	public static void consumeDurabilityOnPlace(BlockPlaceContext blockPlaceContext, BlockPos blockPos, BlockState blockState) {
+		findAndDamageExtendoGrip(blockPlaceContext.getPlayer());
 	}
 
 	private static void findAndDamageExtendoGrip(Player player) {

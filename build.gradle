@@ -1,3 +1,6 @@
+import java.util.jar.JarEntry
+import java.util.jar.JarOutputStream
+
 //file:noinspection GrMethodMayBeStatic
 plugins {
     id "fabric-loom" version "1.6.+"
@@ -61,9 +64,6 @@ def dependencies(DependencyHandler deps) {
     deps.modApi(deps.include("com.tterrag.registrate_fabric:Registrate:$registrate_version")) {
         exclude(group: "io.github.fabricators_of_create") // avoid duplicate Porting Lib
     }
-
-    // Stub mod to allow addons to depend on a constant version between sub-patches
-    deps.include(project(":stubMod"))
 
     deps.modApi(deps.include("com.jozufozu.flywheel:flywheel-fabric-$flywheel_minecraft_version:$flywheel_version"))
     deps.modApi(deps.include("com.jamieswhiteshirt:reach-entity-attributes:$reach_entity_attributes_version"))
@@ -231,6 +231,43 @@ jar {
     from("LICENSE") {
         rename { "${it}_$archivesBaseName" }
     }
+}
+
+tasks.register("createStubJar") {
+    outputs.upToDateWhen { false }
+
+    ByteArrayOutputStream byteStream = new ByteArrayOutputStream()
+    JarOutputStream jarStream = new JarOutputStream(byteStream)
+
+    try {
+        File fabricModJson = file("$projectDir/stubMod/fabric.mod.json")
+        if (fabricModJson.exists()) {
+            String content = fabricModJson.text.replace('${version}', mod_version)
+            jarStream.putNextEntry(new JarEntry("fabric.mod.json"))
+            jarStream.write(content.bytes)
+            jarStream.closeEntry()
+        } else {
+            throw new FileNotFoundException("Warning: fabric.mod.json not found at ${fabricModJson.path}")
+        }
+    } finally {
+        jarStream.close()
+    }
+
+    File baseDir = file("$projectDir/build/stub")
+    baseDir.mkdirs()
+    File outputFile = file("$baseDir/create-stub-${mod_version}.jar")
+    outputFile.withOutputStream { os ->
+        byteStream.writeTo(os)
+    }
+
+    outputs.file(outputFile)
+
+    println "Stub jar created at: ${outputFile.path}"
+}
+
+tasks.remapJar.configure {
+    dependsOn tasks.createStubJar
+    tasks.remapJar.nestedJars.from(createStubJar.outputs)
 }
 
 // see gradle/publishing.gradle for publishing
