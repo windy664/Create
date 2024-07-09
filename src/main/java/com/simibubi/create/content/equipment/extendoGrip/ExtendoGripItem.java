@@ -163,6 +163,14 @@ public class ExtendoGripItem extends Item  {
 		}
 	}
 
+	public static void consumeDurabilityOnBlockBreak(Level level, Player player, BlockPos blockPos, BlockState blockState, BlockEntity blockEntity) {
+		findAndDamageExtendoGrip(player);
+	}
+
+	public static void consumeDurabilityOnPlace(BlockPlaceContext blockPlaceContext, BlockPos blockPos, BlockState blockState) {
+		findAndDamageExtendoGrip(blockPlaceContext.getPlayer());
+	}
+
 	private static void findAndDamageExtendoGrip(Player player) {
 		if (player == null)
 			return;
@@ -275,14 +283,6 @@ public class ExtendoGripItem extends Item  {
 		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getMainHandItem());
 		boolean holdingGrip = inOff || inMain;
 		return holdingGrip;
-	}
-
-    public static void consumeDurabilityOnBreak(Level level, Player player, BlockPos blockPos, BlockState blockState, BlockEntity blockEntity) {
-		findAndDamageExtendoGrip(player);
-	}
-
-	public static void consumeDurabilityOnPlace(BlockPlaceContext blockPlaceContext, BlockPos blockPos, BlockState blockState) {
-		findAndDamageExtendoGrip(blockPlaceContext.getPlayer());
 	}
 
 //	@Override
