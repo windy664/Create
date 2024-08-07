@@ -2,7 +2,6 @@ package com.simibubi.create.content.redstone.thresholdSwitch;
 
 import java.util.List;
 
-import com.simibubi.create.compat.thresholdSwitch.StorageDrawers;
 import com.simibubi.create.compat.thresholdSwitch.ThresholdSwitchCompat;
 import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
 import com.simibubi.create.content.redstone.FilteredDetectorFilterSlot;
@@ -47,10 +46,11 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 	private TankManipulationBehaviour observedTank;
 	private VersionedInventoryTrackerBehaviour invVersionTracker;
 
+	// fabric: not needed, view.getCapacity is pretty much correct for the most part
 	private static final List<ThresholdSwitchCompat> COMPAT = List.of(
 		//new FunctionalStorage(),
 		//new SophisticatedStorage(),
-		new StorageDrawers()
+		//new StorageDrawers()
 	);
 
 	public ThresholdSwitchBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -128,24 +128,23 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 
 				} else {
 					invVersionTracker.awaitNewVersion(inv);
-					for (int slot = 0; slot < inv.getSlots(); slot++) {
-						ItemStack stackInSlot = inv.getStackInSlot(slot);
+					try (Transaction t = TransferUtil.getTransaction()) {
+						for (StorageView<ItemVariant> view : inv.iterable(t)) {
+							long space = COMPAT
+									.stream()
+									.filter(compat -> compat.isFromThisMod(targetBlockEntity))
+									.map(compat -> compat.getSpaceInSlot(view))
+									.findFirst()
+									.orElseGet(() -> Math.min(view.getResource().toStack().getMaxStackSize(), view.getCapacity()));
 
-						int finalSlot = slot;
-						long space = COMPAT
-							.stream()
-							.filter(compat -> compat.isFromThisMod(targetBlockEntity))
-							.map(compat -> compat.getSpaceInSlot(inv, finalSlot))
-							.findFirst()
-							.orElseGet(() -> (long) Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(finalSlot)));
+							long count = view.getCapacity();
+							if (space == 0)
+								continue;
 
-						int count = stackInSlot.getCount();
-						if (space == 0)
-							continue;
-
-						totalSpace += 1;
-						if (filtering.test(stackInSlot))
-							occupied += count * (1f / space);
+							totalSpace += 1;
+							if (filtering.test(view.getResource().toStack()))
+								occupied += count * (1f / space);
+						}
 					}
 				}
 			}
