@@ -37,13 +37,13 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 	private int capacityEnchantLevel;
 
 	private CompoundTag vanillaTag;
-	private CompoundTag forgeCapsTag;
+//	private CompoundTag forgeCapsTag;
 
 	public BacktankBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		defaultName = getDefaultName(state);
 		vanillaTag = new CompoundTag();
-		forgeCapsTag = null;
+//		forgeCapsTag = null;
 	}
 
 	public static Component getDefaultName(BlockState state) {
@@ -120,13 +120,13 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		compound.putInt("Air", airLevel);
 		compound.putInt("Timer", airLevelTimer);
 		compound.putInt("CapacityEnchantment", capacityEnchantLevel);
-		
+
 		if (this.customName != null)
 			compound.putString("CustomName", Component.Serializer.toJson(this.customName));
-		
+
 		compound.put("VanillaTag", vanillaTag);
-		if (forgeCapsTag != null)
-			compound.put("ForgeCapsTag", forgeCapsTag);
+//		if (forgeCapsTag != null)
+//			compound.put("ForgeCapsTag", forgeCapsTag);
 	}
 
 	@Override
@@ -136,12 +136,12 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		airLevel = compound.getInt("Air");
 		airLevelTimer = compound.getInt("Timer");
 		capacityEnchantLevel = compound.getInt("CapacityEnchantment");
-		
+
 		if (compound.contains("CustomName", 8))
 			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
-		
+
 		vanillaTag = compound.getCompound("VanillaTag");
-		forgeCapsTag = compound.contains("ForgeCapsTag") ? compound.getCompound("ForgeCapsTag") : null;
+//		forgeCapsTag = compound.contains("ForgeCapsTag") ? compound.getCompound("ForgeCapsTag") : null;
 
 		if (prev != 0 && prev != airLevel && airLevel == BacktankUtil.maxAir(capacityEnchantLevel) && clientPacket)
 			playFilledEffect();
@@ -181,18 +181,18 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 	public void setCapacityEnchantLevel(int capacityEnchantLevel) {
 		this.capacityEnchantLevel = capacityEnchantLevel;
 	}
-	
-	public void setTags(CompoundTag vanillaTag, @Nullable CompoundTag forgeCapsTag) {
+
+	public void setTags(CompoundTag vanillaTag/*, @Nullable CompoundTag forgeCapsTag*/) {
 		this.vanillaTag = vanillaTag;
-		this.forgeCapsTag = forgeCapsTag;
+//		this.forgeCapsTag = forgeCapsTag;
 	}
 
 	public CompoundTag getVanillaTag() {
 		return vanillaTag;
 	}
-	
-	public CompoundTag getForgeCapsTag() {
-		return forgeCapsTag;
-	}
+
+//	public CompoundTag getForgeCapsTag() {
+//		return forgeCapsTag;
+//	}
 
 }

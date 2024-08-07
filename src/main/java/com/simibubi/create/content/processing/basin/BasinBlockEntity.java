@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import com.simibubi.create.foundation.utility.IntAttached;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;

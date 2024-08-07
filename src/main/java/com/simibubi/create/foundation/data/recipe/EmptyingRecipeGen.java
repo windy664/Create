@@ -8,6 +8,7 @@ import io.github.tropheusj.milk.Milk;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.material.Fluids;
 
 public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
@@ -36,7 +37,7 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 				.whenModLoaded(Mods.AM.getId())),
 
 		NEO_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Mods.FD, "milk_bottle")
-				.output(ForgeMod.MILK.get(), 250)
+				.output(Milk.STILL_MILK, 250)
 				.output(Items.GLASS_BOTTLE)
 				.whenModLoaded(Mods.NEA.getId()))
 

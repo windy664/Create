@@ -73,10 +73,10 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			return false;
 
 		HeatLevel heat = BasinBlockEntity.getHeatLevelOf(basin.getLevel()
-			.getBlockState(basin.getBlockPos()
-				.below(1)));
+				.getBlockState(basin.getBlockPos()
+						.below(1)));
 		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()
-			.testBlazeBurner(heat))
+				.testBlazeBurner(heat))
 			return false;
 
 		List<ItemStack> recipeOutputItems = new ArrayList<>();
@@ -84,13 +84,14 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 		List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
 		List<FluidIngredient> fluidIngredients =
-			isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
+				isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
 
 		// fabric: track consumed items to get remainders later
 		NonNullList<ItemStack> consumedItems = NonNullList.create();
 
 		try (Transaction t = TransferUtil.getTransaction()) {
-			Ingredients: for (Ingredient ingredient : ingredients) {
+			Ingredients:
+			for (Ingredient ingredient : ingredients) {
 				for (StorageView<ItemVariant> view : TransferUtil.getNonEmpty(availableItems, t)) {
 					ItemVariant var = view.getResource();
 					ItemStack stack = var.toStack();
@@ -109,8 +110,9 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			}
 
 			boolean fluidsAffected = false;
-			FluidIngredients: for (FluidIngredient fluidIngredient : fluidIngredients) {
-			long amountRequired = fluidIngredient.getRequiredAmount();
+			FluidIngredients:
+			for (FluidIngredient fluidIngredient : fluidIngredients) {
+				long amountRequired = fluidIngredient.getRequiredAmount();
 				for (StorageView<FluidVariant> view : TransferUtil.getNonEmpty(availableFluids, t)) {
 					FluidStack fluidStack = new FluidStack(view);
 					if (!fluidIngredient.test(fluidStack)) continue;
@@ -138,20 +140,19 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			if (recipe instanceof BasinRecipe basinRecipe) {
 				recipeOutputItems.addAll(basinRecipe.rollResults());
 				for (FluidStack fluidStack : basinRecipe.getFluidResults())
-				if (!fluidStack.isEmpty())
-							recipeOutputFluids.add(fluidStack);
-					for (ItemStack stack : basinRecipe.getRemainingItems(basin.getInputInventory()))
-						if (!stack.isEmpty())
-							recipeOutputItems.add(stack);
+					if (!fluidStack.isEmpty())
+						recipeOutputFluids.add(fluidStack);
+				for (ItemStack stack : basinRecipe.getRemainingItems(basin.getInputInventory()))
+					if (!stack.isEmpty())
+						recipeOutputItems.add(stack);
 			} else {
 				recipeOutputItems.add(recipe.getResultItem());
 
-					if (recipe instanceof CraftingRecipe craftingRecipe) {
-						for (ItemStack stack : craftingRecipe
-							.getRemainingItems(new DummyCraftingContainer(availableItems, extractedItemsFromSlot)))
-							if (!stack.isEmpty())
-								recipeOutputItems.add(stack);
-					}
+				if (recipe instanceof CraftingRecipe craftingRecipe) {
+					for (ItemStack stack : craftingRecipe
+							.getRemainingItems(new DummyCraftingContainer(consumedItems)))
+						if (!stack.isEmpty())
+							recipeOutputItems.add(stack);
 				}
 			}
 

@@ -4,6 +4,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.processing.basin.BasinRecipe;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.compat.rei.ConversionRecipe;
@@ -22,7 +24,6 @@ import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
-import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeSerializer;
@@ -135,7 +136,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		return world.getRecipeManager()
 			.getRecipeFor(getType(), inv, world);
 	}
-	
+
 	public static boolean shouldIgnoreInAutomation(Recipe<?> recipe) {
 		RecipeSerializer<?> serializer = recipe.getSerializer();
 		if (serializer != null && AllTags.AllRecipeSerializerTags.AUTOMATION_IGNORE.matches(serializer))

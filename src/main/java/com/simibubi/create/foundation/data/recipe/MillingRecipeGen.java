@@ -5,6 +5,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
+import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
 import net.minecraft.core.Registry;
@@ -815,7 +816,7 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 	protected GeneratedRecipe botaniaPetals(String... colors) {
 		for (String color : colors) {
 			create(Mods.BTN.recipeId(color + "_petal"), b -> b.duration(50)
-					.require(AllTags.optionalTag(ForgeRegistries.ITEMS,
+					.require(AllTags.optionalTag(Registry.ITEM,
 							new ResourceLocation(Mods.BTN.getId(), "petals/" + color)))
 					.output(Mods.MC, color + "_dye"));
 		}

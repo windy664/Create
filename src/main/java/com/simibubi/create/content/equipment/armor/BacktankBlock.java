@@ -121,6 +121,9 @@ public class BacktankBlock extends HorizontalKineticBlock implements IBE<Backtan
 			be.setAirLevel(vanillaTag.getInt("Air"));
 			if (stack.hasCustomHoverName())
 				be.setCustomName(stack.getHoverName());
+
+			be.setTags(vanillaTag);
+
 			// fabric: forge mangles item placement logic, so this isn't needed there.
 			// here, we need to do this manually so neighboring blocks are updated (comparators, #1396)
 			// this isn't needed for other items with block entity data (ex. chests) since they use the BlockEntityTag
@@ -129,32 +132,33 @@ public class BacktankBlock extends HorizontalKineticBlock implements IBE<Backtan
 		});
 	}
 
-	@Override
-	@SuppressWarnings("deprecation")
-	// Re-adding ForgeCaps to item here as there is no loot function that can modify
-	// outside of the vanilla tag
-	public List<ItemStack> getDrops(BlockState pState, LootContext.Builder pBuilder) {
-		List<ItemStack> lootDrops = super.getDrops(pState, pBuilder);
-
-		BlockEntity blockEntity = pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-		if (!(blockEntity instanceof BacktankBlockEntity bbe))
-			return lootDrops;
-
-		CompoundTag forgeCapsTag = bbe.getForgeCapsTag();
-		if (forgeCapsTag == null)
-			return lootDrops;
-
-		return lootDrops.stream()
-			.map(stack -> {
-				if (!(stack.getItem() instanceof BacktankItem))
-					return stack;
-
-				ItemStack modifiedStack = new ItemStack(stack.getItem(), stack.getCount(), forgeCapsTag.copy());
-				modifiedStack.setTag(stack.getTag());
-				return modifiedStack;
-			})
-			.toList();
-	}
+	// fabric: unused
+//	@Override
+//	@SuppressWarnings("deprecation")
+//	// Re-adding ForgeCaps to item here as there is no loot function that can modify
+//	// outside of the vanilla tag
+//	public List<ItemStack> getDrops(BlockState pState, LootContext.Builder pBuilder) {
+//		List<ItemStack> lootDrops = super.getDrops(pState, pBuilder);
+//
+//		BlockEntity blockEntity = pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+//		if (!(blockEntity instanceof BacktankBlockEntity bbe))
+//			return lootDrops;
+//
+//		CompoundTag forgeCapsTag = bbe.getForgeCapsTag();
+//		if (forgeCapsTag == null)
+//			return lootDrops;
+//
+//		return lootDrops.stream()
+//			.map(stack -> {
+//				if (!(stack.getItem() instanceof BacktankItem))
+//					return stack;
+//
+//				ItemStack modifiedStack = new ItemStack(stack.getItem(), stack.getCount());
+//				modifiedStack.setTag(stack.getTag());
+//				return modifiedStack;
+//			})
+//			.toList();
+//	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
@@ -187,14 +191,14 @@ public class BacktankBlock extends HorizontalKineticBlock implements IBE<Backtan
 
 		Optional<BacktankBlockEntity> blockEntityOptional = getBlockEntityOptional(blockGetter, pos);
 
-		CompoundTag forgeCapsTag = blockEntityOptional.map(BacktankBlockEntity::getForgeCapsTag)
-			.orElse(null);
+//		CompoundTag forgeCapsTag = blockEntityOptional.map(BacktankBlockEntity::getForgeCapsTag)
+//			.orElse(null);
 		CompoundTag vanillaTag = blockEntityOptional.map(BacktankBlockEntity::getVanillaTag)
 			.orElse(new CompoundTag());
 		int air = blockEntityOptional.map(BacktankBlockEntity::getAirLevel)
 			.orElse(0);
 
-		ItemStack stack = new ItemStack(item, 1, forgeCapsTag);
+		ItemStack stack = new ItemStack(item, 1);
 		vanillaTag.putInt("Air", air);
 		stack.setTag(vanillaTag);
 		return stack;

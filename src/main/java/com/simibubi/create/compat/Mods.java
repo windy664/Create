@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -63,7 +64,7 @@ public enum Mods {
 	}
 
 	public Item getItem(String id) {
-		return ForgeRegistries.ITEMS.getValue(rl(id));
+		return Registry.ITEM.get(rl(id));
 	}
 
 	public boolean contains(ItemLike entry) {
