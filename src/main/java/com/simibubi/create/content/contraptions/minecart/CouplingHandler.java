@@ -48,7 +48,8 @@ public class CouplingHandler {
 		Set<UUID> cartsWithCoupling = CapabilityMinecartController.loadedMinecartsWithCoupling.get(world);
 		if (cartsWithCoupling == null)
 			return;
-		cartsWithCoupling.forEach(id -> {
+
+		for (UUID id : cartsWithCoupling) {
 			MinecartController controller = CapabilityMinecartController.getIfPresent(world, id);
 			if (controller == null)
 				return;
@@ -59,7 +60,7 @@ public class CouplingHandler {
 			if (coupledController == null)
 				return;
 			consumer.accept(Couple.create(controller, coupledController));
-		});
+		};
 	}
 
 	public static boolean tryToCoupleCarts(@Nullable Player player, Level world, int cartId1, int cartId2) {

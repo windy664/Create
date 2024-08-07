@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
@@ -60,6 +61,10 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	SEQUENCED_ASSEMBLY(SequencedAssemblyRecipeSerializer::new),
 
 	TOOLBOX_DYEING(() -> new SimpleRecipeSerializer<>(ToolboxDyeingRecipe::new), () -> RecipeType.CRAFTING, false);
+
+	public static final Predicate<? super Recipe<?>> CAN_BE_AUTOMATED = r -> !r.getId()
+		.getPath()
+		.endsWith("_manual_only");
 
 	private final ResourceLocation id;
 	private final RecipeSerializer<?> serializerObject;
@@ -130,13 +135,11 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		return world.getRecipeManager()
 			.getRecipeFor(getType(), inv, world);
 	}
-
+	
 	public static boolean shouldIgnoreInAutomation(Recipe<?> recipe) {
 		RecipeSerializer<?> serializer = recipe.getSerializer();
 		if (serializer != null && AllTags.AllRecipeSerializerTags.AUTOMATION_IGNORE.matches(serializer))
 			return true;
-		return recipe.getId()
-			.getPath()
-			.endsWith("_manual_only");
+		return !CAN_BE_AUTOMATED.test(recipe);
 	}
 }

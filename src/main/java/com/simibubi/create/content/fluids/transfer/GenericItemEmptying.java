@@ -27,7 +27,7 @@ public class GenericItemEmptying {
 	private static final Container WRAPPER = new ItemStackHandlerContainer(1);
 
 	public static boolean canItemBeEmptied(Level world, ItemStack stack) {
-		if (stack.getItem() instanceof PotionItem)
+		if (PotionFluidHandler.isPotionItem(stack))
 			return true;
 
 		WRAPPER.setItem(0, stack);
@@ -42,7 +42,7 @@ public class GenericItemEmptying {
 		FluidStack resultingFluid = FluidStack.EMPTY;
 		ItemStack resultingItem = ItemStack.EMPTY;
 
-		if (stack.getItem() instanceof PotionItem)
+		if (PotionFluidHandler.isPotionItem(stack))
 			return PotionFluidHandler.emptyPotion(stack, simulate);
 
 		WRAPPER.setItem(0, stack);

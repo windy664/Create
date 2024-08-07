@@ -5,6 +5,7 @@ import static com.simibubi.create.content.kinetics.base.DirectionalKineticBlock.
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -57,6 +58,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -570,8 +572,7 @@ public class DeployerBlockEntity extends KineticBlockEntity implements ItemTrans
 		ItemStack heldItemMainhand = player.getMainHandItem();
 		if (heldItemMainhand.getItem() instanceof SandPaperItem) {
 			sandpaperInv.setItem(0, stack);
-			return AllRecipeTypes.SANDPAPER_POLISHING.find(sandpaperInv, level)
-				.orElse(null);
+			return checkRecipe(AllRecipeTypes.SANDPAPER_POLISHING, sandpaperInv, level).orElse(null);
 		}
 
 		recipeInv.setItem(0, stack);
@@ -581,11 +582,15 @@ public class DeployerBlockEntity extends KineticBlockEntity implements ItemTrans
 
 		event.addRecipe(() -> SequencedAssemblyRecipe.getRecipe(level, event.getInventory(),
 			AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class), 100);
-		event.addRecipe(() -> AllRecipeTypes.DEPLOYING.find(event.getInventory(), level), 50);
-		event.addRecipe(() -> AllRecipeTypes.ITEM_APPLICATION.find(event.getInventory(), level), 50);
+		event.addRecipe(() -> checkRecipe(AllRecipeTypes.DEPLOYING, event.getInventory(), level), 50);
+		event.addRecipe(() -> checkRecipe(AllRecipeTypes.ITEM_APPLICATION, event.getInventory(), level), 50);
 
 		DeployerRecipeSearchEvent.EVENT.invoker().handle(event);
 		return event.getRecipe();
+	}
+
+	private Optional<? extends Recipe<? extends Container>> checkRecipe(AllRecipeTypes type, RecipeWrapper inv, Level level) {
+		return type.find(inv, level).filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 	}
 
 	public DeployerFakePlayer getPlayer() {

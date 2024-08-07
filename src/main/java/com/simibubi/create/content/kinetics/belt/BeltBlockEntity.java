@@ -32,6 +32,7 @@ import com.simibubi.create.content.kinetics.belt.transport.ItemHandlerBeltSegmen
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
@@ -74,6 +75,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements ItemTransfera
 	protected BlockPos controller;
 	protected BeltInventory inventory;
 	protected Storage<ItemVariant> itemHandler;
+	public VersionedInventoryTrackerBehaviour invVersionTracker;
 
 	public CompoundTag trackerUpdateTag;
 
@@ -99,6 +101,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements ItemTransfera
 			.setInsertionHandler(this::tryInsertingFromSide).considerOccupiedWhen(this::isOccupied));
 		behaviours.add(new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf));
+		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 	}
 
 	@Override
@@ -463,7 +466,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements ItemTransfera
 			return false;
 		return getMovementFacing() != side.getOpposite();
 	}
-	
+
 	private boolean isOccupied(Direction side) {
 		BeltBlockEntity nextBeltController = getControllerBE();
 		if (nextBeltController == null)

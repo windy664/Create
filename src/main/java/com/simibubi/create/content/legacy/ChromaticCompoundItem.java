@@ -137,7 +137,7 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 		BlockPos.MutableBlockPos testPos =
 			new BlockPos.MutableBlockPos(entityX, Math.min(Mth.floor(entity.getY()), localWorldHeight), entityZ);
 
-		while (testPos.getY() > 0) {
+		while (testPos.getY() > minHeight) {
 			testPos.move(Direction.DOWN);
 			BlockState state = world.getBlockState(testPos);
 			if (state.getLightBlock(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)

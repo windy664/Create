@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockFace;
+import com.simibubi.create.foundation.utility.HashableNonNullConsumer;
 
 import io.github.fabricators_of_create.porting_lib.transfer.StorageProvider;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
@@ -92,6 +93,26 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		if (filter != null && !filter.upTo)
 			mode = ExtractionCountMode.EXACTLY;
 		return mode;
+	}
+
+	public void findNewCapability() {
+		Level world = getWorld();
+		BlockFace targetBlockFace = target.getTarget(world, blockEntity.getBlockPos(), blockEntity.getBlockState())
+			.getOpposite();
+		BlockPos pos = targetBlockFace.getPos();
+
+		targetCapability = LazyOptional.empty();
+
+		if (!world.isLoaded(pos))
+			return;
+		BlockEntity invBE = world.getBlockEntity(pos);
+		if (invBE == null)
+			return;
+		Capability<T> capability = capability();
+		targetCapability =
+			bypassSided ? invBE.getCapability(capability) : invBE.getCapability(capability, targetBlockFace.getFace());
+		if (targetCapability.isPresent())
+			targetCapability.addListener(new HashableNonNullConsumer<>(this::onHandlerInvalidated, this));
 	}
 
 	@FunctionalInterface

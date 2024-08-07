@@ -469,7 +469,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements I
 		}
 
 		super.onBlockBroken(stateToBreak);
-		TreeCutter.findTree(level, breakingPos)
+		TreeCutter.findTree(level, breakingPos, stateToBreak)
 			.destroyBlocks(level, null, this::dropItemFromCutTree);
 	}
 

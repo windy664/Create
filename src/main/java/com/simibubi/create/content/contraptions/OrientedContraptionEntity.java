@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions;
 
 import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
+import static com.simibubi.create.foundation.utility.AngleHelper.wrapAngle180;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -363,7 +364,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 				return false;
 			OrientedContraptionEntity parent = (OrientedContraptionEntity) riding;
 			prevYaw = yaw;
-			yaw = -parent.getViewYRot(1);
+			yaw = wrapAngle180(getInitialYaw() - parent.getInitialYaw()) - parent.getViewYRot(1);
 			return false;
 		}
 
@@ -581,7 +582,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		Vec3 passengerPosition = parent.getPassengerPosition(this, partialTicks);
 		if (passengerPosition == null)
 			return Vec3.ZERO;
-		
+
 		double x = passengerPosition.x - Mth.lerp(partialTicks, this.xOld, this.getX());
 		double y = passengerPosition.y - Mth.lerp(partialTicks, this.yOld, this.getY());
 		double z = passengerPosition.z - Mth.lerp(partialTicks, this.zOld, this.getZ());

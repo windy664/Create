@@ -28,7 +28,17 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 		FD_MILK = create(Mods.FD.recipeId("milk_bottle"), b -> b.require(Mods.FD, "milk_bottle")
 			.output(Milk.FLOWING_MILK, FluidConstants.BOTTLE)
 			.output(Items.GLASS_BOTTLE)
-			.whenModLoaded(Mods.FD.getId()))
+			.whenModLoaded(Mods.FD.getId())),
+
+		AM_LAVA = create(Mods.AM.recipeId("lava_bottle"), b -> b.require(Mods.AM, "lava_bottle")
+				.output(Items.GLASS_BOTTLE)
+				.output(Fluids.LAVA, 250)
+				.whenModLoaded(Mods.AM.getId())),
+
+		NEO_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Mods.FD, "milk_bottle")
+				.output(ForgeMod.MILK.get(), 250)
+				.output(Items.GLASS_BOTTLE)
+				.whenModLoaded(Mods.NEA.getId()))
 
 	;
 

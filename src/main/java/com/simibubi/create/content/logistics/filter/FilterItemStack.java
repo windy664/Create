@@ -130,7 +130,7 @@ public class FilterItemStack {
 					containedItems.add(FilterItemStack.of(stackInSlot));
 			}
 
-			shouldRespectNBT = !defaults ? false
+			shouldRespectNBT = defaults ? false
 				: filter.getTag()
 					.getBoolean("RespectNBT");
 			isBlacklist = defaults ? false

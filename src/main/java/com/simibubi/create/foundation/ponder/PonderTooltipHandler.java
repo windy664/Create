@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.base.Strings;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.ponder.ui.NavigatableSimiScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
@@ -29,7 +30,7 @@ public class PonderTooltipHandler {
 
 	public static boolean enable = true;
 
-	static LerpedFloat holdWProgress = LerpedFloat.linear()
+	static LerpedFloat holdKeyProgress = LerpedFloat.linear()
 		.startWithValue(0);
 	static ItemStack hoveredStack = ItemStack.EMPTY;
 	static ItemStack trackingStack = ItemStack.EMPTY;
@@ -50,11 +51,11 @@ public class PonderTooltipHandler {
 
 		if (hoveredStack.isEmpty() || trackingStack.isEmpty()) {
 			trackingStack = ItemStack.EMPTY;
-			holdWProgress.startWithValue(0);
+			holdKeyProgress.startWithValue(0);
 			return;
 		}
 
-		float value = holdWProgress.getValue();
+		float value = holdKeyProgress.getValue();
 		int keyCode = KeyBindingHelper.getKeyCode(ponderKeybind()).getValue();
 		long window = instance.getWindow()
 			.getWindow();
@@ -64,12 +65,12 @@ public class PonderTooltipHandler {
 				if (currentScreen instanceof NavigatableSimiScreen)
 					((NavigatableSimiScreen) currentScreen).centerScalingOnMouse();
 				ScreenOpener.transitionTo(PonderUI.of(trackingStack));
-				holdWProgress.startWithValue(0);
+				holdKeyProgress.startWithValue(0);
 				return;
 			}
-			holdWProgress.setValue(Math.min(1, value + Math.max(.25f, value) * .25f));
+			holdKeyProgress.setValue(Math.min(1, value + Math.max(.25f, value) * .25f));
 		} else
-			holdWProgress.setValue(Math.max(0, value - .05f));
+			holdKeyProgress.setValue(Math.max(0, value - .05f));
 
 		hoveredStack = ItemStack.EMPTY;
 	}
@@ -90,7 +91,7 @@ public class PonderTooltipHandler {
 			.getFrameTime();
 		Component component = subject ? Lang.translateDirect(SUBJECT)
 			.withStyle(ChatFormatting.GREEN)
-			: makeProgressBar(Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f));
+			: makeProgressBar(Math.min(1, holdKeyProgress.getValue(renderPartialTicks) * 8 / 7f));
 		if (tooltip.size() < 2)
 			tooltip.add(component);
 		else
@@ -118,7 +119,7 @@ public class PonderTooltipHandler {
 			return;
 
 		if (prevStack.isEmpty() || !prevStack.sameItem(stack))
-			holdWProgress.startWithValue(0);
+			holdKeyProgress.startWithValue(0);
 
 		hoveredStack = stack;
 		trackingStack = stack;
@@ -127,13 +128,13 @@ public class PonderTooltipHandler {
 	public static RenderTooltipBorderColorCallback.BorderColorEntry handleTooltipColor(ItemStack stack, int originalBorderColorStart, int originalBorderColorEn) {
 		if (trackingStack != stack)
 			return null;
-		if (holdWProgress.getValue() == 0)
+		if (holdKeyProgress.getValue() == 0)
 			return null;
 		float renderPartialTicks = Minecraft.getInstance()
 			.getFrameTime();
 		int start = originalBorderColorStart;
 		int end = originalBorderColorEn;
-		float progress = Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f);
+		float progress = Math.min(1, holdKeyProgress.getValue(renderPartialTicks) * 8 / 7f);
 
 		start = getSmoothColorForProgress(progress);
 		end = getSmoothColorForProgress((progress));
@@ -172,7 +173,7 @@ public class PonderTooltipHandler {
 	}
 
 	protected static KeyMapping ponderKeybind() {
-		return Minecraft.getInstance().options.keyUp;
+		return AllKeys.PONDER.getKeybind();
 	}
 
 }

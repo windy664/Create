@@ -26,27 +26,25 @@ public class BasinInventory extends SmartInventory {
 	}
 
 	@Override
-	public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-		StoragePreconditions.notBlankNotNegative(resource, maxAmount);
-		if (!insertionAllowed)
-			return 0;
-		// Only insert if no other slot already has a stack of this item
-		try (Transaction test = transaction.openNested()) {
-			long contained = this.extract(resource, Long.MAX_VALUE, test);
-			if (contained != 0) {
-				// already have this item. can we stack?
-				long maxStackSize = Math.min(stackSize, resource.getItem().getMaxStackSize());
-				long space = Math.max(0, maxStackSize - contained);
-				if (space <= 0) {
-					// nope.
-					return 0;
-				} else {
-					// yes!
-					maxAmount = Math.min(space, maxAmount);
-				}
-			}
+	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		int firstFreeSlot = -1;
+
+		for (int i = 0; i < getSlots(); i++) {
+			// Only insert if no other slot already has a stack of this item
+			if (i != slot && ItemHandlerHelper.canItemStacksStack(stack, inv.getStackInSlot(i)))
+				return stack;
+			if (inv.getStackInSlot(i)
+				.isEmpty() && firstFreeSlot == -1)
+				firstFreeSlot = i;
 		}
-		return super.insert(resource, maxAmount, transaction);
+
+		// Only insert if this is the first empty slot, prevents overfilling in the
+		// simulation pass
+		if (inv.getStackInSlot(slot)
+			.isEmpty() && firstFreeSlot != slot)
+			return stack;
+
+		return super.insertItem(slot, stack, simulate);
 	}
 
 	@Override

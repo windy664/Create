@@ -3,7 +3,6 @@ package com.simibubi.create.content.processing.basin;
 import java.util.List;
 
 import com.simibubi.create.AllBlockEntityTypes;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -62,6 +61,10 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
 		super.createBlockStateDefinition(p_206840_1_.add(FACING));
+	}
+	
+	public static boolean isBasin(LevelReader world, BlockPos pos) {
+		return world.getBlockEntity(pos) instanceof BasinBlockEntity;
 	}
 
 	@Override
@@ -122,7 +125,8 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 	@Override
 	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
 		super.updateEntityAfterFallOn(worldIn, entityIn);
-		if (!AllBlocks.BASIN.has(worldIn.getBlockState(entityIn.blockPosition())))
+		if (!worldIn.getBlockState(entityIn.blockPosition())
+			.is(this))
 			return;
 		if (!(entityIn instanceof ItemEntity))
 			return;

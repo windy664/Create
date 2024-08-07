@@ -67,6 +67,22 @@ public class ItemHandlerBeltSegment implements SingleSlotStorage<ItemVariant> {
 		TransportedItemStack transported = this.beltInventory.getStackAtOffset(offset);
 		if (transported == null)
 			return ItemStack.EMPTY;
-		return transported.stack.isEmpty() ? ItemStack.EMPTY : transported.stack;
+
+		amount = Math.min(amount, transported.stack.getCount());
+		ItemStack extracted = simulate ? transported.stack.copy()
+			.split(amount) : transported.stack.split(amount);
+		if (!simulate) {
+			if (transported.stack.isEmpty())
+				beltInventory.toRemove.add(transported);
+			else
+				beltInventory.belt.notifyUpdate();
+		}
+
+		return extracted;
+	}
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return Math.min(getStackInSlot(slot).getMaxStackSize(), 64);
 	}
 }

@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.actors.roller.RollerBlockEntity.RollingMode;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.pulley.PulleyContraption;
@@ -109,7 +110,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 				return false;
 
 		return super.canBreak(world, breakingPos, state) && !state.getCollisionShape(world, breakingPos)
-			.isEmpty() && !AllBlocks.TRACK.has(state);
+			.isEmpty() && !AllTags.AllBlockTags.TRACKS.matches(state);
 	}
 
 	@Override
@@ -195,7 +196,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		int startingY = 1;
 		if (!getStateToPaveWith(context).isAir()) {
 			FilterItemStack filter = context.getFilterFromBE();
-			if (!ItemHelper	
+			if (!ItemHelper
 				.extract(context.contraption.getSharedInventory(),
 					stack -> filter.test(context.world, stack), 1, true)
 				.isEmpty())
@@ -306,7 +307,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		BlockState stateToPaveWith = getStateToPaveWith(context);
 		BlockState stateToPaveWithAsSlab = getStateToPaveWithAsSlab(context);
 		RollingMode mode = getMode(context);
-		
+
 		if (mode != RollingMode.TUNNEL_PAVE && stateToPaveWith.isAir())
 			return;
 
@@ -470,9 +471,10 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (existing.is(toPlace.getBlock()))
 			return PaveResult.PASS;
 		if (!existing.is(BlockTags.LEAVES) && !existing.getMaterial()
-			.isReplaceable()
-			&& !existing.getCollisionShape(level, targetPos)
-				.isEmpty())
+				.isReplaceable()
+				&& (!existing.getCollisionShape(level, targetPos)
+					.isEmpty()
+					|| existing.is(BlockTags.PORTALS)))
 			return PaveResult.FAIL;
 
 		FilterItemStack filter = context.getFilterFromBE();

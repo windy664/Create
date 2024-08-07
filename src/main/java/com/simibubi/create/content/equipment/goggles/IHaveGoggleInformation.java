@@ -2,6 +2,7 @@ package com.simibubi.create.content.equipment.goggles;
 
 import java.util.List;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
@@ -44,6 +45,17 @@ public interface IHaveGoggleInformation {
 	 */
 	default boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return false;
+	}
+
+	/**
+	 * this method will be called when looking at a BlockEntity that implemented this
+	 * interface
+	 * <p>
+	 * return the item of your choosing after checking for any logic you wish, and the goggle on the goggle
+	 * tooltip will be replaced with the item you have returned
+	 */
+	default ItemStack getIcon(boolean isPlayerSneaking) {
+		return AllItems.GOGGLES.asStack();
 	}
 
 	default boolean containedFluidTooltip(List<Component> tooltip, boolean isPlayerSneaking, Storage<FluidVariant> handler) {

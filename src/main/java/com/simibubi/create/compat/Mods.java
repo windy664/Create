@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
 /**
@@ -18,11 +20,16 @@ public enum Mods {
 	CONNECTIVITY,
 	CURIOS,
 	DYNAMICTREES,
+	FUNCTIONALSTORAGE,
 	OCCULTISM,
 	PACKETFIXER,
+	SOPHISTICATEDBACKPACKS,
+	SOPHISTICATEDSTORAGE,
 	STORAGEDRAWERS,
 	TCONSTRUCT,
+	FRAMEDBLOCKS,
 	XLPACKETS,
+	MODERNUI,
 
 	// fabric mods
 	SANDWICHABLE,
@@ -53,6 +60,19 @@ public enum Mods {
 
 	public Block getBlock(String id) {
 		return Registry.BLOCK.get(rl(id));
+	}
+
+	public Item getItem(String id) {
+		return ForgeRegistries.ITEMS.getValue(rl(id));
+	}
+
+	public boolean contains(ItemLike entry) {
+		if (!isLoaded())
+			return false;
+		Item asItem = entry.asItem();
+		return asItem != null && asItem.getRegistryName()
+			.getNamespace()
+			.equals(id);
 	}
 
 	/**
