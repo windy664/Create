@@ -95,25 +95,25 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		return mode;
 	}
 
-	public void findNewCapability() {
-		Level world = getWorld();
-		BlockFace targetBlockFace = target.getTarget(world, blockEntity.getBlockPos(), blockEntity.getBlockState())
-			.getOpposite();
-		BlockPos pos = targetBlockFace.getPos();
-
-		targetCapability = LazyOptional.empty();
-
-		if (!world.isLoaded(pos))
-			return;
-		BlockEntity invBE = world.getBlockEntity(pos);
-		if (invBE == null)
-			return;
-		Capability<T> capability = capability();
-		targetCapability =
-			bypassSided ? invBE.getCapability(capability) : invBE.getCapability(capability, targetBlockFace.getFace());
-		if (targetCapability.isPresent())
-			targetCapability.addListener(new HashableNonNullConsumer<>(this::onHandlerInvalidated, this));
-	}
+//	public void findNewCapability() {
+//		Level world = getWorld();
+//		BlockFace targetBlockFace = target.getTarget(world, blockEntity.getBlockPos(), blockEntity.getBlockState())
+//			.getOpposite();
+//		BlockPos pos = targetBlockFace.getPos();
+//
+//		targetCapability = LazyOptional.empty();
+//
+//		if (!world.isLoaded(pos))
+//			return;
+//		BlockEntity invBE = world.getBlockEntity(pos);
+//		if (invBE == null)
+//			return;
+//		Capability<T> capability = capability();
+//		targetCapability =
+//			bypassSided ? invBE.getCapability(capability) : invBE.getCapability(capability, targetBlockFace.getFace());
+//		if (targetCapability.isPresent())
+//			targetCapability.addListener(new HashableNonNullConsumer<>(this::onHandlerInvalidated, this));
+//	}
 
 	@FunctionalInterface
 	public interface InterfaceProvider {

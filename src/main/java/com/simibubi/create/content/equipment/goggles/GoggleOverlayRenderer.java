@@ -52,7 +52,7 @@ public class GoggleOverlayRenderer {
 	public static int hoverTicks = 0;
 	public static BlockPos lastHovered = null;
 
-	public static void renderOverlay(PoseStack poseStack, float partialTicks, Window window) {
+	public static void renderOverlay(PoseStack poseStack, float partialTicks, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -179,11 +179,11 @@ public class GoggleOverlayRenderer {
 		}
 
 		CClient cfg = AllConfigs.client();
-		int posX = mc.getWindow().getGuiScaledWidth() / 2 + cfg.overlayOffsetX.get();
-		int posY = mc.getWindow().getGuiScaledHeight() / 2 + cfg.overlayOffsetY.get();
+		int posX = width / 2 + cfg.overlayOffsetX.get();
+		int posY = height / 2 + cfg.overlayOffsetY.get();
 
-		posX = Math.min(posX, mc.getWindow().getGuiScaledWidth() - tooltipTextWidth - 20);
-		posY = Math.min(posY, mc.getWindow().getGuiScaledHeight() - tooltipHeight - 20);
+		posX = Math.min(posX, width - tooltipTextWidth - 20);
+		posY = Math.min(posY, height - tooltipHeight - 20);
 
 		float fade = Mth.clamp((hoverTicks + partialTicks) / 24f, 0, 1);
 		Boolean useCustom = cfg.overlayCustomColor.get();

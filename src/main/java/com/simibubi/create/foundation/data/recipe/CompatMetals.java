@@ -1,12 +1,16 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import static com.simibubi.create.foundation.data.recipe.Mods.ALG;
 import static com.simibubi.create.foundation.data.recipe.Mods.GS;
 import static com.simibubi.create.foundation.data.recipe.Mods.IC2;
 import static com.simibubi.create.foundation.data.recipe.Mods.IE;
 import static com.simibubi.create.foundation.data.recipe.Mods.IF;
 import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
+import static com.simibubi.create.foundation.data.recipe.Mods.MI;
+import static com.simibubi.create.foundation.data.recipe.Mods.MTM;
 import static com.simibubi.create.foundation.data.recipe.Mods.OREGANIZED;
 import static com.simibubi.create.foundation.data.recipe.Mods.TH;
+import static com.simibubi.create.foundation.data.recipe.Mods.TR;
 
 import com.simibubi.create.foundation.utility.Lang;
 

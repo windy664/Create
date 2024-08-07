@@ -141,8 +141,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		return i;
 	}
 
-	@SubscribeEvent
-	public static void entitiesDontRetaliate(LivingChangeTargetEvent event) {
+	public static void entitiesDontRetaliate(LivingEntityEvents.ChangeTarget.ChangeTargetEvent event) {
 		if (!(event.getOriginalTarget() instanceof DeployerFakePlayer))
 			return;
 		LivingEntity entityLiving = (LivingEntity) event.getEntity();

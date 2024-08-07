@@ -23,6 +23,7 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -652,9 +653,9 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		if (remainingFuel > getShotsPerGunpowder()) {
 			remainingFuel = getShotsPerGunpowder();
 			sendUpdate = true;
-			return;	
+			return;
 		}
-		
+
 		if (remainingFuel > 0)
 			return;
 
@@ -664,13 +665,15 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 				.shrink(1);
 		else {
 			boolean externalGunpowderFound = false;
-			for (LazyOptional<IItemHandler> cap : attachedInventories) {
-				IItemHandler itemHandler = cap.orElse(EmptyHandler.INSTANCE);
-				if (ItemHelper.extract(itemHandler, stack -> inventory.isItemValid(4, stack), 1, false)
-					.isEmpty())
-					continue;
-				externalGunpowderFound = true;
-				break;
+			try (Transaction t = TransferUtil.getTransaction()) {
+				for (Entry<Direction, StorageProvider<ItemVariant>> entry : storages.entrySet()) {
+					Storage<ItemVariant> storage = entry.getValue().get(entry.getKey().getOpposite());
+					if (storage == null)
+						continue;
+					long amountExtracted = storage.extract(ItemVariant.of(Items.GUNPOWDER), 1, t);
+					if (amountExtracted > 0)
+						externalGunpowderFound = true;
+				}
 			}
 			if (!externalGunpowderFound)
 				return;

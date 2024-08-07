@@ -24,6 +24,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // fabric: all uses of addTag must be replaced with forceAddTag.
 public class CreateRegistrateTags {
 	public static void addGenerators() {
@@ -121,8 +124,8 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE, List.of(
 				"connector_lv", "connector_lv_relay", "connector_mv", "connector_mv_relay",
 				"connector_hv", "connector_hv_relay", "connector_bundled", "connector_structural",
-				"connector_redstone", "connector_probe", "breaker_switch")
-				.addOptional(Mods.BC.asResource("bits_block")); // // fabric: Causes Problems last I checked. TODO: re-evaluate
+				"connector_redstone", "connector_probe", "breaker_switch"))
+				.addOptional(Mods.BC.asResource("bits_block")); // fabric: Causes Problems last I checked. TODO: re-evaluate
 
 		// VALIDATE
 

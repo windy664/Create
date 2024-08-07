@@ -589,7 +589,7 @@ public class DeployerBlockEntity extends KineticBlockEntity implements ItemTrans
 		return event.getRecipe();
 	}
 
-	private Optional<? extends Recipe<? extends Container>> checkRecipe(AllRecipeTypes type, RecipeWrapper inv, Level level) {
+	private Optional<? extends Recipe<? extends Container>> checkRecipe(AllRecipeTypes type, ItemStackHandlerContainer inv, Level level) {
 		return type.find(inv, level).filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 	}
 

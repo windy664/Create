@@ -26,6 +26,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.SystemReport;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import oshi.SystemInfo;
 
 /**
  * Allows for providing easily accessible debugging information.

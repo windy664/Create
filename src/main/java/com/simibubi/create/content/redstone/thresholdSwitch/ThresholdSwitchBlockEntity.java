@@ -2,8 +2,6 @@ package com.simibubi.create.content.redstone.thresholdSwitch;
 
 import java.util.List;
 
-import com.simibubi.create.compat.thresholdSwitch.FunctionalStorage;
-import com.simibubi.create.compat.thresholdSwitch.SophisticatedStorage;
 import com.simibubi.create.compat.thresholdSwitch.StorageDrawers;
 import com.simibubi.create.compat.thresholdSwitch.ThresholdSwitchCompat;
 import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
@@ -28,6 +26,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -49,8 +48,8 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 	private VersionedInventoryTrackerBehaviour invVersionTracker;
 
 	private static final List<ThresholdSwitchCompat> COMPAT = List.of(
-		new FunctionalStorage(),
-		new SophisticatedStorage(),
+		//new FunctionalStorage(),
+		//new SophisticatedStorage(),
 		new StorageDrawers()
 	);
 
@@ -138,7 +137,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 							.filter(compat -> compat.isFromThisMod(targetBlockEntity))
 							.map(compat -> compat.getSpaceInSlot(inv, finalSlot))
 							.findFirst()
-							.orElseGet(() -> (long) Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(finalSlot)));
+							.orElseGet(() -> (long) Math.min(stackInSlot.getMaxStackSize(), inv.a(finalSlot)));
 
 						int count = stackInSlot.getCount();
 						if (space == 0)

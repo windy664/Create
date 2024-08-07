@@ -41,10 +41,10 @@ import net.minecraft.world.level.material.Fluids;
 public class PotionFluidHandler {
 
 	public static boolean isPotionItem(ItemStack stack) {
-		return stack.getItem() instanceof PotionItem && !(stack.getContainerItem()
+		return stack.getItem() instanceof PotionItem && !(stack.getRecipeRemainder()
 			.getItem() instanceof BucketItem);
 	}
-	
+
 	public static Pair<FluidStack, ItemStack> emptyPotion(ItemStack stack, boolean simulate) {
 		FluidStack fluid = getFluidFromPotionItem(stack);
 		if (!simulate)

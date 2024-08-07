@@ -11,6 +11,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -22,8 +23,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 
 public interface IWrenchable {
 
@@ -60,9 +59,8 @@ public interface IWrenchable {
 		if (!(world instanceof ServerLevel serverLevel))
 			return InteractionResult.SUCCESS;
 
-		BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos), player);
-		MinecraftForge.EVENT_BUS.post(event);
-		if (event.isCanceled())
+		boolean shouldBreak = PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, pos, world.getBlockState(pos), null);
+		if (!shouldBreak)
 			return InteractionResult.SUCCESS;
 
 		if (player != null && !player.isCreative()) {

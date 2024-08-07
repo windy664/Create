@@ -197,7 +197,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return entry -> onClient(() -> () -> registerItemModel(entry, func));
 	}
 
-	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(
+	public static <T extends Block> NonNullConsumer<T> connectedTextures(
 			Supplier<ConnectedTextureBehaviour> behavior) {
 		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
