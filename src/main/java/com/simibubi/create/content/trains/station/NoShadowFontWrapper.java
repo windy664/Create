@@ -2,7 +2,7 @@ package com.simibubi.create.content.trains.station;
 
 import java.util.List;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.FontAccessor;
+import com.simibubi.create.foundation.mixin.fabric.FontAccessor;
 
 import org.joml.Matrix4f;
 
@@ -20,13 +20,14 @@ public class NoShadowFontWrapper extends Font {
 	private Font wrapped;
 
 	public NoShadowFontWrapper(Font wrapped) {
-		super(null, false);
+		super(((FontAccessor) wrapped).create$getFonts(), false);
 		this.wrapped = wrapped;
 	}
 
-	public FontSet getFontSet(ResourceLocation pFontLocation) {
-		return ((FontAccessor) wrapped).port_lib$getFontSet(pFontLocation);
-	}
+	// fabric: we pass the correct fonts function to super
+//	public FontSet getFontSet(ResourceLocation pFontLocation) {
+//		return wrapped.getFontSet(pFontLocation);
+//	}
 
 	@Override
 	public int drawInBatch(Component pText, float pX, float pY, int pColor, boolean pDropShadow, Matrix4f pMatrix,

@@ -48,6 +48,7 @@
     "client.PlayerRendererMixin",
     "client.WindowResizeMixin",
     "fabric.ClientTextTooltipAccessor",
+    "fabric.FontAccessor",
     "fabric.GuiAccessor"
   ],
   "injectors": {
