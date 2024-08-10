@@ -1,26 +1,26 @@
 {
   "type": "create:filling",
-  "ingredients": [
-    {
-      "item": "aether:aether_dirt"
-    },
-    {
-      "fluid": "minecraft:water",
-      "nbt": {},
-      "amount": 500
-    }
-  ],
-  "results": [
-    {
-      "item": "aether:aether_grass_block"
-    }
-  ],
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "aether"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "aether:aether_dirt"
+    },
+    {
+      "amount": 500,
+      "fluid": "minecraft:water",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "aether:aether_grass_block"
     }
   ]
 }

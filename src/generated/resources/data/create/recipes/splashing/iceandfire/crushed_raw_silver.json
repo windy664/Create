@@ -1,5 +1,13 @@
 {
   "type": "create:splashing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "iceandfire"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_raw_silver"
@@ -7,16 +15,8 @@
   ],
   "results": [
     {
-      "item": "iceandfire:silver_nugget",
-      "count": 9
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "iceandfire"
-      ]
+      "count": 9,
+      "item": "iceandfire:silver_nugget"
     }
   ]
 }

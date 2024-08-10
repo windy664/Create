@@ -1,23 +1,23 @@
 {
   "type": "create:milling",
-  "ingredients": [
-    {
-      "item": "regions_unexplored:purple_snowbelle"
-    }
-  ],
-  "results": [
-    {
-      "item": "minecraft:purple_dye",
-      "count": 2
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "regions_unexplored"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "regions_unexplored:purple_snowbelle"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:purple_dye"
     }
   ]
 }

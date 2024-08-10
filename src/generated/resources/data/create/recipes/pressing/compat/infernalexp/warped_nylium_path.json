@@ -1,5 +1,13 @@
 {
   "type": "create:pressing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "infernalexp"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "minecraft:warped_nylium"
@@ -8,14 +16,6 @@
   "results": [
     {
       "item": "infernalexp:warped_nylium_path"
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "infernalexp"
-      ]
     }
   ]
 }

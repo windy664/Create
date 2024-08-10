@@ -1,31 +1,31 @@
 {
   "type": "create:milling",
-  "ingredients": [
-    {
-      "item": "byg:snowdrops"
-    }
-  ],
-  "results": [
-    {
-      "item": "minecraft:white_dye",
-      "count": 2
-    },
-    {
-      "item": "minecraft:lime_dye",
-      "chance": 0.1
-    },
-    {
-      "item": "minecraft:white_dye",
-      "chance": 0.1
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "byg"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "byg:snowdrops"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:white_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:lime_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:white_dye"
     }
   ]
 }

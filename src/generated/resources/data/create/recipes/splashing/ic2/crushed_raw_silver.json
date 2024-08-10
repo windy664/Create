@@ -1,5 +1,13 @@
 {
   "type": "create:splashing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "ic2"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_raw_silver"
@@ -7,16 +15,8 @@
   ],
   "results": [
     {
-      "item": "ic2:nugget_silver",
-      "count": 9
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "ic2"
-      ]
+      "count": 9,
+      "item": "ic2:nugget_silver"
     }
   ]
 }

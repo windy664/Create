@@ -1,32 +1,32 @@
 {
   "type": "create:crushing",
-  "ingredients": [
-    {
-      "item": "druidcraft:fiery_glass_ore"
-    }
-  ],
-  "results": [
-    {
-      "item": "druidcraft:fiery_glass",
-      "count": 8
-    },
-    {
-      "item": "druidcraft:fiery_glass",
-      "count": 6,
-      "chance": 0.25
-    },
-    {
-      "item": "minecraft:cobblestone",
-      "chance": 0.125
-    }
-  ],
-  "processingTime": 300,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "druidcraft"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "druidcraft:fiery_glass_ore"
+    }
+  ],
+  "processingTime": 300,
+  "results": [
+    {
+      "count": 8,
+      "item": "druidcraft:fiery_glass"
+    },
+    {
+      "chance": 0.25,
+      "count": 6,
+      "item": "druidcraft:fiery_glass"
+    },
+    {
+      "chance": 0.125,
+      "item": "minecraft:cobblestone"
     }
   ]
 }

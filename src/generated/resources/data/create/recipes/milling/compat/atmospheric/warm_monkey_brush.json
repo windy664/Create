@@ -1,32 +1,32 @@
 {
   "type": "create:milling",
-  "ingredients": [
-    {
-      "item": "atmospheric:scalding_monkey_brush"
-    }
-  ],
-  "results": [
-    {
-      "item": "minecraft:yellow_dye",
-      "count": 2
-    },
-    {
-      "item": "minecraft:yellow_dye",
-      "count": 2,
-      "chance": 0.1
-    },
-    {
-      "item": "minecraft:orange_dye",
-      "chance": 0.1
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "atmospheric"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "atmospheric:scalding_monkey_brush"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:yellow_dye"
+    },
+    {
+      "chance": 0.1,
+      "count": 2,
+      "item": "minecraft:yellow_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:orange_dye"
     }
   ]
 }

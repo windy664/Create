@@ -1,27 +1,27 @@
 {
   "type": "create:milling",
-  "ingredients": [
-    {
-      "item": "byg:california_poppy"
-    }
-  ],
-  "results": [
-    {
-      "item": "minecraft:orange_dye",
-      "count": 2
-    },
-    {
-      "item": "minecraft:green_dye",
-      "chance": 0.05
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "byg"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "byg:california_poppy"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:orange_dye"
+    },
+    {
+      "chance": 0.05,
+      "item": "minecraft:green_dye"
     }
   ]
 }

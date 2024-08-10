@@ -1,22 +1,22 @@
 {
   "type": "create:cutting",
-  "ingredients": [
-    {
-      "item": "atmospheric:morado_wood"
-    }
-  ],
-  "results": [
-    {
-      "item": "atmospheric:stripped_morado_wood"
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "atmospheric"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "atmospheric:morado_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "atmospheric:stripped_morado_wood"
     }
   ]
 }

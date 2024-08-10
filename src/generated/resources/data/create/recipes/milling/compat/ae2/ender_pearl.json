@@ -1,22 +1,22 @@
 {
   "type": "create:milling",
-  "ingredients": [
-    {
-      "tag": "c:ender_pearls"
-    }
-  ],
-  "results": [
-    {
-      "item": "ae2:ender_dust"
-    }
-  ],
-  "processingTime": 100,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "ae2"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "c:ender_pearls"
+    }
+  ],
+  "processingTime": 100,
+  "results": [
+    {
+      "item": "ae2:ender_dust"
     }
   ]
 }

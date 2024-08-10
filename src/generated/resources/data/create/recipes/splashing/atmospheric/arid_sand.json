@@ -1,5 +1,13 @@
 {
   "type": "create:splashing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "atmospheric"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "atmospheric:arid_sand"
@@ -7,20 +15,12 @@
   ],
   "results": [
     {
-      "item": "minecraft:clay_ball",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:clay_ball"
     },
     {
-      "item": "atmospheric:aloe_kernels",
-      "chance": 0.05
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "atmospheric"
-      ]
+      "chance": 0.05,
+      "item": "atmospheric:aloe_kernels"
     }
   ]
 }

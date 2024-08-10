@@ -1,5 +1,13 @@
 {
   "type": "create:splashing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "endergetic"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "endergetic:nether_corrock_crown"
@@ -8,14 +16,6 @@
   "results": [
     {
       "item": "endergetic:petrified_nether_corrock_crown"
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "endergetic"
-      ]
     }
   ]
 }

@@ -1,5 +1,13 @@
 {
   "type": "create:splashing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "the_vault"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "the_vault:ornate_chain"
@@ -8,14 +16,6 @@
   "results": [
     {
       "item": "the_vault:ornate_chain_rusty"
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "the_vault"
-      ]
     }
   ]
 }

@@ -15,6 +15,7 @@ import com.simibubi.create.content.contraptions.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.trains.entity.TrainRelocator;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox;
+import com.simibubi.create.foundation.gui.RemovedGuiUtils;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.mixin.accessor.MouseHandlerAccessor;

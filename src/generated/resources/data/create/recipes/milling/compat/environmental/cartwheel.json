@@ -1,27 +1,27 @@
 {
   "type": "create:milling",
-  "ingredients": [
-    {
-      "item": "environmental:cartwheel"
-    }
-  ],
-  "results": [
-    {
-      "item": "minecraft:pink_dye",
-      "count": 2
-    },
-    {
-      "item": "minecraft:orange_dye",
-      "chance": 0.1
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "environmental"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "environmental:cartwheel"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:pink_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:orange_dye"
     }
   ]
 }

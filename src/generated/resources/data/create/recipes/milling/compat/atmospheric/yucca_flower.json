@@ -1,27 +1,27 @@
 {
   "type": "create:milling",
-  "ingredients": [
-    {
-      "item": "atmospheric:yucca_flower"
-    }
-  ],
-  "results": [
-    {
-      "item": "minecraft:light_gray_dye",
-      "count": 2
-    },
-    {
-      "item": "minecraft:white_dye",
-      "chance": 0.05
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "atmospheric"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "atmospheric:yucca_flower"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:light_gray_dye"
+    },
+    {
+      "chance": 0.05,
+      "item": "minecraft:white_dye"
     }
   ]
 }

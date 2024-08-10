@@ -1,20 +1,5 @@
 {
   "type": "create:cutting",
-<<<<<<<< HEAD:src/generated/resources/data/create/recipes/cutting/compat/hexcasting/stripped_edified_wood.json
-========
-  "ingredients": [
-    {
-      "item": "hexcasting:edified_wood_stripped"
-    }
-  ],
-  "results": [
-    {
-      "item": "hexcasting:edified_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
->>>>>>>> mc1.18/fabric/next:src/generated/resources/data/create/recipes/cutting/compat/hexcasting/edified_wood_stripped.json
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",

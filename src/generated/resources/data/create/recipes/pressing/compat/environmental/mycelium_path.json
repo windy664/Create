@@ -1,5 +1,13 @@
 {
   "type": "create:pressing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "environmental"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "minecraft:mycelium"
@@ -8,14 +16,6 @@
   "results": [
     {
       "item": "environmental:mycelium_path"
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "environmental"
-      ]
     }
   ]
 }

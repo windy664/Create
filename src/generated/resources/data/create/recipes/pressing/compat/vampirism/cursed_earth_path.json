@@ -1,5 +1,13 @@
 {
   "type": "create:pressing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "vampirism"
+      ]
+    }
+  ],
   "ingredients": [
     {
       "item": "vampirism:cursed_earth"
@@ -8,14 +16,6 @@
   "results": [
     {
       "item": "vampirism:cursed_earth_path"
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "vampirism"
-      ]
     }
   ]
 }

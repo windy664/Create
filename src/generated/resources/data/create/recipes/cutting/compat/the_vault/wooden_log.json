@@ -1,22 +1,22 @@
 {
   "type": "create:cutting",
-  "ingredients": [
-    {
-      "item": "the_vault:wooden_log"
-    }
-  ],
-  "results": [
-    {
-      "item": "the_vault:stripped_wooden_log"
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "the_vault"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "the_vault:wooden_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "the_vault:stripped_wooden_log"
     }
   ]
 }

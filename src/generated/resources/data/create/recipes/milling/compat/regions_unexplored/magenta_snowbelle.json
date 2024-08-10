@@ -1,23 +1,23 @@
 {
   "type": "create:milling",
-  "ingredients": [
-    {
-      "item": "regions_unexplored:magenta_snowbelle"
-    }
-  ],
-  "results": [
-    {
-      "item": "minecraft:magenta_dye",
-      "count": 2
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "regions_unexplored"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "regions_unexplored:magenta_snowbelle"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:magenta_dye"
     }
   ]
 }

@@ -1,22 +1,22 @@
 {
   "type": "create:crushing",
-  "ingredients": [
-    {
-      "item": "minecraft:sand"
-    }
-  ],
-  "results": [
-    {
-      "item": "exnihilosequentia:dust"
-    }
-  ],
-  "processingTime": 200,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "exnihilosequentia"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "minecraft:sand"
+    }
+  ],
+  "processingTime": 200,
+  "results": [
+    {
+      "item": "exnihilosequentia:dust"
     }
   ]
 }

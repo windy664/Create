@@ -1,23 +1,23 @@
 {
   "type": "create:cutting",
-  "ingredients": [
-    {
-      "item": "atmospheric:stripped_rosewood"
-    }
-  ],
-  "results": [
-    {
-      "item": "atmospheric:rosewood_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "atmospheric"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "atmospheric:stripped_rosewood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "atmospheric:rosewood_planks"
     }
   ]
 }

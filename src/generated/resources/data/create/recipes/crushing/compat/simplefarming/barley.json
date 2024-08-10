@@ -1,31 +1,31 @@
 {
   "type": "create:crushing",
-  "ingredients": [
-    {
-      "item": "simplefarming:barley"
-    }
-  ],
-  "results": [
-    {
-      "item": "create:wheat_flour"
-    },
-    {
-      "item": "create:wheat_flour",
-      "count": 2,
-      "chance": 0.25
-    },
-    {
-      "item": "simplefarming:barley_seeds",
-      "chance": 0.25
-    }
-  ],
-  "processingTime": 150,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "simplefarming"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "simplefarming:barley"
+    }
+  ],
+  "processingTime": 150,
+  "results": [
+    {
+      "item": "create:wheat_flour"
+    },
+    {
+      "chance": 0.25,
+      "count": 2,
+      "item": "create:wheat_flour"
+    },
+    {
+      "chance": 0.25,
+      "item": "simplefarming:barley_seeds"
     }
   ]
 }

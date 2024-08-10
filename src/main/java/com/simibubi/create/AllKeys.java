@@ -9,7 +9,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public enum AllKeys {
 
 	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT),

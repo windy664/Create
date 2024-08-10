@@ -1,22 +1,22 @@
 {
   "type": "create:cutting",
-  "ingredients": [
-    {
-      "item": "endergetic:poise_stem"
-    }
-  ],
-  "results": [
-    {
-      "item": "endergetic:stripped_poise_stem"
-    }
-  ],
-  "processingTime": 50,
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "endergetic"
       ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "endergetic:poise_stem"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "endergetic:stripped_poise_stem"
     }
   ]
 }

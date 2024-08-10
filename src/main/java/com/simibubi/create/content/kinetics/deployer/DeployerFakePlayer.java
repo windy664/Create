@@ -133,11 +133,6 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	protected boolean doesEmitEquipEvent(EquipmentSlot p_217035_) {
-		return false;
-	}
-
-	@Override
 	protected void playEquipSound(ItemStack p_217042_) {}
 
 	@Override
