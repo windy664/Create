@@ -1,5 +1,4 @@
 {
-  "type": "create:milling",
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
@@ -8,6 +7,7 @@
       ]
     }
   ],
+  "type": "create:milling",
   "ingredients": [
     {
       "item": "byg:iris"
