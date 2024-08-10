@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
@@ -72,7 +73,7 @@ public enum Mods {
 		if (!isLoaded())
 			return false;
 		Item asItem = entry.asItem();
-		return asItem != null && asItem.getRegistryName()
+		return asItem != null && RegisteredObjects.getKeyOrThrow(asItem)
 			.getNamespace()
 			.equals(id);
 	}

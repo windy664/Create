@@ -22,6 +22,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.Connection;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.level.ServerLevel;
@@ -123,6 +124,11 @@ public class DeployerFakePlayer extends FakePlayer {
 					.placeItemBackInInventory(stack.getItem()));
 			return true;
 		}
+		return false;
+	}
+
+	@Override
+	protected boolean doesEmitEquipEvent(EquipmentSlot p_217035_) {
 		return false;
 	}
 

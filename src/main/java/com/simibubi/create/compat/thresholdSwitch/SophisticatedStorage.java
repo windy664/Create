@@ -1,7 +1,7 @@
 package com.simibubi.create.compat.thresholdSwitch;
 
-// fabric: https://modrinth.com/mod/sophisticated-storage-(unofficial-fabric-port) isn't on 1.19.2
 //import com.simibubi.create.compat.Mods;
+//import com.simibubi.create.foundation.utility.RegisteredObjects;
 //
 //import net.minecraft.world.level.block.entity.BlockEntity;
 //import net.minecraftforge.items.IItemHandler;
@@ -13,8 +13,7 @@ package com.simibubi.create.compat.thresholdSwitch;
 //		if (be == null)
 //			return false;
 //
-//		String namespace = be.getType()
-//			.getRegistryName()
+//		String namespace = RegisteredObjects.getKeyOrThrow(be.getType())
 //			.getNamespace();
 //
 //		return

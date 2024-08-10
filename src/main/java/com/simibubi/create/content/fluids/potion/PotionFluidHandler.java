@@ -41,7 +41,7 @@ import net.minecraft.world.level.material.Fluids;
 public class PotionFluidHandler {
 
 	public static boolean isPotionItem(ItemStack stack) {
-		return stack.getItem() instanceof PotionItem && !(stack.getRecipeRemainder()
+		return stack.getItem() instanceof PotionItem && !(stack.getCraftingRemainingItem()
 			.getItem() instanceof BucketItem);
 	}
 

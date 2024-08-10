@@ -13,7 +13,7 @@ public enum Mods {
 	ARS_N("ars_nouveau"),
 	BSK("blue_skies"),
 	BTN("botania", b -> b.omitWoodSuffix()),
-	FA("forbidden_arcanus", b -> b.omitWoodSuffix()),
+	FA("forbidden_arcanus"),
 	HEX("hexcasting"),
 	ID("integrateddynamics", b -> b.strippedWoodIsSuffix()),
 	BYG("byg"),
@@ -56,6 +56,7 @@ public enum Mods {
 	AET("aether"),
 	HH("hauntedharvest"),
 	VMP("vampirism"),
+	WSP("windswept"),
 
 	// Fabric Mods
 	TR("techreborn"),

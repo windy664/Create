@@ -38,7 +38,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.Marker;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -309,6 +308,7 @@ public class SuperGlueEntity extends Entity
 	public void setPortalEntrancePos() {
 		portalEntrancePos = blockPosition();
 	}
+
 	@Override
 	public PortalInfo findDimensionEntryPoint(ServerLevel pDestination) {
 		return super.findDimensionEntryPoint(pDestination);

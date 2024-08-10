@@ -10,13 +10,13 @@
   ],
   "ingredients": [
     {
-      "item": "forbidden_arcanus:mysterywood"
+      "item": "forbidden_arcanus:cherry_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "item": "forbidden_arcanus:stripped_mysterywood"
+      "item": "forbidden_arcanus:stripped_cherry_wood"
     }
   ]
 }
