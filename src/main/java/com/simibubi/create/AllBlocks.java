@@ -558,7 +558,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<WaterWheelStructuralBlock> WATER_WHEEL_STRUCTURAL =
 		REGISTRATE.block("water_wheel_structure", WaterWheelStructuralBlock::new)
-			.initialProperties(SharedProperties::wooden)
+			//.initialProperties(SharedProperties::wooden) fabric: make structual blocks non flammable
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(BlockStateGen.mapToAir(p), WaterWheelStructuralBlock.FACING))
 			.properties(p -> p.noOcclusion().color(MaterialColor.DIRT))
