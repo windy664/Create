@@ -66,7 +66,7 @@ public enum Mods {
 	}
 
 	public Item getItem(String id) {
-		return Registry.ITEM.get(rl(id));
+		return BuiltInRegistries.ITEM.get(rl(id));
 	}
 
 	public boolean contains(ItemLike entry) {

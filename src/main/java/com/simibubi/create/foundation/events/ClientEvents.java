@@ -387,7 +387,7 @@ public class ClientEvents {
 
 		public static void registerClientReloadListeners() {
 			ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
-			event.registerReloadListener(TrainHatInfoReloadListener.LISTENER);
+			ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(TrainHatInfoReloadListener.LISTENER);
 		}
 	}
 

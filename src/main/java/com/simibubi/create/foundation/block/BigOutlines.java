@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -37,8 +38,8 @@ public class BigOutlines {
 			: mc.hitResult.getLocation()
 				.distanceToSqr(origin);
 
-		AttributeInstance range = player.getAttribute(ForgeMod.BLOCK_REACH.get());
-		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range.getValue()) + 1, origin);
+		double range = ReachUtil.reach(player);
+		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range) + 1, origin);
 
 		RaycastHelper.rayTraceUntil(origin, target, pos -> {
 			MutableBlockPos p = BlockPos.ZERO.mutable();

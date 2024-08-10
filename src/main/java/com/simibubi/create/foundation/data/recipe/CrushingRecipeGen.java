@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
@@ -211,7 +212,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 
 		// Oh The Biomes You'll Go
 		BYG_AMETRINE_ORE = create(Mods.BYG.recipeId("ametrine_ore"), b -> b.duration(500)
-				.require(AllTags.optionalTag(Registry.ITEM,
+				.require(AllTags.optionalTag(BuiltInRegistries.ITEM,
 						new ResourceLocation("forge", "ores/ametrine")))
 				.output(1f, Mods.BYG, "ametrine_gems", 2)
 				.output(.25f, Mods.BYG, "ametrine_gems", 1)
@@ -220,7 +221,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 				.whenModLoaded(Mods.BYG.getId())),
 
 		BYG_ANTHRACITE_ORE = create(Mods.BYG.recipeId("anthracite_ore"), b -> b.duration(150)
-				.require(AllTags.optionalTag(Registry.ITEM,
+				.require(AllTags.optionalTag(BuiltInRegistries.ITEM,
 						new ResourceLocation("forge", "ores/anthracite")))
 				.output(1f, Mods.BYG, "anthracite", 2)
 				.output(.5f, Mods.BYG, "anthracite", 1)
@@ -606,7 +607,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
-	public CrushingRecipeGen(PackOutput output) {
+	public CrushingRecipeGen(FabricDataOutput output) {
 		super(output);
 	}
 

@@ -98,7 +98,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 				.whenModLoaded(mod.getId()));
 	}
 
-	public FillingRecipeGen(PackOutput output) {
+	public FillingRecipeGen(FabricDataOutput output) {
 		super(output);
 	}
 

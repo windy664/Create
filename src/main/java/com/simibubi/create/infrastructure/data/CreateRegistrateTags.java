@@ -25,6 +25,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CreateRegistrateTags {
 	public static void addGenerators() {
 		Create.REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, CreateRegistrateTags::genBlockTags);

@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -31,7 +32,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.SlabType;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class ItemRequirement {
 	public static final ItemRequirement NONE = new ItemRequirement(Collections.emptyList());
@@ -103,8 +103,8 @@ public class ItemRequirement {
 			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, state.getValue(SnowLayerBlock.LAYERS)
 				.intValue()));
 		// FD's rich soil extends FarmBlock so this is to make sure the cost is correct (it should be rich soil not dirt)
-		if (block == ForgeRegistries.BLOCKS.getValue(Mods.FD.asResource("rich_soil_farmland")))
-			return new ItemRequirement(ItemUseType.CONSUME, ForgeRegistries.ITEMS.getValue(Mods.FD.asResource("rich_soil")));
+		if (block == BuiltInRegistries.BLOCK.get(Mods.FD.asResource("rich_soil_farmland")))
+			return new ItemRequirement(ItemUseType.CONSUME, BuiltInRegistries.ITEM.get(Mods.FD.asResource("rich_soil")));
 		if (block instanceof FarmBlock || block instanceof DirtPathBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, Items.DIRT);
 		if (block instanceof AbstractBannerBlock && be instanceof BannerBlockEntity bannerBE)

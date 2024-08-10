@@ -76,7 +76,7 @@ public class HauntingRecipeGen extends ProcessingRecipeGen {
 				.whenModLoaded(mod.getId()));
 	}
 
-	public HauntingRecipeGen(PackOutput output) {
+	public HauntingRecipeGen(FabricDataOutput output) {
 		super(output);
 	}
 

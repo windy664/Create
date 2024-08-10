@@ -7,10 +7,12 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.foundation.mixin.accessor.AgeableListModelAccessor;
+import com.simibubi.create.foundation.mixin.fabric.LivingEntityRendererAccessor;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.Couple;
 
 import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ModelPartAccessor;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.LivingEntityAccessor;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.EntityModel;
@@ -79,7 +81,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 			ModelPart lastChild = partsToHead.get(partsToHead.size() - 1);
 			if (!lastChild.isEmpty()) {
-				Cube cube = lastChild.cubes.get(Mth.clamp(info.cubeIndex(), 0, lastChild.cubes.size() - 1));
+				Cube cube = ((ModelPartAccessor) lastChild).porting_lib$cubes().get(Mth.clamp(info.cubeIndex(), 0, ((ModelPartAccessor) lastChild).porting_lib$cubes().size() - 1));
 				ms.translate(info.offset().x() / 16.0F, (cube.minY - cube.maxY + info.offset().y()) / 16.0F, info.offset().z() / 16.0F);
 				float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / 8.0F * info.scale();
 				ms.scale(max, max, max);
@@ -135,7 +137,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		if (!(model instanceof HierarchicalModel) && !(model instanceof AgeableListModel))
 			return;
 
-		livingRenderer.addLayer((TrainHatArmorLayer) new TrainHatArmorLayer<>(livingRenderer));
+		((LivingEntityRendererAccessor) livingRenderer).create$addLayer(new TrainHatArmorLayer<>(livingRenderer));
 	}
 
 	private static ModelPart getHeadPart(AgeableListModel<?> model) {

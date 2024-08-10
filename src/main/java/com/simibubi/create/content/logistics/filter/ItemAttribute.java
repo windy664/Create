@@ -293,7 +293,7 @@ public interface ItemAttribute {
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
 			return CreativeModeTabs.tabs().stream()
-					.filter(tab -> !tab.hasSearchBar() && tab.contains(stack))
+					.filter(tab -> tab.getType() != CreativeModeTab.Type.SEARCH && tab.contains(stack))
 					.map(tab -> (ItemAttribute)new InItemGroup(tab))
 					.toList();
 		}
@@ -311,7 +311,7 @@ public interface ItemAttribute {
 		@Override
 		public void writeNBT(CompoundTag nbt) {
 			if (group != null) {
-				ResourceLocation groupId = CreativeModeTabRegistry.getName(group);
+				ResourceLocation groupId = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(group);
 
 				if (groupId != null) {
 					nbt.putString("group", groupId.toString());
@@ -321,7 +321,7 @@ public interface ItemAttribute {
 
 		@Override
 		public ItemAttribute readNBT(CompoundTag nbt) {
-			return nbt.contains("group") ? new InItemGroup(CreativeModeTabRegistry.getTab(new ResourceLocation(nbt.getString("group")))) : EMPTY;
+			return nbt.contains("group") ? new InItemGroup(BuiltInRegistries.CREATIVE_MODE_TAB.get(new ResourceLocation(nbt.getString("group")))) : EMPTY;
 		}
 	}
 

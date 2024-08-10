@@ -113,9 +113,7 @@ public class DeployerFakePlayer extends FakePlayer {
 			event.setNewEyeHeight(0);
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public static void deployerCollectsDropsFromKilledEntities(LivingDropsEvent event) {
-		DamageSource source = event.getSource();
+	public static boolean deployerCollectsDropsFromKilledEntities(LivingEntity target, DamageSource source, Collection<ItemEntity> drops, int lootingLevel, boolean recentlyHit) {
 		Entity trueSource = source.getEntity();
 		if (trueSource != null && trueSource instanceof DeployerFakePlayer) {
 			DeployerFakePlayer fakePlayer = (DeployerFakePlayer) trueSource;

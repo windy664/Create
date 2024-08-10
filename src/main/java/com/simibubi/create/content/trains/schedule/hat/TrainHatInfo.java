@@ -2,10 +2,12 @@ package com.simibubi.create.content.trains.schedule.hat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ModelPartAccessor;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.phys.Vec3;
 
@@ -24,17 +26,21 @@ public record TrainHatInfo(String part, int cubeIndex, Vec3 offset, float scale)
 		if (!info.part().isEmpty() && !info.part().equals(defaultPart)) {
 			String[] partList = info.part().split("/");
 			for (String part : partList) {
-				if (parent.children.containsKey(part)) {
-					finalParts.add(parent.children.get(part));
-					parent = parent.children.get(part);
+				if (getChildren(parent).containsKey(part)) {
+					finalParts.add(getChildren(parent).get(part));
+					parent = getChildren(parent).get(part);
 				}
 			}
 		} else {
-			if (parent.children.containsKey(defaultPart)) {
-				finalParts.add(parent.children.get(defaultPart));
+			if (getChildren(parent).containsKey(defaultPart)) {
+				finalParts.add(getChildren(parent).get(defaultPart));
 			}
 		}
 
 		return finalParts;
+	}
+
+	public static Map<String, ModelPart> getChildren(ModelPart modelPart) {
+		return ((ModelPartAccessor) modelPart).porting_lib$children();
 	}
 }

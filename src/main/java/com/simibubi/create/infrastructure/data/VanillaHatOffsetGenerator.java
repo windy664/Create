@@ -2,12 +2,13 @@ package com.simibubi.create.infrastructure.data;
 
 import com.simibubi.create.api.data.TrainHatInfoProvider;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.Vec3;
 
 public class VanillaHatOffsetGenerator extends TrainHatInfoProvider {
-	public VanillaHatOffsetGenerator(PackOutput output) {
+	public VanillaHatOffsetGenerator(FabricDataOutput output) {
 		super(output);
 	}
 

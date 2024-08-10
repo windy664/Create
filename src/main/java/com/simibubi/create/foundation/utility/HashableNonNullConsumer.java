@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.utility;
 
-import io.github.fabricators_of_create.porting_lib.util.NonNullConsumer;
+import io.github.fabricators_of_create.porting_lib.common.util.NonNullConsumer;
 
 import java.util.Objects;
 
