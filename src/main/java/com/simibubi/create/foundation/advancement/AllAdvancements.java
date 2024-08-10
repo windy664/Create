@@ -22,6 +22,7 @@ import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.advancement.CreateAdvancement.Builder;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -545,7 +546,7 @@ public class AllAdvancements implements DataProvider {
 		TRAIN_TRACK = create("track_0", b -> b.icon(AllBlocks.TRACK)
 			.title("A New Gauge")
 			.description("Obtain some Train Tracks")
-			.whenIconCollected()
+			.whenItemCollected(AllItemTags.TRACKS.tag)
 			.after(STURDY_SHEET)),
 
 		TRAIN_WHISTLE = create("train_whistle", b -> b.icon(AllBlocks.STEAM_WHISTLE)

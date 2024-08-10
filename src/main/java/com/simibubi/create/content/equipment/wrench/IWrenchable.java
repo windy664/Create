@@ -11,6 +11,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -54,16 +55,25 @@ public interface IWrenchable {
 		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		Player player = context.getPlayer();
-		if (world instanceof ServerLevel) {
-			if (player != null && !player.isCreative())
-				Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
-					.forEach(itemStack -> {
-						player.getInventory().placeItemBackInInventory(itemStack);
-					});
-			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY, true);
-			world.destroyBlock(pos, false);
-			playRemoveSound(world, pos);
+
+		if (!(world instanceof ServerLevel serverLevel))
+			return InteractionResult.SUCCESS;
+
+		boolean shouldBreak = PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, pos, world.getBlockState(pos), null);
+		if (!shouldBreak)
+			return InteractionResult.SUCCESS;
+
+		if (player != null && !player.isCreative()) {
+			Block.getDrops(state, serverLevel, pos, world.getBlockEntity(pos), player, context.getItemInHand())
+				.forEach(itemStack -> {
+					player.getInventory()
+						.placeItemBackInInventory(itemStack);
+				});
 		}
+
+		state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY, true);
+		world.destroyBlock(pos, false);
+		playRemoveSound(world, pos);
 		return InteractionResult.SUCCESS;
 	}
 

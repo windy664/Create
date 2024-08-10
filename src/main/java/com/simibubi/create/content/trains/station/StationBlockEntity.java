@@ -362,6 +362,10 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		if (!tryEnterAssemblyMode())
 			return false;
 
+		//Check the station wasn't destroyed
+		if (!(level.getBlockState(worldPosition).getBlock() instanceof StationBlock))
+			return true;
+
 		BlockState newState = getBlockState().setValue(StationBlock.ASSEMBLING, true);
 		level.setBlock(getBlockPos(), newState, 3);
 		refreshBlockState();

@@ -29,7 +29,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class LecternControllerBlockEntity extends SmartBlockEntity {
 
-	private ItemStack controller;
+	private ItemStack controller = ItemStack.EMPTY;
 	private UUID user;
 	private UUID prevUser;	// used only on client
 	private boolean deactivatedThisTick;	// used only on server
@@ -162,9 +162,9 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 			stopUsing((Player) playerEntity);
 
 		Direction dir = state.getValue(LecternControllerBlock.FACING);
-		double x = worldPosition.getX() + 0.5 + 0.25*dir.getStepX();
+		double x = worldPosition.getX() + 0.5 + 0.25 * dir.getStepX();
 		double y = worldPosition.getY() + 1;
-		double z = worldPosition.getZ() + 0.5 + 0.25*dir.getStepZ();
+		double z = worldPosition.getZ() + 0.5 + 0.25 * dir.getStepZ();
 		ItemEntity itementity = new ItemEntity(level, x, y, z, controller.copy());
 		itementity.setDefaultPickUpDelay();
 		level.addFreshEntity(itementity);
@@ -174,7 +174,7 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 	public static boolean playerInRange(Player player, Level world, BlockPos pos) {
 		//double modifier = world.isRemote ? 0 : 1.0;
 		double reach = 0.4* ReachUtil.reach(player);// + modifier;
-		return player.distanceToSqr(Vec3.atCenterOf(pos)) < reach*reach;
+		return player.distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
 	}
 
 }

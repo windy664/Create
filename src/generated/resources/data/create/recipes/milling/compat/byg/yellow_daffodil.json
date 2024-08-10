@@ -1,0 +1,31 @@
+{
+  "type": "create:milling",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "byg"
+      ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "byg:yellow_daffodil"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:yellow_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:green_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:pink_dye"
+    }
+  ]
+}

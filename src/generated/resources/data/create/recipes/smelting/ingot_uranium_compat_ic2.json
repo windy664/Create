@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "ic2"
+      ]
+    }
+  ],
+  "ingredient": {
+    "item": "create:crushed_raw_uranium"
+  },
+  "result": "ic2:ingot_uranium"
+}

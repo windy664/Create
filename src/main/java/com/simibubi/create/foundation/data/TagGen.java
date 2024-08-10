@@ -35,6 +35,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
+import java.util.List;
+
 public class TagGen {
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> axeOrPickaxe() {
 		return b -> b.tag(BlockTags.MINEABLE_WITH_AXE)
@@ -66,7 +68,7 @@ public class TagGen {
 		return appender;
 	}
 
-	public static <T extends TagAppender<?>> T addOptional(T appender, Mods mod, String... ids) {
+	public static <T extends TagAppender<?>> T addOptional(T appender, Mods mod, List<String> ids) {
 		for (String id : ids) {
 			appender.addOptional(mod.asResource(id));
 		}

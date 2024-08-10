@@ -75,10 +75,10 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			return false;
 
 		HeatLevel heat = BasinBlockEntity.getHeatLevelOf(basin.getLevel()
-			.getBlockState(basin.getBlockPos()
-				.below(1)));
+				.getBlockState(basin.getBlockPos()
+						.below(1)));
 		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()
-			.testBlazeBurner(heat))
+				.testBlazeBurner(heat))
 			return false;
 
 		List<ItemStack> recipeOutputItems = new ArrayList<>();
@@ -86,13 +86,14 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 		List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
 		List<FluidIngredient> fluidIngredients =
-			isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
+				isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
 
 		// fabric: track consumed items to get remainders later
 		NonNullList<ItemStack> consumedItems = NonNullList.create();
 
 		try (Transaction t = TransferUtil.getTransaction()) {
-			Ingredients: for (Ingredient ingredient : ingredients) {
+			Ingredients:
+			for (Ingredient ingredient : ingredients) {
 				for (StorageView<ItemVariant> view : availableItems.nonEmptyViews()) {
 					ItemVariant var = view.getResource();
 					ItemStack stack = var.toStack();
@@ -111,8 +112,9 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			}
 
 			boolean fluidsAffected = false;
-			FluidIngredients: for (FluidIngredient fluidIngredient : fluidIngredients) {
-			long amountRequired = fluidIngredient.getRequiredAmount();
+			FluidIngredients:
+			for (FluidIngredient fluidIngredient : fluidIngredients) {
+				long amountRequired = fluidIngredient.getRequiredAmount();
 				for (StorageView<FluidVariant> view : availableFluids.nonEmptyViews()) {
 					FluidStack fluidStack = new FluidStack(view);
 					if (!fluidIngredient.test(fluidStack)) continue;
@@ -139,14 +141,21 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 			if (recipe instanceof BasinRecipe basinRecipe) {
 				recipeOutputItems.addAll(basinRecipe.rollResults());
-				recipeOutputFluids.addAll(basinRecipe.getFluidResults());
-				recipeOutputItems.addAll(basinRecipe.getRemainingItems(basin.getInputInventory()));
+				for (FluidStack fluidStack : basinRecipe.getFluidResults())
+					if (!fluidStack.isEmpty())
+						recipeOutputFluids.add(fluidStack);
+				for (ItemStack stack : basinRecipe.getRemainingItems(basin.getInputInventory()))
+					if (!stack.isEmpty())
+						recipeOutputItems.add(stack);
 			} else {
 				recipeOutputItems.add(recipe.getResultItem(basin.getLevel()
 						.registryAccess()));
 
 				if (recipe instanceof CraftingRecipe craftingRecipe) {
-					recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(consumedItems)));
+					for (ItemStack stack : craftingRecipe
+							.getRemainingItems(new DummyCraftingContainer(consumedItems)))
+						if (!stack.isEmpty())
+							recipeOutputItems.add(stack);
 				}
 			}
 

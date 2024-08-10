@@ -1,0 +1,31 @@
+{
+  "type": "create:milling",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "regions_unexplored"
+      ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "regions_unexplored:day_lily"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:orange_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:lime_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:red_dye"
+    }
+  ]
+}

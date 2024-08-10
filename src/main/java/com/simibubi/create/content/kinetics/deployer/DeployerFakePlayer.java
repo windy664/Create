@@ -24,6 +24,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.Connection;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.level.ServerLevel;
@@ -151,16 +152,12 @@ public class DeployerFakePlayer extends FakePlayer {
 
 		CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
 
-		switch (setting) {
-		case ALL:
-			event.setCanceled(true);
-			break;
-		case CREEPERS:
-			if (mob instanceof Creeper)
-				event.setCanceled(true);
-			break;
-		case NONE:
-		default:
+		switch(setting) {
+			case ALL -> event.setCanceled(true);
+			case CREEPERS -> {
+				if (mob instanceof Creeper)
+					event.setCanceled(true);
+			}
 		}
 	}
 

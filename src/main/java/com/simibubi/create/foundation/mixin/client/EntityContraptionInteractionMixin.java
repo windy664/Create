@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.logging.log4j.util.TriConsumer;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -78,7 +77,7 @@ public abstract class EntityContraptionInteractionMixin {
 	}
 
 	@Unique
-	private void forCollision(Vec3 worldPos, TriConsumer<Contraption, BlockState, BlockPos> action) {
+	private void create$forCollision(Vec3 worldPos, TriConsumer<Contraption, BlockState, BlockPos> action) {
 		create$getIntersectingContraptions().forEach(cEntity -> {
 			Vec3 localPos = ContraptionCollider.worldToLocalPos(worldPos, cEntity);
 
@@ -96,12 +95,12 @@ public abstract class EntityContraptionInteractionMixin {
 
 	// involves block step sounds on contraptions
 	// IFNE line 661 injecting before `!blockstate.isAir(this.world, blockpos)`
-	@Inject(method = "move", at = @At(value = "JUMP", opcode = Opcodes.IFNE, ordinal = 7))
+	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z", ordinal = 0))
 	private void create$contraptionStepSounds(MoverType mover, Vec3 movement, CallbackInfo ci) {
 		Vec3 worldPos = position.add(0, -0.2, 0);
 		MutableBoolean stepped = new MutableBoolean(false);
 
-		forCollision(worldPos, (contraption, state, pos) -> {
+		create$forCollision(worldPos, (contraption, state, pos) -> {
 			playStepSound(pos, state);
 			stepped.setTrue();
 		});
@@ -151,7 +150,7 @@ public abstract class EntityContraptionInteractionMixin {
 		Vec3 worldPos = position.add(0, -0.2, 0);
 		BlockPos particlePos = BlockPos.containing(worldPos); // pos where particles are spawned
 
-		forCollision(worldPos, (contraption, state, pos) -> {
+		create$forCollision(worldPos, (contraption, state, pos) -> {
 			boolean particles = state.getRenderShape() != RenderShape.INVISIBLE;
 			if (state.getBlock() instanceof CustomRunningEffectsBlock custom &&
 					custom.addRunningEffects(state, self.level(), pos, self)) {
