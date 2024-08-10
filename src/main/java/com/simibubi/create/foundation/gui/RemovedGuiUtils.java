@@ -58,14 +58,14 @@ public class RemovedGuiUtils {
 //			new RenderTooltipEvent.Pre(stack, pStack, mouseX, mouseY, screenWidth, screenHeight, font, list);
 //		if (MinecraftForge.EVENT_BUS.post(event))
 //			return;
-
+//
 //		mouseX = event.getX();
 //		mouseY = event.getY();
 //		screenWidth = event.getScreenWidth();
 //		screenHeight = event.getScreenHeight();
 //		font = event.getFont();
-
-		// RenderSystem.disableRescaleNormal();
+//
+//		// RenderSystem.disableRescaleNormal();
 //		RenderSystem.disableDepthTest();
 //		int tooltipTextWidth = 0;
 //
@@ -179,7 +179,7 @@ public class RemovedGuiUtils {
 //			if (lineNumber + 1 == titleLinesCount)
 //				tooltipY += 2;
 //
-//			tooltipY += 10;
+//			tooltipY += line == null ? 10 : line.getHeight();
 //		}
 //
 //		renderType.endBatch();

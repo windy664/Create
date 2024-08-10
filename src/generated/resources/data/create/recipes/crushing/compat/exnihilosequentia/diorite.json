@@ -1,0 +1,22 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:diorite"
+    }
+  ],
+  "results": [
+    {
+      "item": "exnihilosequentia:crushed_diorite"
+    }
+  ],
+  "processingTime": 350,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "exnihilosequentia"
+      ]
+    }
+  ]
+}

@@ -23,6 +23,7 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -95,7 +96,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	public MaterialChecklist checklist;
 
 	// Gui information
-	public float fuelLevel;
+	public int remainingFuel;
 	public float bookPrintingProgress;
 	public float schematicProgress;
 	public String statusMsg;
@@ -162,7 +163,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		statusMsg = compound.getString("Status");
 		schematicProgress = compound.getFloat("Progress");
 		bookPrintingProgress = compound.getFloat("PaperProgress");
-		fuelLevel = compound.getFloat("Fuel");
+		remainingFuel = compound.getInt("RemainingFuel");
 		String stateString = compound.getString("State");
 		state = stateString.isEmpty() ? State.STOPPED : State.valueOf(compound.getString("State"));
 		blocksPlaced = compound.getInt("AmountPlaced");
@@ -236,7 +237,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		// Gui information
 		compound.putFloat("Progress", schematicProgress);
 		compound.putFloat("PaperProgress", bookPrintingProgress);
-		compound.putFloat("Fuel", fuelLevel);
+		compound.putInt("RemainingFuel", remainingFuel);
 		compound.putString("Status", statusMsg);
 		compound.putString("State", state.name());
 		compound.putInt("AmountPlaced", blocksPlaced);
@@ -328,7 +329,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 			return;
 		}
 
-		if (state == State.PAUSED && !positionNotLoaded && missingItem == null && fuelLevel > getFuelUsageRate())
+		if (state == State.PAUSED && !positionNotLoaded && missingItem == null && remainingFuel > 0)
 			return;
 
 		// Initialize Printer
@@ -344,15 +345,18 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		}
 
 		// Check Fuel
-		if (fuelLevel <= 0 && !hasCreativeCrate) {
-			fuelLevel = 0;
-			state = State.PAUSED;
-			statusMsg = "noGunpowder";
-			sendUpdate = true;
-			return;
+		if (remainingFuel <= 0 && !hasCreativeCrate) {
+			refillFuelIfPossible();
+			if (remainingFuel <= 0) {
+				state = State.PAUSED;
+				statusMsg = "noGunpowder";
+				sendUpdate = true;
+				return;
+			}
 		}
 
 		if (hasCreativeCrate) {
+			remainingFuel = 0;
 			if (missingItem != null) {
 				missingItem = null;
 				state = State.RUNNING;
@@ -431,13 +435,13 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		});
 
 		printerCooldown = config().schematicannonDelay.get();
-		fuelLevel -= getFuelUsageRate();
+		remainingFuel -= 1;
 		sendUpdate = true;
 		missingItem = null;
 	}
 
-	public double getFuelUsageRate() {
-		return hasCreativeCrate ? 0 : config().schematicannonFuelUsage.get() / 100f;
+	public int getShotsPerGunpowder() {
+		return hasCreativeCrate ? 0 : config().schematicannonShotsPerGunpowder.get();
 	}
 
 	protected void initializePrinter(ItemStack blueprint) {
@@ -646,25 +650,42 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	protected void refillFuelIfPossible() {
 		if (hasCreativeCrate)
 			return;
-		if (1 - fuelLevel + 1 / 128f < getFuelAddedByGunPowder())
+		if (remainingFuel > getShotsPerGunpowder()) {
+			remainingFuel = getShotsPerGunpowder();
+			sendUpdate = true;
 			return;
-		if (inventory.getStackInSlot(4)
-				.isEmpty())
+		}
+
+		if (remainingFuel > 0)
 			return;
 
-		inventory.getStackInSlot(4)
+		if (!inventory.getStackInSlot(4)
+				.isEmpty())
+			inventory.getStackInSlot(4)
 				.shrink(1);
-		fuelLevel += getFuelAddedByGunPowder();
+		else {
+			boolean externalGunpowderFound = false;
+			try (Transaction t = TransferUtil.getTransaction()) {
+				for (Entry<Direction, StorageProvider<ItemVariant>> entry : storages.entrySet()) {
+					Storage<ItemVariant> storage = entry.getValue().get(entry.getKey().getOpposite());
+					if (storage == null)
+						continue;
+					long amountExtracted = storage.extract(ItemVariant.of(Items.GUNPOWDER), 1, t);
+					if (amountExtracted > 0)
+						externalGunpowderFound = true;
+				}
+			}
+			if (!externalGunpowderFound)
+				return;
+		}
+
+		remainingFuel += getShotsPerGunpowder();
 		if (statusMsg.equals("noGunpowder")) {
 			if (blocksPlaced > 0)
 				state = State.RUNNING;
 			statusMsg = "ready";
 		}
 		sendUpdate = true;
-	}
-
-	public double getFuelAddedByGunPowder() {
-		return config().schematicannonGunpowderWorth.get() / 100f;
 	}
 
 	protected void tickPaperPrinter() {

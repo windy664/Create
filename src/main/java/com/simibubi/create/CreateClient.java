@@ -132,7 +132,7 @@ public class CreateClient implements ClientModInitializer {
 
 			RemainingAirOverlay.render(stack, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Remaining Air
 			TrainHUD.renderOverlay(stack, partialTicks, window); // Create's Train Driver HUD
-			GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window); // Create's Goggle Information
+			GoggleOverlayRenderer.renderOverlay(stack, partialTicks, window.getGuiScaledWidth(), window.getGuiScaledHeight()); // Create's Goggle Information
 			BlueprintOverlayRenderer.renderOverlay(stack, partialTicks, window); // Create's Blueprints
 			LinkedControllerClientHandler.renderOverlay(stack, partialTicks, window); // Create's Linked Controller
 			SCHEMATIC_HANDLER.renderOverlay(stack, partialTicks, window); // Create's Schematics

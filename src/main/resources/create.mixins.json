@@ -33,6 +33,7 @@
     "accessor.AgeableListModelAccessor",
     "accessor.GameRendererAccessor",
     "accessor.HumanoidArmorLayerAccessor",
+    "accessor.MouseHandlerAccessor",
     "accessor.ParticleEngineAccessor",
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",

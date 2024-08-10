@@ -2,6 +2,7 @@ package com.simibubi.create.content.redstone.thresholdSwitch;
 
 import java.util.List;
 
+import com.simibubi.create.compat.thresholdSwitch.ThresholdSwitchCompat;
 import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
 import com.simibubi.create.content.redstone.FilteredDetectorFilterSlot;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
@@ -24,6 +25,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -43,6 +45,13 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 	private InvManipulationBehaviour observedInventory;
 	private TankManipulationBehaviour observedTank;
 	private VersionedInventoryTrackerBehaviour invVersionTracker;
+
+	// fabric: not needed, view.getCapacity is pretty much correct for the most part
+	private static final List<ThresholdSwitchCompat> COMPAT = List.of(
+		//new FunctionalStorage(),
+		//new SophisticatedStorage(),
+		//new StorageDrawers()
+	);
 
 	public ThresholdSwitchBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -108,9 +117,6 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 		if (targetBlockEntity instanceof ThresholdSwitchObservable observable) {
 			currentLevel = observable.getPercent() / 100f;
 
-//		} else if (StorageDrawers.isDrawer(targetBlockEntity) && observedInventory.hasInventory()) {
-//			currentLevel = StorageDrawers.getTrueFillLevel(observedInventory.getInventory(), filtering);
-
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
 
@@ -123,8 +129,14 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 				} else {
 					invVersionTracker.awaitNewVersion(inv);
 					for (StorageView<ItemVariant> view : inv) {
-						long space = view.getCapacity();
-						long count = view.getAmount();
+						long space = COMPAT
+									.stream()
+									.filter(compat -> compat.isFromThisMod(targetBlockEntity))
+									.map(compat -> compat.getSpaceInSlot(view))
+									.findFirst()
+									.orElseGet(() -> Math.min(view.getResource().toStack().getMaxStackSize(), view.getCapacity()));
+
+						long count = view.getCapacity();
 						if (space == 0)
 							continue;
 

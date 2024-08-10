@@ -67,7 +67,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<
 	}
 
 	public static void notifyGatherers(LevelAccessor level, BlockPos pos) {
-		forEachAttachedGatherer(level, pos, DisplayLinkBlockEntity::updateGatheredData);
+		forEachAttachedGatherer(level, pos, DisplayLinkBlockEntity::tickSource);
 	}
 
 	@SuppressWarnings("unchecked")

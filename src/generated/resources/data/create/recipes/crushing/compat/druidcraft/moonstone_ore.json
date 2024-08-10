@@ -1,0 +1,31 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "druidcraft:moonstone_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "druidcraft:moonstone",
+      "count": 2
+    },
+    {
+      "item": "druidcraft:moonstone",
+      "chance": 0.5
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "chance": 0.125
+    }
+  ],
+  "processingTime": 300,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "druidcraft"
+      ]
+    }
+  ]
+}

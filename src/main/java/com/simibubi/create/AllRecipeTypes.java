@@ -1,7 +1,10 @@
 package com.simibubi.create;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import com.simibubi.create.content.processing.basin.BasinRecipe;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +24,6 @@ import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
-import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeSerializer;
@@ -60,6 +62,10 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	SEQUENCED_ASSEMBLY(SequencedAssemblyRecipeSerializer::new),
 
 	TOOLBOX_DYEING(() -> new SimpleRecipeSerializer<>(ToolboxDyeingRecipe::new), () -> RecipeType.CRAFTING, false);
+
+	public static final Predicate<? super Recipe<?>> CAN_BE_AUTOMATED = r -> !r.getId()
+		.getPath()
+		.endsWith("_manual_only");
 
 	private final ResourceLocation id;
 	private final RecipeSerializer<?> serializerObject;
@@ -135,8 +141,6 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		RecipeSerializer<?> serializer = recipe.getSerializer();
 		if (serializer != null && AllTags.AllRecipeSerializerTags.AUTOMATION_IGNORE.matches(serializer))
 			return true;
-		return recipe.getId()
-			.getPath()
-			.endsWith("_manual_only");
+		return !CAN_BE_AUTOMATED.test(recipe);
 	}
 }

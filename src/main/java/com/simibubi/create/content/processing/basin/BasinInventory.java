@@ -14,15 +14,6 @@ public class BasinInventory extends SmartInventory {
 	public BasinInventory(int slots, BasinBlockEntity be) {
 		super(slots, be, 16, true);
 		this.blockEntity = be;
-		this.whenContentsChanged(be::notifyChangeOfContents);
-	}
-
-	@Override
-	public SmartInventory whenContentsChanged(Runnable updateCallback) {
-		return super.whenContentsChanged(() -> {
-			updateCallback.run();
-			blockEntity.notifyChangeOfContents();
-		});
 	}
 
 	@Override
@@ -50,8 +41,11 @@ public class BasinInventory extends SmartInventory {
 	}
 
 	@Override
-	protected void onFinalCommit() {
-		super.onFinalCommit();
-		blockEntity.notifyChangeOfContents();
+	public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+		long extractedAmount = super.extract(resource, maxAmount, transaction);
+		if (extractedAmount != 0)
+			blockEntity.notifyChangeOfContents();
+		return extractedAmount;
 	}
+
 }

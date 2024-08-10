@@ -26,6 +26,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.SystemReport;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import oshi.SystemInfo;
 
 /**
  * Allows for providing easily accessible debugging information.
@@ -86,6 +87,7 @@ public class DebugInformation {
 				.put("Java Version", SystemReportAccessor.getJAVA_VERSION())
 				.put("JVM Flags", getMcSystemInfo("JVM Flags"))
 				.put("Memory", () -> getMcSystemInfo("Memory"))
+				.put("Total Memory", getTotalRam())
 				.put("CPU", getCpuInfo())
 				.putAll(listAllGraphicsCards())
 				.buildTo(DebugInformation::registerBothInfo);
@@ -128,6 +130,13 @@ public class DebugInformation {
 			cards.add(new InfoEntry(key, value));
 		}
 		return cards.isEmpty() ? List.of(new InfoEntry("Graphics cards", "none")) : cards;
+	}
+
+	public static String getTotalRam() {
+		long availableMemory = new SystemInfo().getHardware().getMemory().getAvailable();
+		long totalMemory = new SystemInfo().getHardware().getMemory().getTotal();
+		long usedMemory = totalMemory - availableMemory;
+		return String.format("%s bytes (%s MiB) / %s bytes (%s MiB)", usedMemory, usedMemory / 1049000, totalMemory, totalMemory / 1049000);
 	}
 
 	public static String getCpuInfo() {

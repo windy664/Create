@@ -1,5 +1,20 @@
 {
   "type": "create:cutting",
+<<<<<<<< HEAD:src/generated/resources/data/create/recipes/cutting/compat/hexcasting/stripped_edified_log.json
+========
+  "ingredients": [
+    {
+      "item": "hexcasting:edified_log_stripped"
+    }
+  ],
+  "results": [
+    {
+      "item": "hexcasting:edified_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+>>>>>>>> mc1.18/fabric/next:src/generated/resources/data/create/recipes/cutting/compat/hexcasting/edified_log_stripped.json
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",

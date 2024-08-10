@@ -1,0 +1,23 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:stripped_cypress_wood"
+    }
+  ],
+  "results": [
+    {
+      "item": "regions_unexplored:cypress_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "regions_unexplored"
+      ]
+    }
+  ]
+}

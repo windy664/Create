@@ -168,7 +168,7 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 		BiConsumer<BlockPos, Integer> add, boolean searchDownward) throws ChunkNotLoadedException {
 		Level world = getWorld();
 		int maxBlocks = maxBlocks();
-		int maxRange = canDrainInfinitely(fluid) ? maxRange() : maxRange() / 2;
+		int maxRange = maxRange();
 		int maxRangeSq = maxRange * maxRange;
 		int i;
 
@@ -225,7 +225,7 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 	protected void playEffect(Level world, BlockPos pos, Fluid fluid, boolean fillSound) {
 		if (fluid == null)
 			return;
-		
+
 		BlockPos splooshPos = pos == null ? blockEntity.getBlockPos() : pos;
 		FluidStack stack = new FluidStack(fluid, 1);
 
