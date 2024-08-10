@@ -10,10 +10,12 @@
       "item": "quark:rusty_iron_plate"
     }
   ],
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "quark",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "quark"
+      ]
     }
   ]
 }

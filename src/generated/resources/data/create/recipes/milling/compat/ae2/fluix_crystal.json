@@ -1,12 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "ae2"
-      ]
-    }
-  ],
   "type": "create:milling",
   "ingredients": [
     {
@@ -15,9 +7,16 @@
   ],
   "results": [
     {
-      "item": "ae2:fluix_dust",
-      "count": 1
+      "item": "ae2:fluix_dust"
     }
   ],
-  "processingTime": 200
+  "processingTime": 200,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "ae2"
+      ]
+    }
+  ]
 }

@@ -32,7 +32,7 @@ public enum Mods {
 	ENDER("endergetic"),
 	PVJ("projectvibrantjourneys"),
 	UA("upgrade_aquatic"),
-	BEF("betterendforge"),
+	//BEF("betterendforge"), fabric: replaced with Better End
 	ENV("environmental"),
 	SUP("supplementaries"),
   	AM("alexsmobs"),
@@ -62,7 +62,8 @@ public enum Mods {
 	MI("modern_industrialization"),
 	MTM("mythicmetals"),
 	ALG("alloygery"),
-	BC("bitsandchisels")
+	BC("bitsandchisels"),
+	BE("betterend")
 
 	;
 

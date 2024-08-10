@@ -29,9 +29,10 @@ public class PressingRecipeGen extends ProcessingRecipeGen {
 		// Atmospheric
 		ATM = moddedPaths(Mods.ATM, "crustose"),
 
+		// fabric: replaced with better end fabric
 		// Better End Forge
 
-		BEF = moddedPaths(Mods.BEF, "amber_moss", "cave_moss", "chorus_nylium", "crystal_moss",
+		BE = moddedPaths(Mods.BE, "amber_moss", "cave_moss", "chorus_nylium", "crystal_moss",
 				"end_moss", "end_myclium", "jungle_moss", "pink_moss", "shadow_grass"),
 		// Environmental
 		ENV_MYCELIUM = create("compat/environmental/mycelium_path", b -> b.require(Blocks.MYCELIUM)

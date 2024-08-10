@@ -10,10 +10,12 @@
       "item": "hauntedharvest:rotten_apple"
     }
   ],
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "hauntedharvest",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "hauntedharvest"
+      ]
     }
   ]
 }

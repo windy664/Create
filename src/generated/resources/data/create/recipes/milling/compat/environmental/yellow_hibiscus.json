@@ -1,12 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "environmental"
-      ]
-    }
-  ],
   "type": "create:milling",
   "ingredients": [
     {
@@ -20,9 +12,16 @@
     },
     {
       "item": "minecraft:yellow_dye",
-      "count": 1,
       "chance": 0.1
     }
   ],
-  "processingTime": 50
+  "processingTime": 50,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "environmental"
+      ]
+    }
+  ]
 }

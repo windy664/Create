@@ -1,12 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "byg"
-      ]
-    }
-  ],
   "type": "create:milling",
   "ingredients": [
     {
@@ -15,7 +7,7 @@
   ],
   "results": [
     {
-      "item": "minecraft:cyan_dye",
+      "item": "minecraft:red_dye",
       "count": 3
     },
     {
@@ -24,10 +16,18 @@
       "chance": 0.05
     },
     {
-      "item": "minecraft:light_blue_dye",
+      "item": "minecraft:red_dye",
       "count": 2,
       "chance": 0.25
     }
   ],
-  "processingTime": 50
+  "processingTime": 50,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "byg"
+      ]
+    }
+  ]
 }

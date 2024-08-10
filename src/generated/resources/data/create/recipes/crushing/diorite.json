@@ -12,13 +12,15 @@
     }
   ],
   "processingTime": 350,
-  "conditions": [
+  "fabric:load_conditions": [
     {
+      "condition": "fabric:not",
       "value": {
-        "modid": "exnihilosequentia",
-        "type": "forge:mod_loaded"
-      },
-      "type": "forge:not"
+        "condition": "fabric:all_mods_loaded",
+        "values": [
+          "exnihilosequentia"
+        ]
+      }
     }
   ]
 }

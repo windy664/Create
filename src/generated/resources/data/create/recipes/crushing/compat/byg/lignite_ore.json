@@ -1,12 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "byg"
-      ]
-    }
-  ],
   "type": "create:crushing",
   "ingredients": [
     {
@@ -32,5 +24,13 @@
       "chance": 0.125
     }
   ],
-  "processingTime": 300
+  "processingTime": 300,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "byg"
+      ]
+    }
+  ]
 }

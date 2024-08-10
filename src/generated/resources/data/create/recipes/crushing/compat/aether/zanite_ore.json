@@ -23,10 +23,12 @@
     }
   ],
   "processingTime": 350,
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "aether",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "aether"
+      ]
     }
   ]
 }

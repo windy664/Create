@@ -1,31 +1,27 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "byg"
-      ]
-    }
-  ],
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "byg:richea"
+      "item": "regions_unexplored:wilting_trillium"
     }
   ],
   "results": [
     {
-      "item": "minecraft:light_gray_dye",
+      "item": "minecraft:brown_dye",
       "count": 2
     },
     {
-      "item": "minecraft:green_dye",
+      "item": "minecraft:light_gray_dye",
       "chance": 0.1
-    },
-    {
-      "item": "minecraft:brown_dye",
-      "chance": 0.05
     }
   ],
-  "processingTime": 50
+  "processingTime": 50,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "regions_unexplored"
+      ]
+    }
+  ]
 }

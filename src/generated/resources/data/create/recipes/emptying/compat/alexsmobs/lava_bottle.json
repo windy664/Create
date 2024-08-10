@@ -1,12 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "alexsmobs"
-      ]
-    }
-  ],
   "type": "create:emptying",
   "ingredients": [
     {
@@ -19,7 +11,15 @@
     },
     {
       "fluid": "minecraft:lava",
-      "amount": 27000
+      "amount": 250
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "alexsmobs"
+      ]
     }
   ]
 }

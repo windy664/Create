@@ -1,12 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "alexsmobs"
-      ]
-    }
-  ],
   "type": "create:filling",
   "ingredients": [
     {
@@ -14,12 +6,21 @@
     },
     {
       "fluid": "minecraft:lava",
-      "amount": 27000
+      "nbt": {},
+      "amount": 250
     }
   ],
   "results": [
     {
       "item": "alexsmobs:lava_bottle"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "alexsmobs"
+      ]
     }
   ]
 }

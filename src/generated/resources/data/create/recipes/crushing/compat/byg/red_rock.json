@@ -1,12 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "byg"
-      ]
-    }
-  ],
   "type": "create:crushing",
   "ingredients": [
     {
@@ -15,9 +7,16 @@
   ],
   "results": [
     {
-      "item": "minecraft:red_sand",
-      "count": 1
+      "item": "minecraft:red_sand"
     }
   ],
-  "processingTime": 150
+  "processingTime": 150,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "byg"
+      ]
+    }
+  ]
 }

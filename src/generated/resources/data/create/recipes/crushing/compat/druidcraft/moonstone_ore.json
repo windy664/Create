@@ -20,10 +20,12 @@
     }
   ],
   "processingTime": 300,
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "druidcraft",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "druidcraft"
+      ]
     }
   ]
 }

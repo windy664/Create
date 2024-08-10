@@ -1,16 +1,8 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "byg"
-      ]
-    }
-  ],
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "byg:purple_sage"
+      "item": "byg:purple_rose"
     }
   ],
   "results": [
@@ -23,5 +15,13 @@
       "chance": 0.1
     }
   ],
-  "processingTime": 50
+  "processingTime": 50,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "byg"
+      ]
+    }
+  ]
 }

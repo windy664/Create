@@ -15,10 +15,12 @@
       "chance": 0.05
     }
   ],
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "atmospheric",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "atmospheric"
+      ]
     }
   ]
 }

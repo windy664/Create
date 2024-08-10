@@ -1,16 +1,8 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "byg"
-      ]
-    }
-  ],
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "byg:osiria_rose"
+      "item": "regions_unexplored:salmon_poppy_bush"
     }
   ],
   "results": [
@@ -20,8 +12,16 @@
     },
     {
       "item": "minecraft:green_dye",
-      "chance": 0.05
+      "chance": 0.1
     }
   ],
-  "processingTime": 50
+  "processingTime": 50,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "regions_unexplored"
+      ]
+    }
+  ]
 }

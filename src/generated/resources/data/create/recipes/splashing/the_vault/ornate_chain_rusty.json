@@ -10,10 +10,12 @@
       "item": "the_vault:ornate_chain_rusty"
     }
   ],
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "the_vault",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "the_vault"
+      ]
     }
   ]
 }

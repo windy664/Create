@@ -1,13 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "endergetic"
-      ]
-    }
-  ],
   "type": "create:splashing",
   "ingredients": [
     {
@@ -17,6 +8,14 @@
   "results": [
     {
       "item": "endergetic:petrified_end_corrock"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "endergetic"
+      ]
     }
   ]
 }

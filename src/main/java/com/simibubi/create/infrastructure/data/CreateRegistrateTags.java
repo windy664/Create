@@ -42,9 +42,9 @@ public class CreateRegistrateTags {
 					Blocks.BIG_DRIPLEAF, Blocks.VINE, Blocks.TWISTING_VINES_PLANT, Blocks.TWISTING_VINES,
 					Blocks.WEEPING_VINES_PLANT, Blocks.WEEPING_VINES, Blocks.CAKE
 			)
-			.addTag(AllBlockTags.CORALS.tag)
-			.addTag(BlockTags.CAVE_VINES)
-			.addTag(BlockTags.BANNERS)
+			.forceAddTag(AllBlockTags.CORALS.tag)
+			.forceAddTag(BlockTags.CAVE_VINES)
+			.forceAddTag(BlockTags.BANNERS)
 			.forceAddTag(BlockTags.BEDS)
 			.forceAddTag(BlockTags.DOORS);
 
@@ -75,10 +75,10 @@ public class CreateRegistrateTags {
 					Blocks.VINE, Blocks.TWISTING_VINES_PLANT, Blocks.TWISTING_VINES, Blocks.WEEPING_VINES_PLANT,
 					Blocks.WEEPING_VINES
 			)
-			.addTag(AllBlockTags.CORALS.tag)
-			.addTag(BlockTags.CAVE_VINES)
+			.forceAddTag(AllBlockTags.CORALS.tag)
+			.forceAddTag(BlockTags.CAVE_VINES)
 			.forceAddTag(BlockTags.FENCE_GATES)
-			.addTag(BlockTags.BANNERS);
+			.forceAddTag(BlockTags.BANNERS);
 
 		prov.tag(AllBlockTags.ORE_OVERRIDE_STONE.tag)
 			.forceAddTag(BlockTags.STONE_ORE_REPLACEABLES);

@@ -20,10 +20,12 @@
     }
   ],
   "processingTime": 50,
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "regions_unexplored",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "regions_unexplored"
+      ]
     }
   ]
 }

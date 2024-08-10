@@ -15,10 +15,12 @@
       "item": "vampirism:cursed_grass_block"
     }
   ],
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "vampirism",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "vampirism"
+      ]
     }
   ]
 }

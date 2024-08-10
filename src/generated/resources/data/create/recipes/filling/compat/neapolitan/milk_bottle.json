@@ -1,12 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:all_mods_loaded",
-      "values": [
-        "neapolitan"
-      ]
-    }
-  ],
   "type": "create:filling",
   "ingredients": [
     {
@@ -14,12 +6,20 @@
     },
     {
       "fluidTag": "c:milk",
-      "amount": 27000
+      "amount": 250
     }
   ],
   "results": [
     {
       "item": "neapolitan:milk_bottle"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "neapolitan"
+      ]
     }
   ]
 }

@@ -10,10 +10,12 @@
       "item": "infernalexp:warped_nylium_path"
     }
   ],
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "infernalexp",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "infernalexp"
+      ]
     }
   ]
 }

@@ -12,10 +12,12 @@
     }
   ],
   "processingTime": 50,
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "modid": "endergetic",
-      "type": "forge:mod_loaded"
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "endergetic"
+      ]
     }
   ]
 }
