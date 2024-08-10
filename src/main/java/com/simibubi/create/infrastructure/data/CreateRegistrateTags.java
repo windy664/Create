@@ -90,7 +90,7 @@ public class CreateRegistrateTags {
 
 		prov.tag(AllBlockTags.SAFE_NBT.tag)
 			.addTag(BlockTags.BANNERS)
-			.addTag(BlockTags.SIGNS);
+			.addTag(BlockTags.ALL_SIGNS);
 
 		prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag)
 			.add(Blocks.BEE_NEST, Blocks.COCOA, Blocks.MANGROVE_PROPAGULE, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT, Blocks.VINE);
@@ -105,6 +105,9 @@ public class CreateRegistrateTags {
 			.addTag(BlockTags.BUTTONS)
 			.addTag(BlockTags.PRESSURE_PLATES)
 			.addTag(BlockTags.RAILS);
+
+		prov.tag(AllBlockTags.ROOTS.tag)
+				.add(Blocks.MANGROVE_ROOTS);
 
 		prov.tag(AllBlockTags.CORALS.tag)
 			.add(Blocks.DEAD_TUBE_CORAL, Blocks.DEAD_BRAIN_CORAL, Blocks.DEAD_BUBBLE_CORAL, Blocks.DEAD_FIRE_CORAL,
@@ -126,6 +129,9 @@ public class CreateRegistrateTags {
 				"connector_hv", "connector_hv_relay", "connector_bundled", "connector_structural",
 				"connector_redstone", "connector_probe", "breaker_switch"))
 				.addOptional(Mods.BC.asResource("bits_block")); // fabric: Causes Problems last I checked. TODO: re-evaluate
+
+		TagGen.addOptional(prov.tag(AllBlockTags.ROOTS.tag), Mods.TF,
+				List.of("root", "liveroot_block", "mangrove_root"));
 
 		// VALIDATE
 
@@ -224,10 +230,10 @@ public class CreateRegistrateTags {
 
 		helper.add(Mods.ARS_N, "blue_archwood", "purple_archwood", "green_archwood", "red_archwood");
 		helper.add(Mods.BTN, "livingwood", "dreamwood");
-		helper.add(Mods.FA, "cherrywood", "mysterywood");
+		helper.add(Mods.FA, "mysterywood");
 		helper.add(Mods.HEX, "akashic");
 		helper.add(Mods.ID, "menril");
-		helper.add(Mods.BYG, "aspen", "baobab", "enchanted", "cherry", "cika", "cypress", "ebony", "ether",
+		helper.add(Mods.BYG, "aspen", "baobab", "enchanted", "cika", "cypress", "ebony", "ether",
 			"fir", "green_enchanted", "holly", "jacaranda", "lament", "mahogany", "mangrove", "maple", "nightshade",
 			"palm", "palo_verde", "pine", "rainbow_eucalyptus", "redwood", "skyris", "willow", "witch_hazel",
 			"zelkova");
@@ -238,10 +244,10 @@ public class CreateRegistrateTags {
 		helper.add(Mods.AP, "twisted");
 		helper.add(Mods.Q, "azalea", "blossom");
 		helper.add(Mods.ECO, "coconut", "walnut", "azalea");
-		helper.add(Mods.BOP, "fir", "redwood", "cherry", "mahogany", "jacaranda", "palm", "willow", "dead",
+		helper.add(Mods.BOP, "fir", "redwood", "mahogany", "jacaranda", "palm", "willow", "dead",
 			"magic", "umbran", "hellbark");
-		helper.add(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple", "cherry");
-		helper.add(Mods.ENV, "cherry", "willow", "wisteria");
+		helper.add(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple");
+		helper.add(Mods.ENV, "willow", "wisteria");
 		helper.add(Mods.ATM, "aspen", "kousa", "yucca", "morado");
 		helper.add(Mods.ATM_2, "rosewood", "grimwood");
 		helper.add(Mods.GOOD, "muddy_oak", "cypress");

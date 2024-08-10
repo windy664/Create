@@ -51,7 +51,8 @@ import com.simibubi.create.content.trains.TrainHUD;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.CarriageCouplingRenderer;
 import com.simibubi.create.content.trains.entity.TrainRelocator;
-import com.simibubi.create.content.trains.schedule.TrainHatArmorLayer;
+import com.simibubi.create.content.trains.schedule.hat.TrainHatArmorLayer;
+import com.simibubi.create.content.trains.schedule.hat.TrainHatInfoReloadListener;
 import com.simibubi.create.content.trains.track.CurvedTrackInteraction;
 import com.simibubi.create.content.trains.track.TrackBlockItem;
 import com.simibubi.create.content.trains.track.TrackBlockOutline;
@@ -386,6 +387,7 @@ public class ClientEvents {
 
 		public static void registerClientReloadListeners() {
 			ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
+			event.registerReloadListener(TrainHatInfoReloadListener.LISTENER);
 		}
 	}
 

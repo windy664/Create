@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.schedule;
+package com.simibubi.create.content.trains.schedule.hat;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,14 +13,8 @@ import com.simibubi.create.foundation.utility.Couple;
 import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ModelPartAccessor;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper;
 import net.minecraft.client.model.AgeableListModel;
-import net.minecraft.client.model.AxolotlModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.FrogModel;
 import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.model.LavaSlimeModel;
-import net.minecraft.client.model.SlimeModel;
-import net.minecraft.client.model.WardenModel;
-import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelPart.Cube;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -31,6 +25,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,20 +33,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
-	private Vec3 offset;
-
-	public TrainHatArmorLayer(RenderLayerParent<T, M> renderer, Vec3 offset) {
+	public TrainHatArmorLayer(RenderLayerParent<T, M> renderer) {
 		super(renderer);
-		this.offset = offset;
 	}
 
 	@Override
-	public void render(PoseStack ms, MultiBufferSource buffer, int light, LivingEntity entity, float yaw, float pitch,
-		float pt, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
+	public void render(PoseStack ms, MultiBufferSource buffer, int light, LivingEntity entity, float limbSwing, float limbSwingAmount,
+					   float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (!shouldRenderOn(entity))
 			return;
 
@@ -59,9 +53,9 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		RenderType renderType = Sheets.cutoutBlockSheet();
 		ms.pushPose();
 
-		boolean valid = false;
 		TransformStack msr = TransformStack.cast(ms);
-		float scale = 1;
+		TrainHatInfo info = TrainHatInfoReloadListener.getHatInfoFor(entity.getType());
+		List<ModelPart> partsToHead = new ArrayList<>();
 
 		if (entityModel instanceof AgeableListModel<?> model && entityModel instanceof io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AgeableListModelAccessor access) {
 			if (model.young) {
@@ -74,64 +68,31 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 			ModelPart head = getHeadPart(model);
 			if (head != null) {
-				head.translateAndRotate(ms);
-
-				if (model instanceof WolfModel)
-					head = head.getChild("real_head");
-				if (model instanceof AxolotlModel)
-					head = head.getChild("head");
-
-				ms.translate(offset.x / 16f, offset.y / 16f, offset.z / 16f);
-
-				if (!head.isEmpty()) {
-					Cube cube = ((ModelPartAccessor) (Object) head).porting_lib$cubes().get(0);
-					ms.translate(offset.x / 16f, (cube.minY - cube.maxY + offset.y) / 16f, offset.z / 16f);
-					float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / 8f;
-					ms.scale(max, max, max);
-				}
-
-				valid = true;
+				partsToHead.addAll(TrainHatInfo.getAdjustedPart(info, head, ""));
 			}
+		} else if (entityModel instanceof HierarchicalModel<?> model) {
+			partsToHead.addAll(TrainHatInfo.getAdjustedPart(info, model.root(), "head"));
 		}
 
-		else if (entityModel instanceof HierarchicalModel<?> model) {
-			boolean slime = model instanceof SlimeModel || model instanceof LavaSlimeModel;
-			ModelPart root = model.root();
-			String headName = slime ? "cube" : "head";
-			ModelPart head = root.hasChild(headName) ? root.getChild(headName) : null;
+		if (!partsToHead.isEmpty()) {
+			partsToHead.forEach(part -> part.translateAndRotate(ms));
 
-			if (model instanceof WardenModel)
-				head = root.getChild("bone").getChild("body").getChild("head");
-
-			if (model instanceof FrogModel) {
-				head = root.getChild("body").getChild("head");
-				scale = .5f;
+			ModelPart lastChild = partsToHead.get(partsToHead.size() - 1);
+			if (!lastChild.isEmpty()) {
+				Cube cube = lastChild.cubes.get(Mth.clamp(info.cubeIndex(), 0, lastChild.cubes.size() - 1));
+				ms.translate(info.offset().x() / 16.0F, (cube.minY - cube.maxY + info.offset().y()) / 16.0F, info.offset().z() / 16.0F);
+				float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / 8.0F * info.scale();
+				ms.scale(max, max, max);
 			}
 
-			if (head != null) {
-				head.translateAndRotate(ms);
-
-				if (!head.isEmpty()) {
-					ModelPartAccessor headAccess = (ModelPartAccessor) (Object) head;
-					Cube cube = headAccess.porting_lib$cubes().get(0);
-					ms.translate(offset.x, (cube.minY - cube.maxY + offset.y) / 16f, offset.z / 16f);
-					float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / (slime ? 6.5f : 8f) * scale;
-					ms.scale(max, max, max);
-				}
-
-				valid = true;
-			}
-		}
-
-		if (valid) {
 			ms.scale(1, -1, -1);
-			ms.translate(0, -2.25f / 16f, 0);
-			msr.rotateX(-8.5f);
+			ms.translate(0, -2.25F / 16.0F, 0);
+			msr.rotateX(-8.5F);
 			BlockState air = Blocks.AIR.defaultBlockState();
 			CachedBufferer.partial(AllPartialModels.TRAIN_HAT, air)
-				.forEntityRender()
-				.light(light)
-				.renderInto(ms, buffer.getBuffer(renderType));
+					.forEntityRender()
+					.light(light)
+					.renderInto(ms, buffer.getBuffer(renderType));
 		}
 
 		ms.popPose();
@@ -141,7 +102,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		if (entity == null)
 			return false;
 		if (entity.getCustomData()
-			.contains("TrainHat"))
+				.contains("TrainHat"))
 			return true;
 		if (!entity.isPassenger())
 			return false;
@@ -174,9 +135,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		if (!(model instanceof HierarchicalModel) && !(model instanceof AgeableListModel))
 			return;
 
-		Vec3 offset = TrainHatOffsets.getOffset(model);
-		TrainHatArmorLayer<?, ?> layer = new TrainHatArmorLayer<>(livingRenderer, offset);
-		helper.register(layer);
+		livingRenderer.addLayer((TrainHatArmorLayer) new TrainHatArmorLayer<>(livingRenderer));
 	}
 
 	private static ModelPart getHeadPart(AgeableListModel<?> model) {

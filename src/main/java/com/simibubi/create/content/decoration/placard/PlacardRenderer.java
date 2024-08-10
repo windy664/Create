@@ -47,7 +47,7 @@ public class PlacardRenderer extends SafeBlockEntityRenderer<PlacardBlockEntity>
 			.translate(0, 0, 4.5 / 16f)
 			.scale(blockItem ? .5f : .375f);
 
-		itemRenderer.render(heldItem, TransformType.FIXED, false, ms, buffer, light, overlay, bakedModel);
+		itemRenderer.render(heldItem, ItemDisplayContext.FIXED, false, ms, buffer, light, overlay, bakedModel);
 		ms.popPose();
 	}
 

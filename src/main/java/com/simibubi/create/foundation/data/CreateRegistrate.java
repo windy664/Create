@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.data;
 
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -54,7 +55,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
-	private static final Map<RegistryEntry<?>, ResourceKey<CreativeModeTab>> TAB_LOOKUP = new IdentityHashMap<>();
+	private static final Map<RegistryEntry<?>, ResourceKey<CreativeModeTab>> TAB_LOOKUP = Collections.synchronizedMap(new IdentityHashMap<>());
 
 	@Nullable
 	protected Function<Item, TooltipModifier> currentTooltipModifierFactory;

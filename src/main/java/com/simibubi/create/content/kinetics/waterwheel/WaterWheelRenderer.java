@@ -129,7 +129,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 
 	private static final String[] LOG_LOCATIONS = new String[] {
 
-		"x_log", "x_stem", // Covers most wood types
+		"x_log", "x_stem", "x_block", // Covers most wood types
 		"wood/log/x" // TerraFirmaCraft
 
 	};

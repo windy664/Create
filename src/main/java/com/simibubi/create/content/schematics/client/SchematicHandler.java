@@ -314,8 +314,12 @@ public class SchematicHandler {
 
 	private boolean itemLost(Player player) {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
+			if (player.getInventory()
+					.getItem(i)
+					.is(activeSchematicItem.getItem()))
+				continue;
 			if (!ItemStack.matches(player.getInventory()
-				.getItem(i), activeSchematicItem))
+					.getItem(i), activeSchematicItem))
 				continue;
 			return false;
 		}

@@ -89,7 +89,7 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 				.whenModLoaded(mod.getId()));
 	}
 
-	public MixingRecipeGen(FabricDataOutput output) {
+	public MixingRecipeGen(PackOutput output) {
 		super(output);
 	}
 

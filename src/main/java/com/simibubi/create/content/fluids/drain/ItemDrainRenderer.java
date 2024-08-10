@@ -117,7 +117,7 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 			ms.scale(.5f, .5f, .5f);
 			if (!blockItem && !renderUpright)
 				msr.rotateX(90);
-			itemRenderer.render(itemStack, TransformType.FIXED, false, ms, buffer, light, overlay, bakedModel);
+			itemRenderer.render(itemStack, ItemDisplayContext.FIXED, false, ms, buffer, light, overlay, bakedModel);
 			ms.popPose();
 
 			if (!renderUpright) {

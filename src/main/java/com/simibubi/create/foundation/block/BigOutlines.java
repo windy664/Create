@@ -37,8 +37,8 @@ public class BigOutlines {
 			: mc.hitResult.getLocation()
 				.distanceToSqr(origin);
 
-		double range = ReachUtil.reach(player);
-		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range) + 1, origin);
+		AttributeInstance range = player.getAttribute(ForgeMod.BLOCK_REACH.get());
+		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range.getValue()) + 1, origin);
 
 		RaycastHelper.rayTraceUntil(origin, target, pos -> {
 			MutableBlockPos p = BlockPos.ZERO.mutable();

@@ -133,7 +133,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 				ms.translate(0, -3 / 16f, 0);
 				msr.rotateX(90);
 			}
-			itemRenderer.render(itemStack, TransformType.FIXED, false, ms, buffer, light, overlay, bakedModel);
+			itemRenderer.render(itemStack, ItemDisplayContext.FIXED, false, ms, buffer, light, overlay, bakedModel);
 			ms.popPose();
 
 			if (!renderUpright) {

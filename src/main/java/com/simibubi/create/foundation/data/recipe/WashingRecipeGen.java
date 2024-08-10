@@ -150,7 +150,7 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 				.output(mod, output).whenModLoaded(mod.getId()));
 	}
 
-	public WashingRecipeGen(FabricDataOutput output) {
+	public WashingRecipeGen(PackOutput output) {
 		super(output);
 	}
 

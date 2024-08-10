@@ -32,6 +32,7 @@ import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.MouseHandler;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -212,7 +213,7 @@ public class GoggleOverlayRenderer {
 
 		if (!Mods.MODERNUI.isLoaded()) {
 			// default tooltip rendering when modernUI is not loaded
-			RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
+			RemovedGuiUtils.drawHoveringText(graphics, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
 				colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 			poseStack.popPose();
@@ -236,7 +237,7 @@ public class GoggleOverlayRenderer {
 		((MouseHandlerAccessor) mouseHandler).create$setXPos(Math.round(cursorX / guiScale) * guiScale);
 		((MouseHandlerAccessor) mouseHandler).create$setYPos(Math.round(cursorY / guiScale) * guiScale);
 
-		RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
+		RemovedGuiUtils.drawHoveringText(graphics, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
 			colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		((MouseHandlerAccessor) mouseHandler).create$setXPos(cursorX);

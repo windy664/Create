@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.List;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
@@ -18,8 +20,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-
-import java.util.List;
 
 @SuppressWarnings("unused")
 public class MillingRecipeGen extends ProcessingRecipeGen {
@@ -850,7 +850,7 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 		}
 	}
 
-	public MillingRecipeGen(FabricDataOutput output) {
+	public MillingRecipeGen(PackOutput output) {
 		super(output);
 	}
 

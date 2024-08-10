@@ -26,10 +26,6 @@
       "required": false
     },
     {
-      "id": "forbidden_arcanus:stripped_cherrywood_wood",
-      "required": false
-    },
-    {
       "id": "forbidden_arcanus:stripped_mysterywood_wood",
       "required": false
     },
@@ -51,10 +47,6 @@
     },
     {
       "id": "byg:stripped_enchanted_wood",
-      "required": false
-    },
-    {
-      "id": "byg:stripped_cherry_wood",
       "required": false
     },
     {
@@ -226,10 +218,6 @@
       "required": false
     },
     {
-      "id": "biomesoplenty:stripped_cherry_wood",
-      "required": false
-    },
-    {
       "id": "biomesoplenty:stripped_mahogany_wood",
       "required": false
     },
@@ -283,14 +271,6 @@
     },
     {
       "id": "blue_skies:stripped_maple_wood",
-      "required": false
-    },
-    {
-      "id": "blue_skies:stripped_cherry_wood",
-      "required": false
-    },
-    {
-      "id": "environmental:stripped_cherry_wood",
       "required": false
     },
     {

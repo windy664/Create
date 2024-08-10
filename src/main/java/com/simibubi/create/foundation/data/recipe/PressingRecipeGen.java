@@ -113,7 +113,7 @@ public class PressingRecipeGen extends ProcessingRecipeGen {
 				.whenModLoaded(mod.getId()));
 	}
 
-	public PressingRecipeGen(FabricDataOutput output) {
+	public PressingRecipeGen(PackOutput output) {
 		super(output);
 	}
 

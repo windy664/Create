@@ -98,6 +98,7 @@ public class AllTags {
 		VALVE_HANDLES,
 		WINDMILL_SAILS,
 		WRENCH_PICKUP,
+		ROOTS,
 
 		CORALS,
 

@@ -606,7 +606,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
-	public CrushingRecipeGen(FabricDataOutput output) {
+	public CrushingRecipeGen(PackOutput output) {
 		super(output);
 	}
 

@@ -49,6 +49,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -60,6 +62,7 @@ public interface ItemAttribute {
 
 	static ItemAttribute standard = register(StandardTraits.DUMMY);
 	static ItemAttribute inTag = register(new InTag(ItemTags.LOGS));
+	static ItemAttribute inItemGroup = register(InItemGroup.EMPTY);
 	static ItemAttribute addedBy = register(new AddedBy("dummy"));
 	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
 	static ItemAttribute shulkerFillLevel = register(ShulkerFillLevelAttribute.EMPTY);
@@ -271,6 +274,55 @@ public interface ItemAttribute {
 			return new InTag(TagKey.create(Registries.ITEM, new ResourceLocation(nbt.getString("space"), nbt.getString("path"))));
 		}
 
+	}
+
+	public static class InItemGroup implements ItemAttribute {
+		public static final InItemGroup EMPTY = new InItemGroup(null);
+
+		private CreativeModeTab group;
+
+		public InItemGroup(CreativeModeTab group) {
+			this.group = group;
+		}
+
+		@Override
+		public boolean appliesTo(ItemStack stack) {
+			return group != null && group.contains(stack);
+		}
+
+		@Override
+		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
+			return CreativeModeTabs.tabs().stream()
+					.filter(tab -> !tab.hasSearchBar() && tab.contains(stack))
+					.map(tab -> (ItemAttribute)new InItemGroup(tab))
+					.toList();
+		}
+
+		@Override
+		public String getTranslationKey() {
+			return "in_item_group";
+		}
+
+		@Override
+		public Object[] getTranslationParameters() {
+			return new Object[] { group == null ? "<none>" : group.getDisplayName().getString() };
+		}
+
+		@Override
+		public void writeNBT(CompoundTag nbt) {
+			if (group != null) {
+				ResourceLocation groupId = CreativeModeTabRegistry.getName(group);
+
+				if (groupId != null) {
+					nbt.putString("group", groupId.toString());
+				}
+			}
+		}
+
+		@Override
+		public ItemAttribute readNBT(CompoundTag nbt) {
+			return nbt.contains("group") ? new InItemGroup(CreativeModeTabRegistry.getTab(new ResourceLocation(nbt.getString("group")))) : EMPTY;
+		}
 	}
 
 	public static class AddedBy implements ItemAttribute {
