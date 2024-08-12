@@ -231,43 +231,6 @@ jar {
     }
 }
 
-tasks.register("createStubJar") {
-    outputs.upToDateWhen { false }
-
-    ByteArrayOutputStream byteStream = new ByteArrayOutputStream()
-    JarOutputStream jarStream = new JarOutputStream(byteStream)
-
-    try {
-        File fabricModJson = file("$projectDir/stubMod/fabric.mod.json")
-        if (fabricModJson.exists()) {
-            String content = fabricModJson.text.replace('${version}', mod_version)
-            jarStream.putNextEntry(new JarEntry("fabric.mod.json"))
-            jarStream.write(content.bytes)
-            jarStream.closeEntry()
-        } else {
-            throw new FileNotFoundException("Warning: fabric.mod.json not found at ${fabricModJson.path}")
-        }
-    } finally {
-        jarStream.close()
-    }
-
-    File baseDir = file("$projectDir/build/stub")
-    baseDir.mkdirs()
-    File outputFile = file("$baseDir/create-stub-${mod_version}.jar")
-    outputFile.withOutputStream { os ->
-        byteStream.writeTo(os)
-    }
-
-    outputs.file(outputFile)
-
-    println "Stub jar created at: ${outputFile.path}"
-}
-
-tasks.remapJar.configure {
-    dependsOn tasks.createStubJar
-    tasks.remapJar.nestedJars.from(createStubJar.outputs)
-}
-
 // see gradle/publishing.gradle for publishing
 apply from: "gradle/publishing/publishing.gradle"
 apply from: "gradle/compat/compat.gradle"
