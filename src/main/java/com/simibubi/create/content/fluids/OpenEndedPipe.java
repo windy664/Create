@@ -191,10 +191,10 @@ public class OpenEndedPipe extends FlowSource {
 			return false;
 		if (fluid.isEmpty())
 			return false;
-		if (!(fluid.getFluid() instanceof FlowingFluid))
-			return false;
 		if (!FluidHelper.hasBlockState(fluid.getFluid()) || fluid.getFluid().is(Milk.MILK_FLUID_TAG)) // fabric: milk logic is different
 			return true;
+		if (!(fluid.getFluid() instanceof FlowingFluid))
+			return false;
 
 		// fabric: note - this is possibly prone to issues but follows what forge does.
 		// collisions completely ignore simulation / transactions.
