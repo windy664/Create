@@ -134,10 +134,5 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements IBE<Wate
 	public static Couple<Integer> getSpeedRange() {
 		return Couple.create(8, 8);
 	}
-	
-	@Override
-	public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-		return false;
-	}
 
 }
