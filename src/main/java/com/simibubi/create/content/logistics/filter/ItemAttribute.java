@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
 import com.simibubi.create.content.logistics.filter.attribute.BookAuthorAttribute;
 import com.simibubi.create.content.logistics.filter.attribute.BookCopyAttribute;
@@ -45,12 +46,12 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -286,16 +287,49 @@ public interface ItemAttribute {
 		}
 
 		@Override
+		public boolean appliesTo(ItemStack stack, Level world) {
+			if (group == null)
+				return false;
+
+			if (group.getDisplayItems()
+				.isEmpty()
+				&& group.getSearchTabDisplayItems()
+					.isEmpty()) {
+
+				try {
+					group.buildContents(new CreativeModeTab.ItemDisplayParameters(world.enabledFeatures(), false,
+						world.registryAccess()));
+				} catch (RuntimeException | LinkageError e) {
+					Create.LOGGER.error("Attribute Filter: Item Group crashed while building contents.",
+						group.getDisplayName()
+							.getString(),
+						e);
+					group = null;
+					return false;
+				}
+
+			}
+
+			return tabContainsItem(group, stack);
+		}
+
+		@Override
 		public boolean appliesTo(ItemStack stack) {
-			return group != null && group.contains(stack);
+			return false;
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			return CreativeModeTabs.tabs().stream()
-					.filter(tab -> tab.getType() != CreativeModeTab.Type.SEARCH && tab.contains(stack))
-					.map(tab -> (ItemAttribute)new InItemGroup(tab))
-					.toList();
+			return CreativeModeTabs.tabs()
+				.stream()
+				.filter(tab -> tab.getType() == CreativeModeTab.Type.CATEGORY)
+				.filter(tab -> tabContainsItem(tab, stack))
+				.map(tab -> (ItemAttribute) new InItemGroup(tab))
+				.toList();
+		}
+
+		private static boolean tabContainsItem(CreativeModeTab tab, ItemStack stack) {
+			return tab.contains(stack) || tab.contains(new ItemStack(stack.getItem()));
 		}
 
 		@Override

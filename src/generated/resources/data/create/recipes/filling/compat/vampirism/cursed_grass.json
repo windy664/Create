@@ -10,7 +10,7 @@
   "type": "create:filling",
   "ingredients": [
     {
-      "item": "vampirism:cursed_dirt"
+      "item": "vampirism:cursed_earth"
     },
     {
       "amount": 500,
@@ -20,7 +20,7 @@
   ],
   "results": [
     {
-      "item": "vampirism:cursed_grass_block"
+      "item": "vampirism:cursed_grass"
     }
   ]
 }

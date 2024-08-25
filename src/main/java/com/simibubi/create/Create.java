@@ -57,8 +57,10 @@ import com.simibubi.create.infrastructure.worldgen.AllBiomeModifiers;
 import com.simibubi.create.infrastructure.worldgen.AllFeatures;
 import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 
 public class Create implements ModInitializer {
@@ -81,7 +83,8 @@ public class Create implements ModInitializer {
 	 * <b>Other mods should not use this field!</b> If you are an addon developer, create your own instance of
 	 * {@link CreateRegistrate}.
 	 */
-	public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID);
+	public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID)
+		.defaultCreativeTab((ResourceKey<CreativeModeTab>) null);
 
 	static {
 		REGISTRATE.setTooltipModifierFactory(item -> {
