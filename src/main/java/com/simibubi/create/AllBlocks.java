@@ -530,8 +530,9 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<WaterWheelBlock> WATER_WHEEL = REGISTRATE.block("water_wheel", WaterWheelBlock::new)
-		.initialProperties(SharedProperties::wooden)
+		//.initialProperties(SharedProperties::wooden) fabric: make structual blocks non flammable
 		.properties(p -> p.noOcclusion().mapColor(MapColor.DIRT))
+		.properties(p -> p.strength(2.0F).sound(SoundType.WOOD)) // fabric: add the properties directly instead of using the material
 		.transform(axeOrPickaxe())
 		.blockstate(
 			(c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, s -> AssetLookup.partialBaseModel(c, p)))
@@ -544,8 +545,9 @@ public class AllBlocks {
 
 	public static final BlockEntry<LargeWaterWheelBlock> LARGE_WATER_WHEEL =
 		REGISTRATE.block("large_water_wheel", LargeWaterWheelBlock::new)
-			.initialProperties(SharedProperties::wooden)
+			//.initialProperties(SharedProperties::wooden) fabric: make structual blocks non flammable
 			.properties(p -> p.noOcclusion().mapColor(MapColor.DIRT))
+			.properties(p -> p.strength(2.0F).sound(SoundType.WOOD)) // fabric: add the properties directly instead of using the material
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> axisBlock(c, p,
 				s -> s.getValue(LargeWaterWheelBlock.EXTENSION) ? AssetLookup.partialBaseModel(c, p, "extension")
@@ -562,6 +564,7 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(BlockStateGen.mapToAir(p), WaterWheelStructuralBlock.FACING))
 			.properties(p -> p.noOcclusion().mapColor(MapColor.DIRT))
+			.properties(p -> p.strength(2.0F).sound(SoundType.WOOD)) // fabric: add the properties directly instead of using the material
 			.properties(p -> p.pushReaction(PushReaction.BLOCK)) // fabric: handled by method override on forge
 			.transform(axeOrPickaxe())
 			.lang("Large Water Wheel")

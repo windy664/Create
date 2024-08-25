@@ -165,7 +165,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 //		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP))
 //			blocksnapshot.restore(true, false);
-//		else if (AllBlocks.TRACK.has(blockState))
+		if (AllBlocks.TRACK.has(blockState))
 			player.placedTracks = true;
 	}
 
