@@ -313,7 +313,7 @@ public class BeltBlock extends HorizontalKineticBlock
 			updateCoverProperty(world, pos, world.getBlockState(pos));
 
 			SoundType soundType = AllBlocks.BRASS_CASING.getDefaultState()
-				.getSoundType(world, pos, player);
+				.getSoundType();
 			world.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS,
 				(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 
@@ -325,7 +325,7 @@ public class BeltBlock extends HorizontalKineticBlock
 			updateCoverProperty(world, pos, world.getBlockState(pos));
 
 			SoundType soundType = AllBlocks.ANDESITE_CASING.getDefaultState()
-				.getSoundType(world, pos, player);
+				.getSoundType();
 			world.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS,
 				(soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 
