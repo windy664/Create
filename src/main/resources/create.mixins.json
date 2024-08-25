@@ -6,6 +6,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "${archivesBaseName}-refmap.json",
   "mixins": [
+    "BlockItemMixin",
     "ClientboundMapItemDataPacketMixin",
     "CustomItemUseEffectsMixin",
     "EnchantmentHelperMixin",
@@ -22,6 +23,7 @@
     "accessor.NbtAccounterAccessor",
     "accessor.ServerLevelAccessor",
     "accessor.SystemReportAccessor",
+    "accessor.UseOnContextAccessor",
     "fabric.AbstractMinecartMixin",
     "fabric.BlockableEventLoopAccessor",
     "fabric.EntityMixin",

@@ -187,6 +187,8 @@ public class BeltBlockEntity extends KineticBlockEntity implements ItemTransfera
 	@Nullable
 	@Override
 	public Storage<ItemVariant> getItemStorage(@Nullable Direction direction) {
+		if (!BeltBlock.canTransportObjects(getBlockState()))
+			return super.getCapability(cap, side);
 		if (!isRemoved() && itemHandler == null)
 			initializeItemHandler();
 		return itemHandler;
@@ -488,6 +490,8 @@ public class BeltBlockEntity extends KineticBlockEntity implements ItemTransfera
 		ItemStack inserted = transportedStack.stack;
 		ItemStack empty = ItemStack.EMPTY;
 
+		if (!BeltBlock.canTransportObjects(getBlockState()))
+			return inserted;
 		if (nextBeltController == null)
 			return inserted;
 		BeltInventory nextInventory = nextBeltController.getInventory();
