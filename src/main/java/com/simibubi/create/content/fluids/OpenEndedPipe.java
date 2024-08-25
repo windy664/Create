@@ -46,6 +46,7 @@ import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
@@ -187,6 +188,10 @@ public class OpenEndedPipe extends FlowSource {
 		if (!waterlog && !state.canBeReplaced())
 			return false;
 		if (fluid.isEmpty())
+			return false;
+		if (!(fluid.getFluid() instanceof FlowingFluid))
+			return false;
+		if (!(fluid.getFluid() instanceof FlowingFluid))
 			return false;
 		if (!FluidHelper.hasBlockState(fluid.getFluid()) || fluid.getFluid().is(Milk.MILK_FLUID_TAG)) // fabric: milk logic is different
 			return true;
