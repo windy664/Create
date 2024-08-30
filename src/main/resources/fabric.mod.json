@@ -64,7 +64,7 @@
     "colormatic": "<=3.1.1",
     "iris": "<=1.2.5",
     
-    "create_interactive": "*"
+    "create_interactive": "*",
 
     "railways": "<1.4.8",
     "garnished": "<=1.6.3",
