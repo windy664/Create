@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "fabric:load_conditions": [
     {
-      "condition": "fabric:item_tags_populated",
+      "condition": "fabric:tags_populated",
       "values": [
         "c:storage_blocks/raw_tin"
       ]

@@ -1,4 +1,4 @@
-// 1.19.2	2024-09-02T17:53:12.775316965	Create's Processing Recipes
+// 1.19.2	2024-09-02T18:04:01.216318282	Create's Processing Recipes
 053b06fb46a58401d0314b775bfabfc299a3fdcc data/create/recipes/cutting/compat/projectvibrantjourneys/stripped_palm_log.json
 9ab3ba5847c3abbc17c476436978141f2c039ce9 data/create/recipes/deploying/waxed_weathered_cut_copper_from_adding_wax.json
 57eb0b64ff8a8365ff7814ec2e955d5593161698 data/create/recipes/splashing/endergetic/petrified_end_corrock.json
@@ -28,7 +28,7 @@ cf293101395d45ff126d9658ea2f62e603658839 data/create/recipes/milling/compat/byg/
 cde385c0fb0007dc94a97cfdca391bb62197113f data/create/recipes/milling/compat/regions_unexplored/yellow_snowbelle.json
 3cecd22e103177fca349da6ea68f5228ad5da699 data/create/recipes/cutting/compat/ecologics/azalea_log.json
 285a24e440d6a8cf34f2925a3eed7fa1d16e102b data/create/recipes/milling/compat/botania/light_blue_petal.json
-8ca249a8d5c8ae0ce57cf27c318fde702c3b45c6 data/create/recipes/crushing/raw_tin_block.json
+8f830c7aadddef1ba8099ad1eea4e9e5bed42d39 data/create/recipes/crushing/raw_tin_block.json
 611de11a4d0a28afaf9f4c704dfe6b98e31bb0f5 data/create/recipes/cutting/compat/ars_nouveau/purple_archwood_log.json
 088375309c149ed61c51205bffa793eb837ba6cd data/create/recipes/crushing/compat/silentgems/garnet_ore.json
 9c3989fd9e72e21353803f475a08b8f199717c1f data/create/recipes/crushing/gilded_blackstone.json
@@ -239,7 +239,7 @@ e537e06f6e5c4b0a60081e7de182bcc7bd2654a2 data/create/recipes/splashing/techrebor
 e789244a24a5aeedcb4415e96bbdc7b564a3b5bf data/create/recipes/crushing/compat/galosphere/lumiere.json
 dd7e714188b93570805ef897fd25b7832925291d data/create/recipes/cutting/compat/ecologics/coconut_wood.json
 fb3d64812d91b4743db4ae27cf8b85e097906662 data/create/recipes/cutting/compat/twilightforest/stripped_dark_log.json
-cde43ac2d6dc8b67a9a98d9c64f1915d7a0e1223 data/create/recipes/crushing/raw_osmium_block.json
+e89226a2ab089b7feb5d4bf2d37ec91d24236b87 data/create/recipes/crushing/raw_osmium_block.json
 a31d2317362342119530798385f12e76402fc0e8 data/create/recipes/cutting/stripped_mangrove_wood.json
 60fa473f4ece5e4d35f419e759658e1448b541e1 data/create/recipes/cutting/compat/regions_unexplored/stripped_redwood_log.json
 f725329633d40e993c3682750d47bf0409975de7 data/create/recipes/cutting/compat/quark/azalea_log.json
@@ -262,7 +262,7 @@ aa5477f55db251ea7fbfa452c8b716e617090418 data/create/recipes/milling/compat/byg/
 590009138400d9217c43c2b36ad296282b29f245 data/create/recipes/splashing/modern_industrialization/crushed_raw_lead.json
 c99a0987bd2c4a005916160a577e7ed31cbb4e0e data/create/recipes/cutting/compat/the_vault/stripped_overgrown_wooden_log.json
 00f40ff3f7c6e939ffd003142e6492e5a7874afc data/create/recipes/pressing/compat/betterend/cave_moss_path.json
-31667559ca4a7691ed820f75bf2ef574127cd513 data/create/recipes/crushing/raw_nickel.json
+a4e53f7ac50cd268095b45b5f22dbf1bbb39c100 data/create/recipes/crushing/raw_nickel.json
 f4f8d3d7e14580c5926b325b04db9cc9c0ab76bd data/create/recipes/milling/sandstone.json
 3a30358bef0d4088f18b05d847eabab8591f331f data/create/recipes/milling/compat/biomesoplenty/violet.json
 26365dd1f80ecc859dc510cd5278907d2fa6f2f7 data/create/recipes/crushing/deepslate_redstone_ore.json
@@ -469,7 +469,7 @@ b43179bde4c4c16ad2e2dfcf6f7273130d45bdbe data/create/recipes/cutting/compat/proj
 f6ac34502fc1469dba9c5cb50dce352b6a2c3b88 data/create/recipes/milling/compat/byg/incan_lily.json
 9007921968d7ce3b4bf80433aea3733811d407c6 data/create/recipes/milling/compat/tconstruct/nercotic_bone.json
 58679c5c37eaa5a52ef9e0f4f7cc695c58ddee96 data/create/recipes/deploying/waxed_weathered_copper_from_adding_wax.json
-a668f9962ae782a0d252955f3be1d4936371582b data/create/recipes/crushing/raw_uranium_block.json
+abd0a10520e6dee24d85946ddaf7136b245362de data/create/recipes/crushing/raw_uranium_block.json
 204ca38528b2c253acee4d531a2848bcf5e511e5 data/create/recipes/cutting/compat/biomesoplenty/magic_log.json
 d295debfefc18f4c90b49c9aa2a8872fa834a1d6 data/create/recipes/milling/compat/environmental/orange_hibiscus.json
 3eea7f9fcca7709bfe7f8dd3c8975f2cd5fe433e data/create/recipes/cutting/compat/projectvibrantjourneys/willow_log.json
@@ -513,7 +513,7 @@ b264faf0dae97e0753a8e50e3f5ce8887aef3914 data/create/recipes/cutting/compat/twil
 c28fabfb6565fd62077ae67d6b1a3912125904cf data/create/recipes/cutting/compat/byg/aspen_log.json
 52480f72f7d956f4354b1c48dbe0f904ca7ab8d9 data/create/recipes/crushing/compat/silentgems/amber_ore.json
 cb262fd21650c5f2d4007974b2fa89887848f2a2 data/create/recipes/cutting/compat/regions_unexplored/brimwood_log_magma.json
-1ffe2c627ea1a942f8f495ab8866038850ae6df2 data/create/recipes/crushing/raw_quicksilver_block.json
+3b7475dcd3d0e455bbd850edc4f4b9700fd89655 data/create/recipes/crushing/raw_quicksilver_block.json
 6ff5ecce0f98968aff1c17b7384383c46ddddd72 data/create/recipes/cutting/compat/projectvibrantjourneys/fir_log.json
 85cf63074b922696ea691cfbc2cf7c348d4e0977 data/create/recipes/cutting/spruce_wood.json
 12868cb504a0f92ec7083e2ecde25ee77cb9b78e data/create/recipes/cutting/compat/ars_nouveau/stripped_green_archwood_wood.json
@@ -532,7 +532,7 @@ ca91ef20e46b2783a9d3b72ff187ff82c19e736a data/create/recipes/cutting/compat/upgr
 5ec20614850c53e34909ec510e2015a0724e0f2f data/create/recipes/cutting/compat/byg/blue_enchanted_wood.json
 c4ceee52c341a829981cf08860e68e95d672bce0 data/create/recipes/crushing/compat/silentgems/yellow_diamond_ore.json
 69bf2f1e8b50aabbb57e1373bde8e4ef69f57e40 data/create/recipes/milling/compat/byg/orange_daisy.json
-6c7c9750c3b47ef86d53287735838ff26f8ca84a data/create/recipes/crushing/raw_osmium.json
+bd3261c1eb398e8e50efb7afd486ad9694a74552 data/create/recipes/crushing/raw_osmium.json
 35b8cccea65d18248fe85287f7c00d9d7feb9795 data/create/recipes/milling/compat/regions_unexplored/magenta_snowbelle.json
 1e632e0c0fccf1b6c67d1700f23303cc2623e76d data/create/recipes/cutting/compat/ars_nouveau/green_archwood_log.json
 8addd735263ee2d36941da9655d6c305e2b7e5ee data/create/recipes/compacting/blaze_cake.json
@@ -558,7 +558,7 @@ ff9fe14bb4e805f6e7973dac66e9c9f27e376b6d data/create/recipes/cutting/compat/regi
 ad1885f5dc1ae07d1509f4b61d8df31437ad6428 data/create/recipes/cutting/compat/twilightforest/dark_log.json
 b3cbfe44b4af8df032d371a18c3507befd69d8b7 data/create/recipes/crushing/compat/silentgems/topaz_ore.json
 e70bdb5b30eebacd2f6b571f0eb9c1796424acda data/create/recipes/cutting/compat/integrateddynamics/menril_wood_stripped.json
-ae2faf12fce8f59004faf5d6d5cd32d1bd719125 data/create/recipes/crushing/raw_lead_block.json
+493179b84f04516faaaeb0ff2bee35cb4c23eefd data/create/recipes/crushing/raw_lead_block.json
 1ae0962a4ea7f39d4a77fe1d85660834c9358b6a data/create/recipes/milling/compat/regions_unexplored/bleeding_heart.json
 1f9f25481cbb1d393148049e85bf1507222268ca data/create/recipes/cutting/compat/projectvibrantjourneys/stripped_baobab_log.json
 9fb8da4cf864ebd5d32acf3048153afc778bd5f9 data/create/recipes/milling/poppy.json
@@ -575,7 +575,7 @@ ecb5837cb02694230a8696aefce349208e107372 data/create/recipes/milling/compat/envi
 945e48345d804cb6b75d335aeb5953c0078608df data/create/recipes/milling/compat/byg/white_anemone.json
 f03aca5139077c3793433526a566696fd9c59028 data/create/recipes/item_application/railway_casing.json
 48dee6ae510f219ef56120a0d78461d783bfea5b data/create/recipes/cutting/compat/biomesoplenty/stripped_redwood_log.json
-dad32f8bbc20b9ee8568a361179367b7d6e61723 data/create/recipes/crushing/raw_quicksilver.json
+2b56c66f943a21b67fee1ca2e6d4b637bb885345 data/create/recipes/crushing/raw_quicksilver.json
 22a380d13d05efaac3096ebe9f014b4fd62e241b data/create/recipes/splashing/modern_industrialization/crushed_raw_tin.json
 615e9fd31d518d0a0b8f16f61218ef3861aaef79 data/create/recipes/filling/honey_bottle.json
 33e338242aff64f9d52169392d2eb8e617b8da5c data/create/recipes/deploying/waxed_cut_copper_slab_from_adding_wax.json
@@ -594,7 +594,7 @@ fce8557c942ebbb48b1096fd4f0efbddc9a6044e data/create/recipes/cutting/compat/envi
 98bc23c54317ecf4ab244d3be16f20eb6fd7ec49 data/create/recipes/milling/compat/biomesoplenty/blue_hydrangea.json
 7244424b8f74e71d65b130486f3c6764774a7819 data/create/recipes/cutting/compat/byg/cherry_wood.json
 9cd5a6c71b5102ef2660e8a5c650cbd2c2327580 data/create/recipes/deploying/waxed_exposed_cut_copper_stairs_from_adding_wax.json
-c8ec61f32d2b4328c7f479ea89ff6e8346d09e48 data/create/recipes/crushing/raw_platinum_block.json
+efee62f67cfe6402143e116965761f7fb2e8932b data/create/recipes/crushing/raw_platinum_block.json
 09e114685483329a78c3cecf8b312f16d26cd981 data/create/recipes/milling/compat/botania/magenta_petal.json
 d0c7805681e3ed6a6bc5775d42c702af924e8785 data/create/recipes/deploying/waxed_oxidized_copper_shingle_stairs_from_adding_wax.json
 43481011579803a4f9d363cc2e1756e4118d0adc data/create/recipes/cutting/compat/biomesoplenty/stripped_palm_log.json
@@ -604,7 +604,7 @@ acb785fd57d14ac337beacc0a0a0651d75dd45da data/create/recipes/crushing/prismarine
 1230f449873262e79585752d3430e5f7f383bcb2 data/create/recipes/deploying/large_cogwheel.json
 3192777eeb363a55174a0eb58197ee686b2e02c7 data/create/recipes/milling/compat/botania/blue_petal.json
 7e0a167201b9c915579ede71ee7128bccdeee9c2 data/create/recipes/milling/compat/botania/purple_petal.json
-9d57ee6ee5911e023304a899b63f9b936fd9b2f4 data/create/recipes/crushing/raw_uranium.json
+54888827fb4a2ad62f8b6be180a9020bc3bc08bc data/create/recipes/crushing/raw_uranium.json
 10d21f4f9f916917dff43991f1b1ee26dffe1da5 data/create/recipes/milling/compat/regions_unexplored/black_snowbelle.json
 87e74ad45287a291ffab75f10330afb527510bed data/create/recipes/cutting/compat/quark/blossom_log.json
 eff2e77f004873e695e419afc71a7011328d3de8 data/create/recipes/deploying/waxed_exposed_copper_shingles_from_adding_wax.json
@@ -716,7 +716,7 @@ b895ef423e64936b5d94ee54a6527316ed48d9d6 data/create/recipes/deploying/waxed_exp
 4e16347d3ec542f940b6043c292b6e857201d1c6 data/create/recipes/mixing/chocolate_melting.json
 f5c504dc1da567692db7264d5bd03079061cdaa9 data/create/recipes/crushing/compat/ae2/deepslate_quartz_ore.json
 3486d82cc7e909cfd48b4cc6d6a344a7586cad8d data/create/recipes/crushing/compat/byg/brimstone_nether_quartz_ore.json
-89e89b6353dc6635e7682f71123397c42eae69f7 data/create/recipes/crushing/raw_aluminum_block.json
+3cc0277210e1d627e7978c6c6fe649e79520ad49 data/create/recipes/crushing/raw_aluminum_block.json
 fef995b64a04a2e29bdbb7ec83ee5bcf0bff8144 data/create/recipes/cutting/compat/byg/zelkova_wood.json
 d480b1b4c48440c6d6cb775321e95be7ea171aa5 data/create/recipes/milling/andesite.json
 e34df7cc80df6139a0f77cd5f7b8b17b0abbffa9 data/create/recipes/cutting/jungle_wood.json
@@ -807,7 +807,7 @@ cc042fa35bd58d93d95247ccbc38594a645804f0 data/create/recipes/mixing/andesite_all
 1d8dab24913945268f819c24e132d8bb74f792c2 data/create/recipes/milling/compat/botania/cyan_petal.json
 e5466fa647c7b85ef558ed00d61a2aaeffd53c7f data/create/recipes/crushing/compat/galosphere/allurite.json
 e921d41b942cccfad7f84ff91226cee403c10b9c data/create/recipes/cutting/compat/regions_unexplored/green_bioshroom_stem.json
-a739bb62e9381c09746bc4f1f91c4c4a584a905c data/create/recipes/crushing/raw_nickel_block.json
+a6ed6ee27a773fac7f3c91ed638939238f3b0751 data/create/recipes/crushing/raw_nickel_block.json
 079c1a6893dde3c543057388f4ebf26d3a5a139b data/create/recipes/milling/compat/regions_unexplored/lime_snowbelle.json
 d8031f360f61b4faaa69f8de67829654126c8562 data/create/recipes/milling/compat/regions_unexplored/red_lupine.json
 25a16e38ee6d9d241c89fa6787838b53862218b7 data/create/recipes/cutting/compat/ecologics/coconut_log.json
@@ -861,7 +861,7 @@ b1e839dcea8ff661a1ed506d4d5010d6c27e18f3 data/create/recipes/cutting/compat/atmo
 b47c787eca0e770dbf15a945fa77320b2b041123 data/create/recipes/cutting/compat/twilightforest/time_log.json
 4324ecdabdc24cb90bcf9bc2bb10f509b3deaf32 data/create/recipes/cutting/compat/biomesoplenty/stripped_willow_log.json
 878cb25bdfd02edc39bb6c661d4e8cf78fb8a127 data/create/recipes/splashing/stained_glass_pane.json
-d9cb13d74b59b02d4be5a23764892e97cc014a9b data/create/recipes/crushing/raw_silver_block.json
+b2c90317faa3dcd7e1b9f86558748d7a015ea22a data/create/recipes/crushing/raw_silver_block.json
 7f48c3aacd003afe1694299754828a538b5030f8 data/create/recipes/filling/sweet_roll.json
 d4053dba524524329f43df5bdde81d9ee07838b5 data/create/recipes/splashing/light_gray_concrete_powder.json
 be56ae757b7389926fae6df461bf34a3ecc67b6d data/create/recipes/crushing/compat/silentgems/amethyst_ore.json
@@ -898,7 +898,7 @@ daec20896057eb121c5515debe331a562e8c7a7d data/create/recipes/cutting/compat/byg/
 582083e0fed8760cde2c53aa2b02237eb59a3df0 data/create/recipes/deploying/waxed_exposed_copper_tile_slab_from_adding_wax.json
 6bcb55ebebbf7ab3745f2764238231cc3f761ccb data/create/recipes/milling/compat/byg/protea_flower.json
 6b04c43b3580082ae8ec4b27b3233d51e8252eeb data/create/recipes/cutting/compat/nethers_exoticism/stripped_jabuticaba_log.json
-aab23e77ddc3fffa0e31a4ecff05cbefbb26b7bb data/create/recipes/crushing/raw_platinum.json
+cc7e9879395ed5378e2ba793460c448072416404 data/create/recipes/crushing/raw_platinum.json
 b9f76af7f58d3e9b0689795dcad4c72be7f75211 data/create/recipes/milling/sunflower.json
 28cbeb278022b2ac62cae2f3deaa65cb375c6456 data/create/recipes/milling/compat/botania/white_petal.json
 05e677cc933d0ab39beba97168ffd7bcb733cf8c data/create/recipes/cutting/compat/blue_skies/cherry_wood.json
@@ -953,7 +953,7 @@ a22ad6cea98d59488fd40e3bda638ed6a5c9e148 data/create/recipes/cutting/compat/byg/
 f1ffa300ded530476cd4e87d498abf1e66f58656 data/create/recipes/cutting/compat/biomesoplenty/mahogany_wood.json
 720ff9753bb30e874483fc850c3cbc8bfa973224 data/create/recipes/milling/bone.json
 b60cd78ba245e9748aa3d515254cdabab4637a3b data/create/recipes/cutting/compat/twilightforest/time_wood.json
-05c64f60def151a8be3ba5632df4bef817605fbc data/create/recipes/crushing/raw_tin.json
+1382139595f6b4f4072e02ae775257e3f5fd4568 data/create/recipes/crushing/raw_tin.json
 32aaf64568521556d4900921e4fdb064510d0e44 data/create/recipes/milling/compat/environmental/violet.json
 88bc4f3520d3f60ea931ccddd69037436c9636fe data/create/recipes/milling/compat/byg/allium_flower_bush.json
 5c390fe9127a8e23189bf13151d0db41329661ec data/create/recipes/crushing/compat/silentgems/flourite_ore.json
@@ -993,7 +993,7 @@ eecd6194b0efc2bee321ba7fac7348cd3f5911ab data/create/recipes/deploying/waxed_cop
 cd4c050e6ad9227bf293768f2d8b965c0ecafeab data/create/recipes/deploying/waxed_weathered_cut_copper_stairs_from_adding_wax.json
 07e8991a2161aab4dd73bb74900fd0c70aad2847 data/create/recipes/crushing/nether_gold_ore.json
 bd33a879dc55a153c9aa4d4e3a62befb7b58c6d7 data/create/recipes/cutting/compat/byg/stripped_redwood_wood.json
-5d544fb1b479c81a7460e710f9cb95a6798550dd data/create/recipes/crushing/raw_lead.json
+da6764a8a979bda314fdc35d2cc519fa6afa8ac6 data/create/recipes/crushing/raw_lead.json
 4c26555483c978d853d2dfee144042ba0496ddca data/create/recipes/cutting/compat/regions_unexplored/redwood_log.json
 b816e80fd09048c263910893e78f987f2edbc81d data/create/recipes/cutting/compat/twilightforest/stripped_mangrove_wood.json
 fb111cb957a91d8f980d897005a39d1a3bd2d6c1 data/create/recipes/cutting/compat/tconstruct/stripped_bloodshroom_log.json
@@ -1102,12 +1102,12 @@ ecb1fcf44c7fa8461ec2857ae83c1c88b8dc73b6 data/create/recipes/cutting/compat/envi
 97b7b3f65807328d0a036cb66ee53d898504da77 data/create/recipes/deploying/waxed_oxidized_copper_from_adding_wax.json
 7b798944fecbcbb1b0796551cf572b7bf0cdd40a data/create/recipes/crushing/compat/silentgems/black_diamond_ore.json
 2d8f94acb8364f92818ec2186f1918494e725507 data/create/recipes/cutting/compat/biomesoplenty/cherry_log.json
-cac4f050a79c7dd12a9afd24edc3426748c2a6d0 data/create/recipes/crushing/raw_aluminum.json
+15dc31b527f49b033b91ad3ef2a88b3922677604 data/create/recipes/crushing/raw_aluminum.json
 4a8e4f3eea3566ab1b8eb890728d765f6acf0db0 data/create/recipes/crushing/compat/silentgems/carnelian_ore.json
 b90e5b0a18d6d2e7eae62d0caf41fb3dd597c1e9 data/create/recipes/cutting/stripped_crimson_hyphae.json
 0d8201d59773c8b33f4b066b74654d9c802220f2 data/create/recipes/splashing/yellow_concrete_powder.json
 5b3eab6a44b9c76e6317254214991128450c0cd7 data/create/recipes/cutting/dark_oak_wood.json
-5d5240f54298a850f0d5a768451c6c362ae0d33b data/create/recipes/crushing/raw_silver.json
+d5c323dc46f57058b39128e4ae6d0499b9a8901e data/create/recipes/crushing/raw_silver.json
 ec974355f513705d67041e6fbbf72e8d314ef99a data/create/recipes/cutting/compat/biomesoplenty/fir_log.json
 6f98f067d53badf3f9c9f52404ee561261d2da34 data/create/recipes/milling/grass.json
 fd305b77503fe6adff952a37260d45cb7332785c data/create/recipes/milling/compat/byg/lolipop_flower.json
