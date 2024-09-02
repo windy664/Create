@@ -12,14 +12,12 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Widget;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -99,7 +97,7 @@ public class OpenCreateMenuButton extends Button {
 
 			int offsetX_ = offsetX;
 			MutableObject<OpenCreateMenuButton> toAdd = new MutableObject<>(null);
-			((ScreenAccessor) screen).port_lib$getChildren().stream()
+			Screens.getButtons(screen).stream()
 				.filter(w -> w instanceof AbstractWidget)
 				.map(w -> (AbstractWidget) w)
 				.filter(w -> w.getMessage()
