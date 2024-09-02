@@ -339,7 +339,8 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 
 		ItemStack returned = ItemStack.EMPTY;
 		int maxCount = heldItem.stack.getMaxStackSize();
-		if (maxCount < heldItem.stack.getCount())
+		boolean stackTooLarge = maxCount < heldItem.stack.getCount();
+		if (stackTooLarge)
 			returned = ItemHandlerHelper.copyStackWithSize(heldItem.stack, heldItem.stack.getCount() - maxCount);
 
 		if (this.isEmpty()) {
@@ -349,8 +350,14 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 			else
 				TransactionCallback.onSuccess(ctx, () -> AllSoundEvents.DEPOT_PLOP.playOnServer(getWorld(), getPos()));
 		}
+
 		snapshotParticipant.updateSnapshots(ctx);
-		heldItem = heldItem.copy();
+
+		if (stackTooLarge) {
+			heldItem = heldItem.copy();
+			heldItem.stack.setCount(maxCount);
+		}
+
 		this.heldItem = heldItem;
 		onHeldInserted.accept(heldItem.stack);
 		return returned;
