@@ -16,7 +16,6 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
@@ -62,7 +61,7 @@ public abstract class CreateRecipeProvider extends FabricRecipeProvider {
 		}
 
 		static TagKey<Item> gold() {
-			return AllTags.forgeItemTag("gold_ingots");
+			return Tags.Items.INGOTS_GOLD;
 		}
 
 		static TagKey<Item> goldSheet() {
@@ -73,7 +72,7 @@ public abstract class CreateRecipeProvider extends FabricRecipeProvider {
 			return Tags.Items.STONE;
 		}
 
-		static ItemLike andesite() {
+		static ItemLike andesiteAlloy() {
 			return AllItems.ANDESITE_ALLOY.get();
 		}
 
@@ -106,7 +105,7 @@ public abstract class CreateRecipeProvider extends FabricRecipeProvider {
 		}
 
 		static TagKey<Item> ironNugget() {
-			return AllTags.forgeItemTag("iron_nuggets");
+			return Tags.Items.NUGGETS_IRON;
 		}
 
 		static TagKey<Item> zinc() {
@@ -137,10 +136,6 @@ public abstract class CreateRecipeProvider extends FabricRecipeProvider {
 			return AllItems.PRECISION_MECHANISM.get();
 		}
 
-		static ItemLike copperBlock() {
-			return Items.COPPER_BLOCK;
-		}
-
 		static TagKey<Item> brassBlock() {
 			return AllTags.forgeItemTag("brass_blocks");
 		}
@@ -153,16 +148,20 @@ public abstract class CreateRecipeProvider extends FabricRecipeProvider {
 			return AllTags.forgeItemTag("wheat_flour");
 		}
 
-		static ItemLike copper() {
-			return Items.COPPER_INGOT;
-		}
-
-		static TagKey<Item> copperSheet() {
-			return AllTags.forgeItemTag("copper_plates");
+		static TagKey<Item> copper() {
+			return Tags.Items.INGOTS_COPPER;
 		}
 
 		static TagKey<Item> copperNugget() {
 			return AllTags.forgeItemTag("copper_nuggets");
+		}
+
+		static TagKey<Item> copperBlock() {
+			return Tags.Items.STORAGE_BLOCKS_COPPER;
+		}
+
+		static TagKey<Item> copperSheet() {
+			return AllTags.forgeItemTag("plates/copper");
 		}
 
 		static TagKey<Item> brassNugget() {
@@ -186,7 +185,7 @@ public abstract class CreateRecipeProvider extends FabricRecipeProvider {
 		}
 
 		static Ingredient netherite() {
-			return Ingredient.of(AllTags.forgeItemTag("netherite_ingots"));
+			return Ingredient.of(Tags.Items.INGOTS_NETHERITE);
 		}
 
 	}

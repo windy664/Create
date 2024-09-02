@@ -427,7 +427,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			inserter = BlockEntityBehaviour.get(level, be.getBlockPos(), InvManipulationBehaviour.TYPE);
 		}
 
-		if (be instanceof BasinBlockEntity)
+		if (filter != null && filter.isRecipeFilter())
 			filter = null; // Do not test spout outputs against the recipe filter
 
 		Storage<ItemVariant> targetInv = getItemSpoutputOutput(direction);
