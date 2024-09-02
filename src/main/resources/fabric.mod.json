@@ -63,9 +63,10 @@
     "optifabric": "*",
     "colormatic": "<=3.1.1",
     "iris": "<=1.2.5",
+    
+    "create_interactive": "*",
 
     "railways": "<1.4.8",
-    "create_interactive": "<=1.0.0-beta.3",
     "garnished": "<=1.6.3",
     "create_basic_additions": "<=1.0.1",
     "createmorepotatoes": "<=1.0.3",
