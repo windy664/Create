@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "C": {
-      "item": "minecraft:copper_ingot"
+      "tag": "c:copper_ingots"
     },
     "P": {
       "tag": "c:gold_plates"

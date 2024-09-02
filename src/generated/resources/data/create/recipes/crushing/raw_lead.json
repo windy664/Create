@@ -3,14 +3,14 @@
     {
       "condition": "fabric:tags_populated",
       "values": [
-        "c:raw_lead_ores"
+        "c:raw_materials/lead"
       ]
     }
   ],
   "type": "create:crushing",
   "ingredients": [
     {
-      "tag": "c:raw_lead_ores"
+      "tag": "c:raw_materials/lead"
     }
   ],
   "processingTime": 400,

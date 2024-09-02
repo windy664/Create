@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "item": "minecraft:raw_iron_block"
+      "tag": "c:raw_iron_blocks"
     }
   ],
   "processingTime": 400,
