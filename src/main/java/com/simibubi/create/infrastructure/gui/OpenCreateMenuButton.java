@@ -15,6 +15,9 @@ import io.github.fabricators_of_create.porting_lib.mixin.client.accessor.ScreenA
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -22,6 +25,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
+
+import org.apache.commons.lang3.mutable.MutableObject;
 
 public class OpenCreateMenuButton extends Button {
 
@@ -72,11 +77,7 @@ public class OpenCreateMenuButton extends Button {
 
 	public static class OpenConfigButtonHandler {
 
-		// onGuiInit
-		@SubscribeEvent
-		public static void onInitScreen(ScreenEvent.InitScreenEvent event) {
-			Screen screen = event.getScreen();
-
+		public static void onGuiInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
 			MenuRows menu;
 			int rowIdx;
 			int offsetX;
@@ -100,9 +101,8 @@ public class OpenCreateMenuButton extends Button {
 			String targetMessage = I18n.get((onLeft ? menu.leftTextKeys : menu.rightTextKeys).get(rowIdx - 1));
 
 			int offsetX_ = offsetX;
-			MutableObject<GuiEventListener> toAdd = new MutableObject<>(null);
-			event.getListenersList()
-				.stream()
+			MutableObject<OpenCreateMenuButton> toAdd = new MutableObject<>(null);
+			((ScreenAccessor) screen).port_lib$getChildren().stream()
 				.filter(w -> w instanceof AbstractWidget)
 				.map(w -> (AbstractWidget) w)
 				.filter(w -> w.getMessage()
@@ -112,7 +112,7 @@ public class OpenCreateMenuButton extends Button {
 				.ifPresent(w -> toAdd
 					.setValue(new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)));
 			if (toAdd.getValue() != null)
-				event.addListener(toAdd.getValue());
+				screen.addRenderableWidget(toAdd.getValue());
 		}
 
 	}

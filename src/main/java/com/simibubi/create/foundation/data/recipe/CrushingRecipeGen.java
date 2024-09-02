@@ -22,6 +22,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
+import me.alphamode.forgetags.Tags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
 import net.minecraft.core.Registry;
@@ -33,10 +34,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.conditions.NotCondition;
-import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class CrushingRecipeGen extends ProcessingRecipeGen {
 
@@ -528,7 +525,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			int amount = block ? 9 : 1;
 			String tagPath = (block ? "storage_blocks/raw_" : "raw_materials/") + name;
 			return b.duration(400)
-				.withCondition(new NotCondition(new TagEmptyCondition("forge", tagPath)))
+				.withCondition(DefaultResourceConditions.itemTagsPopulated(AllTags.forgeItemTag(tagPath)))
 				.require(AllTags.forgeItemTag(tagPath))
 				.output(result.get(), amount)
 				.output(.75f, AllItems.EXP_NUGGET.get(), amount);
