@@ -5,13 +5,13 @@
       "item": "create:andesite_alloy"
     },
     "B": {
-      "tag": "c:storage_blocks/copper"
+      "tag": "c:copper_blocks"
     },
     "G": {
       "item": "create:shaft"
     },
     "P": {
-      "tag": "c:ingots/copper"
+      "tag": "c:copper_ingots"
     }
   },
   "pattern": [

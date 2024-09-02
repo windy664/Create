@@ -1,4 +1,4 @@
-// 1.19.2	2024-08-10T10:07:20.388960674	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2024-09-02T17:53:12.650372897	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 144ec3864fb0a7981e74d357200a96033c75a2d6 assets/create/models/block/cut_deepslate.json
 eff46540ee57be9223011f46d40ffd92a7518616 assets/create/models/block/cut_scoria_stairs_outer.json
 ba1ab31dd3ed2fbf9709ef2ba509b7ac210f5ad2 assets/create/blockstates/large_water_wheel.json
@@ -981,7 +981,7 @@ f1eee675c4c7c70728ec76454b6da65ccf725ce8 data/c/tags/items/nuggets.json
 5272c61c8c17eb7a528cade93bbc80fd9ef51521 data/create/recipes/asurine_from_stone_types_asurine_stonecutting.json
 480a7585107ebbfd54f3288eccb68e639790fe3c assets/create/models/item/sequenced_gearshift.json
 14deacf26b83b06de47d5076ea8ba3c24561d966 data/create/recipes/polished_cut_tuff_from_stone_types_tuff_stonecutting.json
-7cd7b3c4aa57f52af13e8dd0230af25878d56a82 assets/create/lang/en_us.json
+f6d16a26137ea690cedc7cae5e2e1019ce431e32 assets/create/lang/en_us.json
 31ee144085b7f83584005ed820c7889f906b71b4 data/create/recipes/crafting/kinetics/red_valve_handle_from_other_valve_handle.json
 84dd3522b4f68627eb50f21a6ed92616d1e49907 assets/create/models/block/cut_andesite_stairs_outer.json
 fce7bf52fd5d760f69fc3b99f435af991ad0aadd data/create/recipes/copycat_panel_from_zinc_ingots_stonecutting.json
@@ -4004,7 +4004,7 @@ f8f9802df9c0b4e39edeefc3b1abb38255d79801 assets/create/blockstates/purple_sail.j
 675479b236bce6994b2dc6a3ac3abda270dc72ab data/create/recipes/cut_calcite_brick_slab.json
 2006f482a0efe5d087082f0b3374af12e4e30133 data/c/tags/items/copper_nuggets.json
 3ff2f65dafcb4654b99e0d65b7e851760f9a4075 assets/create/blockstates/cut_dripstone_brick_stairs.json
-acf1ad426a9c721ae5e0e20f12489edb36a8ac68 assets/create/lang/en_ud.json
+b8f2b988ac6bba27db1a6c09800d04378c2be0dc assets/create/lang/en_ud.json
 7f128501d989122df9d2ab002a497356831caa1c assets/create/models/block/small_diorite_brick_stairs_inner.json
 1f8c70ffc04e990d0f18994f0b9ceb9f840d19b6 data/c/tags/items/zinc_nuggets.json
 8725b8d89416b5fcfc02a69038046067e834bf48 assets/create/models/block/brass_post.json

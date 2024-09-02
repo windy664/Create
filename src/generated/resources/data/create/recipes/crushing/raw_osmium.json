@@ -2,15 +2,15 @@
   "type": "create:crushing",
   "fabric:load_conditions": [
     {
-      "condition": "fabric:tags_populated",
+      "condition": "fabric:item_tags_populated",
       "values": [
-        "c:raw_osmium_ores"
+        "c:raw_materials/osmium"
       ]
     }
   ],
   "ingredients": [
     {
-      "tag": "c:raw_osmium_ores"
+      "tag": "c:raw_materials/osmium"
     }
   ],
   "processingTime": 400,

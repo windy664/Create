@@ -2,15 +2,15 @@
   "type": "create:crushing",
   "fabric:load_conditions": [
     {
-      "condition": "fabric:tags_populated",
+      "condition": "fabric:item_tags_populated",
       "values": [
-        "c:raw_tin_ores"
+        "c:raw_materials/tin"
       ]
     }
   ],
   "ingredients": [
     {
-      "tag": "c:raw_tin_ores"
+      "tag": "c:raw_materials/tin"
     }
   ],
   "processingTime": 400,

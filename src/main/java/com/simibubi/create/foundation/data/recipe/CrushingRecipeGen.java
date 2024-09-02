@@ -525,7 +525,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			int amount = block ? 9 : 1;
 			String tagPath = (block ? "storage_blocks/raw_" : "raw_materials/") + name;
 			return b.duration(400)
-				.withCondition(DefaultResourceConditions.itemTagsPopulated(AllTags.forgeItemTag(tagPath)))
+				.withCondition(DefaultResourceConditions.tagsPopulated(AllTags.forgeItemTag(tagPath)))
 				.require(AllTags.forgeItemTag(tagPath))
 				.output(result.get(), amount)
 				.output(.75f, AllItems.EXP_NUGGET.get(), amount);

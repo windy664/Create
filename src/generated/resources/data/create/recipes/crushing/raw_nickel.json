@@ -2,15 +2,15 @@
   "type": "create:crushing",
   "fabric:load_conditions": [
     {
-      "condition": "fabric:tags_populated",
+      "condition": "fabric:item_tags_populated",
       "values": [
-        "c:raw_nickel_ores"
+        "c:raw_materials/nickel"
       ]
     }
   ],
   "ingredients": [
     {
-      "tag": "c:raw_nickel_ores"
+      "tag": "c:raw_materials/nickel"
     }
   ],
   "processingTime": 400,

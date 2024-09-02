@@ -3,7 +3,7 @@
   "heatRequirement": "heated",
   "ingredients": [
     {
-      "tag": "c:ingots/copper"
+      "tag": "c:copper_ingots"
     },
     {
       "tag": "c:zinc_ingots"
