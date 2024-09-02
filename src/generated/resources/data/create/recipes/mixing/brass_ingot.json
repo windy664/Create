@@ -2,7 +2,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "tag": "forge:ingots/copper"
+      "tag": "c:ingots/copper"
     },
     {
       "tag": "c:ingots/zinc"

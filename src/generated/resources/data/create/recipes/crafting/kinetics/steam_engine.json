@@ -10,7 +10,7 @@
       "tag": "c:plates/gold"
     },
     "C": {
-      "tag": "forge:storage_blocks/copper"
+      "tag": "c:storage_blocks/copper"
     },
     "A": {
       "item": "create:andesite_alloy"
