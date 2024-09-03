@@ -5,7 +5,11 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- added red sandpaper as a polishing workstation to EMI (#1453)
-- fix a possible error in EMI init (#1439)
-- fix deploying in EMI missing sandpaper and item application recipes (#1397)
+- Added red sandpaper as a polishing workstation to EMI (#1453)
+- Fix a possible error in EMI init (#1439)
+- Fix deploying in EMI missing sandpaper and item application recipes (#1397)
 - Remove breaks for Sound Physics Remastered
+- Implement breaks for Create: Interactive
+- Fix ingredients overlapping with heat bar when using EMI (#1582)
+- Fix extendo grip not using up durability
+- Update to 0.5.1.g (https://github.com/Creators-of-Create/Create/wiki/0.5.1g)
