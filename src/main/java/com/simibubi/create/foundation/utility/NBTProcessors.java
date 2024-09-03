@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
@@ -11,13 +12,16 @@ import com.simibubi.create.AllBlockEntityTypes;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public final class NBTProcessors {
 
@@ -34,27 +38,6 @@ public final class NBTProcessors {
 	}
 
 	static {
-		String[] signSides = new String[] { "front_text", "back_text" };
-		UnaryOperator<CompoundTag> signProcessor = data -> {
-			for (String side : signSides) {
-				if (data.contains(side, Tag.TAG_COMPOUND)) {
-					CompoundTag sideData = data.getCompound(side);
-					if (sideData.contains("messages", Tag.TAG_LIST)) {
-						ListTag messages = sideData.getList("messages", Tag.TAG_STRING);
-						for (int i = 0; i < messages.size(); i++) {
-							String string = messages.getString(i);
-							if (textComponentHasClickEvent(string)) {
-								return null;
-							}
-						}
-					}
-				}
-			}
-			return data;
-		};
-		addProcessor(BlockEntityType.SIGN, signProcessor);
-		addProcessor(BlockEntityType.HANGING_SIGN, signProcessor);
-
 		addProcessor(BlockEntityType.LECTERN, data -> {
 			if (!data.contains("Book", Tag.TAG_COMPOUND))
 				return data;
@@ -77,6 +60,20 @@ public final class NBTProcessors {
 		addProcessor(AllBlockEntityTypes.CREATIVE_CRATE.get(), itemProcessor("Filter"));
 		addProcessor(AllBlockEntityTypes.PLACARD.get(), itemProcessor("Item"));
 	}
+
+	// Triggered by block tag, not BE type
+	private static final UnaryOperator<CompoundTag> signProcessor = data -> {
+		for (String key : List.of("front_text", "back_text")) {
+			CompoundTag textTag = data.getCompound(key);
+			if (!textTag.contains("messages", Tag.TAG_LIST))
+				continue;
+			for (Tag tag : textTag.getList("messages", Tag.TAG_STRING))
+				if (tag instanceof StringTag stringTag)
+					if (textComponentHasClickEvent(stringTag.getAsString()))
+						return null;
+		}
+		return data;
+	};
 
 	public static UnaryOperator<CompoundTag> itemProcessor(String tagKey) {
 		return data -> {
@@ -131,7 +128,7 @@ public final class NBTProcessors {
 	private NBTProcessors() {}
 
 	@Nullable
-	public static CompoundTag process(BlockEntity blockEntity, CompoundTag compound, boolean survival) {
+	public static CompoundTag process(BlockState blockState, BlockEntity blockEntity, CompoundTag compound, boolean survival) {
 		if (compound == null)
 			return null;
 		BlockEntityType<?> type = blockEntity.getType();
@@ -143,6 +140,8 @@ public final class NBTProcessors {
 				.apply(compound);
 		if (blockEntity instanceof SpawnerBlockEntity)
 			return compound;
+		if (blockState.is(BlockTags.ALL_SIGNS))
+			return signProcessor.apply(compound);
 		if (blockEntity.onlyOpCanSetNbt())
 			return null;
 		return compound;

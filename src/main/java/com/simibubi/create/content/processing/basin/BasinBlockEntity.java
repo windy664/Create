@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.simibubi.create.foundation.utility.IntAttached;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
@@ -425,6 +427,9 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			inserter = BlockEntityBehaviour.get(level, be.getBlockPos(), InvManipulationBehaviour.TYPE);
 		}
 
+		if (filter != null && filter.isRecipeFilter())
+			filter = null; // Do not test spout outputs against the recipe filter
+
 		Storage<ItemVariant> targetInv = getItemSpoutputOutput(direction);
 		if (targetInv == null && inserter != null) targetInv = inserter.getInventory();
 
@@ -446,21 +451,24 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 					continue;
 				}
 
-				if (targetInv == null)
-					break;
-				try (Transaction nested = t.openNested()) {
-					long inserted = targetInv.insert(ItemVariant.of(itemStack), itemStack.getCount(), nested);
-					if (itemStack.getCount() != inserted)
-						continue;
-					if (filter != null && !filter.test(itemStack))
-						continue;
+			if (targetInv == null)
+				break;
 
-					update = true;
-					iterator.remove();
-					visualizedOutputItems.add(LongAttached.withZero(itemStack));
-					nested.commit();
-				}
-			}
+			long inserted = TransferUtil.insertItem(targetInv, itemStack);
+			if (inserted == 0)
+				continue;
+			if (filter != null && !filter.test(itemStack))
+				continue;
+
+			visualizedOutputItems.add(LongAttached.withZero(itemStack));
+			update = true;
+
+			inserted = TransferUtil.insertItem(targetInv, itemStack.copy());
+			if (inserted == itemStack.getCount())
+				iterator.remove();
+			else
+				itemStack.setCount((int) inserted);
+		}
 
 			for (Iterator<FluidStack> iterator = spoutputFluidBuffer.iterator(); iterator.hasNext();) {
 				FluidStack fluidStack = iterator.next();
@@ -590,9 +598,9 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 					return false;
 			}
 
-			for (ItemStack itemStack : outputItems) {
-				spoutputBuffer.add(itemStack.copy());
-			}
+			for (ItemStack itemStack : outputItems)
+				if (!itemStack.isEmpty())
+					spoutputBuffer.add(itemStack.copy());
 			if (!externalTankNotPresent)
 				for (FluidStack fluidStack : outputFluids)
 					spoutputFluidBuffer.add(fluidStack.copy());
@@ -650,7 +658,9 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	public static HeatLevel getHeatLevelOf(BlockState state) {
 		if (state.hasProperty(BlazeBurnerBlock.HEAT_LEVEL))
 			return state.getValue(BlazeBurnerBlock.HEAT_LEVEL);
-		return AllTags.AllBlockTags.PASSIVE_BOILER_HEATERS.matches(state) && BlockHelper.isNotUnheated(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
+		return AllTags.AllBlockTags.PASSIVE_BOILER_HEATERS.matches(state) && BlockHelper.isNotUnheated(state)
+			? HeatLevel.SMOULDERING
+			: HeatLevel.NONE;
 	}
 
 	public Couple<SmartFluidTankBehaviour> getTanks() {

@@ -6,7 +6,7 @@
       "tag": "c:glass_blocks"
     },
     "P": {
-      "item": "minecraft:copper_ingot"
+      "tag": "c:copper_ingots"
     }
   },
   "pattern": [

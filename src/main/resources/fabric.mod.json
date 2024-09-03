@@ -63,8 +63,8 @@
     "porting_lib_transfer": ">=${port_lib_transfer_version}",
     "porting_lib_models": ">=${port_lib_models_version}",
     "porting_lib_client_events": ">=${port_lib_client_events_version}",
-    "porting_lib_config": ">=${port_lib_config_version}",
 
+    "forgeconfigapiport": ">=${forge_config_version}",
     "milk": ">=${milk_lib_version}",
     "reach-entity-attributes": ">=${reach_entity_attributes_version}"
   },
@@ -74,14 +74,13 @@
     "colormatic": "<=3.1.1",
     "iris": "<=1.2.5",
     "sodium": "<=0.4.10",
-
     "sound_physics_remastered": ">1.20.1-1.4.0 <1.20.2-1.0.0",
 
+    "create_interactive": "*",
     "create_tab_fix": "*",
 
     "railways": "<1.5.3",
     "create_enchantment_industry": "<1.2.16",
-    "create_interactive": "<=1.0.2-beta.1",
     "createfabricfixes": "<=0.0.1",
     "garnished": "<=1.6.3",
     "extendedgears": "<=2.1.0",

@@ -6,6 +6,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "${archivesBaseName}-refmap.json",
   "mixins": [
+    "BlockItemMixin",
     "ClientboundMapItemDataPacketMixin",
     "CustomItemUseEffectsMixin",
     "EntityMixin",
@@ -22,6 +23,7 @@
     "accessor.NbtAccounterAccessor",
     "accessor.ServerLevelAccessor",
     "accessor.SystemReportAccessor",
+    "accessor.UseOnContextAccessor",
     "fabric.AbstractMinecartMixin",
     "fabric.BlockableEventLoopAccessor",
     "fabric.EntityAccessor",
@@ -34,8 +36,10 @@
   ],
   "client": [
     "accessor.AgeableListModelAccessor",
+    "accessor.FontAccessor",
     "accessor.GameRendererAccessor",
     "accessor.HumanoidArmorLayerAccessor",
+    "accessor.MouseHandlerAccessor",
     "accessor.ParticleEngineAccessor",
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
@@ -48,8 +52,8 @@
     "client.PlayerRendererMixin",
     "client.WindowResizeMixin",
     "fabric.ClientTextTooltipAccessor",
-    "fabric.FontAccessor",
-    "fabric.GuiAccessor"
+    "fabric.GuiAccessor",
+    "fabric.LivingEntityRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

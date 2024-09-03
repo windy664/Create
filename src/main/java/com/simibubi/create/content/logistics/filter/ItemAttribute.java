@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
 import com.simibubi.create.content.logistics.filter.attribute.BookAuthorAttribute;
 import com.simibubi.create.content.logistics.filter.attribute.BookCopyAttribute;
@@ -45,6 +46,8 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -60,6 +63,7 @@ public interface ItemAttribute {
 
 	static ItemAttribute standard = register(StandardTraits.DUMMY);
 	static ItemAttribute inTag = register(new InTag(ItemTags.LOGS));
+	static ItemAttribute inItemGroup = register(InItemGroup.EMPTY);
 	static ItemAttribute addedBy = register(new AddedBy("dummy"));
 	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
 	static ItemAttribute shulkerFillLevel = register(ShulkerFillLevelAttribute.EMPTY);
@@ -271,6 +275,88 @@ public interface ItemAttribute {
 			return new InTag(TagKey.create(Registries.ITEM, new ResourceLocation(nbt.getString("space"), nbt.getString("path"))));
 		}
 
+	}
+
+	public static class InItemGroup implements ItemAttribute {
+		public static final InItemGroup EMPTY = new InItemGroup(null);
+
+		private CreativeModeTab group;
+
+		public InItemGroup(CreativeModeTab group) {
+			this.group = group;
+		}
+
+		@Override
+		public boolean appliesTo(ItemStack stack, Level world) {
+			if (group == null)
+				return false;
+
+			if (group.getDisplayItems()
+				.isEmpty()
+				&& group.getSearchTabDisplayItems()
+					.isEmpty()) {
+
+				try {
+					group.buildContents(new CreativeModeTab.ItemDisplayParameters(world.enabledFeatures(), false,
+						world.registryAccess()));
+				} catch (RuntimeException | LinkageError e) {
+					Create.LOGGER.error("Attribute Filter: Item Group crashed while building contents.",
+						group.getDisplayName()
+							.getString(),
+						e);
+					group = null;
+					return false;
+				}
+
+			}
+
+			return tabContainsItem(group, stack);
+		}
+
+		@Override
+		public boolean appliesTo(ItemStack stack) {
+			return false;
+		}
+
+		@Override
+		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
+			return CreativeModeTabs.tabs()
+				.stream()
+				.filter(tab -> tab.getType() == CreativeModeTab.Type.CATEGORY)
+				.filter(tab -> tabContainsItem(tab, stack))
+				.map(tab -> (ItemAttribute) new InItemGroup(tab))
+				.toList();
+		}
+
+		private static boolean tabContainsItem(CreativeModeTab tab, ItemStack stack) {
+			return tab.contains(stack) || tab.contains(new ItemStack(stack.getItem()));
+		}
+
+		@Override
+		public String getTranslationKey() {
+			return "in_item_group";
+		}
+
+		@Override
+		public Object[] getTranslationParameters() {
+			return new Object[] { group == null ? "<none>" : group.getDisplayName().getString() };
+		}
+
+		@Override
+		public void writeNBT(CompoundTag nbt) {
+			if (group != null) {
+				ResourceLocation groupId = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(group);
+
+				if (groupId != null) {
+					nbt.putString("group", groupId.toString());
+				}
+			}
+		}
+
+		@Override
+		public ItemAttribute readNBT(CompoundTag nbt) {
+			return nbt.contains("group") ? new InItemGroup(BuiltInRegistries.CREATIVE_MODE_TAB.get(new ResourceLocation(nbt.getString("group")))) : EMPTY;
+		}
 	}
 
 	public static class AddedBy implements ItemAttribute {

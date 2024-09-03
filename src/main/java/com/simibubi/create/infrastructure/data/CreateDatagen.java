@@ -59,6 +59,7 @@ public class CreateDatagen implements DataGeneratorEntrypoint {
 		pack.addProvider(StandardRecipeGen::new);
 		pack.addProvider(MechanicalCraftingRecipeGen::new);
 		pack.addProvider(SequencedAssemblyRecipeGen::new);
+		pack.addProvider(VanillaHatOffsetGenerator::new);
 		pack.addProvider(ProcessingRecipeGen::registerAll);
 	}
 

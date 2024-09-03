@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Components;
@@ -14,12 +13,15 @@ import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
+
+import org.apache.commons.lang3.mutable.MutableObject;
 
 public class OpenCreateMenuButton extends Button {
 
@@ -38,16 +40,10 @@ public class OpenCreateMenuButton extends Button {
 		ScreenOpener.open(new CreateMainMenuScreen(Minecraft.getInstance().screen));
 	}
 
-	public static class SingleMenuRow {
-		public final String left, right;
+	public record SingleMenuRow(String leftTextKey, String rightTextKey) {
 
-		public SingleMenuRow(String left, String right) {
-			this.left = left;
-			this.right = right;
-		}
-
-		public SingleMenuRow(String center) {
-			this(center, center);
+		public SingleMenuRow(String centerTextKey) {
+			this(centerTextKey, centerTextKey);
 		}
 	}
 
@@ -67,44 +63,52 @@ public class OpenCreateMenuButton extends Button {
 				new SingleMenuRow("menu.returnToMenu")
 		));
 
-		protected final List<String> leftButtons, rightButtons;
+		protected final List<String> leftTextKeys, rightTextKeys;
 
-		public MenuRows(List<SingleMenuRow> variants) {
-			leftButtons = variants.stream().map(r -> r.left).collect(Collectors.toList());
-			rightButtons = variants.stream().map(r -> r.right).collect(Collectors.toList());
+		public MenuRows(List<SingleMenuRow> rows) {
+			leftTextKeys = rows.stream().map(SingleMenuRow::leftTextKey).collect(Collectors.toList());
+			rightTextKeys = rows.stream().map(SingleMenuRow::rightTextKey).collect(Collectors.toList());
 		}
 	}
 
 	public static class OpenConfigButtonHandler {
 
-		public static void onGuiInit(Minecraft client, Screen gui, int scaledWidth, int scaledHeight) {
-			MenuRows menu = null;
-			int rowIdx = 0, offsetX = 0;
-			if (gui instanceof TitleScreen) {
+		public static void onGuiInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
+			MenuRows menu;
+			int rowIdx;
+			int offsetX;
+			if (screen instanceof TitleScreen) {
 				menu = MenuRows.MAIN_MENU;
 				rowIdx = AllConfigs.client().mainMenuConfigButtonRow.get();
 				offsetX = AllConfigs.client().mainMenuConfigButtonOffsetX.get();
-			} else if (gui instanceof PauseScreen) {
+			} else if (screen instanceof PauseScreen) {
 				menu = MenuRows.INGAME_MENU;
 				rowIdx = AllConfigs.client().ingameMenuConfigButtonRow.get();
 				offsetX = AllConfigs.client().ingameMenuConfigButtonOffsetX.get();
+			} else {
+				return;
 			}
 
-			if (rowIdx != 0 && menu != null) {
-				boolean onLeft = offsetX < 0;
-				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
-
-				int offsetX_ = offsetX;
-				Screens.getButtons(gui).stream()
-						.filter(w -> w.getMessage().getContents() instanceof TranslatableContents translatable
-								&& translatable.getKey().equals(target))
-						.findFirst()
-						.ifPresent(w -> {
-							gui.addRenderableWidget(
-									new OpenCreateMenuButton(w.getX() + offsetX_ + (onLeft ? -20 : w.getWidth()), w.getY())
-							);
-						});
+			if (rowIdx == 0) {
+				return;
 			}
+
+			boolean onLeft = offsetX < 0;
+			String targetMessage = I18n.get((onLeft ? menu.leftTextKeys : menu.rightTextKeys).get(rowIdx - 1));
+
+			int offsetX_ = offsetX;
+			MutableObject<OpenCreateMenuButton> toAdd = new MutableObject<>(null);
+			Screens.getButtons(screen).stream()
+				.filter(w -> w instanceof AbstractWidget)
+				.map(w -> (AbstractWidget) w)
+				.filter(w -> w.getMessage()
+					.getString()
+					.equals(targetMessage))
+				.findFirst()
+				.ifPresent(w -> toAdd
+					.setValue(new OpenCreateMenuButton(w.getX() + offsetX_ + (onLeft ? -20 : w.getWidth()), w.getY())));
+			if (toAdd.getValue() != null)
+				screen.addRenderableWidget(toAdd.getValue());
 		}
 
 	}

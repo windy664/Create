@@ -337,17 +337,30 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 			return returned;
 		}
 
+		ItemStack returned = ItemStack.EMPTY;
+		int maxCount = heldItem.stack.getMaxStackSize();
+		boolean stackTooLarge = maxCount < heldItem.stack.getCount();
+		if (stackTooLarge)
+			returned = ItemHandlerHelper.copyStackWithSize(heldItem.stack, heldItem.stack.getCount() - maxCount);
+
 		if (this.isEmpty()) {
 			if (heldItem.insertedFrom.getAxis()
-					.isHorizontal())
+				.isHorizontal())
 				TransactionCallback.onSuccess(ctx, () -> AllSoundEvents.DEPOT_SLIDE.playOnServer(getWorld(), getPos()));
 			else
 				TransactionCallback.onSuccess(ctx, () -> AllSoundEvents.DEPOT_PLOP.playOnServer(getWorld(), getPos()));
 		}
+
 		snapshotParticipant.updateSnapshots(ctx);
+
+		if (stackTooLarge) {
+			heldItem = heldItem.copy();
+			heldItem.stack.setCount(maxCount);
+		}
+
 		this.heldItem = heldItem;
-		TransactionCallback.onSuccess(ctx, () -> onHeldInserted.accept(heldItem.stack));
-		return ItemStack.EMPTY;
+		onHeldInserted.accept(heldItem.stack);
+		return returned;
 	}
 
 	public void setHeldItem(TransportedItemStack heldItem) {
@@ -377,7 +390,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 			return true;
 		return false;
 	}
-	
+
 	private ItemStack tryInsertingFromSide(TransportedItemStack transportedStack, Direction side, boolean simulate) {
 		ItemStack inserted = transportedStack.stack;
 

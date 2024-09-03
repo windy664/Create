@@ -56,6 +56,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	boolean showCount;
 
 	private FilterItemStack filter;
+
 	public int count;
 	public boolean upTo;
 	private Predicate<ItemStack> predicate;
@@ -390,4 +391,9 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 		return setFilter(side, copied);
 	}
+
+	public boolean isRecipeFilter() {
+		return recipeFilter;
+	}
+
 }

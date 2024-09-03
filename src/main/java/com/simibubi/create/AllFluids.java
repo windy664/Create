@@ -55,7 +55,6 @@ public class AllFluids {
 	static {
 		REGISTRATE.setCreativeTab(AllCreativeModeTabs.BASE_CREATIVE_TAB.key());
 	}
-
 	// Fabric: since a honey block is 4 bottles, we can't use the default 1/3 (27000)
 	// we can't make a block take 108000, since then it can't fit in the basin
 	public static final long HONEY_BOTTLE_AMOUNT = FluidConstants.BLOCK / 4;
