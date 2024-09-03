@@ -1,4 +1,4 @@
-// 1.20.1	2024-09-02T18:08:12.850186637	Create/Create's Standard Recipes
+// 1.20.1	2024-09-03T10:28:10.7115402	Create/Create's Standard Recipes
 cd7bd6a160e10d758c1609c2555c17bde8f8ddb6 data/create/recipes/crafting/materials/copper_nugget.json
 ef72e6d69fb4a8b4b389a59ccfea09f5f3b79378 data/create/advancements/recipes/misc/crafting/kinetics/steam_engine.json
 001868b8959c6d1583daa08ce7098a0bda349d08 data/create/recipes/crafting/kinetics/speedometer.json
@@ -195,8 +195,8 @@ f1c66b020628992d3fbc46e4aa6277b1a6157ae2 data/create/recipes/crafting/appliances
 409b5d70ee1ef9164c327d79472e6d66ce55dec6 data/create/recipes/crafting/appliances/filter_clear.json
 ddada7bebdab1c2448ab4f8ad436727ea0b2bafe data/create/advancements/recipes/misc/crafting/kinetics/whisk.json
 b6489530bfdd3dc4cd8a3ebe26ce345f8559f5ae data/create/advancements/recipes/misc/crafting/kinetics/framed_glass_door.json
-5b10d7e8219158fa25c587ba1709ade3ca718500 data/create/advancements/recipes/misc/blasting/silver_ingot_compat_oreganized.json
 a64868fbde0037501680368d827de96d8caef225 data/create/recipes/smelting/silver_ingot_compat_galosphere.json
+5b10d7e8219158fa25c587ba1709ade3ca718500 data/create/advancements/recipes/misc/blasting/silver_ingot_compat_oreganized.json
 1e22edba76fc82d3d06d72e3325fa015259561cb data/create/advancements/recipes/misc/smelting/zinc_ingot_from_crushed.json
 be87c0108dae97d6bcb637715749b96fbc656002 data/create/recipes/crafting/kinetics/furnace_minecart_from_contraption_cart.json
 3e7f0954559c7f2d6e0e39b74f16aea9ce355c75 data/create/advancements/recipes/misc/smelting/scoria.json
