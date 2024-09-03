@@ -1,0 +1,27 @@
+{
+  "type": "create:splashing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "atmospheric"
+      ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "atmospheric:red_arid_sand"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.125,
+      "count": 4,
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "chance": 0.05,
+      "item": "atmospheric:aloe_kernels"
+    }
+  ]
+}

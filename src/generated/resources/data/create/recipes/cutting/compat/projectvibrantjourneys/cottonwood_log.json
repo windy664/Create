@@ -1,0 +1,22 @@
+{
+  "type": "create:cutting",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "projectvibrantjourneys"
+      ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "projectvibrantjourneys:cottonwood_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "projectvibrantjourneys:stripped_cottonwood_log"
+    }
+  ]
+}

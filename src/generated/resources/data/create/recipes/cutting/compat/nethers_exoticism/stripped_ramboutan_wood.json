@@ -1,0 +1,23 @@
+{
+  "type": "create:cutting",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "nethers_exoticism"
+      ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "nethers_exoticism:stripped_ramboutan_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "nethers_exoticism:ramboutan_planks"
+    }
+  ]
+}

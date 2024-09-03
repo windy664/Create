@@ -11,19 +11,23 @@ import io.github.fabricators_of_create.porting_lib.util.FluidStack;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 
 public class VanillaFluidTargets {
 
-	public static boolean shouldPipesConnectTo(BlockState state) {
+	public static boolean canProvideFluidWithoutCapability(BlockState state) {
 		if (state.hasProperty(BlockStateProperties.LEVEL_HONEY))
 			return true;
-		if (state.is(BlockTags.CAULDRONS))
+		if (state.is(Blocks.CAULDRON))
+			return true;
+		if (state.is(Blocks.LAVA_CAULDRON))
+			return true;
+		if (state.is(Blocks.WATER_CAULDRON))
 			return true;
 		return false;
 	}
@@ -36,13 +40,15 @@ public class VanillaFluidTargets {
 				.getSource(), FluidConstants.BOTTLE);
 		}
 
-		if (state.getBlock() == Blocks.LAVA_CAULDRON) {
+		if (state.is(Blocks.LAVA_CAULDRON)) {
 			((LevelExtensions) level).updateSnapshots(ctx);
 			level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.LAVA, FluidConstants.BUCKET);
 		}
 
-		if (state.getBlock() == Blocks.WATER_CAULDRON) {
+		if (state.is(Blocks.WATER_CAULDRON) && state.getBlock() instanceof LayeredCauldronBlock lcb) {
+			if (!lcb.isFull(state))
+				return FluidStack.EMPTY;
 			((LevelExtensions) level).updateSnapshots(ctx);
 			level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.WATER, FluidConstants.BUCKET);

@@ -4,13 +4,13 @@
     {
       "condition": "fabric:tags_populated",
       "values": [
-        "c:raw_platinum_blocks"
+        "c:storage_blocks/raw_platinum"
       ]
     }
   ],
   "ingredients": [
     {
-      "tag": "c:raw_platinum_blocks"
+      "tag": "c:storage_blocks/raw_platinum"
     }
   ],
   "processingTime": 400,

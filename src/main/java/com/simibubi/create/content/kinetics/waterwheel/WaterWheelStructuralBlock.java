@@ -206,4 +206,9 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 		return stillValid(level, pos, state, false) ? getMaster(level, pos, state) : pos;
 	}
 
+	// fabric: handled in AllBlocks by not giving it the wood material
+//	@Override
+//	public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+//		return false;
+//	}
 }

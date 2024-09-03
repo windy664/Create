@@ -1,0 +1,21 @@
+{
+  "type": "create:pressing",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "betterend"
+      ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "betterend:shadow_grass"
+    }
+  ],
+  "results": [
+    {
+      "item": "betterend:shadow_grass_path"
+    }
+  ]
+}

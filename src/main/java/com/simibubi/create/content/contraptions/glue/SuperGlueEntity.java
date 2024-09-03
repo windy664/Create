@@ -163,7 +163,13 @@ public class SuperGlueEntity extends Entity
 
 	@Override
 	public void tick() {
-		super.tick();
+		xRotO = getXRot();
+		yRotO = getYRot();
+		walkDistO = walkDist;
+		xo = getX();
+		yo = getY();
+		zo = getZ();
+
 		if (getBoundingBox().getXsize() == 0)
 			discard();
 	}
@@ -302,6 +308,7 @@ public class SuperGlueEntity extends Entity
 	public void setPortalEntrancePos() {
 		portalEntrancePos = blockPosition();
 	}
+
 	@Override
 	public PortalInfo findDimensionEntryPoint(ServerLevel pDestination) {
 		return super.findDimensionEntryPoint(pDestination);

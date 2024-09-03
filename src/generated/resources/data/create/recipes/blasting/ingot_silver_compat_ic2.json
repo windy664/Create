@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.1,
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "ic2"
+      ]
+    }
+  ],
+  "ingredient": {
+    "item": "create:crushed_raw_silver"
+  },
+  "result": "ic2:ingot_silver"
+}

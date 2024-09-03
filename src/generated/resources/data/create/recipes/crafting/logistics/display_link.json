@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "tag": "c:copper_plates"
+      "tag": "c:plates/copper"
     },
     "C": {
       "item": "minecraft:redstone_torch"

@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "item": "minecraft:raw_copper_block"
+      "tag": "c:raw_copper_blocks"
     }
   ],
   "processingTime": 400,

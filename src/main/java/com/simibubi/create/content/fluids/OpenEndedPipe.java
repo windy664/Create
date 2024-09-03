@@ -193,6 +193,8 @@ public class OpenEndedPipe extends FlowSource {
 			return false;
 		if (!(fluid.getFluid() instanceof FlowingFluid))
 			return false;
+		if (!(fluid.getFluid() instanceof FlowingFluid))
+			return false;
 		if (!FluidHelper.hasBlockState(fluid.getFluid()) || fluid.getFluid().is(Milk.MILK_FLUID_TAG)) // fabric: milk logic is different
 			return true;
 

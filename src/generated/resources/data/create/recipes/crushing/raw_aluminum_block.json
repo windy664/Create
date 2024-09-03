@@ -4,13 +4,13 @@
     {
       "condition": "fabric:tags_populated",
       "values": [
-        "c:raw_aluminum_blocks"
+        "c:storage_blocks/raw_aluminum"
       ]
     }
   ],
   "ingredients": [
     {
-      "tag": "c:raw_aluminum_blocks"
+      "tag": "c:storage_blocks/raw_aluminum"
     }
   ],
   "processingTime": 400,

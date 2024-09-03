@@ -2,7 +2,7 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "item": "minecraft:raw_gold"
+      "tag": "c:gold_raw_materials"
     }
   ],
   "processingTime": 400,

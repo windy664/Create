@@ -1,0 +1,22 @@
+{
+  "type": "create:cutting",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "atmospheric"
+      ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "atmospheric:aspen_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "atmospheric:stripped_aspen_wood"
+    }
+  ]
+}
