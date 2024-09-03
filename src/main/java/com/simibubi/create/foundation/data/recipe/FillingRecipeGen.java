@@ -63,17 +63,17 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.GLOWSTONE_DUST)),
 
 
-		AM_LAVA = create(Mods.AM.recipeId("lava_bottle"), b -> b.require(Fluids.LAVA, 250)
+		AM_LAVA = create(Mods.AM.recipeId("lava_bottle"), b -> b.require(Fluids.LAVA, FluidConstants.BOTTLE)
 			.require(Items.GLASS_BOTTLE)
 			.output(1, Mods.AM, "lava_bottle", 1)
 			.whenModLoaded(Mods.AM.getId())),
 
 		BYG_LUSH_GRASS = create(Mods.BYG.recipeId("lush_grass_block"), b -> b.require(Mods.BYG, "lush_dirt")
-			.require(Fluids.WATER, 500)
+			.require(Fluids.WATER, FluidConstants.BUCKET / 2)
 			.output(Mods.BYG, "lush_grass_block")
 			.whenModLoaded(Mods.BYG.getId())),
 
-		NEA_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, 250)
+		NEA_MILK = create(Mods.NEA.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, FluidConstants.BOTTLE)
 			.require(Items.GLASS_BOTTLE)
 			.output(1, Mods.NEA, "milk_bottle", 1)
 			.whenModLoaded(Mods.NEA.getId())),
@@ -92,7 +92,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 	public GeneratedRecipe moddedGrass(Mods mod, String name) {
 		String grass = name + "_grass_block";
-		return create(mod.recipeId(grass), b -> b.require(Fluids.WATER, 500)
+		return create(mod.recipeId(grass), b -> b.require(Fluids.WATER, FluidConstants.BUCKET / 2)
 				.require(mod, name + "_dirt")
 				.output(mod, grass)
 				.whenModLoaded(mod.getId()));
