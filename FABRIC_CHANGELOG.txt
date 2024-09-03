@@ -12,4 +12,5 @@ Change logging starts below:
 - Implement breaks for Create: Interactive
 - Fix ingredients overlapping with heat bar when using EMI (#1582)
 - Fix extendo grip not using up durability
+- Fix displaying sequenced assembly with multiple spout steps in REI (#1490)
 - Update to 0.5.1.g (https://github.com/Creators-of-Create/Create/wiki/0.5.1g)
