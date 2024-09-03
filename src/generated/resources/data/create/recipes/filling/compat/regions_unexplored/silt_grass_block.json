@@ -13,7 +13,7 @@
       "item": "regions_unexplored:silt_dirt"
     },
     {
-      "amount": 500,
+      "amount": 40500,
       "fluid": "minecraft:water",
       "nbt": {}
     }

@@ -27,7 +27,7 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		TEA = create("tea", b -> b.require(Fluids.WATER, FluidConstants.BOTTLE)
 			.require(Tags.Fluids.MILK, FluidConstants.BOTTLE)
 			.require(ItemTags.LEAVES)
-			.output(AllFluids.TEA.get(), FluidConstants.BOTTLE * 2)
+			.output(AllFluids.TEA.get(), FluidConstants.BUCKET / 2)
 			.requiresHeat(HeatCondition.HEATED)),
 
 		CHOCOLATE = create("chocolate", b -> b.require(Tags.Fluids.MILK, FluidConstants.BOTTLE)
@@ -68,7 +68,7 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		// AE2
 
 		AE2_FLUIX = create(Mods.AE2.recipeId("fluix_crystal"), b -> b.require(Tags.Items.DUSTS_REDSTONE)
-				.require(Fluids.WATER, 250)
+				.require(Fluids.WATER, FluidConstants.BOTTLE)
 				.require(Mods.AE2, "charged_certus_quartz_crystal")
 				.require(Tags.Items.GEMS_QUARTZ)
 				.output(1f, Mods.AE2, "fluix_crystal", 2)
@@ -83,7 +83,7 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	public GeneratedRecipe moddedMud(Mods mod, String name) {
 		String mud = name + "_mud";
-		return create(mod.recipeId(mud), b -> b.require(Fluids.WATER, 250)
+		return create(mod.recipeId(mud), b -> b.require(Fluids.WATER, FluidConstants.BOTTLE)
 				.require(mod, name + "_dirt")
 				.output(mod, mud)
 				.whenModLoaded(mod.getId()));
