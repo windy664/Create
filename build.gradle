@@ -1,6 +1,3 @@
-import java.util.jar.JarEntry
-import java.util.jar.JarOutputStream
-
 //file:noinspection GrMethodMayBeStatic
 plugins {
     id "fabric-loom" version "1.7.+"
@@ -188,7 +185,7 @@ loom {
             server()
             name "Headlesss GameTests"
             vmArg "-Dfabric-api.gametest"
-            vmArg "-Dfabric-api.gametest.report-file=${project.buildDir}/junit.xml"
+            vmArg "-Dfabric-api.gametest.report-file=${project.layout.buildDirectory}/junit.xml"
             runDir "run/gametest"
         }
     }
