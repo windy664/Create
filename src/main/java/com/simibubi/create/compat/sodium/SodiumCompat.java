@@ -40,6 +40,8 @@ public class SodiumCompat {
 		if (!Mods.INDIUM.isLoaded()) {
 			ClientPlayConnectionEvents.JOIN.register(SodiumCompat::sendNoIndiumWarning);
 		}
+
+		boolean compatInitialized = false;
 		for (SpriteUtilCompat value : SpriteUtilCompat.values()) {
 			if (value.doesWork.get()) {
 				Minecraft mc = Minecraft.getInstance();
@@ -48,8 +50,12 @@ public class SodiumCompat {
 					TextureAtlasSprite sawSprite = atlas.apply(SAW_TEXTURE);
 					value.markSpriteAsActive.accept(sawSprite);
 				});
+				compatInitialized = true;
 				break;
 			}
+		}
+		if (!compatInitialized) {
+			Create.LOGGER.error("Create's Sodium compat errored and has been partially disabled. Report this!");
 		}
 	}
 
