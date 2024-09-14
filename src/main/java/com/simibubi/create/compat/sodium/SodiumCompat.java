@@ -1,7 +1,13 @@
 package com.simibubi.create.compat.sodium;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.Mods;
@@ -14,7 +20,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.ComponentUtils;
@@ -27,19 +32,24 @@ import net.minecraft.world.inventory.InventoryMenu;
  * Fixes the Mechanical Saw's sprite and lets players know when Indium isn't installed.
  */
 public class SodiumCompat {
+	private static final MethodHandles.Lookup lookup = MethodHandles.lookup();
+
 	public static final ResourceLocation SAW_TEXTURE = Create.asResource("block/saw_reversed");
 
 	public static void init() {
 		if (!Mods.INDIUM.isLoaded()) {
 			ClientPlayConnectionEvents.JOIN.register(SodiumCompat::sendNoIndiumWarning);
 		}
-		if (spriteUtilWorks()) {
-			Minecraft mc = Minecraft.getInstance();
-			WorldRenderEvents.START.register(ctx -> {
-				Function<ResourceLocation, TextureAtlasSprite> atlas = mc.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
-				TextureAtlasSprite sawSprite = atlas.apply(SAW_TEXTURE);
-				SpriteUtil.markSpriteActive(sawSprite);
-			});
+		for (SpriteUtilCompat value : SpriteUtilCompat.values()) {
+			if (value.doesWork.get()) {
+				Minecraft mc = Minecraft.getInstance();
+				WorldRenderEvents.START.register(ctx -> {
+					Function<ResourceLocation, TextureAtlasSprite> atlas = mc.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
+					TextureAtlasSprite sawSprite = atlas.apply(SAW_TEXTURE);
+					value.markSpriteAsActive.accept(sawSprite);
+				});
+				break;
+			}
 		}
 	}
 
@@ -63,16 +73,64 @@ public class SodiumCompat {
 		mc.player.displayClientMessage(text, false);
 	}
 
-	private static boolean spriteUtilWorks() {
-		try {
-			// make sure class and method still exist, sodium is unstable
-			Method method = SpriteUtil.class.getMethod("markSpriteActive", TextureAtlasSprite.class); // throws if missing
+	private enum SpriteUtilCompat {
+		V0_5(() -> {
+			try {
+				return checkMarkSpriteActiveSignature(SpriteUtil.class);
+			} catch (Throwable t) {
+				return false;
+			}
+		}, SpriteUtil::markSpriteActive),
+		V0_6(() -> {
+			try {
+				return checkMarkSpriteActiveSignature(Class.forName("net.caffeinemc.mods.sodium.client.render.texture.SpriteUtil"));
+			} catch (Throwable t) {
+				return false;
+			}
+		}, (sawSprite) -> {
+			try {
+				Class<?> clazz = Class.forName("net.caffeinemc.mods.sodium.client.render.texture.SpriteUtil");
+
+				MethodType methodType = MethodType.methodType(Void.TYPE);
+				MethodHandle handle = lookup.findVirtual(clazz, "markSpriteActive", methodType);
+
+				handle.invoke(sawSprite);
+			} catch (Throwable ignored) {}
+		}),
+		V0_6_API(() -> {
+			try {
+				Field field = Class.forName("net.caffeinemc.mods.sodium.api.texture.SpriteUtil")
+						.getDeclaredField("INSTANCE");
+				return checkMarkSpriteActiveSignature((Class<?>) field.get(null));
+			} catch (Throwable t) {
+				return false;
+			}
+		}, (sawSprite) -> {
+			try {
+				Field field = Class.forName("net.caffeinemc.mods.sodium.api.texture.SpriteUtil")
+						.getDeclaredField("INSTANCE");
+				Class<?> implClass = (Class<?>) field.get(null);
+
+				MethodType methodType = MethodType.methodType(Void.TYPE);
+				MethodHandle handle = lookup.findVirtual(implClass, "markSpriteActive", methodType);
+
+				handle.invoke(sawSprite);
+			} catch (Throwable ignored) {}
+		});
+
+		private final Supplier<Boolean> doesWork;
+		private final Consumer<TextureAtlasSprite> markSpriteAsActive;
+
+		SpriteUtilCompat(Supplier<Boolean> doesWork, Consumer<TextureAtlasSprite> markSpriteAsActive) {
+			this.doesWork = doesWork;
+			this.markSpriteAsActive = markSpriteAsActive;
+		}
+
+		private static boolean checkMarkSpriteActiveSignature(Class<?> clazz) throws Throwable {
+			Method method = clazz.getMethod("markSpriteActive", TextureAtlasSprite.class);
 			if (method.getReturnType() != Void.TYPE)
 				throw new IllegalStateException("markSpriteActive's signature has changed");
 			return true;
-		} catch (Throwable t) {
-			Create.LOGGER.error("Create's Sodium compat errored and has been partially disabled. Report this!", t);
 		}
-		return false;
 	}
 }
