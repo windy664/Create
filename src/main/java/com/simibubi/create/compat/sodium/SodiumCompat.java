@@ -95,12 +95,7 @@ public class SodiumCompat {
 			}
 		}, (sawSprite) -> {
 			try {
-				Class<?> clazz = Class.forName("net.caffeinemc.mods.sodium.client.render.texture.SpriteUtil");
-
-				MethodType methodType = MethodType.methodType(Void.TYPE);
-				MethodHandle handle = lookup.findVirtual(clazz, "markSpriteActive", methodType);
-
-				handle.invoke(sawSprite);
+				invokeMarkSpriteActive(Class.forName("net.caffeinemc.mods.sodium.client.render.texture.SpriteUtil"), sawSprite);
 			} catch (Throwable ignored) {}
 		}),
 		V0_6_API(() -> {
@@ -115,12 +110,8 @@ public class SodiumCompat {
 			try {
 				Field field = Class.forName("net.caffeinemc.mods.sodium.api.texture.SpriteUtil")
 						.getDeclaredField("INSTANCE");
-				Class<?> implClass = (Class<?>) field.get(null);
 
-				MethodType methodType = MethodType.methodType(Void.TYPE);
-				MethodHandle handle = lookup.findVirtual(implClass, "markSpriteActive", methodType);
-
-				handle.invoke(sawSprite);
+				invokeMarkSpriteActive((Class<?>) field.get(null), sawSprite);
 			} catch (Throwable ignored) {}
 		});
 
@@ -137,6 +128,13 @@ public class SodiumCompat {
 			if (method.getReturnType() != Void.TYPE)
 				throw new IllegalStateException("markSpriteActive's signature has changed");
 			return true;
+		}
+
+		private static void invokeMarkSpriteActive(Class<?> clazz, TextureAtlasSprite sawSprite) throws Throwable {
+			MethodType methodType = MethodType.methodType(Void.TYPE);
+			MethodHandle handle = lookup.findVirtual(clazz, "markSpriteActive", methodType);
+
+			handle.invoke(sawSprite);
 		}
 	}
 }
