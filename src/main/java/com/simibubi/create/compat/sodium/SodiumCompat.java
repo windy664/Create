@@ -86,7 +86,11 @@ public class SodiumCompat {
 			} catch (Throwable t) {
 				return false;
 			}
-		}, SpriteUtil::markSpriteActive),
+		}, (sawSprite) -> {
+			try {
+				SpriteUtil.markSpriteActive(sawSprite);
+			} catch (Throwable ignored) {}
+		}),
 		V0_6(() -> {
 			try {
 				return checkMarkSpriteActiveSignature(Class.forName("net.caffeinemc.mods.sodium.client.render.texture.SpriteUtil"));
