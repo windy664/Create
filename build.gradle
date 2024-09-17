@@ -1,6 +1,6 @@
 //file:noinspection GrMethodMayBeStatic
 plugins {
-    id "fabric-loom" version "1.6.+"
+    id "fabric-loom" version "1.7.+"
 
     id "io.github.p03w.machete" version "1.1.4" // automatic jar compressing on build
 
@@ -20,7 +20,6 @@ group = project.maven_group
 archivesBaseName = "create-fabric"
 
 repositories {
-    maven { url = "https://maven.quiltmc.org/repository/release" } // QM
     maven { url = "https://maven.parchmentmc.org" } // Parchment
     maven { url = "https://maven.fabricmc.net/" } // FAPI, Loader
     maven { url = "https://mvn.devos.one/snapshots/" } // Registrate, Forge Tags, Milk Lib
@@ -75,9 +74,8 @@ def dependencies(DependencyHandler deps) {
 def setup(DependencyHandler deps) {
     deps.minecraft("com.mojang:minecraft:$minecraft_version")
     deps.mappings(loom.layered {
-        it.mappings("org.quiltmc:quilt-mappings:$minecraft_version+build.$qm_version:intermediary-v2")
-        it.parchment("org.parchmentmc.data:parchment-$minecraft_version:$parchment_version@zip")
         it.officialMojangMappings { nameSyntheticMembers = false }
+        it.parchment("org.parchmentmc.data:parchment-$minecraft_version:$parchment_version@zip")
     })
     deps.modImplementation("net.fabricmc:fabric-loader:$loader_version")
 }
