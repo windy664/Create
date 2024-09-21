@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
@@ -177,11 +177,11 @@ public class VirtualChunk extends ChunkAccess {
 	}
 
 	@Override
-	public void findBlocks(BiPredicate<BlockState, BlockPos> predicate, BiConsumer<BlockPos, BlockState> consumer) {
+	public void findBlocks(Predicate<BlockState> predicate, BiConsumer<BlockPos, BlockState> output) {
 		world.blockStates.forEach((pos, state) -> {
 			if (SectionPos.blockToSectionCoord(pos.getX()) == chunkPos.x && SectionPos.blockToSectionCoord(pos.getZ()) == chunkPos.z) {
-				if (predicate.test(state, pos)) {
-					consumer.accept(pos, state);
+				if (predicate.test(state)) {
+					output.accept(pos, state);
 				}
 			}
 		});

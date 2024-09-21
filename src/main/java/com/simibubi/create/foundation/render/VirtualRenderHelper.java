@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.render;
 
 import java.nio.ByteBuffer;
 
+import dev.engine_room.flywheel.lib.model.baked.FabricBakedModelBuilder;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -19,15 +21,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class VirtualRenderHelper {
-	public static final ModelProperty<Boolean> VIRTUAL_PROPERTY = new ModelProperty<>();
-	public static final ModelData VIRTUAL_DATA = ModelData.builder().with(VIRTUAL_PROPERTY, true).build();
-
-	private static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new ForgeBakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).modelData(VIRTUAL_DATA).build());
+	private static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new FabricBakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).modelData(VIRTUAL_DATA).build());
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
-
-	public static boolean isVirtual(ModelData data) {
-		return data.has(VirtualRenderHelper.VIRTUAL_PROPERTY) && data.get(VirtualRenderHelper.VIRTUAL_PROPERTY);
-	}
 
 	/**
 	 * A copy of {@link dev.engine_room.flywheel.lib.model.Models#block(BlockState)}, but with virtual model data passed in.
@@ -59,9 +54,8 @@ public class VirtualRenderHelper {
 		ShadedBlockSbbBuilder sbbBuilder = objects.sbbBuilder;
 		sbbBuilder.begin();
 
-		ModelData modelData = model.getModelData(VirtualEmptyBlockGetter.FULL_DARK, BlockPos.ZERO, state, VIRTUAL_DATA);
 		poseStack.pushPose();
-		renderer.tesselateBlock(VirtualEmptyBlockGetter.FULL_DARK, model, state, BlockPos.ZERO, poseStack, sbbBuilder, false, random, 42L, OverlayTexture.NO_OVERLAY, modelData, null);
+		renderer.tesselateBlock(VirtualEmptyBlockGetter.FULL_DARK, model, state, BlockPos.ZERO, poseStack, sbbBuilder, false, random, 42L, OverlayTexture.NO_OVERLAY);
 		poseStack.popPose();
 
 		return sbbBuilder.end();
