@@ -13,13 +13,12 @@ import net.fabricmc.api.Environment;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer.CommonRenderer;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
 
-import net.minecraft.core.Registry;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -66,6 +65,7 @@ private Map<BogeySizes.BogeySize, ResourceLocation> sizes;
 		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			this.sizeRenderers = new HashMap<>();
 			sizeRenderers.forEach((k, v) -> this.sizeRenderers.put(k, v.get()));
+
 			this.commonRendererFactory = commonRenderer;
 			this.commonRenderer = commonRenderer.map(Supplier::get);
 		});
@@ -117,8 +117,8 @@ private Map<BogeySizes.BogeySize, ResourceLocation> sizes;
 		return this.commonRendererFactory.map(Supplier::get);
 	}
 
-	public BogeyInstance createInstance(CarriageBogey bogey, BogeySizes.BogeySize size, MaterialManager materialManager) {
-		return new BogeyInstance(bogey, this, size, materialManager);
+	public BogeyVisual createVisual(CarriageBogey bogey, BogeySizes.BogeySize size, VisualizationContext context) {
+		return new BogeyVisual(bogey, this, size, context);
 	}
 
 	@Environment(EnvType.CLIENT)

@@ -4,10 +4,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.core.model.ModelUtil;
-import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
 import com.simibubi.create.content.decoration.bracket.BracketedBlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;

@@ -3,19 +3,14 @@ package com.simibubi.create.content.schematics.client;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.jozufozu.flywheel.core.model.ModelUtil;
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
-import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
-import com.jozufozu.flywheel.fabric.model.LayerFilteringBakedModel;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.render.ShadedBlockSbbBuilder;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
+import dev.engine_room.flywheel.lib.model.ModelUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -79,15 +74,12 @@ public class SchematicRenderer {
 	}
 
 	protected void redraw() {
-		bufferCache.forEach((layer, sbb) -> sbb.delete());
 		bufferCache.clear();
 
 		for (RenderType layer : RenderType.chunkBufferLayers()) {
 			SuperByteBuffer buffer = drawLayer(layer);
 			if (!buffer.isEmpty())
 				bufferCache.put(layer, buffer);
-			else
-				buffer.delete();
 		}
 	}
 
@@ -100,17 +92,12 @@ public class SchematicRenderer {
 		RandomSource random = objects.random;
 		BlockPos.MutableBlockPos mutableBlockPos = objects.mutableBlockPos;
 		SchematicWorld renderWorld = schematic;
-		renderWorld.renderMode = true;
 		BoundingBox bounds = renderWorld.getBounds();
 
-		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		BufferBuilder shadedBuilder = objects.shadedBuilder;
-		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
+		ShadedBlockSbbBuilder sbbBuilder = objects.sbbBuilder;
+		sbbBuilder.begin();
 
-		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
-
+		renderWorld.renderMode = true;
 		ModelBlockRenderer.enableCaching();
 		for (BlockPos localPos : BlockPos.betweenClosed(bounds.minX(), bounds.minY(), bounds.minZ(), bounds.maxX(), bounds.maxY(), bounds.maxZ())) {
 			BlockPos pos = mutableBlockPos.setWithOffset(localPos, anchor);
@@ -132,22 +119,16 @@ public class SchematicRenderer {
 				poseStack.pushPose();
 				poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
 
-				renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, shadeSeparatingWrapper, true, random,
+				renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, sbbBuilder, true, random,
 						seed, OverlayTexture.NO_OVERLAY);
 
 				poseStack.popPose();
 			}
 		}
 		ModelBlockRenderer.clearCache();
-
-		shadeSeparatingWrapper.clear();
-		ShadeSeparatedBufferedData bufferedData = ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
-
 		renderWorld.renderMode = false;
 
-		SuperByteBuffer sbb = new SuperByteBuffer(bufferedData);
-		bufferedData.release();
-		return sbb;
+		return sbbBuilder.end();
 	}
 
 	// fabric: calling chunkBufferLayers early causes issues (#612), let the map handle its size on its own
@@ -160,9 +141,7 @@ public class SchematicRenderer {
 		public final PoseStack poseStack = new PoseStack();
 		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
 		public final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
-		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
-		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
-		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
+		public final ShadedBlockSbbBuilder sbbBuilder = new ShadedBlockSbbBuilder();
 	}
 
 }

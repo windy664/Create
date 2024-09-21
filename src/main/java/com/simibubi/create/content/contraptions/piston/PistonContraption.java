@@ -19,7 +19,6 @@ import com.simibubi.create.content.contraptions.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.ContraptionType;
 import com.simibubi.create.content.contraptions.TranslatingContraption;
 import com.simibubi.create.content.contraptions.piston.MechanicalPistonBlock.PistonState;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -244,9 +243,4 @@ public class PistonContraption extends TranslatingContraption {
 		return tag;
 	}
 
-	@Environment(EnvType.CLIENT)
-	@Override
-	public ContraptionLighter<?> makeLighter() {
-		return new PistonLighter(this);
-	}
 }

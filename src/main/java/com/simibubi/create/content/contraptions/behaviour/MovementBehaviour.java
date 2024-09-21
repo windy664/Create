@@ -2,19 +2,12 @@ package com.simibubi.create.content.contraptions.behaviour;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
+import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -73,7 +66,7 @@ public interface MovementBehaviour {
 		Vec3 vec = context.position;
 		if (vec == null)
 			return;
-		
+
 		ItemEntity itemEntity = new ItemEntity(context.world, vec.x, vec.y, vec.z, remainder);
 		itemEntity.setDeltaMovement(context.motion.add(0, 0.5f, 0)
 			.scale(context.world.random.nextFloat() * .3f));
@@ -90,11 +83,7 @@ public interface MovementBehaviour {
 
 	default void writeExtraData(MovementContext context) {}
 
-	default boolean renderAsNormalBlockEntity() {
-		return false;
-	}
-
-	default boolean hasSpecialInstancedRendering() {
+	default boolean disableBlockEntityRendering() {
 		return false;
 	}
 
@@ -104,8 +93,8 @@ public interface MovementBehaviour {
 
 	@Environment(EnvType.CLIENT)
 	@Nullable
-	default ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
+	default ActorVisual createVisual(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+		MovementContext movementContext) {
 		return null;
 	}
 }

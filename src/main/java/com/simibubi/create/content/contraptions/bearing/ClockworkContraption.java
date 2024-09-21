@@ -12,7 +12,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionType;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
@@ -133,9 +132,4 @@ public class ClockworkContraption extends Contraption {
 		HOUR, MINUTE
 	}
 
-	@Environment(EnvType.CLIENT)
-	@Override
-	public ContraptionLighter<?> makeLighter() {
-		return new AnchoredLighter(this);
-	}
 }

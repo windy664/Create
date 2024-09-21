@@ -2,7 +2,6 @@ package com.simibubi.create.content.redstone.nixieTube;
 
 import net.minecraft.util.RandomSource;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.redstone.nixieTube.DoubleFaceAttachedBlock.DoubleAttachFace;
@@ -17,8 +16,7 @@ import com.simibubi.create.foundation.utility.DyeHelper;
 
 import com.simibubi.create.foundation.utility.Iterate;
 
-import io.github.fabricators_of_create.porting_lib.util.FontRenderUtil;
-
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
@@ -49,11 +47,11 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 			+ (face == DoubleAttachFace.WALL_REVERSED ? 180 : 0);
 		float xRot = face == DoubleAttachFace.WALL ? -90 : face == DoubleAttachFace.WALL_REVERSED ? 90 : 0;
 
-		TransformStack msr = TransformStack.cast(ms);
-		msr.centre()
-			.rotateY(yRot)
-			.rotateZ(xRot)
-			.unCentre();
+		var msr = TransformStack.of(ms);
+		msr.center()
+			.rotateYDegrees(yRot)
+			.rotateZDegrees(xRot)
+			.uncenter();
 
 		if (be.signalState != null) {
 			renderAsSignal(be, partialTicks, ms, buffer, light, overlay);
@@ -61,7 +59,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 			return;
 		}
 
-		msr.centre();
+		msr.center();
 
 		float height = face == DoubleAttachFace.CEILING ? 5 : 3;
 		float scale = 1 / 20f;
@@ -130,12 +128,12 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 		BlockState blockState = be.getBlockState();
 		Direction facing = NixieTubeBlock.getFacing(blockState);
 		Vec3 observerVec = Minecraft.getInstance().cameraEntity.getEyePosition(partialTicks);
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 
 		if (facing == Direction.DOWN)
-			msr.centre()
-				.rotateZ(180)
-				.unCentre();
+			msr.center()
+				.rotateZDegrees(180)
+				.uncenter();
 
 		boolean invertTubes =
 			facing == Direction.DOWN || blockState.getValue(NixieTubeBlock.FACE) == DoubleAttachFace.WALL_REVERSED;
@@ -183,7 +181,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 					.light(0xf000f0)
 					.disableDiffuse()
 					.scale(vert ? longSideGlow : 2, vert ? 2 : longSideGlow, 2)
-					.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+					.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
 			}
 
 			CachedBufferer
@@ -192,7 +190,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 				.light(0xF000F0)
 				.disableDiffuse()
 				.scale(1 + 1 / 16f)
-				.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+				.renderInto(ms, buffer.getBuffer(RenderTypes.additive()));
 
 			ms.popPose();
 		}

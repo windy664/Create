@@ -12,7 +12,7 @@ import com.simibubi.create.content.kinetics.belt.transport.ItemHandlerBeltSegmen
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.logistics.funnel.BeltFunnelBlock;
@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
+import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
 import io.github.fabricators_of_create.porting_lib.util.StorageProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -122,7 +123,7 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity implements SidedStor
 			sides.addAll(flaps.keySet());
 		super.read(compound, clientPacket);
 		if (clientPacket)
-			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
 	private LerpedFloat createChasingFlap() {

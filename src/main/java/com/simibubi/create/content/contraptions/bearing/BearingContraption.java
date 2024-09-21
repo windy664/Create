@@ -7,7 +7,6 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionType;
-import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 import com.simibubi.create.content.decoration.copycat.CopycatBlockEntity;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -104,9 +103,4 @@ public class BearingContraption extends Contraption {
 		return facing.getAxis() == this.facing.getAxis();
 	}
 
-	@Environment(EnvType.CLIENT)
-	@Override
-	public ContraptionLighter<?> makeLighter() {
-		return new AnchoredLighter(this);
-	}
 }

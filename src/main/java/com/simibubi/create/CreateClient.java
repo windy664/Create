@@ -5,8 +5,8 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.sodium.SodiumCompat;
 import com.simibubi.create.compat.trinkets.Trinkets;
 import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
-import com.simibubi.create.content.contraptions.render.SBBContraptionManager;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderInfoManager;
 import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
 import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
 import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
@@ -33,8 +33,9 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.outliner.Outliner;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.CreateContexts;
+import com.simibubi.create.foundation.render.StitchedSprite;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.Components;
@@ -79,12 +80,13 @@ public class CreateClient implements ClientModInitializer {
 
 	public static final ClientResourceReloadListener RESOURCE_RELOAD_LISTENER = new ClientResourceReloadListener();
 
-	@Override
-	public void onInitializeClient() { // onCtorClient and clientInit merged
-//		modEventBus.addListener(CreateClient::clientInit); // merged together
-//		modEventBus.addListener(AllParticleTypes::registerFactories); // ParticleManagerRegistrationCallback in ClientEvents
-		FlywheelEvents.GATHER_CONTEXT.register(CreateContexts::flwInit);
-		FlywheelEvents.GATHER_CONTEXT.register(ContraptionRenderDispatcher::gatherContext);
+	public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
+		modEventBus.addListener(CreateClient::clientInit);
+		modEventBus.addListener(AllParticleTypes::registerFactories);
+
+		modEventBus.addListener(StitchedSprite::onTextureStitchPost);
+
+		AllInstanceTypes.init();
 
 		MODEL_SWAPPER.registerListeners();
 
@@ -98,7 +100,7 @@ public class CreateClient implements ClientModInitializer {
 		BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
 		BUFFER_CACHE.registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
 		BUFFER_CACHE.registerCompartment(WaterWheelRenderer.WATER_WHEEL);
-		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
+		BUFFER_CACHE.registerCompartment(ContraptionRenderInfo.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllKeys.register();
@@ -149,7 +151,7 @@ public class CreateClient implements ClientModInitializer {
 		BUFFER_CACHE.invalidate();
 
 		SCHEMATIC_HANDLER.updateRenderers();
-		ContraptionRenderDispatcher.reset();
+		ContraptionRenderInfoManager.resetAll();
 	}
 
 	public static void checkGraphicsFanciness() {

@@ -1,6 +1,5 @@
 package com.simibubi.create.content.trains.schedule.hat;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.Contraption;
@@ -11,16 +10,13 @@ import com.simibubi.create.foundation.mixin.fabric.LivingEntityRendererAccessor;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.Couple;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ModelPartAccessor;
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.LivingEntityAccessor;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelPart.Cube;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -52,12 +48,11 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			return;
 
 		M entityModel = getParentModel();
-		RenderType renderType = Sheets.cutoutBlockSheet();
 		ms.pushPose();
 
-		TransformStack msr = TransformStack.cast(ms);
-		TrainHatInfo info = TrainHatInfoReloadListener.getHatInfoFor(entity.getType());
-		List<ModelPart> partsToHead = new ArrayList<>();
+		boolean valid = false;
+		var msr = TransformStack.of(ms);
+		float scale = 1;
 
 		if (entityModel instanceof AgeableListModel<?> model && entityModel instanceof io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AgeableListModelAccessor access) {
 			if (model.young) {
@@ -89,12 +84,12 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 			ms.scale(1, -1, -1);
 			ms.translate(0, -2.25F / 16.0F, 0);
-			msr.rotateX(-8.5F);
+			msr.rotateXDegrees(-8.5F);
 			BlockState air = Blocks.AIR.defaultBlockState();
 			CachedBufferer.partial(AllPartialModels.TRAIN_HAT, air)
-					.forEntityRender()
+					.disableDiffuse()
 					.light(light)
-					.renderInto(ms, buffer.getBuffer(renderType));
+					.renderInto(ms, buffer.getBuffer(Sheets.cutoutBlockSheet()));
 		}
 
 		ms.popPose();

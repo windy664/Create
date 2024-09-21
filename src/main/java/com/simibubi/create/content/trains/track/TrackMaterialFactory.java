@@ -7,13 +7,10 @@ import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.access
 
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllTags;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -105,9 +102,9 @@ public class TrackMaterialFactory {
 		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			String namespace = id.getNamespace();
 			String prefix = "block/track/" + id.getPath() + "/";
-			tieModel = new PartialModel(new ResourceLocation(namespace, prefix + "tie"));
-			leftSegmentModel = new PartialModel(new ResourceLocation(namespace, prefix + "segment_left"));
-			rightSegmentModel = new PartialModel(new ResourceLocation(namespace, prefix + "segment_right"));
+			tieModel = PartialModel.of(new ResourceLocation(namespace, prefix + "tie"));
+			leftSegmentModel = PartialModel.of(new ResourceLocation(namespace, prefix + "segment_left"));
+			rightSegmentModel = PartialModel.of(new ResourceLocation(namespace, prefix + "segment_right"));
 		});
 		return this;
 	}

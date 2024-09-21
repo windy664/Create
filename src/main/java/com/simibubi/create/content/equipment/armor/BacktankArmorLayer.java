@@ -2,6 +2,7 @@ package com.simibubi.create.content.equipment.armor;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -12,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -45,7 +45,7 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			return;
 
 		HumanoidModel<?> model = (HumanoidModel<?>) entityModel;
-		RenderType renderType = Sheets.cutoutBlockSheet();
+		VertexConsumer vc = buffer.getBuffer(Sheets.cutoutBlockSheet());
 		BlockState renderedState = item.getBlock().defaultBlockState()
 				.setValue(BacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
 		SuperByteBuffer backtank = CachedBufferer.block(renderedState);
@@ -57,20 +57,20 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		ms.translate(-1 / 2f, 10 / 16f, 1f);
 		ms.scale(1, -1, -1);
 
-		backtank.forEntityRender()
+		backtank.disableDiffuse()
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(renderType));
+			.renderInto(ms, vc);
 
-		cogs.centre()
-			.rotateY(180)
-			.unCentre()
+		cogs.center()
+			.rotateYDegrees(180)
+			.uncenter()
 			.translate(0, 6.5f / 16, 11f / 16)
-			.rotate(Direction.EAST, AngleHelper.rad(2 * AnimationTickHolder.getRenderTime(entity.level()) % 360))
+			.rotate(AngleHelper.rad(2 * AnimationTickHolder.getRenderTime(entity.level()) % 360), Direction.EAST)
 			.translate(0, -6.5f / 16, -11f / 16);
 
-		cogs.forEntityRender()
+		cogs.disableDiffuse()
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(renderType));
+			.renderInto(ms, vc);
 
 		ms.popPose();
 	}

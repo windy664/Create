@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import dev.engine_room.flywheel.api.backend.BackendManager;
 import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -77,7 +78,8 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 		super.tick();
 
 		if (level.isClientSide) {
-			tickAnimation();
+			if (shouldTickAnimation())
+				tickAnimation();
 			if (!isVirtual())
 				spawnParticles(getHeatLevelFromBlock(), 1);
 			return;
@@ -104,7 +106,13 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 	}
 
 	@Environment(EnvType.CLIENT)
-	private void tickAnimation() {
+	private boolean shouldTickAnimation() {
+		// Offload the animation tick to the visual when flywheel in enabled
+		return !BackendManager.isBackendOn();
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	void tickAnimation() {
 		boolean active = getHeatLevelFromBlock().isAtLeast(HeatLevel.FADING) && isValidBlockAbove();
 
 		if (!active) {

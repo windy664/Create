@@ -1,12 +1,15 @@
 package com.simibubi.create.foundation.utility.ghost;
 
-import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
-import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.decoration.copycat.CopycatModel;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
 import io.github.fabricators_of_create.porting_lib.models.virtual.FixedLightBakedModel;
 import io.github.fabricators_of_create.porting_lib.models.virtual.TranslucentBakedModel;

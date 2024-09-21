@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.bearing.StabilizedContraption;
@@ -26,8 +25,7 @@ import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
 import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
 import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -548,13 +546,13 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 				repositionOnContraption(matrixStack, partialTicks, ridingEntity);
 		}
 
-		TransformStack.cast(matrixStack)
+		TransformStack.of(matrixStack)
 			.nudge(getId())
-			.centre()
-			.rotateY(angleYaw)
-			.rotateZ(anglePitch)
-			.rotateY(angleInitialYaw)
-			.unCentre();
+			.center()
+			.rotateYDegrees(angleYaw)
+			.rotateZDegrees(anglePitch)
+			.rotateYDegrees(angleInitialYaw)
+			.uncenter();
 	}
 
 	@Environment(EnvType.CLIENT)

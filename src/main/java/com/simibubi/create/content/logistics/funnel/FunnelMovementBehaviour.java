@@ -122,9 +122,4 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 		}
 	}
 
-	@Override
-	public boolean renderAsNormalBlockEntity() {
-		return true;
-	}
-
 }

@@ -2,21 +2,14 @@ package com.simibubi.create.content.logistics.crate;
 
 import java.util.List;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-
-import org.jetbrains.annotations.Nullable;
-
-import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -55,8 +48,8 @@ public class CreativeCrateBlockEntity extends CrateBlockEntity implements SidedS
 
 			@Override
 			public void rotate(BlockState state, PoseStack ms) {
-				TransformStack.cast(ms)
-					.rotateX(90);
+				TransformStack.of(ms)
+					.rotateXDegrees(90);
 			}
 
 			@Override
