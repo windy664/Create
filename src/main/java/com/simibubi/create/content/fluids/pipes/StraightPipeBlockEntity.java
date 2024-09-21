@@ -34,7 +34,7 @@ public class StraightPipeBlockEntity extends SmartBlockEntity implements PipeAtt
 
 	@Override
 	@Nullable
-	public Object getRenderAttachmentData() {
+	public Object getRenderData() {
 		return PipeAttachmentBlockEntity.getAttachments(this);
 	}
 

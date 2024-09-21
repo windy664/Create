@@ -1,18 +1,19 @@
 package com.simibubi.create.content.fluids;
 
+import net.fabricmc.fabric.api.blockview.v2.RenderDataBlockEntity;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 /**
  * Fabric: Implement this on any BlockEntity that uses {@link PipeAttachmentModel} and call {@link #getAttachments(BlockEntity)}
  */
-public interface PipeAttachmentBlockEntity extends RenderAttachmentBlockEntity {
+public interface PipeAttachmentBlockEntity extends RenderDataBlockEntity {
 	@Nullable
 	static AttachmentTypes[] getAttachments(BlockEntity be) {
 		FluidTransportBehaviour behavior = BlockEntityBehaviour.get(be, FluidTransportBehaviour.TYPE);

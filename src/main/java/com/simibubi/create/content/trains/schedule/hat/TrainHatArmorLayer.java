@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.Couple;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ModelPartAccessor;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
@@ -31,9 +33,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
@@ -123,7 +122,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		return validSides != null;
 	}
 
-	public static void registerOn(EntityRenderer<?> entityRenderer, RegistrationHelper helper) {
+	public static void registerOn(EntityRenderer<?> entityRenderer, LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper helper) {
 		if (!(entityRenderer instanceof LivingEntityRenderer<?, ?> livingRenderer))
 			return;
 

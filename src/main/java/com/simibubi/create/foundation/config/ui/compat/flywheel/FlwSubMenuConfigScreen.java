@@ -3,8 +3,6 @@ package com.simibubi.create.foundation.config.ui.compat.flywheel;
 import java.util.Collections;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
-import com.jozufozu.flywheel.config.FlwConfig;
-import com.jozufozu.flywheel.config.Option;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.config.ui.ConfigTextField;
@@ -21,6 +19,8 @@ import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
+import dev.engine_room.flywheel.impl.FlwConfig;
+import me.jellysquid.mods.sodium.client.gui.options.Option;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;

@@ -24,6 +24,9 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockview.v2.RenderDataBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.registries.Registries;
@@ -44,7 +47,9 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class TrackBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity, IMergeableBE, RenderAttachmentBlockEntity {
+import org.jetbrains.annotations.Nullable;
+
+public class TrackBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity, IMergeableBE, RenderDataBlockEntity {
 
 	Map<BlockPos, BezierConnection> connections;
 	boolean cancelDrops;
@@ -341,7 +346,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 
 	@Override
 	@Nullable
-	public Double getRenderAttachmentData() {
+	public Double getRenderData() {
 		if (!isTilted())
 			return null;
 		return tilt.smoothingAngle.get();

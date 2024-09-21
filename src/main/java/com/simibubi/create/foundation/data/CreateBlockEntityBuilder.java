@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
@@ -14,9 +15,12 @@ import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer;
+import net.fabricmc.api.EnvType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+
+import org.jetbrains.annotations.NotNull;
 
 public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEntityBuilder<T, P> {
 
@@ -77,15 +81,13 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 	}
 
 	protected void registerVisualizer() {
-		OneTimeEventReceiver.addModListener(Create.REGISTRATE, FMLClientSetupEvent.class, $ -> {
-			var visualFactory = this.visualFactory;
-			if (visualFactory != null) {
-				NonNullPredicate<T> renderNormally = this.renderNormally;
-				SimpleBlockEntityVisualizer.builder(getEntry())
+		var visualFactory = this.visualFactory;
+		if (visualFactory != null) {
+			Predicate<@NotNull T> renderNormally = this.renderNormally;
+			SimpleBlockEntityVisualizer.builder(getEntry())
 					.factory(visualFactory.get())
 					.skipVanillaRender(be -> !renderNormally.test(be))
 					.apply();
-			}
-		});
+		}
 	}
 }

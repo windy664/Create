@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.config.ui.compat.flywheel;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.config.Option;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.gui.AllIcons;

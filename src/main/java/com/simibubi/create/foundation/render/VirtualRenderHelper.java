@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.engine_room.flywheel.api.model.Model;
 import dev.engine_room.flywheel.lib.model.ModelCache;
 import dev.engine_room.flywheel.lib.model.ModelUtil;
-import dev.engine_room.flywheel.lib.model.baked.ForgeBakedModelBuilder;
 import dev.engine_room.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
@@ -18,8 +17,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
 
 public class VirtualRenderHelper {
 	public static final ModelProperty<Boolean> VIRTUAL_PROPERTY = new ModelProperty<>();

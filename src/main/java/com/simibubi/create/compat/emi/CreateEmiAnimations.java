@@ -3,7 +3,6 @@ package com.simibubi.create.compat.emi;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -24,6 +23,7 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import dev.emi.emi.api.widget.WidgetHolder;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import io.github.fabricators_of_create.porting_lib.fluids.FluidStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

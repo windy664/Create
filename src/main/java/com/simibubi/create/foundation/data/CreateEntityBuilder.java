@@ -11,9 +11,14 @@ import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer;
+import net.fabricmc.api.EnvType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Predicate;
 
 @ParametersAreNonnullByDefault
 public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P> {
@@ -50,15 +55,13 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 	}
 
 	protected void registerVisualizer() {
-		OneTimeEventReceiver.addModListener(Create.REGISTRATE, FMLClientSetupEvent.class, $ -> {
-			var visualFactory = this.visualFactory;
-			if (visualFactory != null) {
-				NonNullPredicate<T> renderNormally = this.renderNormally;
-				SimpleEntityVisualizer.builder(getEntry())
+		var visualFactory = this.visualFactory;
+		if (visualFactory != null) {
+			Predicate<@NotNull T> renderNormally = this.renderNormally;
+			SimpleEntityVisualizer.builder(getEntry())
 					.factory(visualFactory.get())
 					.skipVanillaRender(entity -> !renderNormally.test(entity))
 					.apply();
-			}
-		});
+		}
 	}
 }

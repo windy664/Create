@@ -47,7 +47,7 @@ public class FluidPipeBlockEntity extends SmartBlockEntity implements ITransform
 
 	@Override
 	@Nullable
-	public Object getRenderAttachmentData() {
+	public Object getRenderData() {
 		return PipeAttachmentBlockEntity.getAttachments(this);
 	}
 

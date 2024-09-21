@@ -111,7 +111,7 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 		return !BackendManager.isBackendOn();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	void tickAnimation() {
 		boolean active = getHeatLevelFromBlock().isAtLeast(HeatLevel.FADING) && isValidBlockAbove();
 

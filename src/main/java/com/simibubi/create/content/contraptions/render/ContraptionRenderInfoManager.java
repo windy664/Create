@@ -3,17 +3,13 @@ package com.simibubi.create.content.contraptions.render;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
-import dev.engine_room.flywheel.api.event.ReloadLevelRendererEvent;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(Dist.CLIENT)
 public class ContraptionRenderInfoManager {
 	static final WorldAttached<ContraptionRenderInfoManager> MANAGERS = new WorldAttached<>(ContraptionRenderInfoManager::new);
 
@@ -38,8 +34,7 @@ public class ContraptionRenderInfoManager {
 		MANAGERS.empty(ContraptionRenderInfoManager::delete);
 	}
 
-	@SubscribeEvent
-	public static void onReloadLevelRenderer(ReloadLevelRendererEvent event) {
+	public static void onReloadLevelRenderer(ClientLevel level) {
 		resetAll();
 	}
 

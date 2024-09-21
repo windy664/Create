@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.event.TextureStitchEvent;
 
 public class StitchedSprite {
 	private static final Map<ResourceLocation, List<StitchedSprite>> ALL = new HashMap<>();
@@ -28,8 +27,7 @@ public class StitchedSprite {
 		this(InventoryMenu.BLOCK_ATLAS, location);
 	}
 
-	public static void onTextureStitchPost(TextureStitchEvent.Post event) {
-		TextureAtlas atlas = event.getAtlas();
+	public static void onTextureStitchPost(TextureAtlas atlas) {
 		ResourceLocation atlasLocation = atlas.location();
 		List<StitchedSprite> sprites = ALL.get(atlasLocation);
 		if (sprites != null) {

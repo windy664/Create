@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 
 import com.google.common.base.Predicates;
-import com.jozufozu.flywheel.config.Option;
 import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
@@ -21,6 +20,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Pair;
 
+import me.jellysquid.mods.sodium.client.gui.options.Option;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 

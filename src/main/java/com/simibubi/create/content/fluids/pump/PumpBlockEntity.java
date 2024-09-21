@@ -335,7 +335,7 @@ public class PumpBlockEntity extends KineticBlockEntity implements PipeAttachmen
 
 	@Override
 	@Nullable
-	public Object getRenderAttachmentData() {
+	public Object getRenderData() {
 		return PipeAttachmentBlockEntity.getAttachments(this);
 	}
 

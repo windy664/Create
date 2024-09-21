@@ -1,6 +1,5 @@
 package com.simibubi.create;
 
-import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.sodium.SodiumCompat;
 import com.simibubi.create.compat.trinkets.Trinkets;
@@ -8,7 +7,6 @@ import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderInfo;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderInfoManager;
 import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
-import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
 import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
 import com.simibubi.create.content.equipment.bell.SoulPulseEffectHandler;
 import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
@@ -80,12 +78,8 @@ public class CreateClient implements ClientModInitializer {
 
 	public static final ClientResourceReloadListener RESOURCE_RELOAD_LISTENER = new ClientResourceReloadListener();
 
-	public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
-		modEventBus.addListener(CreateClient::clientInit);
-		modEventBus.addListener(AllParticleTypes::registerFactories);
-
-		modEventBus.addListener(StitchedSprite::onTextureStitchPost);
-
+	@Override
+	public void onInitializeClient() {
 		AllInstanceTypes.init();
 
 		MODEL_SWAPPER.registerListeners();

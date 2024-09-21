@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

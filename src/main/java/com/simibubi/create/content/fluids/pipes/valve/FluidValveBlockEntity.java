@@ -87,7 +87,7 @@ public class FluidValveBlockEntity extends KineticBlockEntity implements PipeAtt
 
 	@Override
 	@Nullable
-	public Object getRenderAttachmentData() {
+	public Object getRenderData() {
 		return PipeAttachmentBlockEntity.getAttachments(this);
 	}
 

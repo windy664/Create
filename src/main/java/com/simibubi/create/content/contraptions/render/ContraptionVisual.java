@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.render;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.engine_room.flywheel.lib.model.baked.FabricMultiBlockModelBuilder;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -28,7 +30,6 @@ import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.api.visualization.VisualizerRegistry;
 import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
-import dev.engine_room.flywheel.lib.model.baked.ForgeMultiBlockModelBuilder;
 import dev.engine_room.flywheel.lib.task.ForEachPlan;
 import dev.engine_room.flywheel.lib.task.NestedPlan;
 import dev.engine_room.flywheel.lib.task.PlanMap;
@@ -45,7 +46,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraftforge.client.model.data.ModelData;
 
 public class ContraptionVisual<E extends AbstractContraptionEntity> extends AbstractEntityVisual<E> implements DynamicVisual, TickableVisual, LightUpdatedVisual, ShaderLightVisual {
 	protected static final int LIGHT_PADDING = 1;
@@ -85,7 +85,7 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 			}
 		};
 
-		model = new ForgeMultiBlockModelBuilder(modelWorld, blocks.positions())
+		model = new FabricMultiBlockModelBuilder(modelWorld, blocks.positions())
 				.modelDataLookup(pos -> contraption.modelData.getOrDefault(pos, ModelData.EMPTY))
 				.build();
 

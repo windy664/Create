@@ -19,6 +19,10 @@ import com.simibubi.create.infrastructure.debugInfo.element.InfoEntry;
 import dev.engine_room.flywheel.api.Flywheel;
 import dev.engine_room.flywheel.api.backend.Backend;
 import dev.engine_room.flywheel.api.backend.BackendManager;
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.SharedConstants;
 import net.minecraft.SystemReport;
 import net.minecraft.Util;
@@ -71,9 +75,9 @@ public class DebugInformation {
 
 		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			DebugInfoSection.builder("Graphics")
-					.put("Flywheel Version", ModList.get()
-							.getModContainerById(Flywheel.ID)
-							.map(c -> c.getModInfo()
+					.put("Flywheel Version", FabricLoader.getInstance()
+							.getModContainer(Flywheel.ID)
+							.map(c -> c.getMetadata()
 									.getVersion()
 									.toString())
 							.orElse("None"))

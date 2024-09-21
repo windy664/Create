@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.events;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -67,6 +66,7 @@ import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
+import com.simibubi.create.foundation.render.StitchedSprite;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -76,6 +76,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.gui.OpenCreateMenuButton;
 
+import dev.engine_room.flywheel.api.event.ReloadLevelRendererCallback;
 import io.github.fabricators_of_create.porting_lib.client_events.event.client.RenderArmCallback;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityMountEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.PlayerTickEvents;
@@ -90,6 +91,7 @@ import io.github.fabricators_of_create.porting_lib.event.client.ParticleManagerR
 import io.github.fabricators_of_create.porting_lib.event.client.RenderHandCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTickStartCallback;
 import io.github.fabricators_of_create.porting_lib.event.client.RenderTooltipBorderColorCallback;
+import io.github.fabricators_of_create.porting_lib.event.client.TextureStitchCallback;
 import io.github.fabricators_of_create.porting_lib.event.common.AttackAirCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
@@ -422,6 +424,7 @@ public class ClientEvents {
 		LivingEntityFeatureRendererRegistrationCallback.EVENT.register(ClientEvents::addEntityRendererLayers);
 		CameraSetupCallback.EVENT.register(ClientEvents::onCameraSetup);
 		DrawSelectionEvents.BLOCK.register(ClipboardValueSettingsHandler::drawCustomBlockSelection);
+		TextureStitchCallback.POST.register(StitchedSprite::onTextureStitchPost);
 
 		// External Events
 
@@ -444,11 +447,7 @@ public class ClientEvents {
 		ScreenEvents.AFTER_INIT.register(latePhase, OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 
 		// Flywheel Events
-
-		FlywheelEvents.BEGIN_FRAME.register(ContraptionRenderDispatcher::beginFrame);
-		FlywheelEvents.RENDER_LAYER.register(ContraptionRenderDispatcher::renderLayer);
-		FlywheelEvents.RELOAD_RENDERERS.register(ContraptionRenderDispatcher::onRendererReload);
-		FlywheelEvents.GATHER_CONTEXT.register(ContraptionRenderDispatcher::gatherContext);
+		ReloadLevelRendererCallback.EVENT.register(ContraptionRenderInfoManager::onReloadLevelRenderer);
 	}
 
 }

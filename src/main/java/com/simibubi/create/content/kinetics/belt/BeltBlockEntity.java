@@ -12,12 +12,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import net.fabricmc.fabric.api.blockview.v2.RenderDataBlockEntity;
+
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.light.LightListener;
-import com.jozufozu.flywheel.light.LightUpdater;
-import com.jozufozu.flywheel.util.box.GridAlignedBB;
-import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -34,15 +32,10 @@ import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.tterrag.registrate.fabric.EnvExecutor;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -60,7 +53,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class BeltBlockEntity extends KineticBlockEntity implements SidedStorageBlockEntity, RenderAttachmentBlockEntity {
+public class BeltBlockEntity extends KineticBlockEntity implements SidedStorageBlockEntity, RenderDataBlockEntity {
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
 	public int beltLength;
@@ -530,7 +523,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements SidedStorageB
 	}
 
 	@Override
-	public RenderData getRenderAttachmentData() {
+	public RenderData getRenderData() {
 		return new RenderData(casing, covered);
 	}
 

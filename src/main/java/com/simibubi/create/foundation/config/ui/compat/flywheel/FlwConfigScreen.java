@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.jozufozu.flywheel.config.FlwConfig;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.config.ui.ConfigModListScreen;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
