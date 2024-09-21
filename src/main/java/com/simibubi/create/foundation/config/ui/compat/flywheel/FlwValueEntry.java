@@ -1,13 +1,5 @@
 package com.simibubi.create.foundation.config.ui.compat.flywheel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.jetbrains.annotations.NotNull;
-
 import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
@@ -19,32 +11,35 @@ import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Pair;
-
-import me.jellysquid.mods.sodium.client.gui.options.Option;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class FlwValueEntry<T> extends ValueEntry<T> {
 
-	protected Option<T> option;
+	protected T option;
 
-	public FlwValueEntry(String label, Option option) {
-		super(label);
+	public FlwValueEntry(T option, String key) {
+		super(ConfigScreen.toHumanReadable(key));
 		this.option = option;
-		this.path = String.join(".", option.getKey());
+		this.path = String.join(".", key);
 
 		resetButton = new BoxWidget(0, 0, resetWidth - 12, 16)
 				.showingElement(AllIcons.I_CONFIG_RESET.asStencil())
 				.withCallback(() -> {
-					setValue((T) option.get());
+					setValue(option);
 					this.onReset();
 				});
 		resetButton.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BoxWidget.gradientFactory.apply(resetButton)));
 
 		listeners.add(resetButton);
 
-		String path = option.getKey();
-		labelTooltip.add(Component.literal(label).withStyle(ChatFormatting.WHITE));
+        labelTooltip.add(Component.literal(ConfigScreen.toHumanReadable(key)).withStyle(ChatFormatting.WHITE));
 		String comment = null;//option.getComment();
 		if (comment == null || comment.isEmpty())
 			return;
@@ -65,7 +60,7 @@ public class FlwValueEntry<T> extends ValueEntry<T> {
 				.map(Component::literal)
 				.flatMap(stc -> TooltipHelper.cutTextComponent(stc, Palette.ALL_GRAY)
 						.stream())
-				.collect(Collectors.toList()));
+				.toList());
 
 		if (annotations.containsKey(ConfigAnnotations.RequiresRelog.TRUE.getName()))
 			labelTooltip.addAll(TooltipHelper.cutTextComponent(Component.literal("Changing this value will require a _relog_ to take full effect"), Palette.GRAY_AND_GOLD));
@@ -73,19 +68,19 @@ public class FlwValueEntry<T> extends ValueEntry<T> {
 		if (annotations.containsKey(ConfigAnnotations.RequiresRestart.CLIENT.getName()))
 			labelTooltip.addAll(TooltipHelper.cutTextComponent(Component.literal("Changing this value will require a _restart_ to take full effect"), Palette.GRAY_AND_RED));
 
-		labelTooltip.add(Component.literal(ConfigScreen.modID + ":" + path).withStyle(ChatFormatting.DARK_GRAY));
+		labelTooltip.add(Component.literal(ConfigScreen.modID + ":" + key).withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 	@Override
 	public void setValue(@NotNull T value) {
-		option.set(value);
+		option = value;
 		onValueChange(value);
 	}
 
 	@NotNull
 	@Override
 	public T getValue() {
-		return option.get();
+		return option;
 	}
 
 	@Override

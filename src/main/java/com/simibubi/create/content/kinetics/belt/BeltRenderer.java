@@ -1,7 +1,5 @@
 package com.simibubi.create.content.kinetics.belt;
 
-import net.minecraft.util.RandomSource;
-
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -34,8 +32,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.Vec3i;
@@ -245,7 +243,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			}
 
 			ms.pushPose();
-			TransformStack.cast(ms).nudge(transported.angle);
+			TransformStack.of(ms).nudge(transported.angle);
 			ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 
 			boolean alongX = beltFacing

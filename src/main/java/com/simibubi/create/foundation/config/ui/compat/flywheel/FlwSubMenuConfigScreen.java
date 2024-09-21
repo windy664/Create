@@ -19,13 +19,13 @@ import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
+import dev.engine_room.flywheel.impl.FabricFlwConfig;
 import dev.engine_room.flywheel.impl.FlwConfig;
-import me.jellysquid.mods.sodium.client.gui.options.Option;
+import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AbstractSelectionListAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AbstractSelectionListAccessor;
 import net.minecraftforge.fml.config.ModConfig;
 
 public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {
@@ -43,7 +43,7 @@ public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {
 
 	@Override
 	protected void saveChanges() {
-		flwConfig.save();
+		FabricFlwConfig.INSTANCE.save();
 	}
 
 	@Override
@@ -142,25 +142,10 @@ public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {
 		search.moveCursorToStart();
 		addRenderableWidget(search);
 
-		flwConfig.getOptionMapView().forEach((key, option) -> {
-			String humanKey = toHumanReadable(key);
-
-			Object value = option.get();
-			ConfigScreenList.Entry entry = null;
-			if (value instanceof Boolean) {
-				entry = new FlwBooleanEntry(humanKey, (Option<Boolean>) option);
-			} else if (value instanceof Enum) {
-				entry = new FlwEnumEntry(humanKey, (Option<Enum<?>>) option);
-			}
-
-			if (entry == null)
-				entry = new ConfigScreenList.LabeledEntry("Impl missing - " + option.get().getClass().getSimpleName() + "  " + humanKey + " : " + value);
-
-			if (highlights.contains(key))
-				entry.annotations.put("highlight", ":)");
-
-			list.children().add(entry);
-		});
+		addConfigEntry(FabricFlwConfig.INSTANCE.backend, "backend");
+		addConfigEntry(FabricFlwConfig.INSTANCE.limitUpdates, "limitUpdates");
+		addConfigEntry(FabricFlwConfig.INSTANCE.workerThreads, "workerThreads");
+		addConfigEntry(FabricFlwConfig.INSTANCE.backendConfig, "flw_backend");
 
 		Collections.sort(list.children(),
 				(e, e2) -> {
@@ -213,5 +198,22 @@ public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {
 		}
 
 		addRenderableWidget(serverLocked);
+	}
+
+	private <T> void addConfigEntry(T option, String key) {
+		ConfigScreenList.Entry entry = null;
+		if (option instanceof Boolean) {
+			entry = new FlwBooleanEntry((Boolean) option, key);
+		} else if (option instanceof Enum) {
+			entry = new FlwEnumEntry((Enum<?>) option, key);
+		}
+
+		if (entry == null)
+			entry = new ConfigScreenList.LabeledEntry("Impl missing - " + option.getClass().getSimpleName() + "  " + toHumanReadable(key) + " : " + option);
+
+		if (highlights.contains(key))
+			entry.annotations.put("highlight", ":)");
+
+		list.children().add(entry);
 	}
 }

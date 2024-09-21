@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.config.ui.compat.flywheel;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.Theme;
@@ -9,7 +8,6 @@ import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.element.TextStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -23,8 +21,8 @@ public class FlwEnumEntry extends FlwValueEntry<Enum<?>> {
 	protected BoxWidget cycleLeft;
 	protected BoxWidget cycleRight;
 
-	public FlwEnumEntry(String label, Option<Enum<?>> option) {
-		super(label, option);
+	public FlwEnumEntry(Enum<?> option, String key) {
+		super(option, key);
 
 		valueText = new TextStencilElement(Minecraft.getInstance().font, "YEP").centered(true, true);
 		valueText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2,
@@ -105,6 +103,6 @@ public class FlwEnumEntry extends FlwValueEntry<Enum<?>> {
 	public void onValueChange(Enum<?> newValue) {
 		super.onValueChange(newValue);
 		valueText.withText(ConfigScreen.toHumanReadable(newValue.name().toLowerCase(Locale.ROOT)));
-		Backend.reloadWorldRenderers();
+		Minecraft.getInstance().levelRenderer.allChanged();
 	}
 }

@@ -5,6 +5,7 @@ import static com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity.
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
@@ -23,7 +24,6 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

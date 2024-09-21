@@ -1,19 +1,13 @@
 package com.simibubi.create.foundation.utility.ghost;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.content.decoration.copycat.CopycatModel;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.render.VirtualRenderHelper;
 
+import dev.engine_room.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
 import io.github.fabricators_of_create.porting_lib.models.virtual.FixedLightBakedModel;
 import io.github.fabricators_of_create.porting_lib.models.virtual.TranslucentBakedModel;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;

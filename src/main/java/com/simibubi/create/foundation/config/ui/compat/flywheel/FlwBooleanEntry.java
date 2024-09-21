@@ -1,13 +1,10 @@
 package com.simibubi.create.foundation.config.ui.compat.flywheel;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.RenderElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
-
 import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AbstractWidgetAccessor;
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -16,8 +13,8 @@ public class FlwBooleanEntry extends FlwValueEntry<Boolean> {
 	RenderElement disabled;
 	BoxWidget button;
 
-	public FlwBooleanEntry(String label, Option<Boolean> option) {
-		super(label, option);
+	public FlwBooleanEntry(Boolean option, String key) {
+		super(option, key);
 
 		enabled = AllIcons.I_CONFIRM.asStencil()
 				.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.BUTTON_SUCCESS)))
