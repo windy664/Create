@@ -23,7 +23,7 @@ public class SawVisual extends SingleRotatingVisual<SawBlockEntity> {
 		if (blockState.getValue(BlockStateProperties.FACING)
 				.getAxis()
 				.isHorizontal()) {
-			BlockState referenceState = blockState.rotate(blockEntity.getLevel(), blockEntity.getBlockPos(), Rotation.CLOCKWISE_180);
+			BlockState referenceState = blockState.rotate(Rotation.CLOCKWISE_180);
 			Direction facing = referenceState.getValue(BlockStateProperties.FACING);
 			return Models.partial(AllPartialModels.SHAFT_HALF, facing);
 		} else {
