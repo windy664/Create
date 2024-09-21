@@ -9,9 +9,9 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import dev.engine_room.flywheel.api.model.Model;
-import dev.engine_room.flywheel.lib.model.ModelCache;
 import dev.engine_room.flywheel.lib.model.ModelUtil;
 import dev.engine_room.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
+import dev.engine_room.flywheel.lib.util.ResourceReloadCache;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -21,7 +21,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class VirtualRenderHelper {
-	private static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new FabricBakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).build());
+	private static final ResourceReloadCache<BlockState, Model> VIRTUAL_BLOCKS = new ResourceReloadCache<>(state -> new FabricBakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).build());
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
 	/**
