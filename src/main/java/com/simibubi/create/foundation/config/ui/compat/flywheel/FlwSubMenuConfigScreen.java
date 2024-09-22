@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.config.ui.compat.flywheel;
 
 import java.util.Collections;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
@@ -143,23 +145,20 @@ public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {
 		addRenderableWidget(search);
 
 		addConfigEntry(FabricFlwConfig.INSTANCE.backend, "backend");
-		addConfigEntry(FabricFlwConfig.INSTANCE.limitUpdates, "limitUpdates");
+		addConfigEntryBoolean(() -> FabricFlwConfig.INSTANCE.limitUpdates, v -> FabricFlwConfig.INSTANCE.limitUpdates = v, "limitUpdates");
 		addConfigEntry(FabricFlwConfig.INSTANCE.workerThreads, "workerThreads");
 		addConfigEntry(FabricFlwConfig.INSTANCE.backendConfig, "flw_backend");
 
-		Collections.sort(list.children(),
-				(e, e2) -> {
-					int group = (e2 instanceof SubMenuEntry ? 1 : 0) - (e instanceof SubMenuEntry ? 1 : 0);
-					if (group == 0 && e instanceof ConfigScreenList.LabeledEntry && e2 instanceof ConfigScreenList.LabeledEntry) {
-						ConfigScreenList.LabeledEntry le = (ConfigScreenList.LabeledEntry) e;
-						ConfigScreenList.LabeledEntry le2 = (ConfigScreenList.LabeledEntry) e2;
-						return le.label.getComponent()
-								.getString()
-								.compareTo(le2.label.getComponent()
-										.getString());
-					}
-					return group;
-				});
+		list.children().sort((e, e2) -> {
+			int group = (e2 instanceof SubMenuEntry ? 1 : 0) - (e instanceof SubMenuEntry ? 1 : 0);
+			if (group == 0 && e instanceof ConfigScreenList.LabeledEntry le && e2 instanceof ConfigScreenList.LabeledEntry le2) {
+				return le.label.getComponent()
+						.getString()
+						.compareTo(le2.label.getComponent()
+								.getString());
+			}
+			return group;
+		});
 
 		list.search(highlights.stream().findFirst().orElse(""));
 
@@ -200,17 +199,11 @@ public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {
 		addRenderableWidget(serverLocked);
 	}
 
-	private <T> void addConfigEntry(T option, String key) {
-		ConfigScreenList.Entry entry = null;
-		if (option instanceof Boolean) {
-			entry = new FlwBooleanEntry((Boolean) option, key);
-		} else if (option instanceof Enum) {
-			entry = new FlwEnumEntry((Enum<?>) option, key);
-		}
+	private void addConfigEntryBoolean(Supplier<Boolean> getter, Consumer<Boolean> option, String key) {
+		addConfigEntry(new FlwBooleanEntry(getter, option, key), key);
+	}
 
-		if (entry == null)
-			entry = new ConfigScreenList.LabeledEntry("Impl missing - " + option.getClass().getSimpleName() + "  " + toHumanReadable(key) + " : " + option);
-
+	private void addConfigEntry(ConfigScreenList.Entry entry, String key) {
 		if (highlights.contains(key))
 			entry.annotations.put("highlight", ":)");
 

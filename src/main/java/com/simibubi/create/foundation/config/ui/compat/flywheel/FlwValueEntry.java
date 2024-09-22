@@ -1,5 +1,14 @@
 package com.simibubi.create.foundation.config.ui.compat.flywheel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
@@ -11,28 +20,24 @@ import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Pair;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 public class FlwValueEntry<T> extends ValueEntry<T> {
+	protected Supplier<T> getter;
+	protected Consumer<T> option;
 
-	protected T option;
-
-	public FlwValueEntry(T option, String key) {
+	public FlwValueEntry(Supplier<T> getter, Consumer<T> option, String key) {
 		super(ConfigScreen.toHumanReadable(key));
+		this.getter = getter;
 		this.option = option;
 		this.path = String.join(".", key);
 
 		resetButton = new BoxWidget(0, 0, resetWidth - 12, 16)
 				.showingElement(AllIcons.I_CONFIG_RESET.asStencil())
 				.withCallback(() -> {
-					setValue(option);
+					setValue(getter.get());
 					this.onReset();
 				});
 		resetButton.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BoxWidget.gradientFactory.apply(resetButton)));
@@ -73,14 +78,14 @@ public class FlwValueEntry<T> extends ValueEntry<T> {
 
 	@Override
 	public void setValue(@NotNull T value) {
-		option = value;
+		option.accept(value);
 		onValueChange(value);
 	}
 
 	@NotNull
 	@Override
 	public T getValue() {
-		return option;
+		return getter.get();
 	}
 
 	@Override
