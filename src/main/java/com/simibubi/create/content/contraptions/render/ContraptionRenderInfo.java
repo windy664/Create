@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.render;
 
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -118,15 +120,17 @@ public class ContraptionRenderInfo {
 			BlockState state = blocks.lookup().apply(pos);
 			if (state.getRenderShape() == RenderShape.MODEL) {
 				BakedModel model = dispatcher.getBlockModel(state);
-				ModelData modelData = contraption.modelData.getOrDefault(pos, ModelData.EMPTY);
-				modelData = model.getModelData(renderWorld, pos, state, modelData);
-				long randomSeed = state.getSeed(pos);
-				random.setSeed(randomSeed);
-				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
-					poseStack.pushPose();
-					poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
-					renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, sbbBuilder, true, random, randomSeed, OverlayTexture.NO_OVERLAY, modelData, layer);
-					poseStack.popPose();
+				if (model.isVanillaAdapter()) {
+					if (ItemBlockRenderTypes.getChunkRenderType(state) != layer) {
+						model = null;
+					}
+				} else {
+					model = LayerFilteringBakedModel.wrap(model, layer);
+				}
+				if (model != null) {
+					model = shadeSeparatingWrapper.wrapModel(model);
+					dispatcher.getModelRenderer()
+							.tesselateBlock(renderWorld, model, state, pos, poseStack, sbbBuilder, true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY);
 				}
 			}
 		}

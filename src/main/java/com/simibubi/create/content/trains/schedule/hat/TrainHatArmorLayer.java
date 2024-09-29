@@ -1,5 +1,8 @@
 package com.simibubi.create.content.trains.schedule.hat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.Contraption;
@@ -49,9 +52,9 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		M entityModel = getParentModel();
 		ms.pushPose();
 
-		boolean valid = false;
 		var msr = TransformStack.of(ms);
-		float scale = 1;
+		TrainHatInfo info = TrainHatInfoReloadListener.getHatInfoFor(entity.getType());
+		List<ModelPart> partsToHead = new ArrayList<>();
 
 		if (entityModel instanceof AgeableListModel<?> model && entityModel instanceof io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AgeableListModelAccessor access) {
 			if (model.young) {

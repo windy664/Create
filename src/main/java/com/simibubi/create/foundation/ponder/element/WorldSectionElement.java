@@ -428,18 +428,17 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 			if (state.getRenderShape() == RenderShape.MODEL) {
 				BakedModel model = dispatcher.getBlockModel(state);
-				BlockEntity blockEntity = world.getBlockEntity(pos);
-				ModelData modelData = blockEntity != null ? blockEntity.getModelData() : ModelData.EMPTY;
-				modelData = model.getModelData(world, pos, state, modelData);
-				long seed = state.getSeed(pos);
-				random.setSeed(seed);
-
-				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
-					poseStack.pushPose();
-					poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
-					renderer.tesselateBlock(world, model, state, pos, poseStack, sbbBuilder, true,
-						random, seed, OverlayTexture.NO_OVERLAY, modelData, layer);
-					poseStack.popPose();
+				if (model.isVanillaAdapter()) {
+					if (ItemBlockRenderTypes.getChunkRenderType(state) != layer) {
+						model = null;
+					}
+				} else {
+					model = LayerFilteringBakedModel.wrap(model, layer);
+				}
+				if (model != null) {
+					model = shadeSeparatingWrapper.wrapModel(model);
+					dispatcher.getModelRenderer()
+							.tesselateBlock(world, model, state, pos, poseStack, sbbBuilder, true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY);
 				}
 			}
 		});
