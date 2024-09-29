@@ -17,8 +17,8 @@ public class FlwBooleanEntry extends FlwValueEntry<Boolean> {
 	RenderElement disabled;
 	BoxWidget button;
 
-	public FlwBooleanEntry(Supplier<Boolean> getter, Consumer<Boolean> option, String key) {
-		super(getter, option, key);
+	public FlwBooleanEntry(String humanKey, Supplier<Boolean> getter, Consumer<Boolean> option) {
+		super(humanKey, getter, option);
 
 		enabled = AllIcons.I_CONFIRM.asStencil()
 				.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.BUTTON_SUCCESS)))

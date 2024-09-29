@@ -28,7 +28,7 @@ public class FlwValueEntry<T> extends ValueEntry<T> {
 	protected Supplier<T> getter;
 	protected Consumer<T> option;
 
-	public FlwValueEntry(Supplier<T> getter, Consumer<T> option, String key) {
+	public FlwValueEntry(String key, Supplier<T> getter, Consumer<T> option) {
 		super(ConfigScreen.toHumanReadable(key));
 		this.getter = getter;
 		this.option = option;

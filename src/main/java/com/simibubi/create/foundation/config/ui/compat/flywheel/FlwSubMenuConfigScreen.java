@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.config.ui.compat.flywheel;
 
-import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -22,7 +21,6 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
 import dev.engine_room.flywheel.impl.FabricFlwConfig;
-import dev.engine_room.flywheel.impl.FlwConfig;
 import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AbstractSelectionListAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -32,20 +30,20 @@ import net.minecraftforge.fml.config.ModConfig;
 
 public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {
 
-	private final FlwConfig flwConfig;
+	private final FabricFlwConfig flwConfig;
 
-	public FlwSubMenuConfigScreen(Screen parent, String title, ModConfig.Type type, FlwConfig flwConfig) {
+	public FlwSubMenuConfigScreen(Screen parent, String title, ModConfig.Type type, FabricFlwConfig flwConfig) {
 		super(parent, title, type, null, null);
 		this.flwConfig = flwConfig;
 	}
 
-	public FlwSubMenuConfigScreen(Screen parent, ModConfig.Type type, FlwConfig flwConfig) {
+	public FlwSubMenuConfigScreen(Screen parent, ModConfig.Type type, FabricFlwConfig flwConfig) {
 		this(parent, "root", type, flwConfig);
 	}
 
 	@Override
 	protected void saveChanges() {
-		FabricFlwConfig.INSTANCE.save();
+		flwConfig.save();
 	}
 
 	@Override
@@ -144,10 +142,23 @@ public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {
 		search.moveCursorToStart();
 		addRenderableWidget(search);
 
-		addConfigEntry(FabricFlwConfig.INSTANCE.backend, "backend");
-		addConfigEntryBoolean(() -> FabricFlwConfig.INSTANCE.limitUpdates, v -> FabricFlwConfig.INSTANCE.limitUpdates = v, "limitUpdates");
-		addConfigEntry(FabricFlwConfig.INSTANCE.workerThreads, "workerThreads");
-		addConfigEntry(FabricFlwConfig.INSTANCE.backendConfig, "flw_backend");
+		// FIXME - add support for changing backend
+		//addConfigEntry(flwConfig.backend, "backend");
+		addConfigEntry(
+				() -> flwConfig.limitUpdates,
+				v -> flwConfig.limitUpdates = v,
+				"limitUpdates"
+		);
+		addConfigEntry(
+				() -> flwConfig.workerThreads,
+				v -> flwConfig.workerThreads = v,
+				"workerThreads"
+		);
+		addConfigEntry(
+				() -> flwConfig.backendConfig.lightSmoothness,
+				v -> flwConfig.backendConfig.lightSmoothness = v,
+				"flw_backend.lightSmoothness"
+		);
 
 		list.children().sort((e, e2) -> {
 			int group = (e2 instanceof SubMenuEntry ? 1 : 0) - (e instanceof SubMenuEntry ? 1 : 0);
@@ -199,11 +210,24 @@ public class FlwSubMenuConfigScreen extends SubMenuConfigScreen {
 		addRenderableWidget(serverLocked);
 	}
 
-	private void addConfigEntryBoolean(Supplier<Boolean> getter, Consumer<Boolean> option, String key) {
-		addConfigEntry(new FlwBooleanEntry(getter, option, key), key);
-	}
+	@SuppressWarnings("unchecked")
+	private <T> void addConfigEntry(Supplier<T> getter, Consumer<T> option, String key) {
+		String humanKey = toHumanReadable(key);
 
-	private void addConfigEntry(ConfigScreenList.Entry entry, String key) {
+		Object value = getter.get();
+		ConfigScreenList.Entry entry = null;
+
+		if (value instanceof Boolean) {
+			entry = new FlwBooleanEntry(key, (Supplier<Boolean>) getter, (Consumer<Boolean>) option);
+		} else if (value instanceof Number) {
+			entry = FlwNumberEntry.create(key, getter, option);
+		} else if (value instanceof Enum<?>) {
+			entry = new FlwEnumEntry(key, (Supplier<Enum<?>>) getter, (Consumer<Enum<?>>) option);
+		}
+
+		if (entry == null)
+			entry = new ConfigScreenList.LabeledEntry("Impl missing - " + getter.get().getClass().getSimpleName() + "  " + humanKey + " : " + value);
+
 		if (highlights.contains(key))
 			entry.annotations.put("highlight", ":)");
 

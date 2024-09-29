@@ -13,14 +13,14 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.TextStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
-import dev.engine_room.flywheel.impl.FlwConfig;
+import dev.engine_room.flywheel.impl.FabricFlwConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.fml.config.ModConfig;
 
 public class FlwConfigScreen extends BaseConfigScreen {
 
-	private final FlwConfig flwConfig = FlwConfig.INSTANCE;
+	private final FabricFlwConfig flwConfig = FabricFlwConfig.INSTANCE;
 
 	public FlwConfigScreen(Screen parent, @NotNull String modID) {
 		super(parent, modID);
