@@ -13,11 +13,12 @@ import com.mojang.math.Axis;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.render.VirtualRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import io.github.fabricators_of_create.porting_lib.fluids.FluidStack;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -30,7 +31,6 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -179,30 +179,29 @@ public class GuiGameElement {
 			transformMatrix(matrixStack);
 
 			RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-			renderModel(blockRenderer, buffer, renderType, vb, matrixStack);
+			renderModel(blockRenderer, buffer, matrixStack);
 
 			cleanUpMatrix(matrixStack);
 		}
 
-		protected void renderModel(BlockRenderDispatcher blockRenderer, MultiBufferSource.BufferSource buffer,
-			PoseStack ms) {
+		protected void renderModel(BlockRenderDispatcher blockRenderer, MultiBufferSource.BufferSource buffer, PoseStack ms) {
 			if (blockState.getBlock() == Blocks.AIR) {
 				RenderType renderType = Sheets.translucentCullBlockSheet();
 				blockRenderer.getModelRenderer()
 					.renderModel(ms.last(), buffer.getBuffer(renderType), blockState, blockModel, 1, 1, 1,
-						LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, VirtualRenderHelper.VIRTUAL_DATA, null);
+						LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 			} else {
 				int color = Minecraft.getInstance()
 					.getBlockColors()
 					.getColor(blockState, null, null, 0);
 				Color rgb = new Color(color == -1 ? this.color : color);
 
-				for (RenderType chunkType : blockModel.getRenderTypes(blockState, RandomSource.create(42L), VirtualRenderHelper.VIRTUAL_DATA)) {
-					RenderType renderType = RenderTypeHelper.getEntityRenderType(chunkType, true);
+				for (RenderType chunkType : RenderType.chunkBufferLayers()) {
+					RenderType renderType = chunkType != RenderType.translucent() ? Sheets.cutoutBlockSheet() : Sheets.translucentCullBlockSheet();
 					blockRenderer.getModelRenderer()
 						.renderModel(ms.last(), buffer.getBuffer(renderType), blockState, blockModel,
 							rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(),
-							LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, VirtualRenderHelper.VIRTUAL_DATA, chunkType);
+							LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 				}
 			}
 
@@ -220,18 +219,17 @@ public class GuiGameElement {
 		}
 
 		@Override
-		protected void renderModel(BlockRenderDispatcher blockRenderer, MultiBufferSource.BufferSource buffer,
-			RenderType renderType, VertexConsumer vb, PoseStack ms) {
+		protected void renderModel(BlockRenderDispatcher blockRenderer, MultiBufferSource.BufferSource buffer, PoseStack ms) {
 			if (blockState.getBlock() instanceof BaseFireBlock) {
 				Lighting.setupForFlatItems();
 //				blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 //				buffer.endBatch();
-				super.renderModel(blockRenderer, buffer, renderType, buffer.getBuffer(ItemBlockRenderTypes.getRenderType(blockState, false)), ms);
+				super.renderModel(blockRenderer, buffer, ms);
 				Lighting.setupFor3DItems();
 				return;
 			}
 
-			super.renderModel(blockRenderer, buffer, renderType, vb, ms);
+			super.renderModel(blockRenderer, buffer, ms);
 
 			if (blockState.getFluidState()
 				.isEmpty())

@@ -3,8 +3,6 @@ package com.simibubi.create.content.contraptions.render;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.engine_room.flywheel.lib.model.baked.FabricMultiBlockModelBuilder;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -30,6 +28,7 @@ import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.api.visualization.VisualizerRegistry;
 import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.TransformedInstance;
+import dev.engine_room.flywheel.lib.model.baked.FabricMultiBlockModelBuilder;
 import dev.engine_room.flywheel.lib.task.ForEachPlan;
 import dev.engine_room.flywheel.lib.task.NestedPlan;
 import dev.engine_room.flywheel.lib.task.PlanMap;
@@ -86,7 +85,6 @@ public class ContraptionVisual<E extends AbstractContraptionEntity> extends Abst
 		};
 
 		model = new FabricMultiBlockModelBuilder(modelWorld, blocks.positions())
-				.modelDataLookup(pos -> contraption.modelData.getOrDefault(pos, ModelData.EMPTY))
 				.build();
 
 		structure = embedding.instancerProvider()

@@ -21,7 +21,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class VirtualRenderHelper {
-	private static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new FabricBakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).modelData(VIRTUAL_DATA).build());
+	private static final ModelCache<BlockState> VIRTUAL_BLOCKS = new ModelCache<>(state -> new FabricBakedModelBuilder(ModelUtil.VANILLA_RENDERER.getBlockModel(state)).build());
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
 	/**
