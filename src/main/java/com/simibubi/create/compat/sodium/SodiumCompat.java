@@ -3,10 +3,10 @@ package com.simibubi.create.compat.sodium;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.Mods;
@@ -41,33 +41,38 @@ public class SodiumCompat {
 	public static final ResourceLocation SAW_TEXTURE = Create.asResource("block/saw_reversed");
 
 	public static void init() {
-		if (!Mods.INDIUM.isLoaded()) {
+		ModContainer container = FabricLoader.getInstance().getModContainer(Mods.SODIUM.id()).orElseThrow();
+		Version sodiumVersion = container.getMetadata().getVersion();
+
+		boolean supportsFRAPI = false;
+
+		try {
+			// Any 0.6.0 version or alpha/beta for it
+			supportsFRAPI = VersionPredicate.parse("~0.6.0-")
+					.test(sodiumVersion);
+		} catch (VersionParsingException ignored) {}
+
+		// If the sodium version is 0.6.0* then it natively supports FRAPI
+		if (!Mods.INDIUM.isLoaded() && !supportsFRAPI) {
 			ClientPlayConnectionEvents.JOIN.register(SodiumCompat::sendNoIndiumWarning);
 		}
 
 		boolean compatInitialized = false;
 
-		Optional<ModContainer> containerOptional = FabricLoader.getInstance()
-				.getModContainer(Mods.SODIUM.id());
 
-		if (containerOptional.isPresent()) {
-			Version sodiumVersion = containerOptional.get()
-					.getMetadata()
-					.getVersion();
-
-			for (SpriteUtilCompat value : SpriteUtilCompat.values()) {
-				if (value.doesWork.test(sodiumVersion)) {
-					Minecraft mc = Minecraft.getInstance();
-					WorldRenderEvents.START.register(ctx -> {
-						Function<ResourceLocation, TextureAtlasSprite> atlas = mc.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
-						TextureAtlasSprite sawSprite = atlas.apply(SAW_TEXTURE);
-						value.markSpriteAsActive.accept(sawSprite);
-					});
-					compatInitialized = true;
-					break;
-				}
+		for (SpriteUtilCompat value : SpriteUtilCompat.values()) {
+			if (value.doesWork.test(sodiumVersion)) {
+				Minecraft mc = Minecraft.getInstance();
+				WorldRenderEvents.START.register(ctx -> {
+					Function<ResourceLocation, TextureAtlasSprite> atlas = mc.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
+					TextureAtlasSprite sawSprite = atlas.apply(SAW_TEXTURE);
+					value.markSpriteAsActive.get().accept(sawSprite);
+				});
+				compatInitialized = true;
+				break;
 			}
 		}
+
 
 		if (!compatInitialized) {
 			Create.LOGGER.error("Create's Sodium compat errored and has been partially disabled. Report this!");
@@ -102,29 +107,21 @@ public class SodiumCompat {
 			} catch (Throwable ignored) {
 				return false;
 			}
-		}, (sawSprite) -> {
-			try {
-				invokeOld(sawSprite);
-			} catch (Throwable ignored) {}
-		}),
+		}, () -> SpriteUtilCompat::invokeOld),
 		V0_6_API((version) -> {
 			try {
 				return VersionPredicate.parse(">=0.6.0-beta.3").test(version);
 			} catch (VersionParsingException e) {
 				return false;
 			}
-		}, (sawSprite) -> {
-			try {
-				SpriteUtil.INSTANCE.markSpriteActive(sawSprite);
-			} catch (Throwable ignored) {}
-		});
+		}, () -> SpriteUtil.INSTANCE::markSpriteActive);
 
 		private static MethodHandle markSpriteActiveHandle;
 
 		private final Predicate<Version> doesWork;
-		private final Consumer<TextureAtlasSprite> markSpriteAsActive;
+		private final Supplier<Consumer<TextureAtlasSprite>> markSpriteAsActive;
 
-		SpriteUtilCompat(Predicate<Version> doesWork, Consumer<TextureAtlasSprite> markSpriteAsActive) {
+		SpriteUtilCompat(Predicate<Version> doesWork, Supplier<Consumer<TextureAtlasSprite>> markSpriteAsActive) {
 			this.doesWork = doesWork;
 			this.markSpriteAsActive = markSpriteAsActive;
 		}
@@ -138,8 +135,10 @@ public class SodiumCompat {
 			} catch (Throwable ignored) {}
 		}
 
-		public static void invokeOld(TextureAtlasSprite sawSprite) throws Throwable {
-			markSpriteActiveHandle.invoke(sawSprite);
+		public static void invokeOld(TextureAtlasSprite sawSprite) {
+			try {
+				markSpriteActiveHandle.invoke(sawSprite);
+			} catch(Throwable ignored) {}
 		}
 	}
 }
