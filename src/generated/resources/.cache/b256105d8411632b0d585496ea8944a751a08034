@@ -1,4 +1,4 @@
-// 1.19.2	2024-09-03T10:26:52.215968095	Create's Processing Recipes
+// 1.19.2	2024-10-09T15:56:36.203604007	Create's Processing Recipes
 053b06fb46a58401d0314b775bfabfc299a3fdcc data/create/recipes/cutting/compat/projectvibrantjourneys/stripped_palm_log.json
 9ab3ba5847c3abbc17c476436978141f2c039ce9 data/create/recipes/deploying/waxed_weathered_cut_copper_from_adding_wax.json
 57eb0b64ff8a8365ff7814ec2e955d5593161698 data/create/recipes/splashing/endergetic/petrified_end_corrock.json
@@ -623,7 +623,7 @@ f70cbf6d839d266a93018c03c230ffb503494531 data/create/recipes/cutting/compat/arch
 1a0d78e6dd6252fc977c4fd55614380855925f2b data/create/recipes/crushing/compat/elementaryores/ore_diamond_nether.json
 762dd5991307c527b448e387e63f60f91af97d0f data/create/recipes/milling/compat/byg/amaranth.json
 2326b5d1fc63126a054fcf8d43f73e3d22446ddb data/create/recipes/cutting/compat/twilightforest/stripped_sorting_log.json
-424ad97c482b974e5e4befea8bcb6278512c6d91 data/create/recipes/splashing/ic2/crushed_raw_aluminum.json
+ab91cdae32df1826da6cdfc7d20773a9da0e1959 data/create/recipes/splashing/ic2/crushed_raw_aluminum.json
 a13100d5e405767595c75b13a3b731f12272ea55 data/create/recipes/cutting/compat/blue_skies/crystallized_log.json
 8b91664e7747f827cb33b69762ef9a1f69e92a25 data/create/recipes/cutting/compat/byg/stripped_aspen_wood.json
 353cc84437efec63ed0b2e5fac99c7dd2d4f8214 data/create/recipes/cutting/compat/regions_unexplored/blue_bioshroom_hyphae.json
