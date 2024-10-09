@@ -819,7 +819,8 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			create(Mods.BTN.recipeId(color + "_petal"), b -> b.duration(50)
 					.require(AllTags.optionalTag(BuiltInRegistries.ITEM,
 							new ResourceLocation(Mods.BTN.getId(), "petals/" + color)))
-					.output(Mods.MC, color + "_dye"));
+					.output(Mods.MC, color + "_dye")
+					.whenModLoaded(Mods.BTN.getId()));
 		}
 		return null;
 	}

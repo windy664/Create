@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.CrossPlaneMirror;
@@ -29,6 +30,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -331,6 +333,14 @@ public class SymmetryWandItem extends Item {
 		}
 		PlayerBlockBreakEvents.CANCELED.invoker().onBlockBreakCanceled(world, player, pos, state, be);
 		return true;
+	}
+	
+	public static boolean presentInHotbar(Player player) {
+		Inventory inv = player.getInventory();
+		for (int i = 0; i < Inventory.getSelectionSize(); i++)
+			if (AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i)))
+				return true;
+		return false;
 	}
 
 	public static void handlePostEvent(Level world, Player player, BlockPos pos, BlockState state, BlockEntity be) {

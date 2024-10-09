@@ -60,14 +60,9 @@ public class SymmetryHandler {
 		if (player == null || AdventureUtil.isAdventure(player))
 			return;
 		Inventory inv = player.getInventory();
-		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			if (!inv.getItem(i)
-				.isEmpty()
-				&& inv.getItem(i)
-					.getItem() == AllItems.WAND_OF_SYMMETRY.get()) {
+		for (int i = 0; i < Inventory.getSelectionSize(); i++)
+			if (AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i)))
 				SymmetryWandItem.apply(player.level(), inv.getItem(i), player, pos, state);
-			}
-		}
 	}
 
 	public static boolean onBlockDestroyed(Level world, Player player, BlockPos pos, BlockState state, /* Nullable */ BlockEntity blockEntity) {
@@ -84,12 +79,9 @@ public class SymmetryHandler {
 //		Player player = event.getPlayer();
 		Inventory inv = player.getInventory();
 		handlingSymmetry = true;
-		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			if (!inv.getItem(i)
-				.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i))) {
-				SymmetryWandItem.remove(player.level(), inv.getItem(i), player, pos, state);
-			}
-		}
+		for (int i = 0; i < Inventory.getSelectionSize(); i++)
+			if (AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i)))
+				SymmetryWandItem.remove(player.level(), inv.getItem(i), player, event.getPos());
 		handlingSymmetry = false;
 		return true;
 	}

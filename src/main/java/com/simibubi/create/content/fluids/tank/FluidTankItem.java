@@ -5,6 +5,7 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
+import com.simibubi.create.content.equipment.symmetryWand.SymmetryWandItem;
 
 import io.github.fabricators_of_create.porting_lib.fluids.FluidStack;
 import net.minecraft.core.BlockPos;
@@ -86,6 +87,8 @@ public class FluidTankItem extends BlockItem {
 		BlockState placedOnState = world.getBlockState(placedOnPos);
 
 		if (!FluidTankBlock.isTank(placedOnState))
+			return;
+		if (SymmetryWandItem.presentInHotbar(player))
 			return;
 		boolean creative = getBlock().equals(AllBlocks.CREATIVE_FLUID_TANK.get());
 		FluidTankBlockEntity tankAt = ConnectivityHandler.partAt(

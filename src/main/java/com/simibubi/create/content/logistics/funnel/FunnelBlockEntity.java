@@ -117,7 +117,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 	private void activateExtractor() {
 		if (invVersionTracker.stillWaiting(invManipulation))
 			return;
-		
+
 		BlockState blockState = getBlockState();
 		Direction facing = AbstractFunnelBlock.getFunnelFacing(blockState);
 
@@ -259,7 +259,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 			new InvManipulationBehaviour(this, (w, p, s) -> new BlockFace(p, AbstractFunnelBlock.getFunnelFacing(s)
 				.getOpposite()));
 		behaviours.add(invManipulation);
-		
+
 		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 
 		filtering = new FilteringBehaviour(this, new FunnelFilterSlotPositioning());
@@ -267,7 +267,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		filtering.onlyActiveWhen(this::supportsFiltering);
 		filtering.withCallback($ -> invVersionTracker.reset());
 		behaviours.add(filtering);
-		
+
 		behaviours.add(new DirectBeltInputBehaviour(this).onlyInsertWhen(this::supportsDirectBeltInput)
 			.setInsertionHandler(this::handleDirectBeltInput));
 		registerAwardables(behaviours, AllAdvancements.FUNNEL);
