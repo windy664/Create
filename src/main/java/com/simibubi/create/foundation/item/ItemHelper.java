@@ -295,4 +295,16 @@ public class ItemHelper {
 //		else
 //			return inv.getStackInSlot(slot);
 //	}
+
+	public static ItemStack limitCountToMaxStackSize(ItemStack stack, boolean simulate) {
+		int count = stack.getCount();
+		int max = stack.getMaxStackSize();
+		if (count <= max)
+			return ItemStack.EMPTY;
+		ItemStack remainder = ItemHandlerHelper.copyStackWithSize(stack, count - max);
+		if (!simulate)
+			stack.setCount(max);
+		return remainder;
+	}
+
 }

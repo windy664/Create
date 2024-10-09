@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper;
 
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;

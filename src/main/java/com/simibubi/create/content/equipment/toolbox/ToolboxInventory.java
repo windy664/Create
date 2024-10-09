@@ -88,7 +88,7 @@ public class ToolboxInventory extends ItemStackHandler {
 			}
 		}
 		settling = false;
-		blockEntity.sendData();
+		notifyUpdate();
 	}
 
 	@Override
@@ -131,8 +131,8 @@ public class ToolboxInventory extends ItemStackHandler {
 		if (!stack.isEmpty() && filters.get(compartment)
 				.isEmpty()) {
 			filters.set(compartment, ItemHandlerHelper.copyStackWithSize(stack, 1));
-			if (ctx != null) TransactionCallback.onSuccess(ctx, blockEntity::sendData);
-			else blockEntity.sendData();
+			if (ctx != null) TransactionCallback.onSuccess(ctx, blockEntity::notifyUpdate);
+			else notifyUpdate();
 		}
 	}
 
@@ -145,10 +145,9 @@ public class ToolboxInventory extends ItemStackHandler {
 
 	@Override
 	protected void onContentsChanged(int slot) {
-		if (!settling && !blockEntity.getLevel().isClientSide)
+		if (!settling && (blockEntity == null || !blockEntity.getLevel().isClientSide))
 			settle(slot / STACKS_PER_COMPARTMENT);
-		blockEntity.sendData();
-		blockEntity.setChanged();
+		notifyUpdate();
 		super.onContentsChanged(slot);
 	}
 
@@ -238,6 +237,11 @@ public class ToolboxInventory extends ItemStackHandler {
 		if (AllItems.BELT_CONNECTOR.isIn(stack1) && AllItems.BELT_CONNECTOR.isIn(stack2))
 			return true;
 		return ItemHandlerHelper.canItemStacksStack(stack1, stack2);
+	}
+
+	private void notifyUpdate() {
+		if (blockEntity != null)
+			blockEntity.notifyUpdate();
 	}
 
 	public static class ToolboxSnapshotData implements ItemStackHandlerSnapshot {

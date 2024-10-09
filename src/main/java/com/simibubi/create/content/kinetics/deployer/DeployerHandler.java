@@ -291,12 +291,12 @@ public class DeployerHandler {
 			!(player.isShiftKeyDown() && holdingSomething)/* || (stack.doesSneakBypassUse(world, clickedPos, player))*/;
 
 		// Use on block
-		if (useBlock != null && flag1
+		if (useBlock != InteractionResult.FAIL && flag1
 			&& safeOnUse(clickedState, world, clickedPos, player, hand, result).consumesAction())
 			return;
 		if (stack.isEmpty())
 			return;
-		if (useItem == null)
+		if (useItem == InteractionResult.FAIL)
 			return;
 		if (item instanceof CartAssemblerBlockItem
 			&& clickedState.canBeReplaced(new BlockPlaceContext(itemusecontext)))

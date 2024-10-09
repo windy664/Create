@@ -70,7 +70,11 @@ public class ValueSettingsInputHandler {
 
 			if (!valueSettingsBehaviour.acceptsValueSettings() || fakePlayer) {
 				valueSettingsBehaviour.onShortInteract(player, hand, ray.getDirection());
-				return InteractionResult.SUCCESS;
+				// fabric: https://github.com/Fabricators-of-Create/Create/issues/1553
+				// Fabric api doesn't have a replacement for Forge's Event.Result so we need to hackily set this
+				// to fail so that other code isn't run, this just simulates the same behavior as create forge since we
+				// skip running further stuff if InteractionResult is FAIL
+				return fakePlayer ? InteractionResult.FAIL : InteractionResult.SUCCESS;
 			}
 
 			if (world.isClientSide) {

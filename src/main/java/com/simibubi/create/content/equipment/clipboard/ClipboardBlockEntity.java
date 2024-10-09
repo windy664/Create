@@ -69,6 +69,8 @@ public class ClipboardBlockEntity extends SmartBlockEntity {
 	protected void read(CompoundTag tag, boolean clientPacket) {
 		super.read(tag, clientPacket);
 		dataContainer = ItemStack.of(tag.getCompound("Item"));
+		if (!AllBlocks.CLIPBOARD.isIn(dataContainer))
+			dataContainer = AllBlocks.CLIPBOARD.asStack();
 
 		if (clientPacket)
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> readClientSide(tag));
