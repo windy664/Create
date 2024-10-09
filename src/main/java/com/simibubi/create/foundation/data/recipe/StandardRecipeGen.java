@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
@@ -55,8 +57,6 @@ import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-
-import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class StandardRecipeGen extends CreateRecipeProvider {
@@ -1562,9 +1562,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		public void serializeRecipeData(@NotNull JsonObject pJson) {
 			wrapped.serializeRecipeData(pJson);
 
-			JsonArray conds = new JsonArray();
-			conditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
-			pJson.add("conditions", conds);
+			ConditionJsonProvider.write(pJson, conditions.toArray(new ConditionJsonProvider[0]));
 		}
 	}
 }

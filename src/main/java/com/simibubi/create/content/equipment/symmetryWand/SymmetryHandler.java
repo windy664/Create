@@ -1,11 +1,8 @@
 package com.simibubi.create.content.equipment.symmetryWand;
 
-import java.util.Random;
-
-import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
-
 import org.joml.Vector3f;
 
+import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllItems;
@@ -29,7 +26,6 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -76,12 +72,11 @@ public class SymmetryHandler {
 		if (player.isSpectator())
 			return true;
 
-//		Player player = event.getPlayer();
 		Inventory inv = player.getInventory();
 		handlingSymmetry = true;
 		for (int i = 0; i < Inventory.getSelectionSize(); i++)
 			if (AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i)))
-				SymmetryWandItem.remove(player.level(), inv.getItem(i), player, event.getPos());
+				SymmetryWandItem.remove(player.level(), inv.getItem(i), player, pos, state);
 		handlingSymmetry = false;
 		return true;
 	}
