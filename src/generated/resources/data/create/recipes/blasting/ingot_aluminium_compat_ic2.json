@@ -7,12 +7,12 @@
       ]
     }
   ],
-  "type": "minecraft:smelting",
+  "type": "minecraft:blasting",
   "category": "blocks",
-  "cookingtime": 200,
+  "cookingtime": 100,
   "experience": 0.1,
   "ingredient": {
     "item": "create:crushed_raw_aluminum"
   },
-  "result": "ic2:ingot_aluminum"
+  "result": "ic2:ingot_aluminium"
 }

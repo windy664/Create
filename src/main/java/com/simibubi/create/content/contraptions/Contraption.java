@@ -1154,6 +1154,7 @@ public abstract class Contraption {
 					if (blockEntity instanceof IMultiBlockEntityContainer) {
 						if (tag.contains("LastKnownPos") || capturedMultiblocks.isEmpty()) {
 							tag.put("LastKnownPos", NbtUtils.writeBlockPos(BlockPos.ZERO.below(Integer.MAX_VALUE - 1)));
+							tag.remove("Controller");
 						}
 					}
 
@@ -1210,6 +1211,9 @@ public abstract class Contraption {
 			// swap nbt data to the new controller position
 			StructureBlockInfo prevControllerInfo = blocks.get(controllerPos);
 			StructureBlockInfo newControllerInfo = blocks.get(otherPos);
+			if (prevControllerInfo == null || newControllerInfo == null)
+				return;
+
 			blocks.put(otherPos, new StructureBlockInfo(newControllerInfo.pos(), newControllerInfo.state(), prevControllerInfo.nbt()));
 			blocks.put(controllerPos, new StructureBlockInfo(prevControllerInfo.pos(), prevControllerInfo.state(), newControllerInfo.nbt()));
 		});
@@ -1401,6 +1405,9 @@ public abstract class Contraption {
 
 	private void gatherBBsOffThread() {
 		getContraptionWorld();
+		if (simplifiedEntityColliderProvider != null) {
+			simplifiedEntityColliderProvider.cancel(false);
+		}
 		simplifiedEntityColliderProvider = CompletableFuture.supplyAsync(() -> {
 					VoxelShape combinedShape = Shapes.empty();
 					for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
@@ -1417,7 +1424,7 @@ public abstract class Contraption {
 				})
 				.thenAccept(r -> {
 					simplifiedEntityColliders = Optional.of(r);
-					simplifiedEntityColliderProvider = null;
+
 				});
 	}
 
