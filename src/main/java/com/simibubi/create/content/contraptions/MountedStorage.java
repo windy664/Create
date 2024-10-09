@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.content.equipment.toolbox.ToolboxInventory;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.logistics.crate.BottomlessItemHandler;
 import com.simibubi.create.content.logistics.vault.ItemVaultBlockEntity;
@@ -185,6 +186,8 @@ public class MountedStorage {
 		CompoundTag tag = handler.serializeNBT();
 		if (noFuel)
 			NBTHelper.putMarker(tag, "NoFuel");
+		if (handler instanceof ToolboxInventory)
+			NBTHelper.putMarker(tag, "Toolbox");
 		if (!(handler instanceof BottomlessItemHandler))
 			return tag;
 
@@ -198,6 +201,9 @@ public class MountedStorage {
 		storage.handler = new ItemStackHandler();
 		if (nbt == null)
 			return storage;
+		if (nbt.contains("Toolbox"))
+			storage.handler = new ToolboxInventory(null);
+		
 		storage.valid = true;
 		storage.noFuel = nbt.contains("NoFuel");
 
