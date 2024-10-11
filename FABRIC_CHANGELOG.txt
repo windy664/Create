@@ -12,4 +12,9 @@ Change logging starts below:
 - Implement breaks for Create: Interactive
 - Fix ingredients overlapping with heat bar when using EMI (#1582)
 - Fix extendo grip not using up durability
-- Update to 0.5.1.h (https://github.com/Creators-of-Create/Create/wiki/0.5.1g-&-h)
+- Fix crash when deployer applies filter to block (#1553)
+- Fix crash when item drain drains a custom potion (#1580)
+- Fix crash when draining items that do not have a remainder (#1622)
+- Fix pumps not draining fluids from custom cauldrons registered with CauldronFluidContent$registerCauldron (#1618)
+- Merge in 0.5.1.g/h (https://github.com/Creators-of-Create/Create/wiki/0.5.1g-&-h)
+- Merge in 0.5.1.i (https://github.com/Creators-of-Create/Create/wiki/0.5.1i)
