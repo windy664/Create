@@ -12,4 +12,5 @@ Change logging starts below:
 - Implement breaks for Create: Interactive
 - Fix ingredients overlapping with heat bar when using EMI (#1582)
 - Fix extendo grip not using up durability
-- Update to 0.5.1.h (https://github.com/Creators-of-Create/Create/wiki/0.5.1g-&-h)
+- Update to 0.5.1.g/h/i (https://github.com/Creators-of-Create/Create/wiki/0.5.1g-&-h and https://github.com/Creators-of-Create/Create/wiki/0.5.1i)
+- fixed smart observers not updating their checked position (#1621)

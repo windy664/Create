@@ -107,10 +107,25 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			// lazyTick should catch any updates we miss.
 			return;
 		}
+
+		// fabric: this method gets called by onPlace in the block class.
+		// onPlace is called during setBlock, but updating the BE's cached state is done afterward.
+		// no clue why this is different on forge, not worth digging through its rewrite of use logic.
+		// manually updating the cache here is sufficient. If this isn't done, it causes:
+		// - a delay when wrench rotating, caused by the setBlocks here undoing the original setBlock
+		// - a delay in level updating when wrench rotating, caused by initializing the StorageProviders based on the outdated state
+		Objects.requireNonNull(this.level);
+		BlockState state = this.level.getBlockState(this.worldPosition);
+		//noinspection deprecation
+		this.setBlockState(state);
+
 		boolean changed = false;
 		float occupied = 0;
 		float totalSpace = 0;
 		float prevLevel = currentLevel;
+
+		observedInventory.findNewCapability();
+		observedTank.findNewCapability();
 
 		BlockPos target = worldPosition.relative(ThresholdSwitchBlock.getTargetDirection(getBlockState()));
 		BlockEntity targetBlockEntity = level.getBlockEntity(target);
@@ -175,7 +190,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			// No compatible inventories found
 			if (currentLevel == -1)
 				return;
-			this.updateLevel(0, Block.UPDATE_ALL);
+			level.setBlock(worldPosition, getBlockState().setValue(ThresholdSwitchBlock.LEVEL, 0), 3);
 			currentLevel = -1;
 			redstoneState = false;
 			sendData();
@@ -196,7 +211,8 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 		int displayLevel = 0;
 		if (currentLevel > 0)
 			displayLevel = (int) (1 + currentLevel * 4);
-		this.updateLevel(displayLevel, update ? Block.UPDATE_ALL : Block.UPDATE_CLIENTS);
+		level.setBlock(worldPosition, getBlockState().setValue(ThresholdSwitchBlock.LEVEL, displayLevel),
+				update ? 3 : 2);
 
 		if (update)
 			scheduleBlockTick();
@@ -205,17 +221,6 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			DisplayLinkBlock.notifyGatherers(level, worldPosition);
 			notifyUpdate();
 		}
-	}
-
-	private void updateLevel(int level, int flags) {
-		// fabric: Get the current state instead of using the cached one. This is done because
-		// onPlace is called during setBlock, and updateCurrentLevel will be called by onPlace.
-		// onPlace is called before the block entity gets its cache updated, so it ends up just
-		// undoing the original setBlock.
-		Objects.requireNonNull(this.level);
-		BlockState state = this.level.getBlockState(this.worldPosition);
-		BlockState newState = state.setValue(ThresholdSwitchBlock.LEVEL, level);
-		this.level.setBlock(this.worldPosition, newState, flags);
 	}
 
 	protected void scheduleBlockTick() {
