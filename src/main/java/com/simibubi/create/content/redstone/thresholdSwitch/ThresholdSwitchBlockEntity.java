@@ -1,6 +1,7 @@
 package com.simibubi.create.content.redstone.thresholdSwitch;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.simibubi.create.compat.thresholdSwitch.ThresholdSwitchCompat;
 import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
@@ -130,14 +131,9 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 					invVersionTracker.awaitNewVersion(inv);
 					try (Transaction t = TransferUtil.getTransaction()) {
 						for (StorageView<ItemVariant> view : inv.iterable(t)) {
-							long space = COMPAT
-									.stream()
-									.filter(compat -> compat.isFromThisMod(targetBlockEntity))
-									.map(compat -> compat.getSpaceInSlot(view))
-									.findFirst()
-									.orElseGet(() -> Math.min(view.getResource().toStack().getMaxStackSize(), view.getCapacity()));
-
-							long count = view.getCapacity();
+							// fabric: compat is unused, skip it
+							long space = Math.min(view.getResource().getItem().getMaxStackSize(), view.getCapacity());
+							long count = view.getAmount();
 							if (space == 0)
 								continue;
 
@@ -179,7 +175,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			// No compatible inventories found
 			if (currentLevel == -1)
 				return;
-			level.setBlock(worldPosition, getBlockState().setValue(ThresholdSwitchBlock.LEVEL, 0), 3);
+			this.updateLevel(0, Block.UPDATE_ALL);
 			currentLevel = -1;
 			redstoneState = false;
 			sendData();
@@ -200,8 +196,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 		int displayLevel = 0;
 		if (currentLevel > 0)
 			displayLevel = (int) (1 + currentLevel * 4);
-		level.setBlock(worldPosition, getBlockState().setValue(ThresholdSwitchBlock.LEVEL, displayLevel),
-			update ? 3 : 2);
+		this.updateLevel(displayLevel, update ? Block.UPDATE_ALL : Block.UPDATE_CLIENTS);
 
 		if (update)
 			scheduleBlockTick();
@@ -210,6 +205,17 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			DisplayLinkBlock.notifyGatherers(level, worldPosition);
 			notifyUpdate();
 		}
+	}
+
+	private void updateLevel(int level, int flags) {
+		// fabric: Get the current state instead of using the cached one. This is done because
+		// onPlace is called during setBlock, and updateCurrentLevel will be called by onPlace.
+		// onPlace is called before the block entity gets its cache updated, so it ends up just
+		// undoing the original setBlock.
+		Objects.requireNonNull(this.level);
+		BlockState state = this.level.getBlockState(this.worldPosition);
+		BlockState newState = state.setValue(ThresholdSwitchBlock.LEVEL, level);
+		this.level.setBlock(this.worldPosition, newState, flags);
 	}
 
 	protected void scheduleBlockTick() {
