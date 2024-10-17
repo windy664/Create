@@ -1,14 +1,12 @@
 package com.simibubi.create.content.trains.track;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-import java.util.function.BiFunction;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.betterend.BetterEndPortalCompat;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.foundation.utility.BlockFace;
@@ -23,7 +21,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -31,10 +28,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-
-import org.slf4j.Logger;
-import com.mojang.logging.LogUtils;
 
 /**
  * Manages portal track integrations for various dimensions and mods within the Create mod.
@@ -44,17 +37,13 @@ import com.mojang.logging.LogUtils;
  * </p>
  */
 public class AllPortalTracks {
-
-	private static final Logger LOGGER = LogUtils.getLogger();
-
 	/**
 	 * Functional interface representing a provider for portal track connections.
 	 * It takes a pair of {@link ServerLevel} and {@link BlockFace} representing the inbound track
 	 * and returns a similar pair for the outbound track.
 	 */
 	@FunctionalInterface
-	public interface PortalTrackProvider extends UnaryOperator<Pair<ServerLevel, BlockFace>> {
-	}
+	public interface PortalTrackProvider extends UnaryOperator<Pair<ServerLevel, BlockFace>> {}
 
 	/**
 	 * Registry mapping portal blocks to their respective {@link PortalTrackProvider}s.
@@ -98,7 +87,7 @@ public class AllPortalTracks {
 	 * @param level        The current {@link ServerLevel}.
 	 * @param inboundTrack The inbound track {@link BlockFace}.
 	 * @return A pair containing the target {@link ServerLevel} and outbound {@link BlockFace},
-	 *         or {@code null} if no corresponding portal is found.
+	 * or {@code null} if no corresponding portal is found.
 	 */
 	public static Pair<ServerLevel, BlockFace> getOtherSide(ServerLevel level, BlockFace inboundTrack) {
 		BlockPos portalPos = inboundTrack.getConnectedPos();
@@ -111,14 +100,14 @@ public class AllPortalTracks {
 
 	/**
 	 * Registers default portal track integrations for built-in dimensions and mods.
-	 * This includes the Nether, Aether (if loaded), and Better End (if loaded).
+	 * This includes the Nether and the Aether (if loaded).
 	 */
 	public static void registerDefaults() {
 		registerIntegration(Blocks.NETHER_PORTAL, AllPortalTracks::nether);
 		if (Mods.AETHER.isLoaded())
-			registerIntegration(new ResourceLocation("aether", "aether_portal"), AllPortalTracks::aether);
+			registerIntegration(Mods.AETHER.rl("aether_portal"), AllPortalTracks::aether);
 		if (Mods.BETTEREND.isLoaded())
-			registerIntegration(new ResourceLocation("betterend", "end_portal_block"), AllPortalTracks::betterend);
+			registerIntegration(Mods.BETTEREND.rl("end_portal_block"), AllPortalTracks::betterend);
 	}
 
 	/**
@@ -145,14 +134,14 @@ public class AllPortalTracks {
 	 */
 	private static Pair<ServerLevel, BlockFace> aether(Pair<ServerLevel, BlockFace> inbound) {
 		ResourceKey<Level> aetherLevelKey =
-				ResourceKey.create(Registries.DIMENSION, new ResourceLocation("aether", "the_aether"));
+				ResourceKey.create(Registries.DIMENSION, Mods.AETHER.rl("the_aether"));
 		return standardPortalProvider(inbound, Level.OVERWORLD, aetherLevelKey, level -> {
 			try {
 				return (ITeleporter) Class.forName("com.aetherteam.aether.block.portal.AetherPortalForcer")
 						.getDeclaredConstructor(ServerLevel.class, boolean.class)
 						.newInstance(level, true);
 			} catch (Exception e) {
-				LOGGER.error("Failed to create Aether teleporter: ", e);
+				Create.LOGGER.error("Failed to create Aether teleporter: ", e);
 			}
 			return getTeleporter(level);
 		});
@@ -165,54 +154,7 @@ public class AllPortalTracks {
 	 * @return A pair with the target {@link ServerLevel} and outbound {@link BlockFace}, or {@code null} if not applicable.
 	 */
 	private static Pair<ServerLevel, BlockFace> betterend(Pair<ServerLevel, BlockFace> inbound) {
-		return portalProvider(
-				inbound,
-				Level.OVERWORLD,
-				Level.END,
-				(otherLevel, probe) -> getBetterEndPortalInfo(probe, otherLevel)
-		);
-	}
-
-	/**
-	 * Retrieves the adjusted {@link PortalInfo} for the Better End portal using reflection.
-	 *
-	 * @param entity      The probe {@link Entity} used for portal traversal calculations.
-	 * @param targetLevel The target {@link ServerLevel} (dimension).
-	 * @return The adjusted {@link PortalInfo} for the target dimension, or {@code null} if an error occurs.
-	 */
-	private static PortalInfo getBetterEndPortalInfo(Entity entity, ServerLevel targetLevel) {
-		try {
-			Class<?> travelerStateClass = Class.forName("org.betterx.betterend.portal.TravelerState");
-			Constructor<?> constructor = travelerStateClass.getDeclaredConstructor(Entity.class);
-			constructor.setAccessible(true);
-			Object travelerState = constructor.newInstance(entity);
-
-			// Set the private portalEntrancePos field to the entity's block position as assumed in TravelerState#findDimensionEntryPoint
-			Field portalEntrancePosField = travelerStateClass.getDeclaredField("portalEntrancePos");
-			portalEntrancePosField.setAccessible(true);
-			portalEntrancePosField.set(travelerState, entity.blockPosition().immutable());
-
-			Method findDimensionEntryPointMethod = travelerStateClass.getDeclaredMethod("findDimensionEntryPoint", ServerLevel.class);
-			findDimensionEntryPointMethod.setAccessible(true);
-
-			// We need to lower the result by 1 to align with the floor on the exit side
-			PortalInfo otherSide = (PortalInfo) findDimensionEntryPointMethod.invoke(travelerState, targetLevel);
-			return new PortalInfo(
-					new Vec3(otherSide.pos.x, otherSide.pos.y - 1, otherSide.pos.z),
-					otherSide.speed,
-					otherSide.yRot,
-					otherSide.xRot
-			);
-		} catch (ClassNotFoundException e) {
-			LOGGER.error("Better End's TravelerState class not found: ", e);
-		} catch (NoSuchMethodException e) {
-			LOGGER.error("Method not found in Better End's TravelerState class: ", e);
-		} catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-			LOGGER.error("Failed to invoke method in Better End's TravelerState class: ", e);
-		} catch (NoSuchFieldException e) {
-			LOGGER.error("Field not found in Better End's TravelerState class: ", e);
-		}
-		return null;
+		return portalProvider(inbound, Level.OVERWORLD, Level.END, BetterEndPortalCompat::getBetterEndPortalInfo);
 	}
 
 	/**
@@ -225,6 +167,7 @@ public class AllPortalTracks {
 		return (ITeleporter) level.getPortalForcer();
 	}
 
+
 	/**
 	 * Provides a standard portal track provider that handles portal traversal between two dimensions.
 	 *
@@ -234,7 +177,7 @@ public class AllPortalTracks {
 	 * @param customPortalForcer  A function to obtain the {@link ITeleporter} for the target level.
 	 * @return A pair with the target {@link ServerLevel} and outbound {@link BlockFace}, or {@code null} if not applicable.
 	 */
-	private static Pair<ServerLevel, BlockFace> standardPortalProvider(
+	public static Pair<ServerLevel, BlockFace> standardPortalProvider(
 			Pair<ServerLevel, BlockFace> inbound,
 			ResourceKey<Level> firstDimension,
 			ResourceKey<Level> secondDimension,
@@ -260,7 +203,7 @@ public class AllPortalTracks {
 	 * @param portalInfoProvider  A function that provides the {@link PortalInfo} given the target level and probe entity.
 	 * @return A pair with the target {@link ServerLevel} and outbound {@link BlockFace}, or {@code null} if not applicable.
 	 */
-	private static Pair<ServerLevel, BlockFace> portalProvider(
+	public static Pair<ServerLevel, BlockFace> portalProvider(
 			Pair<ServerLevel, BlockFace> inbound,
 			ResourceKey<Level> firstDimension,
 			ResourceKey<Level> secondDimension,
