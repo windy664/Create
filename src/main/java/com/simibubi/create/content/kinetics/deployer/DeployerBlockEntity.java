@@ -194,6 +194,8 @@ public class DeployerBlockEntity extends KineticBlockEntity implements SidedStor
 		}
 		if (level.isClientSide)
 			return;
+		if (player == null)
+			return;
 
 		// https://github.com/Fabricators-of-Create/Create/issues/1139 | Occurs on forge as well
 		// Somehow when paired with Jade player becomes null because owner is null (which shouldn't ever happen)
