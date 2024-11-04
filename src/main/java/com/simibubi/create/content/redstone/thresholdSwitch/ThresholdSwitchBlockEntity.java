@@ -25,7 +25,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -152,7 +151,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 							continue;
 
 						totalSpace += 1;
-						if (filtering.test(stackInSlot))
+						if (filtering.test(view.getResource().toStack()))
 							occupied += count * (1f / space);
 					}
 				}
