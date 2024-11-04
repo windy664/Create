@@ -23,10 +23,11 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 	// fabric: move to StorageProvider, big changes
 
 	protected InterfaceProvider target;
-	private StorageProvider<T> targetStorageProvider;
+	protected StorageProvider<T> targetStorageProvider;
+	protected Direction side;
 	protected boolean simulateNext;
 	protected boolean bypassSided;
-	protected Direction side;
+	private boolean findNewNextTick;
 
 	public CapManipulationBehaviourBase(SmartBlockEntity be, InterfaceProvider target) {
 		super(be);
@@ -38,6 +39,20 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 	}
 
 	protected abstract StorageProvider<T> getProvider(BlockPos pos, boolean bypassSided);
+
+	@Override
+	public void initialize() {
+		super.initialize();
+		findNewNextTick = true;
+	}
+
+	@Override
+	public void onNeighborChanged(BlockPos neighborPos) {
+		BlockFace targetBlockFace = target.getTarget(getWorld(), blockEntity.getBlockPos(), blockEntity.getBlockState());
+		if (targetBlockFace.getConnectedPos()
+				.equals(neighborPos))
+			onHandlerInvalidated();
+	}
 
 	@SuppressWarnings("unchecked")
 	public S bypassSidedness() {
@@ -65,16 +80,24 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		return targetStorageProvider.get(side);
 	}
 
+	protected void onHandlerInvalidated() {
+		findNewNextTick = true;
+		this.setProvider(null, null);
+	}
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (targetStorageProvider == null) {
-			BlockFace targetBlockFace = target.getTarget(getWorld(), blockEntity.getBlockPos(), blockEntity.getBlockState())
-					.getOpposite();
-			BlockPos pos = targetBlockFace.getPos();
+		if (targetStorageProvider == null)
+			findNewCapability();
+	}
 
-			targetStorageProvider = getProvider(pos, bypassSided);
-			this.side = targetBlockFace.getFace();
+	@Override
+	public void tick() {
+		super.tick();
+		if (findNewNextTick || getWorld().getGameTime() % 64 == 0) {
+			findNewNextTick = false;
+			findNewCapability();
 		}
 	}
 
@@ -94,23 +117,26 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		return mode;
 	}
 
-//	public void findNewCapability() {
-//		Level world = getWorld();
-//		BlockFace targetBlockFace = target.getTarget(world, blockEntity.getBlockPos(), blockEntity.getBlockState())
-//			.getOpposite();
-//		BlockPos pos = targetBlockFace.getPos();
-//
-//		targetCapability = LazyOptional.empty();
-//
-//		if (!world.isLoaded(pos))
-//			return;
-//		BlockEntity invBE = world.getBlockEntity(pos);
-//		if (invBE == null)
-//			return;
-//		Capability<T> capability = capability();
-//		targetCapability =
-//			bypassSided ? invBE.getCapability(capability) : invBE.getCapability(capability, targetBlockFace.getFace());
-//	}
+	public void findNewCapability() {
+		Level world = getWorld();
+		BlockFace targetBlockFace = target.getTarget(world, blockEntity.getBlockPos(), blockEntity.getBlockState())
+			.getOpposite();
+		BlockPos pos = targetBlockFace.getPos();
+
+		this.setProvider(null, null);
+
+		if (!world.isLoaded(pos))
+			return;
+
+		StorageProvider<T> provider = this.getProvider(pos, this.bypassSided);
+		Direction side = targetBlockFace.getFace();
+		this.setProvider(provider, side);
+	}
+
+	private void setProvider(StorageProvider<T> provider, Direction side) {
+		this.targetStorageProvider = provider;
+		this.side = side;
+	}
 
 	@FunctionalInterface
 	public interface InterfaceProvider {
