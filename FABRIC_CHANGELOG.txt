@@ -19,3 +19,4 @@ Change logging starts below:
 - Fix extendo grip not using up durability
 - Fix displaying sequenced assembly with multiple spout steps in REI (#1490)
 - Update to 0.5.1.h (https://github.com/Creators-of-Create/Create/wiki/0.5.1g-&-h)
+- fix item transmutation with hoppers and toolboxes (#1493)
