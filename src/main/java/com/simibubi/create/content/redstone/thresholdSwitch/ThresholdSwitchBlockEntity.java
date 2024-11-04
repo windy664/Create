@@ -146,7 +146,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 					invVersionTracker.awaitNewVersion(inv);
 					for (StorageView<ItemVariant> view : inv) {
 						// fabric: compat is unused, skip it
-							long space = Math.min(view.getResource().getItem().getMaxStackSize(), view.getCapacity());
+						long space = Math.min(view.getResource().getItem().getMaxStackSize(), view.getCapacity());
 
 						long count = view.getAmount();
 						if (space == 0)
