@@ -1,6 +1,7 @@
 package com.simibubi.create.content.redstone.thresholdSwitch;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.simibubi.create.compat.thresholdSwitch.ThresholdSwitchCompat;
 import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
@@ -106,10 +107,25 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 			// lazyTick should catch any updates we miss.
 			return;
 		}
+
+		// fabric: this method gets called by onPlace in the block class.
+		// onPlace is called during setBlock, but updating the BE's cached state is done afterward.
+		// no clue why this is different on forge, not worth digging through its rewrite of use logic.
+		// manually updating the cache here is sufficient. If this isn't done, it causes:
+		// - a delay when wrench rotating, caused by the setBlocks here undoing the original setBlock
+		// - a delay in level updating when wrench rotating, caused by initializing the StorageProviders based on the outdated state
+		Objects.requireNonNull(this.level);
+		BlockState state = this.level.getBlockState(this.worldPosition);
+		//noinspection deprecation
+		this.setBlockState(state);
+
 		boolean changed = false;
 		float occupied = 0;
 		float totalSpace = 0;
 		float prevLevel = currentLevel;
+
+		observedInventory.findNewCapability();
+		observedTank.findNewCapability();
 
 		BlockPos target = worldPosition.relative(ThresholdSwitchBlock.getTargetDirection(getBlockState()));
 		BlockEntity targetBlockEntity = level.getBlockEntity(target);
@@ -129,14 +145,10 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 				} else {
 					invVersionTracker.awaitNewVersion(inv);
 					for (StorageView<ItemVariant> view : inv) {
-						long space = COMPAT
-									.stream()
-									.filter(compat -> compat.isFromThisMod(targetBlockEntity))
-									.map(compat -> compat.getSpaceInSlot(view))
-									.findFirst()
-									.orElseGet(() -> Math.min(view.getResource().toStack().getMaxStackSize(), view.getCapacity()));
+						// fabric: compat is unused, skip it
+							long space = Math.min(view.getResource().getItem().getMaxStackSize(), view.getCapacity());
 
-						long count = view.getCapacity();
+						long count = view.getAmount();
 						if (space == 0)
 							continue;
 
@@ -199,7 +211,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 		if (currentLevel > 0)
 			displayLevel = (int) (1 + currentLevel * 4);
 		level.setBlock(worldPosition, getBlockState().setValue(ThresholdSwitchBlock.LEVEL, displayLevel),
-			update ? 3 : 2);
+				update ? 3 : 2);
 
 		if (update)
 			scheduleBlockTick();

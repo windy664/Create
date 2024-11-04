@@ -18,7 +18,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 
@@ -65,7 +64,8 @@ public class GenericItemEmptying {
 			return Pair.of(resultingFluid, resultingItem);
 		try (Transaction t = TransferUtil.getTransaction()) {
 			resultingFluid = TransferUtil.extractAnyFluid(tank, FluidConstants.BUCKET);
-			resultingItem = ctx.getItemVariant().toStack((int) ctx.getAmount());
+			int amount = ctx.getItemVariant().isBlank() ? 0 : (int) ctx.getAmount(); // GH#1622
+			resultingItem = ctx.getItemVariant().toStack(amount);
 			if (!simulate) {
 				stack.shrink(1);
 				t.commit();
