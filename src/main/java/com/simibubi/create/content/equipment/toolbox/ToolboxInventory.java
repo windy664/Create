@@ -137,6 +137,9 @@ public class ToolboxInventory extends ItemStackHandler {
 			settle(slot / STACKS_PER_COMPARTMENT);
 		notifyUpdate();
 		super.onContentsChanged(slot);
+		// fabric: since slots bypass setStackInSlot, call this here too
+		ItemStack stack = this.getStackInSlot(slot);
+		updateCompartmentFilters(slot, stack, null);
 	}
 
 	@Override
