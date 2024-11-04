@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.fabric.DefaultLayerFilteringBakedModel;
 
 import dev.engine_room.flywheel.lib.model.baked.VirtualEmptyBlockGetter;
 import io.github.fabricators_of_create.porting_lib.models.virtual.FixedLightBakedModel;

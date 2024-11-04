@@ -11,6 +11,7 @@ import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.fabric.DefaultLayerFilteringBakedModel;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.VirtualEmptyBlockGetter;

@@ -9,8 +9,8 @@ import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
 import com.simibubi.create.foundation.render.ShadedBlockSbbBuilder;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.fabric.LayerFilteringBakedModel;
 
-import dev.engine_room.flywheel.lib.model.ModelUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;

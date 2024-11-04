@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.EmptyMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
+import com.simibubi.create.foundation.render.fabric.DefaultLayerFilteringBakedModel;
 import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -25,7 +26,6 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
