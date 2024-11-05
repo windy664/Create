@@ -1,4 +1,4 @@
-// 1.20.1	2024-10-09T16:32:04.221534865	Create/Create's Processing Recipes
+// 1.20.1	2024-11-04T20:52:29.684929753	Create/Create's Processing Recipes
 9ab3ba5847c3abbc17c476436978141f2c039ce9 data/create/recipes/deploying/waxed_weathered_cut_copper_from_adding_wax.json
 e1a06a5fd1693786cec48c9554baf3b5838e2c39 data/create/recipes/splashing/endergetic/petrified_end_corrock.json
 26c8302f5bec593975705fc1e6edc4addd49f8e0 data/create/recipes/cutting/compat/byg/pine_wood.json
@@ -409,7 +409,7 @@ d438e8cf8493b0e24ac7505db2e5c0b747fadb9c data/create/recipes/milling/compat/biom
 bc63efff854167ae280c40590a1274f726899d44 data/create/recipes/cutting/compat/biomesoplenty/stripped_dead_log.json
 3e36a4e047039bbaae23c343cc6646c4c2ba3c83 data/create/recipes/cutting/compat/blue_skies/maple_log.json
 8dd936818c13147ef66f48eef41fafcd3b548b69 data/create/recipes/cutting/compat/byg/stripped_witch_hazel_wood.json
-acdef62df1c7f28521e704741775ac6640a8ae77 data/create/recipes/milling/compat/ae2/certus_quartz.json
+8f2d53e1ff3d95f97f0337eda085cfc36b4fb278 data/create/recipes/milling/compat/ae2/certus_quartz.json
 745eca7d28ebc5208976ee7b5f69d6852ad1cc3a data/create/recipes/crushing/compat/druidcraft/amber_ore.json
 e5a142f0ec45bb2eed9b158a825a72b50bd498d8 data/create/recipes/cutting/compat/atmospheric/aspen_wood.json
 5bbbbbc70e2cac53ff0a21f48639848483438fa0 data/create/recipes/milling/granite.json
