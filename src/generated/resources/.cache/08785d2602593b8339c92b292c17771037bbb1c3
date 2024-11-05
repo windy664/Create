@@ -1,4 +1,4 @@
-// 1.20.1	2024-11-04T20:52:29.689572254	Create/Create's Standard Recipes
+// 1.20.1	2024-11-04T20:59:05.531954296	Create/Create's Standard Recipes
 cd7bd6a160e10d758c1609c2555c17bde8f8ddb6 data/create/recipes/crafting/materials/copper_nugget.json
 ef72e6d69fb4a8b4b389a59ccfea09f5f3b79378 data/create/advancements/recipes/misc/crafting/kinetics/steam_engine.json
 001868b8959c6d1583daa08ce7098a0bda349d08 data/create/recipes/crafting/kinetics/speedometer.json
@@ -67,6 +67,7 @@ de4c3f66e8664c607900c672ee1c20d3442fdebc data/create/recipes/crafting/appliances
 1b50ed47c37e48d1112c76059574eed71ecea4e5 data/create/advancements/recipes/misc/crafting/logistics/redstone_link.json
 622dec6dcdf8be717be15618e47ce10ea4338ef7 data/create/recipes/crafting/kinetics/fluid_valve.json
 27879de3fe0dbea5e4b6cec110459ce01cfa2556 data/create/recipes/crafting/kinetics/stressometerfrom_conversion.json
+8dd1e507ed1aba691c9789bfc8bf379d4d729263 data/create/advancements/recipes/misc/smelting/silver_ingot_compat_bewitchment.json
 5cf2f917005ace5eb726a0928bdc4f253cbca81d data/create/recipes/crafting/kinetics/basin.json
 480f00383dfd8566fa569f4a416eb12cf8e9f605 data/create/recipes/crafting/logistics/powered_toggle_latch.json
 f92c9eb90a8329d7b30987dfda35b56ae4b824be data/create/advancements/recipes/misc/crafting/appliances/copper_diving_helmet.json
@@ -140,6 +141,7 @@ ab65ce47a47396cf53b0083ed8478ea2ed19c43f data/create/recipes/crafting/appliances
 cb5bf433b60537d74fc9c2433c2a282b103e81e0 data/create/recipes/smelting/ingot_nickel_compat_immersiveengineering.json
 4c109779fa881db7589ced1b7816b48700ad9d17 data/create/advancements/recipes/misc/crafting/kinetics/track_observer_from_other_plates.json
 42f1375bf3004cfd891a5fbb05352f578636dd75 data/create/advancements/recipes/misc/smoking/bread.json
+2b3d093f11705ce6ad4fd68e60cb6c7f520eb726 data/create/recipes/smelting/silver_ingot_compat_bewitchment.json
 35037a92ef619eea8c02fe21c1ab3fa567e9fb72 data/create/recipes/crafting/kinetics/train_door.json
 22bc844b66fd09cf27ae9425e0261a44b0bd90bd data/create/advancements/recipes/misc/crafting/curiosities/brown_toolbox.json
 72cd9a1854d5698f7ef352059aaa931215715abe data/create/recipes/crafting/kinetics/smart_chute.json
@@ -381,6 +383,7 @@ ba22885e1a95a0deaa8546dd977978c60b515f65 data/create/advancements/recipes/misc/c
 dd4849e6ac91a82a4663477dd2ea51375d184bb3 data/create/advancements/recipes/misc/crafting/kinetics/water_wheel.json
 c468594cfe5a8265a277d2e52aa476b2c7a9eff3 data/create/advancements/recipes/misc/crafting/kinetics/controller_rail.json
 4b803aef44bcb527f1aaea9d31007068835671aa data/create/recipes/smelting/ingot_silver_compat_immersiveengineering.json
+4a7a20014e61eafbde780f88607448efafd5f2e1 data/create/recipes/blasting/silver_ingot_compat_bewitchment.json
 74f446a14c9b70174d2a4d59d99907322ea74c61 data/create/advancements/recipes/misc/crafting/kinetics/windmill_bearing.json
 d0bad974476c54315e4b656c67dbf6165d183bbc data/create/recipes/crafting/appliances/tree_fertilizer.json
 9a687ee9dab44c439ab669aa596117064fb13457 data/create/recipes/crafting/schematics/schematicannon.json
@@ -452,6 +455,7 @@ ee957e5dd1d6f49216d78b4d2cc38e0126d89959 data/create/recipes/blasting/tin_ingot_
 d6ee547ff1628b7d41e18e61970cb6eaf826559d data/create/advancements/recipes/misc/crafting/kinetics/placard.json
 b8c730859ee70e00dc4cbf702049d5dd2c03b4e8 data/create/recipes/crafting/materials/sand_paper.json
 33b46fd8c73dd6c2436347fff471bec173b7e373 data/create/advancements/recipes/misc/blasting/ingot_uranium_compat_ic2.json
+a13482fd2dcb252c68c1e17305712c1a814a3484 data/create/advancements/recipes/misc/blasting/silver_ingot_compat_bewitchment.json
 df19991be6233a25319e0f7620ea46819e557965 data/create/advancements/recipes/misc/blasting/zinc_ingot_from_raw_ore.json
 95feec058ab8470127d4f9cf7c8fd47dfd5085f3 data/create/advancements/recipes/misc/crafting/kinetics/copper_door.json
 b3222b4ad0e076b5dbedb93e49e947a960572f95 data/create/advancements/recipes/misc/crafting/kinetics/secondary_linear_chassisfrom_conversion.json
