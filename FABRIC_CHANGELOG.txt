@@ -19,3 +19,4 @@ Change logging starts below:
 - Merge in 0.5.1.g/h (https://github.com/Creators-of-Create/Create/wiki/0.5.1g-&-h)
 - Merge in 0.5.1.i (https://github.com/Creators-of-Create/Create/wiki/0.5.1i)
 - Fix smart observers not updating their checked position (#1621)
+- Fix nonsense fluid unit option when display links measured items (#995)
