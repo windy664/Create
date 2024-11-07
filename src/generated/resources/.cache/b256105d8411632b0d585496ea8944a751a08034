@@ -1,4 +1,4 @@
-// 1.19.2	2024-11-07T10:32:15.674734	Create's Processing Recipes
+// 1.19.2	2024-11-07T10:40:17.226349	Create's Processing Recipes
 6fa162b311d9323d8383dd45239786482cc8c699 data/create/recipes/cutting/compat/byg/imparius_hyphae.json
 8d2f92db0e107b4c82fdb5fcfc5c0f5a23fbd852 data/create/recipes/milling/compat/biomesoplenty/orange_cosmos.json
 47a860aaf489792d7ec7bfc77d0fb020886c92cd data/create/recipes/haunting/soul_lantern.json
@@ -338,7 +338,7 @@ bd33a879dc55a153c9aa4d4e3a62befb7b58c6d7 data/create/recipes/cutting/compat/byg/
 587e32e62f2d4c527bdb6ce748d57bbd307bafbd data/create/recipes/cutting/compat/projectvibrantjourneys/baobab_log.json
 7244424b8f74e71d65b130486f3c6764774a7819 data/create/recipes/cutting/compat/byg/cherry_wood.json
 46d133587dd3b6cef94559e6d712846295555cfc data/create/recipes/cutting/compat/atmospheric/stripped_kousa_log.json
-220b41888887f28d06a714803806603378b8d1e8 data/create/recipes/crushing/raw_zinc.json
+709c80932174641ffd404ab65b04e03054e7ccb5 data/create/recipes/crushing/raw_zinc.json
 f96373d7246fc09c49ca1082ba8b0da7d703bb60 data/create/recipes/pressing/compat/infernalexp/warped_nylium_path.json
 f863ed59c82ac2456afd93788f041378d88358bc data/create/recipes/milling/compat/byg/orange_amaranth.json
 fcb01ec2d0b29e94472232b5364996716b97ea08 data/create/recipes/cutting/compat/biomesoplenty/stripped_cherry_log.json

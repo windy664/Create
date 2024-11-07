@@ -1171,7 +1171,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.inBlastFurnace(),
 
 		RAW_ZINC_ORE = create(AllItems.ZINC_INGOT::get).withSuffix("_from_raw_ore")
-			.viaCookingTag(() -> AllTags.forgeItemTag("raw_materials/zinc"))
+			.viaCookingTag(() -> AllTags.forgeItemTag("raw_zinc_ores"))
 			.rewardXP(.7f)
 			.inBlastFurnace(),
 

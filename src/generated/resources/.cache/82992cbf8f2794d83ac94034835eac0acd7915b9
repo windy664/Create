@@ -1,4 +1,4 @@
-// 1.19.2	2024-11-07T10:32:15.782586	Create's Standard Recipes
+// 1.19.2	2024-11-07T10:40:17.233333	Create's Standard Recipes
 65223af27cbbd3b41579cdcd00300e16295fb1f4 data/create/recipes/crafting/kinetics/brass_hand.json
 dcf0c572da4e7778898a95e94dbf679f54245225 data/create/advancements/recipes/create.base/crafting/logistics/powered_toggle_latch.json
 10411c8e682fa61ea72e5e8b363b476a7dce1506 data/create/recipes/crafting/appliances/filter_clear.json
@@ -22,7 +22,7 @@ bee122e41d30ebaca7f773063b41a8cef3568b52 data/create/advancements/recipes/buildi
 d6b68a6fb4b7872f800585a8616cfe1ff1a0428c data/create/recipes/blasting/copper_ingot_from_crushed.json
 d8d9226fa3e395fabca7f62f2477379e9e1be50f data/create/recipes/crafting/kinetics/item_drain.json
 9402ffe97f6f2154896a367e614e61c604def8b8 data/create/recipes/crafting/kinetics/adjustable_chain_gearshift.json
-8234f7429962361a3682733394614e2da00f4e00 data/create/recipes/blasting/zinc_ingot_from_raw_ore.json
+82219f938d33b1d66f517ee23576c53b94c36e83 data/create/recipes/blasting/zinc_ingot_from_raw_ore.json
 9c5b43b4baf131e287fd34c17ea93ce5315da4f3 data/create/recipes/crafting/kinetics/wrench.json
 db9a084a72910c93dcac4df833b66ff2b917071e data/create/advancements/recipes/building_blocks/blasting/tin_ingot_compat_techreborn.json
 142aff3d898c4cec5e2dae9da30907011d865ff4 data/create/recipes/smelting/ingot_aluminium_compat_ic2.json
@@ -93,7 +93,7 @@ b156e8f54547f6272c9606d5c3b2d482ffc3cb55 data/create/recipes/smelting/platinum_i
 baaabf43821cb3c61ed2bf8a2431ee5ac108c923 data/create/recipes/crafting/kinetics/track_signal.json
 d78395b4352d6df560d39e8edbc006fd389d18b5 data/create/recipes/crafting/logistics/redstone_link.json
 051e9a912e57dcbe12f8a711e54ed8e498bd1d93 data/create/recipes/crafting/kinetics/turntable.json
-cab0e5685f36e0bc0b98e53253ebf08e615b8885 data/create/recipes/smelting/zinc_ingot_from_raw_ore.json
+ed514c713c261273d47a45078b9d0b9aa2c6e2ca data/create/recipes/smelting/zinc_ingot_from_raw_ore.json
 1117899dfc50804579d7b40e0fc441b7e522cb12 data/create/recipes/crafting/kinetics/smart_fluid_pipe.json
 ac8519dc87331facee57802dad374c0b32b8bf0c data/create/recipes/smelting/glass_pane_from_tiled_glass_pane.json
 3e407ded7ff0dde48cbc22b8db5f48743bf04c94 data/create/advancements/recipes/create.base/crafting/kinetics/shaft.json
@@ -307,7 +307,7 @@ f965e0bfde1a0960e009c1bf4daa4ef8704c7ada data/create/advancements/recipes/create
 31faf602c6bc1e695e6d654dfeb5a55fbdc8e6e3 data/create/recipes/crafting/kinetics/controller_rail.json
 9678042d96351f38df2dd538181c711b7319ac4e data/create/advancements/recipes/create.base/crafting/appliances/attribute_filter_clear.json
 0b4fd2cf9ab5d50e2d1f3466e471dc8599cb35d6 data/create/advancements/recipes/create.base/crafting/curiosities/minecart_coupling.json
-edff7ed60a3f094a20dbe7b18379722db127a28a data/create/advancements/recipes/create.base/blasting/zinc_ingot_from_raw_ore.json
+ce3d31af33754ea72abb814d90827430b8e6ae5d data/create/advancements/recipes/create.base/blasting/zinc_ingot_from_raw_ore.json
 babadcfb9adc3527e03e8f8db57a34cacfffa6a5 data/create/advancements/recipes/create.base/crafting/kinetics/vertical_gearboxfrom_conversion.json
 fa379bdc26064fafff3ccb84e705cdca532e9044 data/create/advancements/recipes/create.base/crafting/kinetics/gantry_carriage.json
 c9834e76909bd803f6d8faa5badb4051cd1f4c46 data/create/advancements/recipes/create.base/crafting/kinetics/mechanical_mixer.json
@@ -359,7 +359,7 @@ a72ce82d24d3ece67350ae508cb3e24616d7e09d data/create/advancements/recipes/buildi
 9135b75ab7c1b34889d11b1b29faec91712b4c73 data/create/recipes/crafting/kinetics/large_water_wheel.json
 4f541c22efef5ed3131364cf0609c7fced8f157c data/create/advancements/recipes/create.base/crafting/appliances/schedule_clear.json
 e6bfe9d4b015546d970f5ece35c08a642f9167b6 data/create/recipes/crafting/appliances/linked_controller.json
-48d44e2db17e47c35365048ae71207afef50f0b9 data/create/advancements/recipes/create.base/smelting/zinc_ingot_from_raw_ore.json
+d7063beabc40e0ddec5673f434f054b8d5c2b949 data/create/advancements/recipes/create.base/smelting/zinc_ingot_from_raw_ore.json
 fe68fed5b2d3081cb3b90d11e67caa30bfefcdf5 data/create/recipes/crafting/kinetics/linear_chassis.json
 81fa6d58358e053ca974d1fcc7fc5b0886370e83 data/create/recipes/crafting/logistics/andesite_funnel.json
 c21b460daa90c823459f6a3bdb08bc0e110164f7 data/create/recipes/crafting/kinetics/attribute_filter.json

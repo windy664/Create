@@ -1,4 +1,4 @@
-// 1.19.2	2024-11-07T10:32:15.749981	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2024-11-07T10:40:17.19209	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 9e847f017cfff4c2c60359590d018470cfe66e18 assets/create/models/block/crimson_window_pane_post.json
 ba7a9f542e9f65bdce3d3330a95f1166a0be0673 assets/create/models/item/tree_fertilizer.json
 4b9f96c0171731bee73512314f7c5d18552601ab data/create/advancements/recipes/create.palettes/crafting/kinetics/lime_seat_from_other_seat.json
@@ -1488,7 +1488,6 @@ c7155f56b7d31f5f8f6bb284fb71b39019d967a1 data/create/advancements/recipes/create
 ea74bb8a69f6acbd520ac8922e147495e5f99f6f assets/create/models/block/cut_tuff_slab_top.json
 716fc6ef58c240b3e6b45acf08d6e1472fe38e7c assets/create/models/block/cut_scorchia_brick_slab_top.json
 dadc7b65a4527e288c21a20df978796a8c444fd2 assets/create/models/item/waxed_weathered_copper_tile_stairs.json
-71174ad3f47e445d81b788d4f4dfad8c127142ab data/c/tags/items/raw_materials.json
 04ebbdd14f81f4b4dc7986cb5241caa9f48f4ff1 data/create/recipes/small_ochrum_brick_stairs_from_stone_types_ochrum_stonecutting.json
 59e82c94d2492454309e487a4d263a9839bcc7fe data/c/tags/items/colorless_glass.json
 8fb838ee0868f371eb538f98ffeeaa6d0cfa5f0c assets/create/models/item/gantry_shaft.json
@@ -1891,6 +1890,7 @@ ed767ec42c339081d393eafcc4d91c71cd292ae3 data/create/recipes/crafting/kinetics/y
 c93f33ba39c62b10dfb94c6e1c339cd4fbebffae assets/create/models/block/cut_limestone_brick_slab.json
 2208507d99a47df8bbdc0e2e34ab1d7f94ccd893 data/create/loot_tables/blocks/brown_toolbox.json
 1ba48c5cae05b6f4b1ad223ce80925f1eaaf5dfd data/create/recipes/small_veridium_brick_wall_from_stone_types_veridium_stonecutting.json
+71174ad3f47e445d81b788d4f4dfad8c127142ab data/c/tags/items/raw_zinc_ores.json
 8426a494b776148056cb4525e62744d0be8b28cd data/create/recipes/cut_calcite_slab_from_stone_types_calcite_stonecutting.json
 b3aba4c82062407557d4724d8eae5192f093b132 data/create/recipes/polished_cut_dripstone_slab_from_stone_types_dripstone_stonecutting.json
 4aa1c72bd9cc0421006e0a3c568b4a1176411ed3 data/create/loot_tables/blocks/small_veridium_brick_stairs.json
@@ -2874,6 +2874,7 @@ f9e23ff774f537a06b4c7909c36d92b2163300b2 data/create/loot_tables/blocks/haunted_
 c046436d59c350c6beb6b395675513c12184ffe2 assets/create/models/block/cut_deepslate_bricks_wall_side_tall.json
 49a17610b5b05595894ca2683056cecd724c1111 assets/create/models/item/small_diorite_brick_stairs.json
 0d75b2cdf2ee0ca9366b26c1f7042bb9b3e3753c assets/create/models/item/polished_cut_crimsite.json
+71174ad3f47e445d81b788d4f4dfad8c127142ab data/c/tags/items/raw_ores.json
 b8cb1b04eb869a06ded04c4c3acac6e5a315ee78 assets/create/models/item/cut_dripstone_brick_stairs.json
 792f95d68c501bc0c2d5f1add2faa0cf36b124a2 assets/create/models/block/layered_crimsite.json
 50b550dd3d2e48173c6124de445e9370590fe1f1 data/create/advancements/recipes/create.palettes/polished_cut_scoria_slab.json
@@ -4277,7 +4278,6 @@ c78e2acf9b54d7370f12e34dcca5c71743f47d55 assets/create/models/block/cut_andesite
 278a2c97bf0add278ade05881b61023936e01405 data/create/loot_tables/blocks/cut_scorchia_brick_slab.json
 7008c5576e1a180ef8b1851e5831b5c1bc003ead data/create/tags/entity_types/blaze_burner_capturable.json
 816a66c69beaf91eb676d33576586aaee8fbf802 data/create/tags/blocks/ore_override_stone.json
-71174ad3f47e445d81b788d4f4dfad8c127142ab data/c/tags/items/raw_materials/zinc.json
 8d334e026e94b304a1ff1ee96097f434b50175f2 assets/create/blockstates/cut_ochrum_brick_stairs.json
 972681c4ca6a31eb017d51c2d951b99b3518cb73 data/create/recipes/diorite_from_stone_types_diorite_stonecutting.json
 6ba16971a01a083ae7f246469caa9712513035b2 data/create/recipes/cut_diorite_wall.json
