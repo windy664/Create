@@ -167,7 +167,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		RAW_IRON_ORE = rawOre("iron", () -> Tags.Items.RAW_MATERIALS_IRON, AllItems.CRUSHED_IRON::get, 1),
 		RAW_COPPER_ORE = rawOre("copper", () -> Tags.Items.RAW_MATERIALS_COPPER, AllItems.CRUSHED_COPPER::get, 1),
 		RAW_GOLD_ORE = rawOre("gold", () -> Tags.Items.RAW_MATERIALS_GOLD, AllItems.CRUSHED_GOLD::get, 2),
-		RAW_ZINC_ORE = rawOre("zinc", () -> AllTags.forgeItemTag("raw_materials/zinc"), AllItems.CRUSHED_ZINC::get, 1),
+		RAW_ZINC_ORE = rawOre("zinc", () -> AllTags.forgeItemTag("raw_zinc_ores"), AllItems.CRUSHED_ZINC::get, 1),
 
 		OSMIUM_RAW_ORE = moddedRawOre(OSMIUM, AllItems.CRUSHED_OSMIUM::get),
 		PLATINUM_RAW_ORE = moddedRawOre(PLATINUM, AllItems.CRUSHED_PLATINUM::get),
