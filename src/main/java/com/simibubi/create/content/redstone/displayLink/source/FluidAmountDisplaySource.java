@@ -70,7 +70,8 @@ public class FluidAmountDisplaySource extends SingleLineDisplaySource {
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
-		if (isFirstLine) {
+		super.initConfigurationWidgets(context, builder, isFirstLine);
+		if (!isFirstLine) {
 			builder.addSelectionScrollInput(0, 75,
 					(si, l) -> si.forOptions(Lang.translatedOptions("display_source.fluid_amount", "millibuckets", "droplets"))
 							.titled(Lang.translateDirect("display_source.fluid_amount.display")),
