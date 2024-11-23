@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.portal.PortalInfo;
-import net.minecraft.world.phys.Vec3;
 
 public class BetterEndPortalCompat {
 	private static final MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -56,14 +55,7 @@ public class BetterEndPortalCompat {
 				// as assumed in TravelerState#findDimensionEntryPoint
 				portalEntrancePosHandle.set(travelerState, entity.blockPosition().immutable());
 
-				// We need to lower the result by 1 to align with the floor on the exit side
-				PortalInfo otherSide = (PortalInfo) findDimensionEntryPointHandle.invoke(travelerState, targetLevel);
-				return new PortalInfo(
-						new Vec3(otherSide.pos.x, otherSide.pos.y - 1, otherSide.pos.z),
-						otherSide.speed,
-						otherSide.yRot,
-						otherSide.xRot
-				);
+				return (PortalInfo) findDimensionEntryPointHandle.invoke(travelerState, targetLevel);
 			} catch (Throwable e) {
 				Create.LOGGER.error("Create's Better End Portal compat failed to initialize: ", e);
 			}
