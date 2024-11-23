@@ -146,8 +146,8 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 					invVersionTracker.awaitNewVersion(inv);
 					try (Transaction t = TransferUtil.getTransaction()) {
 						for (StorageView<ItemVariant> view : inv.iterable(t)) {
-							// fabric: compat is unused, skip it
-							long space = Math.min(view.getResource().getItem().getMaxStackSize(), view.getCapacity());
+							// fabric: forge also checks for item max stack size, we should just trust capacity on fabric though.
+							long space = view.getCapacity();
 							long count = view.getAmount();
 							if (space == 0)
 								continue;
