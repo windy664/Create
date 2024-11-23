@@ -26,6 +26,7 @@ Change logging starts below:
 - Fix nonsense fluid unit option when display links measured items (#995)
 - Fix copycat panels with framed glass not hiding faces when using sodium (#1540)
 - Fix filtered Smart Observers stopping listing matching items after finding 1 non-matching item (#996)
+- Fix incorrect capacities on large storages (#1633, #1637)
 - Merge in 0.5.1.g/h (https://github.com/Creators-of-Create/Create/wiki/0.5.1g-&-h)
 - Merge in 0.5.1.i (https://github.com/Creators-of-Create/Create/wiki/0.5.1i)
 - Merge in 0.5.1.j (https://github.com/Creators-of-Create/Create/wiki/0.5.1j)
