@@ -45,7 +45,10 @@ jobs:
             -   name: Validate Gradle Wrapper Integrity
                 uses: gradle/wrapper-validation-action@v2
 
-            -   name: Build
+            -   name: Run Gametests
+                run: ./gradlew runGametestServer --no-daemon
+
+            -   name: Build and/or Publish
                 run: ./gradlew buildOrPublish
 
             -   name: Capture build artifacts
