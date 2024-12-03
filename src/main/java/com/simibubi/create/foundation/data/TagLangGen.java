@@ -51,6 +51,9 @@ public class TagLangGen {
 				.autoRoot()
 				.auto("wheat");
 
+		common.subDir("dusts")
+				.auto("obsidian");
+
 		common.prefixedCategory("stripped")
 				.auto("logs")
 				.auto("wood");
@@ -62,6 +65,7 @@ public class TagLangGen {
 		common.auto("honey_buckets");
 
 		TagLangHelper create = new TagLangHelper(Create.ID, prov);
+		create.auto("tracks");
 		create.subDir("blaze_burner_fuel")
 				.plural("regular")
 				.plural("special");
@@ -91,10 +95,16 @@ public class TagLangGen {
 				.ignoreDir("scoria")
 				.ignoreDir("tuff")
 				.ignoreDir("veridium");
+		create.subDir("stone_types/galosphere")
+				.ignoreDir("allurite")
+				.ignoreDir("amethyst")
+				.ignoreDir("lumiere");
 		create.auto("toolboxes");
 		create.auto("valve_handles");
 		create.auto("vanilla_stripped_logs");
 		create.auto("vanilla_stripped_wood");
+		create.subDir("upgrade_aquatic")
+				.ignoreDir("coral");
 	}
 
 	public record TagLangHelper(String namespace, BaseLangProvider prov) {

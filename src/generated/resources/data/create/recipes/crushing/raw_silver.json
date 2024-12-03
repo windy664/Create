@@ -4,13 +4,13 @@
     {
       "condition": "fabric:tags_populated",
       "values": [
-        "c:raw_materials/silver"
+        "c:raw_silver"
       ]
     }
   ],
   "ingredients": [
     {
-      "tag": "c:raw_materials/silver"
+      "tag": "c:raw_silver"
     }
   ],
   "processingTime": 400,

@@ -197,7 +197,7 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 		// AE2
 
 		AE2_CERTUS = create(Mods.AE2.recipeId("certus_quartz"), b -> b.duration(200)
-				.require(AllTags.forgeItemTag("gems/certus_quartz"))
+				.require(AllTags.forgeItemTag("certus_quartz"))
 				.output(Mods.AE2, "certus_quartz_dust")
 				.whenModLoaded(Mods.AE2.getId())),
 

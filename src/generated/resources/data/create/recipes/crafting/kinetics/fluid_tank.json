@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "B": {
-      "tag": "c:plates/copper"
+      "tag": "c:copper_plates"
     },
     "C": {
       "tag": "c:wooden_barrels"

@@ -10,7 +10,7 @@
   ],
   "ingredients": [
     {
-      "tag": "forge:ores/ametrine"
+      "tag": "c:ores/ametrine"
     }
   ],
   "processingTime": 500,

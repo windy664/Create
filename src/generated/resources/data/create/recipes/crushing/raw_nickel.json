@@ -4,13 +4,13 @@
     {
       "condition": "fabric:tags_populated",
       "values": [
-        "c:raw_materials/nickel"
+        "c:raw_nickel"
       ]
     }
   ],
   "ingredients": [
     {
-      "tag": "c:raw_materials/nickel"
+      "tag": "c:raw_nickel"
     }
   ],
   "processingTime": 400,

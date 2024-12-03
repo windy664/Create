@@ -4,13 +4,13 @@
     {
       "condition": "fabric:tags_populated",
       "values": [
-        "c:raw_materials/uranium"
+        "c:raw_uranium"
       ]
     }
   ],
   "ingredients": [
     {
-      "tag": "c:raw_materials/uranium"
+      "tag": "c:raw_uranium"
     }
   ],
   "processingTime": 400,

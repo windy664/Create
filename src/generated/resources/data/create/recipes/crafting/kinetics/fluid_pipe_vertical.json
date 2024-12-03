@@ -5,7 +5,7 @@
       "tag": "c:copper_ingots"
     },
     "S": {
-      "tag": "c:plates/copper"
+      "tag": "c:copper_plates"
     }
   },
   "pattern": [

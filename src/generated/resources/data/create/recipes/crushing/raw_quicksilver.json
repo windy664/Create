@@ -4,13 +4,13 @@
     {
       "condition": "fabric:tags_populated",
       "values": [
-        "c:raw_materials/quicksilver"
+        "c:raw_quicksilver"
       ]
     }
   ],
   "ingredients": [
     {
-      "tag": "c:raw_materials/quicksilver"
+      "tag": "c:raw_quicksilver"
     }
   ],
   "processingTime": 400,
