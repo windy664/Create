@@ -5,4 +5,6 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- Fixed several incorrect tags and missing tag lang
+- Fix goggles not being equippable in the face slot
+- Fix mixers and presses not processing any items after processing twice
+- Fix spoutputs returning double the amount they should
