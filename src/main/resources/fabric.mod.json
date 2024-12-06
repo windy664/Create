@@ -73,10 +73,9 @@
     "colormatic": "<=3.1.1",
     "iris": "<=1.2.5",
 
-    "create_interactive": "*",
-
     "sound_physics_remastered": "<1.19.2-1.4.5",
 
+    "create_interactive": "<1.1",
     "railways": "<1.5.3",
     "create_jetpack": "<=3.4.1",
     "garnished": "<=1.6.3",
