@@ -5,22 +5,6 @@ No formatting, just plain text. CurseForge support for it is terrible.
 
 Change logging starts below:
 ----------
-- Added red sandpaper as a polishing workstation to EMI (#1453)
-- Fix a possible error in EMI init (#1439)
-- Fix deploying in EMI missing sandpaper and item application recipes (#1397)
-- Remove breaks for Sound Physics Remastered
-- Implement breaks for Create: Interactive
-- Fix ingredients overlapping with heat bar when using EMI (#1582)
-- Fix extendo grip not using up durability
-- Fix crash when deployer applies filter to block (#1553)
-- Fix crash when item drain drains a custom potion (#1580)
-- Fix crash when draining items that do not have a remainder (#1622)
-- Fix pumps not draining fluids from custom cauldrons registered with CauldronFluidContent$registerCauldron (#1618)
-- Fix smart observers not updating their checked position (#1621)
-- Fix nonsense fluid unit option when display links measured items (#995)
-- Fix copycat panels with framed glass not hiding faces when using sodium (#1540)
-- Fix filtered Smart Observers stopping listing matching items after finding 1 non-matching item (#996)
-- Fix incorrect capacities on large storages (#1633, #1637)
-- Merge in 0.5.1.g/h (https://github.com/Creators-of-Create/Create/wiki/0.5.1g-&-h)
-- Merge in 0.5.1.i (https://github.com/Creators-of-Create/Create/wiki/0.5.1i)
-- Merge in 0.5.1.j (https://github.com/Creators-of-Create/Create/wiki/0.5.1j)
+- Fix goggles not being equippable in the face slot
+- Fix mixers and presses not processing any items after processing twice
+- Fix spoutputs returning double the amount they should
