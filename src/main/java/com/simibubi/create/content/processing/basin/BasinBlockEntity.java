@@ -451,25 +451,24 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 					continue;
 				}
 
-			if (targetInv == null)
-				break;
+				if (targetInv == null)
+					break;
 
-			long inserted = TransferUtil.insertItem(targetInv, itemStack);
-			if (inserted == 0)
-				continue;
-			if (filter != null && !filter.test(itemStack))
-				continue;
+				try (Transaction nested = t.openNested()) {
+					long inserted = targetInv.insert(ItemVariant.of(itemStack), itemStack.getCount(), nested);
+					if (itemStack.getCount() != inserted)
+						continue;
+					if (filter != null && !filter.test(itemStack))
+						continue;
 
-			if (visualizedOutputItems.size() < 3)
-				visualizedOutputItems.add(LongAttached.withZero(itemStack));
-			update = true;
+					if (visualizedOutputItems.size() < 3)
+						visualizedOutputItems.add(LongAttached.withZero(itemStack));
+					update = true;
 
-			inserted = TransferUtil.insertItem(targetInv, itemStack.copy());
-			if (inserted == itemStack.getCount())
-				iterator.remove();
-			else
-				itemStack.setCount((int) inserted);
-		}
+					iterator.remove();
+					nested.commit();
+				}
+			}
 
 			for (Iterator<FluidStack> iterator = spoutputFluidBuffer.iterator(); iterator.hasNext();) {
 				FluidStack fluidStack = iterator.next();
