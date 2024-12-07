@@ -1,5 +1,8 @@
 package com.simibubi.create.content.trains.schedule.hat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
@@ -12,7 +15,6 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.Couple;
 
 import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ModelPartAccessor;
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.LivingEntityAccessor;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.EntityModel;
@@ -35,9 +37,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
@@ -81,7 +80,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 
 			ModelPart lastChild = partsToHead.get(partsToHead.size() - 1);
 			if (!lastChild.isEmpty()) {
-				Cube cube = ((ModelPartAccessor) lastChild).porting_lib$cubes().get(Mth.clamp(info.cubeIndex(), 0, ((ModelPartAccessor) lastChild).porting_lib$cubes().size() - 1));
+				Cube cube = ((ModelPartAccessor) (Object) lastChild).porting_lib$cubes().get(Mth.clamp(info.cubeIndex(), 0, ((ModelPartAccessor) lastChild).porting_lib$cubes().size() - 1));
 				ms.translate(info.offset().x() / 16.0F, (cube.minY - cube.maxY + info.offset().y()) / 16.0F, info.offset().z() / 16.0F);
 				float max = Math.max(cube.maxX - cube.minX, cube.maxZ - cube.minZ) / 8.0F * info.scale();
 				ms.scale(max, max, max);
